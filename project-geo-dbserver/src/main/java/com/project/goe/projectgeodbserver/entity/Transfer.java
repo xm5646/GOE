@@ -7,25 +7,42 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ * 转账表，映射用户表
+ * @author zhangqiankun
+ * 注解@Entity一定要带，这个是数据库映射的注解
+ */
 @Entity
 public class Transfer {
+	
+	//转账表主键
 	@Id
 	@GeneratedValue
 	private int transfid; 
 	
+	//发送人ID
 	@Column(nullable = false)
 	private int userid;
 	
+	//创建时间
 	private Date createtime;
 	
+	//金额
 	@Column(nullable = false)
 	private int money;
 	
+	//接收人ID
 	@Column(nullable = false)
 	private int receiveuserid;
 	
+	//转账类型状态  {金额到报单币（customCoinToMoney），未完成(MoneyToCustomCoin)}
+	@Column(nullable = false)
+	private String type;
+	
+	//处理状态  {完成，未完成}
 	private String status;
 	
+	//描述
 	private String discribe;
 
 	public int getTransfid() {
@@ -66,6 +83,14 @@ public class Transfer {
 
 	public void setReceiveuserid(int receiveuserid) {
 		this.receiveuserid = receiveuserid;
+	}
+	
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public String getStatus() {
