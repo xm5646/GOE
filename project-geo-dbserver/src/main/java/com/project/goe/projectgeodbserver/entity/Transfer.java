@@ -9,6 +9,7 @@ import javax.persistence.Id;
 
 /**
  * 转账表，映射用户表
+ * 仅限用户之间转账
  * @author zhangqiankun
  * 注解@Entity一定要带，这个是数据库映射的注解
  */
