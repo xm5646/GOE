@@ -25,39 +25,54 @@ public class User {
 	@Column(nullable = false)
 	private String password;
 	//用户类型
+	@Column
 	private String usertype;
 	//用户状态
+	@Column
 	private String userstatus;
 	//用户银行卡号
+	@Column
 	private String card;
 	//用户电话
+	@Column
 	private String phone;
 	//用户部门A的下级
+	@Column
 	private int departmentA;
 	//用户部门B的下级
+	@Column
 	private int departmentB;
 	//用户部门C的下级
+	@Column
 	private int departmentC;
 	//他的上级ID
+	@Column
 	private int parentid;
 	//推荐人ID
+	@Column
 	private int recomondid;
 	//创建时间
-	@Column(nullable = false)
 	private Date createTime;
 	//重销时间
+	@Column
 	private Date recommendedTime; 
 	//周期次数
+	@Column
 	private String cycleCount;
 	//类型--{激活，冻结}
+	@Column
 	private String type;
 	//考核状态
+	@Column
 	private String assessType;	
 	//层级，权重
+	@Column
 	private int weightCode;
 	//金额
+	@Column
 	private int money;
 	//报单币数目
+	@Column
 	private int customCoin;
 	public int getUserid() {
 		return userid;
