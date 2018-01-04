@@ -2,7 +2,7 @@ package com.project.goe.projectgeodbserver.viewentity;
 
 import java.util.Date;
 
-public class UserVO {
+public class UserVO extends BaseVO{
 	private int userid;
 	//用户名称
 	private String name;
