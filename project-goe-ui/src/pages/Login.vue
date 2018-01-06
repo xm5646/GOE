@@ -14,7 +14,7 @@
           <div class="item-content">
             <div class="item-title label">用户名</div>
             <div class="item-input">
-              <input type="text" placeholder="请输入您的账号">
+              <input type="text" placeholder="请输入您的账号" v-model="username">
             </div>
           </div>
         </form-item>
@@ -25,13 +25,14 @@
           <div class="item-content">
             <div class="item-title label">密码</div>
             <div class="item-input">
-              <input type="password" placeholder="请输入密码" class="">
+              <input type="password" placeholder="请输入密码" class="" v-model="password">
             </div>
           </div>
         </form-item>
         <br>
-        <m-button type="warning" size="large">登录</m-button>
+        <m-button type="warning" size="large" @click.native="doLogin">登录</m-button>
       </form-list>
+      {{ username }}
     </content>
   </div>
 
@@ -54,9 +55,21 @@ export default {
   },
   data () {
     return {
+      username: '',
+      password: ''
     }
   },
   methods: {
+    doLogin () {
+      this.$http.post('http://192.168.8.104:8088/user/login', {
+        name: this.username,
+        password: this.password
+      }).then(response => {
+        console.log(response.body)
+      }, responseErr => {
+        console.log(responseErr.body)
+      })
+    }
   }
 }
 </script>

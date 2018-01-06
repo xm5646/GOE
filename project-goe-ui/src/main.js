@@ -1,9 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import FastClick from 'fastclick'
-
 import Vum from './vum.js'
-
+import VueResource from 'vue-resource'
 // demos
 import Index from './demos/Index'
 import Page from './demos/Page'
@@ -35,6 +34,8 @@ import Home from './pages/Layout'
 
 Vue.use(Router)
 Vue.use(Vum)
+Vue.use(VueResource)
+Vue.http.options.emulateJSON = true
 
 let router = new Router({
   mode: 'history',
