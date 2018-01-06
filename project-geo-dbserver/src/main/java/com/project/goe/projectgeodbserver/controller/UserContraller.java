@@ -34,6 +34,8 @@ public class UserContraller {
 			userService.save(u);
 			return "数据插入成功";
 		}
+		
+		
 	}
 	
 	@RequestMapping("/testsave/{id}")
@@ -76,4 +78,35 @@ public class UserContraller {
     public String getUserEarningInfo() {
     		return "";
     }
+    
+    /**
+     * 新增用户，推荐新增用户
+     */
+    public void createUser() {
+    		//需要  用户信息
+    	    //用户父ID 上级节点编号 上级部门位置
+    	
+    	    //插入1条数据 更新一条数据
+    	 //在任意下级插入一条数据
+    	//更新直属上级数据中的A B C某个位置的ID
+    	
+     //触发结算系统
+    	
+    	
+    }
+    
+    //function  查询基础信息
+    public void login() {
+    	
+    }
+    
+    public void resetPassword() {
+    	
+    }
+    
+    public void resetCard() {
+    	//不行就扩展银行信息表
+    }
+    
+    
 }

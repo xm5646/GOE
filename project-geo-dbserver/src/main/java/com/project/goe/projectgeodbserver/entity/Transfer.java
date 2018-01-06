@@ -8,9 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
- * 转账表，映射用户表
+ * 消费记录表
  * 仅限用户之间转账
- * @author zhangqiankun
+ * 
  * 注解@Entity一定要带，这个是数据库映射的注解
  */
 @Entity
@@ -36,7 +36,13 @@ public class Transfer {
 	@Column(nullable = false)
 	private int receiveuserid;
 	
-	//转账类型状态  {金额到报单币（customCoinToMoney），未完成(MoneyToCustomCoin)}
+	//转账类型状态  
+	/**
+	 * 个人金额到报单币（customCoinToMoney）
+	 * 公司发放报单币到个人
+	 * 报单币用户间转账
+	 * 报单币消费-推荐 
+	 */
 	@Column(nullable = false)
 	private String type;
 	

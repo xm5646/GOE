@@ -7,11 +7,14 @@ import org.springframework.stereotype.Service;
 
 import com.project.goe.projectgeodbserver.entity.Transfer;
 import com.project.goe.projectgeodbserver.repository.TransferRepository;
+import com.project.goe.projectgeodbserver.repository.UserRepository;
 
 @Service
 public class TransferService {
 	@Resource
 	private TransferRepository transferRepository;
+	@Resource
+	private UserRepository userRepository;
 	
 	@Transactional
 	public void save(Transfer t) {

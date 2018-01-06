@@ -12,7 +12,8 @@ import javax.persistence.TemporalType;
 
 /**
  * 收益日志类，映射用户表 每日发放金额日志记录，有发放和未发放状态
- * @author zhangqiankun 注解@Entity一定要带，这个是数据库映射的注解
+ * 奖金发放表
+ * 注解@Entity一定要带，这个是数据库映射的注解
  */
 @Entity
 public class EarningLog {
@@ -25,7 +26,8 @@ public class EarningLog {
 	// 金钱
 	@Column(nullable = false)
 	private int money;
-	// 触发类型--{新增，累计}
+	//20%股份 35%工资提现 35%作为报单币 10%手续费
+	// 触发类型--{新增，累计，公司手工调整}
 	@Column(nullable = false)
 	private String touchtype;
 	// 状态--{已发，未发}

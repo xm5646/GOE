@@ -57,5 +57,10 @@ public class EarningLogController {
 		return this.earningLogService.findByUserid(userid);
 	}
 	
-
+	//收益日志  就是发的钱
+	//查询方法：20%股份 35%工资提现 35%作为报单币 10%手续费
+	
+	//公司临时插入个人收益 
+	
+	//公司更改收益表  增加备注信息  描述信息 （手工校对，补发）
 }

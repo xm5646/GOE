@@ -46,6 +46,7 @@ public class EarningController {
     		return "user update ok";
     }
 	
+	//查询用户收益
 	
 	
 }

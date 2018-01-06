@@ -8,9 +8,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
+ * 更改为业绩表
+ * 
  * 收益审计类，映射收入审计表
  * 每天统计触发
- * @author zhangqiankun
  * 注解@Entity一定要带，这个是数据库映射的注解
  */
 @Entity

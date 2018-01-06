@@ -46,4 +46,13 @@ public class TranferContraller {
     		transferService.save(t);
     		return "user update ok";
     }
+    
+  //方法：公司打钱给个人  更新USER表
+    
+  //方法：个人奖金转换为报单币  更新USER表的属性
+    
+  //方法：用户间报单币互转  更新USER表数据 两个人数据都要更新
+  //方法：消费报单币 -推荐 新增USER表数据
+    
+  //方法：消费报单币-重销  新增一条重销记录，更新USER表考核状态
 }
