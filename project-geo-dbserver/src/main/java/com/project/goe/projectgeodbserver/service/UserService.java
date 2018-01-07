@@ -1,45 +1,16 @@
 package com.project.goe.projectgeodbserver.service;
 
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.project.goe.projectgeodbserver.entity.User;
-import com.project.goe.projectgeodbserver.repository.UserRepository;
-/**
- * 用户服务层，控制用户的事物
- * @author zhangqiankun
- *
- */
+import com.project.goe.projectgeodbserver.repository.UserRepositoy;
+
 @Service
 public class UserService {
-	@Resource
-	private UserRepository userRepository;
-	
-	@Transactional
-	public void save(User u) {
-		userRepository.save(u);
-	}
-	
-	@Transactional
-	public void delete(Integer id) {
-		userRepository.delete(id);
-	}
-	
-	@Transactional
-	public Iterable<User> getAll(){
-		return userRepository.findAll();
-	}
-	
-	@Transactional
-	public User getUserById(Integer id){
-		
-		return userRepository.findOne(id);
-	}
+	@Autowired
+	private UserRepositoy userRepositoy;
 
-	@Transactional
-	public User getUserByName(String name){
-		return userRepository.findByName(name);
+	public User save(User user) {
+		return this.userRepositoy.save(user);
 	}
 }
