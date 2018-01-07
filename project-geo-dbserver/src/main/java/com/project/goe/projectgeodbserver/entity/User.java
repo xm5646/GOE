@@ -4,195 +4,264 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.project.goe.projectgeodbserver.statusType.UserLevel;
+import com.project.goe.projectgeodbserver.statusType.UserType;
 
 /**
- * 用户类，映射用户表
- * @author zhangqiankun
- * 注解@Entity一定要带，这个是数据库映射的注解
+ * 用户类，映射用户表 注解@Entity一定要带，这个是数据库映射的注解
  */
 @Entity
+@Table(name = "tb_user")
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int userid;
-	//用户名称
-	@Column(nullable = false)
-	private String name;
-	//用户密码
-	@Column(nullable = false)
+	// 用户id
+	private long userId;
+
+	// 用户名称
+	@Column(nullable = false, unique = true, length = 100)
+	private String account;
+
+	// 用户密码
+	@Column(nullable = false, length = 50)
 	private String password;
-	//用户类型
+
+	// 用户级别
+	@Column(nullable = false)
+	@Enumerated
+	private UserLevel userLevel = UserLevel.COMMON_SALEMAN;
+
+	// 用户类型
+	@Column(nullable = false)
+	@Enumerated()
+	private UserType userType = UserType.COMMON;
+
+	// 用户状态(false:未激活(初始化默认值),true:激活)
+	@Column(nullable = false)
+	private boolean userStatus = false;
+
+	// 用户手机号码
 	@Column
-	private String usertype;
-	//用户状态
+	private String userPhone;
+
+	// 用户上级ID
 	@Column
-	private String userstatus;
-	//用户银行卡号
-	@Column
-	private String card;
-	//用户电话
-	@Column
-	private String phone;
-	//用户部门A的下级
+	private int parentId;
+
+	// A节点用户id
 	@Column
 	private int departmentA;
-	//用户部门B的下级
+
+	// B节点用户id
 	@Column
 	private int departmentB;
-	//用户部门C的下级
+
+	// C节点用户id
 	@Column
 	private int departmentC;
-	//他的上级ID
+
+	// 推荐人ID
 	@Column
-	private int parentid;
-	//推荐人ID
+	private int recomondId;
+
+	// 创建时间
 	@Column
-	private int recomondid;
-	//创建时间
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date createTime;
-	//重销时间
+
+	// 用户下一次考核日期
 	@Column
-	private Date recommendedTime; 
-	//周期次数
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date assessDate;
+
+	// 用户考核状态(true:重销日用户考核通过；false：重销日用户考核未通过)
 	@Column
-	private String cycleCount;
-	//类型--{激活，冻结}
-	@Column
-	private String type;
-	//考核状态
-	@Column
-	private String assessType;	
-	//层级，权重
+	private boolean assessStatus;
+
+	// 用户层级数
 	@Column
 	private int weightCode;
-	//金额
+
+	// 用户奖金
 	@Column
-	private int money;
-	//报单币数目
+	private double bonusCoin;
+
+	// 报单币
 	@Column
-	private int customCoin;
-	public int getUserid() {
-		return userid;
+	private long consumeCoin;
+
+	// 产品积分
+	@Column
+	private long productCoin;
+
+	public long getUserId() {
+		return userId;
 	}
-	public void setUserid(int userid) {
-		this.userid = userid;
+
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
-	public String getName() {
-		return name;
+
+	public String getAccount() {
+		return account;
 	}
-	public void setName(String name) {
-		this.name = name;
+
+	public void setAccount(String account) {
+		this.account = account;
 	}
+
 	public String getPassword() {
 		return password;
 	}
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getUsertype() {
-		return usertype;
+
+	public UserLevel getUserLevel() {
+		return userLevel;
 	}
-	public void setUsertype(String usertype) {
-		this.usertype = usertype;
+
+	public void setUserLevel(UserLevel userLevel) {
+		this.userLevel = userLevel;
 	}
-	public String getUserstatus() {
-		return userstatus;
+
+	public UserType getUserType() {
+		return userType;
 	}
-	public void setUserstatus(String userstatus) {
-		this.userstatus = userstatus;
+
+	public void setUserType(UserType userType) {
+		this.userType = userType;
 	}
-	public String getCard() {
-		return card;
+
+	public boolean isUserStatus() {
+		return userStatus;
 	}
-	public void setCard(String card) {
-		this.card = card;
+
+	public void setUserStatus(boolean userStatus) {
+		this.userStatus = userStatus;
 	}
-	public String getPhone() {
-		return phone;
+
+	public String getUserPhone() {
+		return userPhone;
 	}
-	public void setPhone(String phone) {
-		this.phone = phone;
+
+	public void setUserPhone(String userPhone) {
+		this.userPhone = userPhone;
 	}
+
+	public int getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(int parentId) {
+		this.parentId = parentId;
+	}
+
 	public int getDepartmentA() {
 		return departmentA;
 	}
+
 	public void setDepartmentA(int departmentA) {
 		this.departmentA = departmentA;
 	}
+
 	public int getDepartmentB() {
 		return departmentB;
 	}
+
 	public void setDepartmentB(int departmentB) {
 		this.departmentB = departmentB;
 	}
+
 	public int getDepartmentC() {
 		return departmentC;
 	}
+
 	public void setDepartmentC(int departmentC) {
 		this.departmentC = departmentC;
 	}
-	public int getParentid() {
-		return parentid;
+
+	public int getRecomondId() {
+		return recomondId;
 	}
-	public void setParentid(int parentid) {
-		this.parentid = parentid;
+
+	public void setRecomondId(int recomondId) {
+		this.recomondId = recomondId;
 	}
-	public int getRecomondid() {
-		return recomondid;
-	}
-	public void setRecomondid(int recomondid) {
-		this.recomondid = recomondid;
-	}
+
 	public Date getCreateTime() {
 		return createTime;
 	}
+
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	public Date getRecommendedTime() {
-		return recommendedTime;
+
+	public Date getAssessDate() {
+		return assessDate;
 	}
-	public void setRecommendedTime(Date recommendedTime) {
-		this.recommendedTime = recommendedTime;
+
+	public void setAssessDate(Date assessDate) {
+		this.assessDate = assessDate;
 	}
-	public String getCycleCount() {
-		return cycleCount;
+
+	public boolean isAssessStatus() {
+		return assessStatus;
 	}
-	public void setCycleCount(String cycleCount) {
-		this.cycleCount = cycleCount;
+
+	public void setAssessStatus(boolean assessStatus) {
+		this.assessStatus = assessStatus;
 	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
-	public String getAssessType() {
-		return assessType;
-	}
-	public void setAssessType(String assessType) {
-		this.assessType = assessType;
-	}
+
 	public int getWeightCode() {
 		return weightCode;
 	}
+
 	public void setWeightCode(int weightCode) {
 		this.weightCode = weightCode;
 	}
-	public int getMoney() {
-		return money;
+
+	public double getBonusCoin() {
+		return bonusCoin;
 	}
-	public void setMoney(int money) {
-		this.money = money;
+
+	public void setBonusCoin(double bonusCoin) {
+		this.bonusCoin = bonusCoin;
 	}
-	public int getCustomCoin() {
-		return customCoin;
+
+	public long getConsumeCoin() {
+		return consumeCoin;
 	}
-	public void setCustomCoin(int customCoin) {
-		this.customCoin = customCoin;
+
+	public void setConsumeCoin(long consumeCoin) {
+		this.consumeCoin = consumeCoin;
 	}
-	
+
+	public long getProductCoin() {
+		return productCoin;
+	}
+
+	public void setProductCoin(long productCoin) {
+		this.productCoin = productCoin;
+	}
+
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", account=" + account + ", password=" + password + ", userLevel=" + userLevel
+				+ ", userType=" + userType + ", userStatus=" + userStatus + ", userPhone=" + userPhone + ", parentId="
+				+ parentId + ", departmentA=" + departmentA + ", departmentB=" + departmentB + ", departmentC="
+				+ departmentC + ", recomondId=" + recomondId + ", createTime=" + createTime + ", assessDate="
+				+ assessDate + ", assessStatus=" + assessStatus + ", weightCode=" + weightCode + ", bonusCoin="
+				+ bonusCoin + ", consumeCoin=" + consumeCoin + ", productCoin=" + productCoin + "]";
+	}
+
 }
