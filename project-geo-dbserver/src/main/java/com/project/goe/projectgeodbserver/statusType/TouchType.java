@@ -1,0 +1,9 @@
+package com.project.goe.projectgeodbserver.statusType;
+
+public class  TouchType {
+	public static final String ACCUMULATION= "累积";
+	public static final String ADDITION= "新增";
+	public static final String PERCENTAGE= "代理";
+	public static final String MANUAL= "手工校对";
+	
+}

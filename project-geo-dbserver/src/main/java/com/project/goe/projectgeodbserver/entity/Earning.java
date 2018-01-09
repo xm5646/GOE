@@ -2,69 +2,94 @@ package com.project.goe.projectgeodbserver.entity;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.project.goe.projectgeodbserver.statusType.TouchType;
 
 /**
- * 收益类，映射用户表  还是收益表
- * 
- * 注解@Entity一定要带，这个是数据库映射的注解
+ * 用户收益类
  */
 @Entity
+@Table(name = "tb_earning")
 public class Earning {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int earnid;
-	//外键，用户ID
-	private int userid;
-	//触发类型-{新增，累计，省代}
-	private String touchtype;
-	//触发级别--{业务员，经理。。。}
-	private String touchleave;
-	//每日金额 对应级别对应的金额
-	private int daymoney;
-	private int starttime;
-	private int endtime;
-	private int surplusDay;
-	//发放时间
-	private Date createtime;
-	public int getEarnid() {
-		return earnid;
-	}
-	public void setEarnid(int earnid) {
-		this.earnid = earnid;
-	}
-	public int getUserid() {
+	private long earningId;
+
+	// 用户ID
+	@Column(nullable = false)
+	private long userid;
+
+	// 收益创建日期：产生收益的时间
+	@Column
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date createTime;
+
+	// 触发类型
+	@Column
+	private TouchType touchType;
+
+	// 每日发放金额
+	@Column
+	private double dayMoney;
+
+	// 金额发放剩余天数
+	@Column
+	private int surplusNumber;
+
+	public long getUserid() {
 		return userid;
 	}
-	public void setUserid(int userid) {
+
+	public void setUserid(long userid) {
 		this.userid = userid;
 	}
-	public String getTouchtype() {
-		return touchtype;
+
+	public TouchType getTouchType() {
+		return touchType;
 	}
-	public void setTouchtype(String touchtype) {
-		this.touchtype = touchtype;
+
+	public void setTouchType(TouchType touchType) {
+		this.touchType = touchType;
 	}
-	public String getTouchleave() {
-		return touchleave;
+
+	public double getDayMoney() {
+		return dayMoney;
 	}
-	public void setTouchleave(String touchleave) {
-		this.touchleave = touchleave;
+
+	public void setDayMoney(double dayMoney) {
+		this.dayMoney = dayMoney;
 	}
-	public int getDaymoney() {
-		return daymoney;
+
+	public int getSurplusNumber() {
+		return surplusNumber;
 	}
-	public void setDaymoney(int daymoney) {
-		this.daymoney = daymoney;
+
+	public void setSurplusNumber(int surplusNumber) {
+		this.surplusNumber = surplusNumber;
 	}
-	public Date getCreatetime() {
-		return createtime;
+
+	public long getEarningId() {
+		return earningId;
 	}
-	public void setCreatetime(Date createtime) {
-		this.createtime = createtime;
+
+	public void setEarningId(long earningId) {
+		this.earningId = earningId;
 	}
-	
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
 }

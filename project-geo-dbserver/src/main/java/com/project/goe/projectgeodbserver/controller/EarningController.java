@@ -1,52 +1,31 @@
 package com.project.goe.projectgeodbserver.controller;
 
-import javax.annotation.Resource;
-
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.goe.projectgeodbserver.entity.Earning;
-import com.project.goe.projectgeodbserver.entity.Transfer;
 import com.project.goe.projectgeodbserver.service.EarningService;
+import com.project.goe.projectgeodbserver.statusType.TouchType;
 
 /**
- * 收益控制层，提供Restful服务
- * @author xiaoming
+ * 收益控制层
  *
  */
 @RestController
 @RequestMapping("/earning")
+@CrossOrigin
 public class EarningController {
 
-	@Resource
+	@Autowired
 	private EarningService earningService;
 	
-	@RequestMapping("/save")
-	public String save() {
-		return "插入成功";
+	@RequestMapping(value = "/save",method = RequestMethod.POST)
+	public Earning save(@ModelAttribute Earning earning) {
+		return this.earningService.save(earning);
 	}
-	
-	@RequestMapping("/delete/{id}")
-	public String delete(@PathVariable("id") Integer id) {
-		earningService.delete(id);
-		return "id" + id;
-	}
-	
-	@RequestMapping("/findAll")
-    public Iterable<Earning> getAll(){
-       return earningService.getAll();
-    }
-	
-	@RequestMapping("/update/{id}")
-    public String update(@PathVariable("id") Integer id) {
-    		Earning e = earningService.getEarningById(id);
-    		//e.setMoney(.getMoney()+100);
-    		earningService.save(e);
-    		return "user update ok";
-    }
-	
-	//查询用户收益
-	
 	
 }

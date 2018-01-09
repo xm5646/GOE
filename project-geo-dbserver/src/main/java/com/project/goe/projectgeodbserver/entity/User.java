@@ -4,7 +4,6 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,19 +29,21 @@ public class User {
 	@Column(nullable = false, unique = true, length = 100)
 	private String account;
 
+	// 昵称
+	@Column
+	private String nickName;
+
 	// 用户密码
 	@Column(nullable = false, length = 50)
 	private String password;
 
 	// 用户级别
 	@Column(nullable = false)
-	@Enumerated
-	private UserLevel userLevel = UserLevel.COMMON_SALEMAN;
+	private String userLevel = UserLevel.COMMON_SALEMAN;
 
 	// 用户类型
 	@Column(nullable = false)
-	@Enumerated()
-	private UserType userType = UserType.COMMON;
+	private String userType = UserType.COMMON;
 
 	// 用户状态(false:未激活(初始化默认值),true:激活)
 	@Column(nullable = false)
@@ -87,7 +88,7 @@ public class User {
 	private boolean assessStatus;
 
 	// 用户层级数
-	@Column
+	@Column(nullable = false)
 	private int weightCode;
 
 	// 用户奖金
@@ -96,11 +97,15 @@ public class User {
 
 	// 报单币
 	@Column
-	private long consumeCoin;
+	private double consumeCoin;
 
 	// 产品积分
 	@Column
-	private long productCoin;
+	private double productCoin;
+
+	// 用户激活时间
+	@Column
+	private Date activateTime;
 
 	public long getUserId() {
 		return userId;
@@ -124,22 +129,6 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public UserLevel getUserLevel() {
-		return userLevel;
-	}
-
-	public void setUserLevel(UserLevel userLevel) {
-		this.userLevel = userLevel;
-	}
-
-	public UserType getUserType() {
-		return userType;
-	}
-
-	public void setUserType(UserType userType) {
-		this.userType = userType;
 	}
 
 	public boolean isUserStatus() {
@@ -238,30 +227,60 @@ public class User {
 		this.bonusCoin = bonusCoin;
 	}
 
-	public long getConsumeCoin() {
-		return consumeCoin;
-	}
-
 	public void setConsumeCoin(long consumeCoin) {
 		this.consumeCoin = consumeCoin;
-	}
-
-	public long getProductCoin() {
-		return productCoin;
 	}
 
 	public void setProductCoin(long productCoin) {
 		this.productCoin = productCoin;
 	}
 
-	@Override
-	public String toString() {
-		return "User [userId=" + userId + ", account=" + account + ", password=" + password + ", userLevel=" + userLevel
-				+ ", userType=" + userType + ", userStatus=" + userStatus + ", userPhone=" + userPhone + ", parentId="
-				+ parentId + ", departmentA=" + departmentA + ", departmentB=" + departmentB + ", departmentC="
-				+ departmentC + ", recomondId=" + recomondId + ", createTime=" + createTime + ", assessDate="
-				+ assessDate + ", assessStatus=" + assessStatus + ", weightCode=" + weightCode + ", bonusCoin="
-				+ bonusCoin + ", consumeCoin=" + consumeCoin + ", productCoin=" + productCoin + "]";
+	public String getNickName() {
+		return nickName;
+	}
+
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+
+	public double getConsumeCoin() {
+		return consumeCoin;
+	}
+
+	public void setConsumeCoin(double consumeCoin) {
+		this.consumeCoin = consumeCoin;
+	}
+
+	public double getProductCoin() {
+		return productCoin;
+	}
+
+	public void setProductCoin(double productCoin) {
+		this.productCoin = productCoin;
+	}
+
+	public Date getActivateTime() {
+		return activateTime;
+	}
+
+	public void setActivateTime(Date activateTime) {
+		this.activateTime = activateTime;
+	}
+
+	public String getUserLevel() {
+		return userLevel;
+	}
+
+	public void setUserLevel(String userLevel) {
+		this.userLevel = userLevel;
+	}
+
+	public String getUserType() {
+		return userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
 	}
 
 }
