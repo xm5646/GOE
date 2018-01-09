@@ -17,35 +17,35 @@ public class ConsumeRecord {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long consumeId;
-	
+
 	@Column(nullable = false)
 	private long userId;
-	
-	//消费日期
+
+	// 消费日期
 	@Column
 	private Date consumeTime;
-	
-	//消费类型
+
+	// 消费类型
 	@Column
-	private ConsumeType consumeType;
-	
-	//发送方userId
+	private String consumeType;
+
+	// 发送方userId
 	@Column
 	private long sendUserId;
-	
-	//接收方userId
+
+	// 接收方userId
 	@Column
 	private long receiveUserId;
-	
-	//消费金额
+
+	// 消费金额
 	@Column
 	private double consumeNumber;
-	
-	//消费状态
+
+	// 消费状态
 	@Column
 	public boolean consumeStatus;
-	
-	//消费记录描述
+
+	// 消费记录描述
 	@Column
 	public String description;
 
@@ -73,11 +73,11 @@ public class ConsumeRecord {
 		this.consumeTime = consumeTime;
 	}
 
-	public ConsumeType getConsumeType() {
+	public String getConsumeType() {
 		return consumeType;
 	}
 
-	public void setConsumeType(ConsumeType consumeType) {
+	public void setConsumeType(String consumeType) {
 		this.consumeType = consumeType;
 	}
 

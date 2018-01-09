@@ -39,7 +39,7 @@ public class DrawCashRecord {
 
 	// 提现的状态
 	@Column(nullable = false)
-	private DrawStatus drawStatus;
+	private String drawStatus;
 
 	// 提现申请提交时间
 	@Column(nullable = false)
@@ -97,11 +97,11 @@ public class DrawCashRecord {
 		this.finalNumber = finalNumber;
 	}
 
-	public DrawStatus getDrawStatus() {
+	public String getDrawStatus() {
 		return drawStatus;
 	}
 
-	public void setDrawStatus(DrawStatus drawStatus) {
+	public void setDrawStatus(String drawStatus) {
 		this.drawStatus = drawStatus;
 	}
 
