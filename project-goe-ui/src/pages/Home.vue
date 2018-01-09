@@ -1,7 +1,7 @@
 <template>
   <div class="my-page">
     <page-header>
-      <header-title style="background-color: orange">GOE会员管理系统</header-title>
+      <header-title style="background-color: orange" :back-link="true">GOE会员管理系统</header-title>
     </page-header>
     <page-content>
       <header class='demos-header'>
@@ -97,7 +97,7 @@
             </router-link>
           </div>
         </list-item>
-        <list-item :link="true">
+        <list-item :link="true" @click.native="linkTo('resetPassword')">
           <div class="item-media">
             <img src="../assets/images/home/form.png" width="30">
           </div>
@@ -115,7 +115,7 @@
             <img src="../assets/images/home/form.png" width="30">
           </div>
           <div class="item-content">
-            <router-link :to="{ name: '' }">
+            <router-link :to="{ path: '/index/resetpw' }">
               <div class="item-title-row">
                 <div class="item-title">修改密码</div>
                 <div class="item-after"><div class="link-arrow icon icon-link">&gt</div></div>
@@ -157,6 +157,11 @@ export default {
     ListItem,
     'page-content': Content,
     Grid
+  },
+  methods: {
+    linkTo (url) {
+      this.$emit('linkTo', url)
+    }
   }
 }
 </script>
