@@ -23,52 +23,32 @@
           </list-item>
         </list>
       </header>
-      <div class="row">
-      <div class="col-25">
-        <p class="title">
-          累计业绩
-        </p>
-      </div>
-      <div class="col-25">
-        <p class="title">
-          A:22
-        </p>
-      </div>
+      <!--业绩显示-->
+      <list>
+        <list-item>
+          <div class="item-media"><img src="../../assets/images/icon-list.png" width="44"></div>
+          <div class="item-content">
+            <div class="item-title-row">
+              <div class="item-title">累计业绩</div>
+            </div>
+            <div class="item-subtitle">
+              <span class="span-performance">A:12</span><span class="span-performance">B:12</span><span class="span-performance">C:0</span>
+            </div>
+          </div>
+        </list-item>
+        <list-item>
+          <div class="item-media"><img src="../../assets/images/icon-list.png" width="44"></div>
+          <div class="item-content">
+            <div class="item-title-row">
+              <div class="item-title">新增业绩</div>
+            </div>
+            <div class="item-subtitle">
+              <span class="span-performance">A:12</span><span class="span-performance">B:12</span><span class="span-performance">C:0</span>
+            </div>
+          </div>
+        </list-item>
+      </list>
 
-      <div class="col-25">
-        <p class="title">
-          B:12
-        </p>
-      </div>
-      <div class="col-25">
-        <p class="title">
-          C:0
-        </p>
-      </div>
-    </div>
-      <div class="row">
-        <div class="col-25">
-          <p class="title">
-            新增业绩
-          </p>
-        </div>
-        <div class="col-25">
-          <p class="title">
-            A:22
-          </p>
-        </div>
-
-        <div class="col-25">
-          <p class="title">
-            B:12
-          </p>
-        </div>
-        <div class="col-25">
-          <p class="title">
-            C:0
-          </p>
-        </div>
-      </div>
 
       <list>
         <list-item :link="true">
@@ -79,7 +59,7 @@
             <router-link :to="{ name: '' }">
               <div class="item-title-row">
                 <div class="item-title">我的业绩</div>
-                <div class="item-after"><div class="link-arrow icon icon-link">&gt</div></div>
+                <div class="item-after"><div class="link-arrow icon icon-link"></div></div>
               </div>
             </router-link>
           </div>
@@ -92,7 +72,7 @@
             <router-link :to="{ name: '' }">
               <div class="item-title-row">
                 <div class="item-title">奖金报单币互转</div>
-                <div class="item-after"><div class="link-arrow icon icon-link">&gt</div></div>
+                <div class="item-after"><div class="link-arrow icon icon-link"></div></div>
               </div>
             </router-link>
           </div>
@@ -105,7 +85,7 @@
             <router-link :to="{ name: '' }">
               <div class="item-title-row">
                 <div class="item-title">报单币转账</div>
-                <div class="item-after"><div class="link-arrow icon icon-link">&gt</div></div>
+                <div class="item-after"><div class="link-arrow icon icon-link"></div></div>
               </div>
             </router-link>
           </div>
@@ -118,7 +98,7 @@
             <router-link :to="{ path: '/resetpassword' }">
               <div class="item-title-row">
                 <div class="item-title">修改密码</div>
-                <div class="item-after"><div class="link-arrow icon icon-link">&gt</div></div>
+                <div class="item-after"><div class="link-arrow icon icon-link"></div></div>
               </div>
             </router-link>
           </div>
@@ -131,7 +111,7 @@
             <router-link :to="{ name: '' }">
               <div class="item-title-row">
                 <div class="item-title">退出登录</div>
-                <div class="item-after"><div class="link-arrow icon icon-link">&gt</div></div>
+                <div class="item-after"><div class="link-arrow icon icon-link"></div></div>
               </div>
             </router-link>
           </div>
@@ -165,4 +145,8 @@ export default {
   }
 }
 </script>
-
+<style>
+  .span-performance{
+    margin-right: 10%;
+  }
+</style>

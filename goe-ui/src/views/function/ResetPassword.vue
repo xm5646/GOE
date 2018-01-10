@@ -40,8 +40,9 @@
           </form-item>
           <br>
           <m-button type="warning" size="large" @click.native="doLogin">更改</m-button>
+          <toast text="完成!" ref="t1"></toast>
+          <toast text="失败!" type="error" ref="t2"></toast>
         </form-list>
-
       </div>
     </page-content>
   </div>
@@ -52,12 +53,14 @@
   import { SimpleHeader } from '../../../node_modules/vum/src/components/header'
   import Content from '../../../node_modules/vum/src/components/content'
   import { Form, FormItem } from '../../../node_modules/vum/src/components/form'
+  import Toast from '../../../node_modules/vum/src/components/toast'
   export default {
     components: {
       SimpleHeader,
       'page-content': Content,
       ButtonGroup,
       FormItem,
+      Toast,
       'form-list': Form,
       'm-button': Button
     },
@@ -65,6 +68,11 @@
       return {
         password: '',
         newPassword: ''
+      }
+    },
+    methods: {
+      doLogin () {
+        this.$refs.t1.open()
       }
     }
   }

@@ -62,9 +62,11 @@ export default {
   },
   methods: {
     doLogin () {
-      this.$http.post('http://192.168.8.104:8088/user/login', {
-        name: this.username,
-        password: this.password
+      this.$http.get('http://192.168.123.21:8088/user/login', {
+        _timeout: 3000,
+        onTimeout: (request) => {
+          console.log('访问超时')
+        }
       }).then(response => {
         console.log(response.body)
       }, responseErr => {
