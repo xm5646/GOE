@@ -4,7 +4,7 @@ import FastClick from 'fastclick'
 import Vum from './vum.js'
 import VueResource from 'vue-resource'
 // demos
-import Index from './demos/Index'
+import Index1 from './demos/Index'
 import Page from './demos/Page'
 import Buttons from './demos/Buttons'
 import Column from './demos/Column'
@@ -30,7 +30,8 @@ import Popover from './demos/Popover'
 import Stars from './demos/Stars'
 import CircleProgress from './demos/CircleProgress'
 import Login from './pages/Login'
-import Home from './pages/Layout'
+import Index from './views/Index'
+import ResetPassword from './views/ResetPassword'
 
 Vue.use(Router)
 Vue.use(Vum)
@@ -41,19 +42,31 @@ let router = new Router({
   mode: 'history',
   routes: [
     {
+      path: '/cankao',
+      name: 'login',
+      component: Index1
+    },
+    {
       path: '/login',
       name: 'login',
       component: Login
     },
     {
-      path: '/home',
-      name: 'home',
-      component: Home
-    },
-    {
       path: '/',
       name: 'index',
-      component: Index
+      component: Index,
+      children: [
+        {
+          path: '/index/resetpw',
+          name: 'resetpassword',
+          component: ResetPassword
+        }
+      ]
+    },
+    {
+      path: '/resetpassword',
+      name: 'resetPassword',
+      component: ResetPassword
     },
     {
       path: '/page',

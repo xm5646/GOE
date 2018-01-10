@@ -11,8 +11,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.project.goe.projectgeodbserver.statusType.TouchType;
-
 /**
  * 用户收益类
  */
@@ -34,7 +32,7 @@ public class Earning {
 
 	// 触发类型
 	@Column
-	private TouchType touchType;
+	private String touchType;
 
 	// 每日发放金额
 	@Column
@@ -52,11 +50,11 @@ public class Earning {
 		this.userid = userid;
 	}
 
-	public TouchType getTouchType() {
+	public String getTouchType() {
 		return touchType;
 	}
 
-	public void setTouchType(TouchType touchType) {
+	public void setTouchType(String touchType) {
 		this.touchType = touchType;
 	}
 

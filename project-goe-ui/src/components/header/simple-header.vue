@@ -32,7 +32,7 @@ export default {
     },
     backText: {
       type: String,
-      default: 'Back'
+      default: '返回'
     }
   }
 }
