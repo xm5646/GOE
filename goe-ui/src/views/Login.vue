@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <simple-header title="GOE会员管理系统"></simple-header>
+    <simple-header title="会员管理系统"></simple-header>
     <content>
       <br><br>
       <div id="img-div">

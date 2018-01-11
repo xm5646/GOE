@@ -95,7 +95,20 @@
             <img src="../../assets/images/home/form.png" width="30">
           </div>
           <div class="item-content">
-            <router-link :to="{ path: '/resetpassword' }">
+            <router-link :to="{ name: 'reConsume' }">
+              <div class="item-title-row">
+                <div class="item-title">重复消费</div>
+                <div class="item-after"><div class="link-arrow icon icon-link"></div></div>
+              </div>
+            </router-link>
+          </div>
+        </list-item>
+        <list-item :link="true">
+          <div class="item-media">
+            <img src="../../assets/images/home/form.png" width="30">
+          </div>
+          <div class="item-content">
+            <router-link :to="{ path: '/resetPassword' }">
               <div class="item-title-row">
                 <div class="item-title">修改密码</div>
                 <div class="item-after"><div class="link-arrow icon icon-link"></div></div>

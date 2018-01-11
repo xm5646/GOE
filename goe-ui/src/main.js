@@ -3,10 +3,11 @@ import Router from 'vue-router'
 import VueResource from 'vue-resource'
 import FastClick from 'fastclick'
 import Vum from 'vum'
-// demos
+// my components
 import Index from './views/Index'
 import Login from './views/Login'
 import ResetPassword from './views/function/ResetPassword'
+import ReConsume from './views/function/ReConsume'
 
 Vue.use(Router)
 Vue.use(Vum)
@@ -41,9 +42,14 @@ let router = new Router({
       component: Login
     },
     {
-      path: '/resetpassword',
-      name: 'resetpassword',
+      path: '/resetPassword',
+      name: 'resetPassword',
       component: ResetPassword
+    },
+    {
+      path: '/reConsume',
+      name: 'reConsume',
+      component: ReConsume
     }
   ]
 })
