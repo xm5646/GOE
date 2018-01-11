@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <simple-header style="background-color: orange" title="GOE会员管理系统" :back-link="true"></simple-header>
+    <simple-header style="background-color: orange" title="会员管理系统" :back-link="true"></simple-header>
     <page-content>
       <div class='content-padded'>
         <h1 class="demos-title">密码重置</h1>
