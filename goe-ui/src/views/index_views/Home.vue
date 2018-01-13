@@ -130,8 +130,6 @@
           </div>
         </list-item>
       </list>
-
-
     </page-content>
   </div>
 </template>
