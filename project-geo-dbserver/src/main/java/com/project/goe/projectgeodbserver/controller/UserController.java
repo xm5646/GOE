@@ -87,8 +87,7 @@ public class UserController {
 
 			return retMsg;
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException("添加用户失败!");
+			throw new RuntimeException("添加用户失败!------->" + e.getMessage());
 		}
 	}
 
