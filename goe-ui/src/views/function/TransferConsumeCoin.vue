@@ -44,12 +44,24 @@
                 </div>
               </div>
             </list-item>
+          <form-list>
+            <form-item>
+              <div class="item-content">
+                <div class="item-input">
+                  <input type="number" placeholder="请输入转账金额" v-model="convertNumber">
+                </div>
+                <div class="item-title label">
+                  <m-button type="warning" size="large" @click.native="findUser" :disabled="transferBtnStatus">转账</m-button>
+                </div>
+              </div>
+            </form-item>
+            {{ convertNumber }}
+          </form-list>
           </list>
         <div v-if="NotFindUser">
           <m-button type="light" @click.native="doLogin">未找到该用户</m-button>
         </div>
-
-        <m-button type="warning" size="large" @click.native="doLogin" :disabled="convertBtnEnable">转换</m-button>
+        <br>
         <toast text="完成!" ref="t1"></toast>
         <toast text="失败!" type="error" ref="t2"></toast>
       </div>
@@ -89,8 +101,8 @@
       }
     },
     methods: {
-      doLogin () {
-        this.$refs.t1.open()
+      findUser () {
+        this.NotFindUser = true
       }
     },
     computed: {
@@ -99,6 +111,9 @@
       },
       finalConsumeCoin: function () {
         return Number(this.consumeCoin) + Number(this.convertNumber)
+      },
+      transferBtnStatus: function () {
+        return (this.convertNumber <= 0 || this.convertNumber > this.consumeCoin)
       }
     }
   }
