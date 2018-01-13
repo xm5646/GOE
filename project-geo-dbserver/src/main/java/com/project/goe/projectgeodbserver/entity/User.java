@@ -20,6 +20,7 @@ import com.project.goe.projectgeodbserver.statusType.UserType;
 @Entity
 @Table(name = "tb_user")
 public class User {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	// 用户id
@@ -55,23 +56,23 @@ public class User {
 
 	// 用户上级ID
 	@Column
-	private int parentId;
+	private long parentId;
 
 	// A节点用户id
 	@Column
-	private int departmentA;
+	private long departmentA;
 
 	// B节点用户id
 	@Column
-	private int departmentB;
+	private long departmentB;
 
 	// C节点用户id
 	@Column
-	private int departmentC;
+	private long departmentC;
 
 	// 推荐人ID
 	@Column
-	private int recomondId;
+	private long recomondId;
 
 	// 创建时间
 	@Column
@@ -147,43 +148,43 @@ public class User {
 		this.userPhone = userPhone;
 	}
 
-	public int getParentId() {
+	public long getParentId() {
 		return parentId;
 	}
 
-	public void setParentId(int parentId) {
+	public void setParentId(long parentId) {
 		this.parentId = parentId;
 	}
 
-	public int getDepartmentA() {
+	public long getDepartmentA() {
 		return departmentA;
 	}
 
-	public void setDepartmentA(int departmentA) {
+	public void setDepartmentA(long departmentA) {
 		this.departmentA = departmentA;
 	}
 
-	public int getDepartmentB() {
+	public long getDepartmentB() {
 		return departmentB;
 	}
 
-	public void setDepartmentB(int departmentB) {
+	public void setDepartmentB(long departmentB) {
 		this.departmentB = departmentB;
 	}
 
-	public int getDepartmentC() {
+	public long getDepartmentC() {
 		return departmentC;
 	}
 
-	public void setDepartmentC(int departmentC) {
+	public void setDepartmentC(long departmentC) {
 		this.departmentC = departmentC;
 	}
 
-	public int getRecomondId() {
+	public long getRecomondId() {
 		return recomondId;
 	}
 
-	public void setRecomondId(int recomondId) {
+	public void setRecomondId(long recomondId) {
 		this.recomondId = recomondId;
 	}
 
