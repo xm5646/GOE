@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.service.UserService;
 import com.project.goe.projectgeodbserver.util.MD5Util;
+import com.project.goe.projectgeodbserver.util.UserUtil;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
 
 @RestController
@@ -30,6 +32,36 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+
+	// 用户登录
+	@PostMapping("/login")
+	public RetMsg login(@ModelAttribute User user) {
+		if ((null == user) || (null == user.getAccount()) || (null == user.getPassword())) {
+			throw new RuntimeException("用户登录信息为空！");
+		}
+
+		String account = user.getAccount();
+		User u = this.userService.findByAccount(account);
+		if (null == u) {
+			throw new RuntimeException("当前用户不存在!");
+		}
+		
+		try {
+			if (!(MD5Util.encrypeByMd5(user.getPassword()).equals(u.getPassword()))) {
+				throw new RuntimeException("用户密码输入有误！");
+			}else {
+				RetMsg retMsg = new RetMsg();
+				retMsg.setCode(200);
+				retMsg.setData(UserUtil.UserToUserVO(u));
+				retMsg.setMessage("用户登录成功！");
+				retMsg.setSuccess(true);
+				
+				return retMsg;
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+	}
 
 	// 新增用户
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
@@ -49,7 +81,7 @@ public class UserController {
 			this.userService.save(user);
 			RetMsg retMsg = new RetMsg();
 			retMsg.setCode(200);
-			retMsg.setData(user);
+			retMsg.setData(UserUtil.UserToUserVO(user));
 			retMsg.setMessage("添加用户成功!");
 			retMsg.setSuccess(true);
 
