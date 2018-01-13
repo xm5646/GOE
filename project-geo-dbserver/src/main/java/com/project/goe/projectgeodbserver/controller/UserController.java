@@ -1,9 +1,6 @@
 package com.project.goe.projectgeodbserver.controller;
 
 import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
