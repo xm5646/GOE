@@ -135,4 +135,12 @@ public class Performance {
 		this.updateTime = updateTime;
 	}
 
+	@Override
+	public String toString() {
+		return "Performance [pId=" + pId + ", userId=" + userId + ", departAcount=" + departAcount + ", departBcount="
+				+ departBcount + ", departCcount=" + departCcount + ", addDepartAcount=" + addDepartAcount
+				+ ", addDepartBcount=" + addDepartBcount + ", addDepartCcount=" + addDepartCcount + ", createTime="
+				+ createTime + ", updateTime=" + updateTime + "]";
+	}
+
 }

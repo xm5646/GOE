@@ -20,6 +20,7 @@ import com.project.goe.projectgeodbserver.statusType.UserType;
 @Entity
 @Table(name = "tb_user")
 public class User {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	// 用户id

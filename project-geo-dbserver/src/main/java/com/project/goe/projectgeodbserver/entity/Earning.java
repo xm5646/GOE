@@ -90,4 +90,10 @@ public class Earning {
 		this.createTime = createTime;
 	}
 
+	@Override
+	public String toString() {
+		return "Earning [earningId=" + earningId + ", userid=" + userid + ", createTime=" + createTime + ", touchType="
+				+ touchType + ", dayMoney=" + dayMoney + ", surplusNumber=" + surplusNumber + "]";
+	}
+
 }
