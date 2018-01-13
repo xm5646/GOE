@@ -2,156 +2,150 @@ package com.project.goe.projectgeodbserver.viewentity;
 
 import java.util.Date;
 
-public class UserVO extends BaseVO{
-	private int userid;
-	//用户名称
-	private String name;
-	//用户类型
-	private String usertype;
-	//用户状态
-	private String userstatus;
-	//用户银行卡号
-	private String card;
-	//用户电话
-	private String phone;
-	//用户部门A的下级
-	private int departmentA;
-	//用户部门B的下级
-	private int departmentB;
-	//用户部门C的下级
-	private int departmentC;
-	//他的上级ID
-	private int parentid;
-	//推荐人ID
-	private int recomondid;
-	//创建时间
+public class UserVO {
+	private String account;
+	private String nickName;
+	private String userLevel;
+	private String userType;
+	private boolean userStatus;
+	private String userPhone;
+	private long departmentA;
+	private long departmentB;
+	private long departmentC;
 	private Date createTime;
-	//重销时间
-	private Date recommendedTime; 
-	//周期次数
-	private String cycleCount;
-	//类型--{激活，冻结}
-	private String type;
-	//考核状态
-	private String assessType;	
-	//层级，权重
-	private int weightCode;
-	//金额
-	private int money;
-	//报单币数目
-	private int customCoin;
-	public int getUserid() {
-		return userid;
+	private Date assessDate;
+	private boolean assessStatus;
+	private double bonusCoin;
+	private double consumeCoin;
+	private double productCoin;
+	private Date activateTime;
+
+	public String getAccount() {
+		return account;
 	}
-	public void setUserid(int userid) {
-		this.userid = userid;
+
+	public void setAccount(String account) {
+		this.account = account;
 	}
-	public String getName() {
-		return name;
+
+	public String getNickName() {
+		return nickName;
 	}
-	public void setName(String name) {
-		this.name = name;
+
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
 	}
-	public String getUsertype() {
-		return usertype;
+
+	public String getUserLevel() {
+		return userLevel;
 	}
-	public void setUsertype(String usertype) {
-		this.usertype = usertype;
+
+	public void setUserLevel(String userLevel) {
+		this.userLevel = userLevel;
 	}
-	public String getUserstatus() {
-		return userstatus;
+
+	public String getUserType() {
+		return userType;
 	}
-	public void setUserstatus(String userstatus) {
-		this.userstatus = userstatus;
+
+	public void setUserType(String userType) {
+		this.userType = userType;
 	}
-	public String getCard() {
-		return card;
+
+	public boolean isUserStatus() {
+		return userStatus;
 	}
-	public void setCard(String card) {
-		this.card = card;
+
+	public void setUserStatus(boolean userStatus) {
+		this.userStatus = userStatus;
 	}
-	public String getPhone() {
-		return phone;
+
+	public String getUserPhone() {
+		return userPhone;
 	}
-	public void setPhone(String phone) {
-		this.phone = phone;
+
+	public void setUserPhone(String userPhone) {
+		this.userPhone = userPhone;
 	}
-	public int getDepartmentA() {
+
+	public long getDepartmentA() {
 		return departmentA;
 	}
-	public void setDepartmentA(int departmentA) {
+
+	public void setDepartmentA(long departmentA) {
 		this.departmentA = departmentA;
 	}
-	public int getDepartmentB() {
+
+	public long getDepartmentB() {
 		return departmentB;
 	}
-	public void setDepartmentB(int departmentB) {
+
+	public void setDepartmentB(long departmentB) {
 		this.departmentB = departmentB;
 	}
-	public int getDepartmentC() {
+
+	public long getDepartmentC() {
 		return departmentC;
 	}
-	public void setDepartmentC(int departmentC) {
+
+	public void setDepartmentC(long departmentC) {
 		this.departmentC = departmentC;
 	}
-	public int getParentid() {
-		return parentid;
-	}
-	public void setParentid(int parentid) {
-		this.parentid = parentid;
-	}
-	public int getRecomondid() {
-		return recomondid;
-	}
-	public void setRecomondid(int recomondid) {
-		this.recomondid = recomondid;
-	}
+
 	public Date getCreateTime() {
 		return createTime;
 	}
+
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	public Date getRecommendedTime() {
-		return recommendedTime;
+
+	public Date getAssessDate() {
+		return assessDate;
 	}
-	public void setRecommendedTime(Date recommendedTime) {
-		this.recommendedTime = recommendedTime;
+
+	public void setAssessDate(Date assessDate) {
+		this.assessDate = assessDate;
 	}
-	public String getCycleCount() {
-		return cycleCount;
+
+	public boolean isAssessStatus() {
+		return assessStatus;
 	}
-	public void setCycleCount(String cycleCount) {
-		this.cycleCount = cycleCount;
+
+	public void setAssessStatus(boolean assessStatus) {
+		this.assessStatus = assessStatus;
 	}
-	public String getType() {
-		return type;
+
+	public double getBonusCoin() {
+		return bonusCoin;
 	}
-	public void setType(String type) {
-		this.type = type;
+
+	public void setBonusCoin(double bonusCoin) {
+		this.bonusCoin = bonusCoin;
 	}
-	public String getAssessType() {
-		return assessType;
+
+	public double getConsumeCoin() {
+		return consumeCoin;
 	}
-	public void setAssessType(String assessType) {
-		this.assessType = assessType;
+
+	public void setConsumeCoin(double consumeCoin) {
+		this.consumeCoin = consumeCoin;
 	}
-	public int getWeightCode() {
-		return weightCode;
+
+	public double getProductCoin() {
+		return productCoin;
 	}
-	public void setWeightCode(int weightCode) {
-		this.weightCode = weightCode;
+
+	public void setProductCoin(double productCoin) {
+		this.productCoin = productCoin;
 	}
-	public int getMoney() {
-		return money;
+
+	public Date getActivateTime() {
+		return activateTime;
 	}
-	public void setMoney(int money) {
-		this.money = money;
+
+	public void setActivateTime(Date activateTime) {
+		this.activateTime = activateTime;
 	}
-	public int getCustomCoin() {
-		return customCoin;
-	}
-	public void setCustomCoin(int customCoin) {
-		this.customCoin = customCoin;
-	}
+
 }

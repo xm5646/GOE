@@ -8,4 +8,5 @@ import com.project.goe.projectgeodbserver.entity.User;
 @Repository
 public interface UserRepositoy extends JpaRepository<User,Long>{
 	public User findByAccount(String account);
+	public User findByUserId(long userId);
 }
