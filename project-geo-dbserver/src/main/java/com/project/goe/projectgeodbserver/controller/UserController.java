@@ -127,14 +127,21 @@ public class UserController {
 		}
 	}
 
-	// 基于单个关键字进行分页查询：默认按照userId字段升序查询；默认显示第一页；默认每页显示5条数据
+	// 基于单个关键字进行分页查询：默认按照userId字段j查询；默认显示第一页；默认每页显示5条数据
 	@GetMapping("/findUsersBySort")
 	public Page<User> findAllUserBySort(
 			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
 			@RequestParam(value = "size", defaultValue = "5", required = false) int size,
-			@RequestParam(value = "keyword", required = false, defaultValue = "userId") String keyword) {
+			@RequestParam(value = "keyword", required = false, defaultValue = "userId") String keyword,
+			@RequestParam(value = "order",required = false,defaultValue = "desc") String order) {
 		try {
-			Sort sort = new Sort(Direction.ASC, keyword);
+			Sort sort = null;
+			
+			if(order.equals("asc"))
+				sort = new Sort(Direction.ASC,keyword);
+			else
+				sort = new Sort(Direction.DESC, keyword);
+			
 			Pageable pageable = new PageRequest(pageNum, size, sort);
 
 			return this.userService.findAllUserBySort(pageable);
