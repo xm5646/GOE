@@ -56,19 +56,6 @@
             <img src="../../assets/images/home/form.png" width="30">
           </div>
           <div class="item-content">
-            <router-link :to="{ name: '' }">
-              <div class="item-title-row">
-                <div class="item-title">我的业绩</div>
-                <div class="item-after"><div class="link-arrow icon icon-link"></div></div>
-              </div>
-            </router-link>
-          </div>
-        </list-item>
-        <list-item :link="true">
-          <div class="item-media">
-            <img src="../../assets/images/home/form.png" width="30">
-          </div>
-          <div class="item-content">
             <router-link :to="{ name: 'convertConsumeCoin' }">
               <div class="item-title-row">
                 <div class="item-title">奖金转换报单币</div>
@@ -82,7 +69,7 @@
             <img src="../../assets/images/home/form.png" width="30">
           </div>
           <div class="item-content">
-            <router-link :to="{ name: '' }">
+            <router-link :to="{ name: 'transferConsumeCoin' }">
               <div class="item-title-row">
                 <div class="item-title">报单币转账</div>
                 <div class="item-after"><div class="link-arrow icon icon-link"></div></div>

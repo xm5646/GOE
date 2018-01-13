@@ -9,17 +9,6 @@
             <div class="item-media"><img src="../../assets/images/icon-list.png" width="44"></div>
             <div class="item-content">
               <div class="item-title-row">
-                <div class="item-title">奖金余额</div>
-              </div>
-              <div class="item-subtitle">
-                <span class="span-performance">{{ bonusCoin }}元</span>
-              </div>
-            </div>
-          </list-item>
-          <list-item>
-            <div class="item-media"><img src="../../assets/images/icon-list.png" width="44"></div>
-            <div class="item-content">
-              <div class="item-title-row">
                 <div class="item-title">报单币余额</div>
               </div>
               <div class="item-subtitle">
@@ -30,19 +19,36 @@
         </list>
         <form-list>
           <form-item>
-            <div class="row">
-              <div class="col-60"><span>转换奖金金额￥：</span></div>
-              <div class="col-40" ><input type="number" v-model="convertNumber"></div>
+            <div class="item-content">
+              <div class="item-input">
+                <input type="text" placeholder="请输入与收款人用户编号">
+              </div>
+              <div class="item-title label">
+                <m-button type="warning" size="large" @click.native="findUser">查询</m-button>
+              </div>
             </div>
           </form-item>
-          <form-item>
-            <div class="row">
-              <div class="col-50"><span>剩余奖金金额：{{bonusCoin - convertNumber}}</span></div>
-              <div class="col-50" ><span>报单币总金额：{{ finalConsumeCoin }}</span></div>
-            </div>
-          </form-item>
-
         </form-list>
+
+          <list v-if="findedUser">
+            <list-item :link="true" @click.native="ViewUserB">
+              <div class="item-media"><img src="../../assets/images/icon-list.png" width="44"></div>
+              <div class="item-content">
+                <div class="item-title-row">
+                  <div class="item-title">username</div>
+                </div>
+                <div class="item-subtitle">
+                  <span class="performence-span">A:1</span>&nbsp;&nbsp;
+                  <span class="performence-span">B:2</span>&nbsp;&nbsp;
+                  <span class="performence-span">C:3</span>&nbsp;&nbsp;
+                </div>
+              </div>
+            </list-item>
+          </list>
+        <div v-if="NotFindUser">
+          <m-button type="light" @click.native="doLogin">未找到该用户</m-button>
+        </div>
+
         <m-button type="warning" size="large" @click.native="doLogin" :disabled="convertBtnEnable">转换</m-button>
         <toast text="完成!" ref="t1"></toast>
         <toast text="失败!" type="error" ref="t2"></toast>
@@ -77,7 +83,9 @@
       return {
         bonusCoin: 1500,
         consumeCoin: 2000,
-        convertNumber: null
+        convertNumber: null,
+        findedUser: false,
+        NotFindUser: false
       }
     },
     methods: {
@@ -100,7 +108,8 @@
   p {
     text-align: center;
   }
-  .row{
+
+  .row {
     margin-bottom: 2%;
   }
 </style>
