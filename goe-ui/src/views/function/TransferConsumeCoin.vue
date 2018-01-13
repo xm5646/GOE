@@ -3,7 +3,7 @@
     <simple-header style="background-color: orange" title="会员管理系统" :back-link="true"></simple-header>
     <page-content>
       <div class='content-padded'>
-        <h1 class="demos-title">重复消费</h1>
+        <h1 class="demos-title">报单币转账</h1>
         <list>
           <list-item>
             <div class="item-media"><img src="../../assets/images/icon-list.png" width="44"></div>
@@ -29,30 +29,23 @@
           </list-item>
         </list>
         <form-list>
-          <br>
-          <div class="row">
-            <div class="col-50">原价：</div>
-            <div class="col-50">{{ discotePrice }}</div>
-          </div>
-          <div class="row">
-            <div class="col-50">重消优惠价格：</div>
-            <div class="col-50">{{ discotePrice }}</div>
-          </div>
-          <div class="row">
-            <div class="col-20">数量</div>
-            <div class="col-50"><input type="number" v-model="buyNumber" disabled="true"></div>
-            <div class="col-10"><m-button @click.native="increaseNumber">+</m-button></div>
-            <div class="col-10"><m-button @click.native="decreaseNumber">-</m-button></div>
-          </div>
-          <div class="row">
-            <div class="col-50">总计： {{ discotePrice * buyNumber }}元</div>
-            <div class="col-50"> <m-button :disabled="buyButton" >购买 </m-button></div>
-          </div>
+          <form-item>
+            <div class="row">
+              <div class="col-60"><span>转换奖金金额￥：</span></div>
+              <div class="col-40" ><input type="number" v-model="convertNumber"></div>
+            </div>
+          </form-item>
+          <form-item>
+            <div class="row">
+              <div class="col-50"><span>剩余奖金金额：{{bonusCoin - convertNumber}}</span></div>
+              <div class="col-50" ><span>报单币总金额：{{ finalConsumeCoin }}</span></div>
+            </div>
+          </form-item>
 
-
-          <toast text="完成!" ref="t1"></toast>
-          <toast text="失败!" type="error" ref="t2"></toast>
         </form-list>
+        <m-button type="warning" size="large" @click.native="doLogin" :disabled="convertBtnEnable">转换</m-button>
+        <toast text="完成!" ref="t1"></toast>
+        <toast text="失败!" type="error" ref="t2"></toast>
       </div>
     </page-content>
   </div>
@@ -63,54 +56,50 @@
   import { SimpleHeader } from '../../../node_modules/vum/src/components/header'
   import Content from '../../../node_modules/vum/src/components/content'
   import { Form, FormItem } from '../../../node_modules/vum/src/components/form'
-  import { List, ListItem } from '../../../node_modules/vum/src/components/list'
-  import Column from '../../../node_modules/vum/src/components/column'
   import Toast from '../../../node_modules/vum/src/components/toast'
-  import GOE from '../../../config/goe'
+  import Column from '../../../node_modules/vum/src/components/column'
+  import { List, ListItem } from '../../../node_modules/vum/src/components/list'
 
   export default {
     components: {
       SimpleHeader,
-      Toast,
       'page-content': Content,
       ButtonGroup,
       FormItem,
+      Toast,
+      Column,
       List,
       ListItem,
-      Column,
       'form-list': Form,
       'm-button': Button
     },
     data () {
       return {
-        price: GOE.goe.price,
-        bonusCoin: 4000,
+        bonusCoin: 1500,
         consumeCoin: 2000,
-        buyNumber: 1
+        convertNumber: null
       }
     },
     methods: {
-      increaseNumber () {
-        this.buyNumber += 1
-      },
-      decreaseNumber () {
-        if (this.buyNumber >= 1) {
-          this.buyNumber -= 1
-        }
+      doLogin () {
+        this.$refs.t1.open()
       }
     },
     computed: {
-      discotePrice: function () {
-        return (this.price * 0.7).toFixed(2)
+      convertBtnEnable: function () {
+        return (!this.convertNumber > 0 || this.convertNumber > this.bonusCoin)
       },
-      finalPrice: function () { return this.discotePrice * this.buyNumber },
-      buyButton: function () {
-        return (this.finalPrice > this.consumeCoin || this.buyNumber === 0)
+      finalConsumeCoin: function () {
+        return Number(this.consumeCoin) + Number(this.convertNumber)
       }
     }
   }
 </script>
-<style >
+
+<style lang="less" scoped>
+  p {
+    text-align: center;
+  }
   .row{
     margin-bottom: 2%;
   }

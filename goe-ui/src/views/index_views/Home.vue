@@ -69,9 +69,9 @@
             <img src="../../assets/images/home/form.png" width="30">
           </div>
           <div class="item-content">
-            <router-link :to="{ name: '' }">
+            <router-link :to="{ name: 'convertConsumeCoin' }">
               <div class="item-title-row">
-                <div class="item-title">奖金报单币互转</div>
+                <div class="item-title">奖金转换报单币</div>
                 <div class="item-after"><div class="link-arrow icon icon-link"></div></div>
               </div>
             </router-link>
