@@ -1,6 +1,7 @@
 package com.project.goe.projectgeodbserver.statusType;
 
 public class UserLevel {
+	public static final String CONSUMER = "普通用户";
 	public static final String COMMON_SALEMAN = "业务员";
 	public static final String GROUP_LEADER = "组长";
 	public static final String DIRECOTR = "主任";

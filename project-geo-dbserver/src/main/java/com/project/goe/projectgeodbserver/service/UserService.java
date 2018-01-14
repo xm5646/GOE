@@ -29,6 +29,21 @@ public class UserService {
 	public User findByAccount(String account) {
 		return this.userRepositoy.findByAccount(account);
 	}
+	
+	@Transactional
+	public void delete(Long id) {
+		userRepositoy.delete(id);
+	}
+	
+	@Transactional
+	public Iterable<User> getAll(){
+		return userRepositoy.findAll();
+	}
+	
+	@Transactional
+	public User getUserById(Long id){
+		return userRepositoy.findOne(id);
+	}
 	//基于userId，查询用户信息
 	public User findByUserId(long userId) {
 		return this.userRepositoy.findByUserId(userId);
