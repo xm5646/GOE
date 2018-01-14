@@ -1,36 +1,32 @@
 <template>
   <div class="page">
     <content>
-      <list>
-        <list-item>
+      <form-list>
+        <form-item>
           <div class="item-content">
-            <form-list>
-              <div class="row">
-                <div class="col-80">
-                  <form-item>
-                    <input type="text" placeholder="请输入要查看的账号编号" v-model="checkUserAccount"/>
-                  </form-item>
-                </div>
-                <div class="col-20">
-                  <form-item>
-                    <m-button size="large" @click.native="chencUser">查找</m-button>
-                  </form-item>
-                </div>
-              </div>
-            </form-list>
-
+            <div class="item-input">
+              <input type="text" placeholder="请输入用户编号" v-model="checkUserAccount">
+            </div>
+            <div class="item-title label">
+              <m-button type="warning" size="large" @click.native="checkUser">查询</m-button>
+            </div>
           </div>
-        </list-item>
+        </form-item>
+      </form-list>
+      <div v-if="notFoundUser">
+        <m-button type="light" >未找到该用户</m-button>
+      </div>
+      <list >
         <list-item>
           <div class="item-content">
             <div class="item-title-row">
-              <div class="item-title"> 当前查看用户：{{ ViewUser.account
-                }}  <span>(A:{{ ViewUser.performanceA}} &nbsp;B:{{ ViewUser.performanceB}} &nbsp;C:{{ ViewUser.performanceA}})</span>
+              <div class="item-title"> 当前查看用户：{{ ViewUser.account}}
+                <span>(A:{{ ViewUser.performanceA}} &nbsp;B:{{ ViewUser.performanceB}} &nbsp;C:{{ ViewUser.performanceC}})</span>
               </div>
             </div>
           </div>
         </list-item>
-        <list-item :link="true" @click.native="ViewUserA">
+        <list-item :link="true" @click.native="ViewUserA" v-if="hasUserA">
           <div class="item-media"><img src="../assets/images/icon-list.png" width="44"></div>
           <div class="item-content">
             <div class="item-title-row">
@@ -43,7 +39,11 @@
             </div>
           </div>
         </list-item>
-        <list-item :link="true" @click.native="ViewUserB">
+        <list-item v-if="!hasUserA">
+          <div class="item-media"><img src="../assets/images/icon-list.png" width="44"></div>
+          &nbsp;&nbsp;&nbsp;<m-button size="warning" @click.native="AddUserA">新增</m-button>
+        </list-item>
+        <list-item :link="true" @click.native="ViewUserB" v-if="hasUserB">
           <div class="item-media"><img src="../assets/images/icon-list.png" width="44"></div>
           <div class="item-content">
             <div class="item-title-row">
@@ -56,7 +56,11 @@
             </div>
           </div>
         </list-item>
-        <list-item :link="true" @click.native="ViewUserC">
+        <list-item v-if="!hasUserB">
+          <div class="item-media"><img src="../assets/images/icon-list.png" width="44"></div>
+          &nbsp;&nbsp;&nbsp;<m-button size="warning" @click.native="AddUserB">新增</m-button>
+        </list-item>
+        <list-item :link="true" @click.native="ViewUserC" v-if="hasUserC">
           <div class="item-media"><img src="../assets/images/icon-list.png" width="44"></div>
           <div class="item-content">
             <div class="item-title-row">
@@ -66,9 +70,12 @@
               <span class="performence-span">A:{{ ViewUser.departUserC.performanceA }}</span>&nbsp;&nbsp;
               <span class="performence-span">B:{{ ViewUser.departUserC.performanceB }}</span>&nbsp;&nbsp;
               <span class="performence-span">C:{{ ViewUser.departUserC.performanceC }}</span>&nbsp;&nbsp;
-
             </div>
           </div>
+        </list-item>
+        <list-item v-if="!hasUserC">
+          <div class="item-media"><img src="../assets/images/icon-list.png" width="44"></div>
+          &nbsp;&nbsp;&nbsp;<m-button size="warning" @click.native="AddUserC">新增</m-button>
         </list-item>
       </list>
 
@@ -90,7 +97,7 @@
 
   console.log(FooterItem)
   export default {
-    props: ['user'],
+    props: ['user', 'notFoundUser'],
     components: {
       Page,
       Content,
@@ -119,7 +126,25 @@
       ViewUserC () {
         this.$emit('viewUsereEvent', this.ViewUser.departUserC.account)
       },
-      chencUser () {
+      AddUserA () {
+        this.$emit('addUserEvent', {
+          'parertUser': this.ViewUser.account,
+          'departMent': 'A'
+        })
+      },
+      AddUserB () {
+        this.$emit('addUserEvent', {
+          'parertUser': this.ViewUser.account,
+          'departMent': 'B'
+        })
+      },
+      AddUserC () {
+        this.$emit('addUserEvent', {
+          'parertUser': this.ViewUser.account,
+          'departMent': 'C'
+        })
+      },
+      checkUser () {
         if (this.checkUserAccount !== '') {
           this.$emit('viewUsereEvent', this.checkUserAccount)
         } else {
@@ -127,6 +152,17 @@
       },
       goBackMyPer () {
         this.$emit('backMyUser')
+      }
+    },
+    computed: {
+      hasUserA: function () {
+        return (this.ViewUser.departUserA.account !== '')
+      },
+      hasUserB: function () {
+        return (this.ViewUser.departUserB.account !== '')
+      },
+      hasUserC: function () {
+        return (this.ViewUser.departUserC.account !== '')
       }
     }
   }

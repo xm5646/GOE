@@ -10,6 +10,7 @@ import ResetPassword from './views/function/ResetPassword'
 import ReConsume from './views/function/ReConsume'
 import ConvertConsume from './views/function/ConvertConsumeCoin'
 import TransferConsumeCoin from './views/function/TransferConsumeCoin'
+import CreateUser from './views/function/CreateUser'
 
 Vue.use(Router)
 Vue.use(Vum)
@@ -47,6 +48,11 @@ let router = new Router({
       path: '/resetPassword',
       name: 'resetPassword',
       component: ResetPassword
+    },
+    {
+      path: '/createUser',
+      name: 'createUser',
+      component: CreateUser
     },
     {
       path: '/reConsume',
