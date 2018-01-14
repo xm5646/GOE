@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.Random;
 
 import com.project.goe.projectgeodbserver.entity.User;
+import com.project.goe.projectgeodbserver.statusType.UserLevel;
+import com.project.goe.projectgeodbserver.statusType.UserType;
 
 import java.util.Date;
 import java.util.Random;
@@ -26,10 +28,17 @@ public class UserUtil {
 	}
 	
 	public static User getTestUser() {
+		Date createDate = new Date();
 		User u = new User();
-		u.setNickName("zs001"+new Random().nextInt(10000));
+		String name = "zs001"+new Random().nextInt(10000);
+		u.setNickName(name);
+		u.setAccount(name);
 		u.setPassword("123456");
-		u.setCreateTime(new Date());
+		u.setCreateTime(createDate);
+		u.setUserLevel(UserLevel.CONSUMER);
+		u.setUserType(UserType.COMMON);
+		u.setAssessStatus(false);
+		u.setAssessDate(createDate);
 		return u;
 	}
 

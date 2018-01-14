@@ -1,5 +1,6 @@
 package com.project.goe.projectgeodbserver.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,14 +92,14 @@ public class CheckUtil {
 	}
 	
 	
-	private static void computePer(Long userid,Map<Long,User> userMap,Map<Long,Performance> perMap) {
+	public static List<Performance> computePer(Long userid,Map<Long,User> userMap,Map<Long,Performance> perMap) {
+		List<Performance> pers = new ArrayList<Performance>();
 		//添加最下级节点的时候的用户信息
 		User u = userMap.get(userid);
 		Long pid = u.getParentId();
-		int weightCode = 4;
-		for (int i = weightCode; i >0; i--) {
+		int weightCode = u.getWeightCode();
+		for (int i = weightCode; i >1; i--) {
 			User pu = userMap.get(pid);
-			System.out.println("k:"+perMap.get(pid).getDepartAcount());
 			if(userid == pu.getDepartmentA()) {
 				perMap.get(pid).setAddDepartAcount(perMap.get(pid).getAddDepartAcount()+1);
 				perMap.get(pid).setDepartAcount(perMap.get(pid).getDepartAcount()+1);
@@ -108,12 +109,12 @@ public class CheckUtil {
 			}else if(userid == pu.getDepartmentC()) {
 				perMap.get(pid).setAddDepartCcount(perMap.get(pid).getAddDepartCcount()+1);
 				perMap.get(pid).setDepartCcount(perMap.get(pid).getDepartCcount()+1);
-			}			
-			System.out.println("e:"+perMap.get(pid).getDepartAcount());
-			pid = pu.getParentId();
+			}	
+			pers.add(perMap.get(pid));
 			userid = pu.getUserId();
+			pid = pu.getParentId();
 		}
-		
+		return pers;
 	}
 	
 	public void auditDay() {
@@ -124,9 +125,13 @@ public class CheckUtil {
 		audit();
 	}
 	
-	private static void printMap(Map map) {
-		for(Object e : map.values()) {
-			System.out.println(e.toString());
+	public static void printMap(Map map) {
+		if (map!=null && map.size()>0) {
+			for(Object e : map.values()) {
+				System.out.println(e.toString());
+			}
+			System.out.println("总数："+map.size());
 		}
+
 	}
 }
