@@ -7,5 +7,5 @@ import com.project.goe.projectgeodbserver.entity.Performance;
 
 @Repository
 public interface PerformanceRepository extends JpaRepository<Performance, Long> {
-
+	public Performance findByUserId(long userId);
 }

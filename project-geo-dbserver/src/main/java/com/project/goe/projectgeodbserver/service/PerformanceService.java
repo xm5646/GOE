@@ -27,4 +27,8 @@ public class PerformanceService {
 		this.performanceRepository.delete(id);
 		return true;
 	}
+	//基于userId，查询用户业绩信息
+	public Performance findByUserId(long userId) {
+		return this.performanceRepository.findByUserId(userId);
+	}
 }

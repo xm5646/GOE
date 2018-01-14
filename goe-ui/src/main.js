@@ -8,6 +8,8 @@ import Index from './views/Index'
 import Login from './views/Login'
 import ResetPassword from './views/function/ResetPassword'
 import ReConsume from './views/function/ReConsume'
+import ConvertConsume from './views/function/ConvertConsumeCoin'
+import TransferConsumeCoin from './views/function/TransferConsumeCoin'
 
 Vue.use(Router)
 Vue.use(Vum)
@@ -50,6 +52,16 @@ let router = new Router({
       path: '/reConsume',
       name: 'reConsume',
       component: ReConsume
+    },
+    {
+      path: '/convertConsumeCoin',
+      name: 'convertConsumeCoin',
+      component: ConvertConsume
+    },
+    {
+      path: '/transferConsumeCoin',
+      name: 'transferConsumeCoin',
+      component: TransferConsumeCoin
     }
   ]
 })
