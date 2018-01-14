@@ -66,6 +66,11 @@ public class TimeUtil {
 		return dateStart;
 	}
 	
+	public static Date addDay(Date nowdate,int day) {
+		Date dateStart = new Date((nowdate.getTime()+(DAY_SECOND* day)));
+		return dateStart;
+	}
+	
 	public static int getDateCycle(int discrepantDays) {
 		return discrepantDays/DATE_CYCLE;
 	}
@@ -74,9 +79,24 @@ public class TimeUtil {
 		return discrepantDays%DATE_CYCLE;
 	}
 	
+	/**
+	 * 比较两个时间的大小
+	 * @param d1
+	 * @param d2
+	 * @return
+	 */
+	public static boolean compareDate(Date d1,Date d2) {
+		System.out.println(d1.before(d2));
+		System.out.println(d1.after(d2));
+		return false;
+	}
+	
 	public static void main(String[] args) {
 		String date1 = "2017-12-12 23:59:59";
 		String date2 = "2017-11-13 23:59:59";
+		
+//		compareDate(date1, date2);
+		
 		int days = getDiscrepantDays(date1,date2);
 		System.out.println(days);
 		int cycle = getDateCycle(days);
@@ -91,6 +111,8 @@ public class TimeUtil {
 		Date datea  = addDay(100);
 		String nowDate1 = getDateFormat(datea);
 		System.out.println(nowDate1);
+		
+		compareDate(date, datea);
 	}
 
 }

@@ -1,97 +1,32 @@
 package com.project.goe.projectgeodbserver.util;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.project.goe.projectgeodbserver.entity.BonusPayList;
+import com.project.goe.projectgeodbserver.entity.BusinessEntity;
 import com.project.goe.projectgeodbserver.entity.Earning;
 import com.project.goe.projectgeodbserver.entity.Performance;
 import com.project.goe.projectgeodbserver.entity.User;
+import com.project.goe.projectgeodbserver.statusType.ConfigConstant;
+import com.project.goe.projectgeodbserver.statusType.TouchType;
 
 public class CheckUtil {
-	public static void audit() {
-		//创建用户信息触发
-		//用户所有上级的信息情况并更新
-		   //更新上级每个节点 有A B C部门数目  ABC新增数目 审计表变为业绩表  每人1条
-		   //判断用户是否达到条件
-		Long userid = 1l;
-		User u1 = new User();
-		u1.setUserId(userid);
-		u1.setNickName("user1");
-		u1.setDepartmentA(2);
-		u1.setWeightCode(1);
-		u1.setDepartmentA(2);
-		
-		User u2 = new User();
-		u2.setUserId(2l);
-		u2.setNickName("user2");
-		u2.setParentId(1l);
-		u2.setDepartmentA(1);
-		u2.setWeightCode(2);
-		u2.setDepartmentA(3);
-		
-		User u3 = new User();
-		u3.setUserId(3l);
-		u3.setNickName("user3");
-		u3.setParentId(2l);
-		u3.setWeightCode(3);
-		u3.setDepartmentA(4);
-		
-		User u4 = new User();
-		u4.setUserId(4l);
-		u4.setNickName("user4");
-		u4.setParentId(3l);
-		u4.setWeightCode(4);
-		u4.setDepartmentA(3);
-		
-		Performance p1 = new Performance();
-		p1.setpId(1l);
-		p1.setUserId(1l);
-		p1.setDepartAcount(3);
-		Performance p2 = new Performance();
-		p2.setpId(2l);
-		p2.setUserId(1l);
-		p2.setUserId(2l);
-		p2.setDepartAcount(2);
-		Performance p3 = new Performance();
-		p3.setpId(3l);
-		p3.setUserId(1l);
-		p3.setUserId(3l);
-		p3.setDepartAcount(1);
-		Performance p4 = new Performance();
-		p4.setpId(4l);
-		p4.setUserId(1l);
-		p4.setUserId(4l);
-		
-		//用户表
-		Map<Long,User> userMap = new HashMap<Long, User>();
-		userMap.put(1l, u1);
-		userMap.put(2l, u2);
-		userMap.put(3l, u3);
-		userMap.put(4l, u4);
-		//业绩表
-		Map<Long,Performance> perMap = new HashMap<Long,Performance>();
-		perMap.put(1l, p1);
-		perMap.put(2l, p2);
-		perMap.put(3l, p3);
-		perMap.put(4l, p4);
-		
-		printMap(userMap);
-		printMap(perMap);
-		//收益表：tb_earning
-		Map<Long,Earning> earnMap = new HashMap<Long,Earning>();
-		//奖金发放表：tb_bonus_paylist
-		Map<Long,BonusPayList> bonusPayMap = new HashMap<Long,BonusPayList>();
-		
-		computePer(4l, userMap, perMap);
-		printMap(userMap);
-		printMap(perMap);
-		
-	}
 	
-	
+	@Autowired
+	private static BonusPayPercentage bpp;
+	/**
+	 * 计算用户业绩
+	 * 传递创建的用户ID，更新他上面所有节点的业绩
+	 * @param userid
+	 * @param userMap
+	 * @param perMap
+	 * @return
+	 */
 	public static List<Performance> computePer(Long userid,Map<Long,User> userMap,Map<Long,Performance> perMap) {
 		List<Performance> pers = new ArrayList<Performance>();
 		//添加最下级节点的时候的用户信息
@@ -99,6 +34,8 @@ public class CheckUtil {
 		Long pid = u.getParentId();
 		int weightCode = u.getWeightCode();
 		for (int i = weightCode; i >1; i--) {
+			//增加业绩之前做判断，未激活用户不增加任何业绩
+			//新增业绩增加前判断用户是否有未领取完的累计升级奖励
 			User pu = userMap.get(pid);
 			if(userid == pu.getDepartmentA()) {
 				perMap.get(pid).setAddDepartAcount(perMap.get(pid).getAddDepartAcount()+1);
@@ -117,12 +54,94 @@ public class CheckUtil {
 		return pers;
 	}
 	
+	public static BonusPayList sendBonusPaylist(User user,Earning earn) {
+		//earn 是当前用户以时间判断-可发的收益，时间最新的
+		if (user!=null && earn != null) {
+			BonusPayList bpl = new BonusPayList();
+			bpl.setUserId(user.getUserId());
+			bpl.setPayTime(new Date());
+			bpl.setTotalMoney(earn.getDayMoney());
+			bpl.setBonusNumber(earn.getDayMoney());
+			bpl.setManageCost(earn.getDayMoney());
+			bpl.setProductCoinNumber(earn.getDayMoney());
+			return bpl;
+		}
+		return null;
+	}
+	
+	/**
+	 * 根据用户的业绩更新用户的收益
+	 */
+	public static List<Earning> userEarning(List<Performance> pers) {
+		List<Earning> earnList = new ArrayList<>();
+		//earns  只取得还可以获得收益的数据当前时间-30天
+		if (pers!=null && pers.size()>0) {
+			for (Performance per : pers) {
+				//这里是计算累计业绩
+				Earning e = accumulativeEarning(per);
+				if (e==null) {
+					//这里是计算新增业绩
+					e = increasedEarning(per);
+				}
+				//保存需要的业绩数据
+				earnList.add(e);
+			}
+		}
+		return earnList;
+	}
+	
+	/**
+	 * 计算累计业绩
+	 */
+	private static Earning accumulativeEarning(Performance per) {
+		if (per!=null && per.getDepartAcount()>=4 && per.getDepartBcount()>=4) {
+			BusinessEntity busentity =  BusinessUtil.getBusinesLevel(per.getDepartAcount(), per.getDepartBcount(),per.getDepartCcount());
+			if (busentity!=null) {
+				Earning e = new Earning();
+				e.setUserid(per.getUserId());
+				e.setTouchType(TouchType.ACCUMULATION);
+				//剩余发放天数
+				e.setSurplusNumber(ConfigConstant.EARNING_SURPLUSNUMBER);
+				//级别对应的金钱
+				e.setDayMoney(busentity.getMoney());
+				e.setUserLevel(busentity.getUserLevel());
+				return e;
+			}
+		}
+		return null;
+	}
+	/**
+	 * 计算新增业绩
+	 */
+	private static Earning increasedEarning(Performance per) {
+		if (per!=null && per.getDepartAcount()>=4 && per.getDepartBcount()>=4) {
+			BusinessEntity busentity =  BusinessUtil.getBusinesLevel(per.getAddDepartAcount(),per.getAddDepartBcount(),per.getAddDepartCcount());
+			if (busentity!=null) {
+				Earning e = new Earning();
+				Date createTime = new Date();
+				e = new Earning();
+				e.setUserid(per.getUserId());
+				e.setTouchType(TouchType.ADDITION);
+				//级别对应的金钱
+				e.setDayMoney(busentity.getMoney());
+				e.setUserLevel(busentity.getUserLevel());
+				e.setCreateTime(createTime);
+				return e;
+			}
+		}
+		return null;
+	}
+	
 	public void auditDay() {
 		
 	}
 	
 	public static void main(String[] args) {
-		audit();
+		User user = new User();
+		Earning earn = new Earning();
+		earn.setDayMoney(100);
+		BonusPayList bpl = sendBonusPaylist(user, earn);
+		System.out.println(bpl);
 	}
 	
 	public static void printMap(Map map) {
