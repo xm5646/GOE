@@ -30,6 +30,16 @@ public class PerformanceController {
 		return this.performanceService.save(performance);
 	}
 	
+	@RequestMapping("/findAll")
+	public Iterable<Performance> getAll(){
+		return this.performanceService.getAll();
+	}
+	
+	@RequestMapping("/delete/{id}")
+	public boolean delete(@PathVariable("id") long id) {
+		return this.performanceService.delete(id);
+	}
+	
 	@RequestMapping("/{userId}")
 	public Performance p(@PathVariable long userId) {
 		return this.performanceService.findByUserId(userId);

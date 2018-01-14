@@ -3,6 +3,8 @@ package com.project.goe.projectgeodbserver.service;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.repository.UserRepositoy;
@@ -27,8 +29,27 @@ public class UserService {
 	public User findByAccount(String account) {
 		return this.userRepositoy.findByAccount(account);
 	}
+	
+	@Transactional
+	public void delete(Long id) {
+		userRepositoy.delete(id);
+	}
+	
+	@Transactional
+	public Iterable<User> getAll(){
+		return userRepositoy.findAll();
+	}
+	
+	@Transactional
+	public User getUserById(Long id){
+		return userRepositoy.findOne(id);
+	}
 	//基于userId，查询用户信息
 	public User findByUserId(long userId) {
 		return this.userRepositoy.findByUserId(userId);
+	}
+	//分页查询
+	public Page<User> findAllUserBySort(Pageable pageable) {
+		return this.userRepositoy.findAll(pageable);
 	}
 }

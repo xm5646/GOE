@@ -11,6 +11,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.project.goe.projectgeodbserver.statusType.UserLevel;
+
 /**
  * 用户收益类
  */
@@ -29,7 +31,8 @@ public class Earning {
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createTime;
-
+	//用户的级别{组长,主任,董事 。。。}
+	private String userLevel = UserLevel.COMMON_SALEMAN;
 	// 触发类型
 	@Column
 	private String touchType;
@@ -48,6 +51,14 @@ public class Earning {
 
 	public void setUserid(long userid) {
 		this.userid = userid;
+	}
+
+	public String getUserLevel() {
+		return userLevel;
+	}
+
+	public void setUserLevel(String userLevel) {
+		this.userLevel = userLevel;
 	}
 
 	public String getTouchType() {

@@ -3,217 +3,83 @@ package com.project.goe.projectgeodbserver.util;
 
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+import com.project.goe.projectgeodbserver.entity.BusinessEntity;
+import com.project.goe.projectgeodbserver.statusType.UserLevel;
 
 public class BusinessUtil {
-
-	public final static String VIP0 = "";   	//普通会员
-	public final static String VIP1 = "AA";	//VIP
-	public final static String VIP2 = "BB";	//业务员
-	public final static String VIP3 = "CC";	//组长
-	public final static String VIP4 = "DD";	//主任
-	public final static String VIP5 = "EE";	//经理
-	public final static String VIP6 = "FF";	//部门经理
-	public final static String VIP7 = "GG";	//高级经理
-	public final static String VIP8 = "HH";	//市场总监
-	public final static String VIP9 = "II";	//高级总监 380
+//	public final static String VIP1 = "AA";	//VIP    0  0
+//	public final static String VIP2 = "BB";	//业务员  4  4   40
+//	public final static String VIP3 = "CC";	//组长    10 10  140
+//	public final static String VIP4 = "DD";	//主任    20 20  180
+//	public final static String VIP5 = "EE";	//经理    40 40  330
+//	public final static String VIP6 = "FF";	//部门经理 80 80  660
+//	public final static String VIP7 = "GG";	//高级经理 160 160  990
+//	public final static String VIP8 = "HH";	//市场总监 260 260  1200
+//	public final static String VIP9 = "II";	//高级总监 380 380  1800
+//	
+//	public final static String DS1 = "JJJ";	//一星董事 380 380 300 3000
+//	public final static String DS2 = "KKK";	//执行总裁 750 750 600 5000
+//	public final static String DS3 = "LLL";	//总裁 1500 1500 1200  6000     
+//	public final static String DS4 = "MMM";	//皇冠 2200 2200 1800  13000
+//	public final static String DS5 = "NNN";	//皇冠大使 3000 3000 2100 20000
 	
-	public final static String DS1 = "JJJ";	//一星董事 380 380 300
-	public final static String DS2 = "KKK";	//二星董事 380 380 300
-	public final static String DS3 = "LLL";	//三星董事 380 380 300
-	public final static String DS4 = "MMM";	//总裁 380 380 300
-	public final static String DS5 = "NNN";	//执行总裁 380 380 300
+	public static Map<String,BusinessEntity> businessMap = new HashMap<>();
 	
-	public static void test(String type) {
+	static{
+//		BusinessEntity VIP1 = new BusinessEntity(UserLevel.CONSUMER, UserLevel.CONSUMER_CH, 0, 0, 0, 0);
+//		businessMap.put(UserLevel.CONSUMER, VIP1);
+		BusinessEntity VIP2 = new BusinessEntity(UserLevel.COMMON_SALEMAN, UserLevel.COMMON_SALEMAN_CH, 4, 4, 0, 40);
+		businessMap.put(UserLevel.COMMON_SALEMAN, VIP2);
+		BusinessEntity VIP3 = new BusinessEntity(UserLevel.GROUP_LEADER, UserLevel.GROUP_LEADER_CH, 10, 10, 0, 140);
+		businessMap.put(UserLevel.GROUP_LEADER, VIP3);
+		BusinessEntity VIP4 = new BusinessEntity(UserLevel.DIRECOTR, UserLevel.DIRECOTR_CH, 20, 20, 0, 180);
+		businessMap.put(UserLevel.DIRECOTR, VIP4);
+		BusinessEntity VIP5 = new BusinessEntity(UserLevel.MANAGEAR, UserLevel.MANAGEAR_CH, 40, 40, 0, 330);
+		businessMap.put(UserLevel.MANAGEAR, VIP5);
+		BusinessEntity VIP6 = new BusinessEntity(UserLevel.BRANCH_MANAGER, UserLevel.BRANCH_MANAGER_CH, 80, 80, 0, 660);
+		businessMap.put(UserLevel.BRANCH_MANAGER, VIP6);
+		BusinessEntity VIP7 = new BusinessEntity(UserLevel.ADVANCE_MANAGER, UserLevel.ADVANCE_MANAGER_CH, 160, 160, 0, 990);
+		businessMap.put(UserLevel.ADVANCE_MANAGER, VIP7);
+		BusinessEntity VIP8 = new BusinessEntity(UserLevel.MARKET_DIRECTOR, UserLevel.MARKET_DIRECTOR_CH, 260, 260, 0, 1200);
+		businessMap.put(UserLevel.MARKET_DIRECTOR, VIP8);
+		BusinessEntity VIP9 = new BusinessEntity(UserLevel.ADVANCED_DIRECTOR, UserLevel.ADVANCED_DIRECTOR_CH, 380, 380, 0, 1800);
+		businessMap.put(UserLevel.ADVANCED_DIRECTOR, VIP9);
 		
-		switch (type) {
-		case VIP0:
-			System.out.println("你的等级是：普通会员");
-			break;
-		case VIP1:
-			System.out.println("你的等级是：VIP");
-			break;
-		case VIP2:
-			System.out.println("你的等级是：业务员");
-			break;
-		case VIP3:
-			System.out.println("你的等级是：组长");
-			break;
-		case VIP4:
-			System.out.println("你的等级是：主任");
-			break;
-		case VIP5:
-			System.out.println("你的等级是：经理");
-			break;
-		case VIP6:
-			System.out.println("你的等级是：部门经理");
-			break;
-		case VIP7:
-			System.out.println("你的等级是：高级经理");
-			break;
-		case VIP8:
-			System.out.println("你的等级是：市场总监");
-			break;
-		case VIP9:
-			System.out.println("你的等级是：高级总监");
-			break;
-		case DS1:
-			System.out.println("你的等级是：一星董事");
-			break;
-		case DS2:
-			System.out.println("你的等级是：二星董事");
-			break;
-		case DS3:
-			System.out.println("你的等级是：三星董事");
-			break;
-		case DS4:
-			System.out.println("你的等级是：总裁");
-			break;
-		case DS5:
-			System.out.println("你的等级是：执行总裁");
-			break;
-
-		default:
-			break;
-		}
+		BusinessEntity DS1 = new BusinessEntity(UserLevel.BOARD_DIRECOTR, UserLevel.BOARD_DIRECOTR_CH, 380, 380, 300, 3000);
+		businessMap.put(UserLevel.BOARD_DIRECOTR, DS1);
+		BusinessEntity DS2 = new BusinessEntity(UserLevel.EXECUTIVE_PRESIDEANT, UserLevel.EXECUTIVE_PRESIDEANT_CH, 750, 750, 600, 5000);
+		businessMap.put(UserLevel.EXECUTIVE_PRESIDEANT, DS2);
+		BusinessEntity DS3 = new BusinessEntity(UserLevel.PRESIDEANT, UserLevel.PRESIDEANT_CH, 1500, 1500, 1200, 6000);
+		businessMap.put(UserLevel.PRESIDEANT, DS3);
+		BusinessEntity DS4 = new BusinessEntity(UserLevel.CROWN, UserLevel.CROWN_CH, 2200, 2200, 1800, 13000);
+		businessMap.put(UserLevel.CROWN, DS4);
+		BusinessEntity DS5 = new BusinessEntity(UserLevel.CROWN_AMBASSADOR, UserLevel.CROWN_AMBASSADOR_CH, 3000, 3000, 2100, 20000);
+		businessMap.put(UserLevel.CROWN_AMBASSADOR, DS5);
 	}
 	
-	/**
-	 * 排序，由小到大
-	 * @param departmentA
-	 * @param departmentB
-	 * @return
-	 */
-	public static int[] orderNumberSort(int departmentA,int departmentB) {
-		int[] arg ={departmentA,departmentB};
-		System.out.println("排序前:"+Arrays.toString(arg) );
-		if (departmentA<departmentB) {
-			arg[0] =departmentA;
-			arg[1] =departmentB;
-		}else {
-			arg[0] =departmentB;
-			arg[1] =departmentA;
-		}
-		System.out.println("排序后:"+Arrays.toString(arg) );
-		return arg;
-	}
-	
-	/**
-	 * 排序，由小到大  C不变
-	 * @param departmentA
-	 * @param departmentB
-	 * @param departmentC
-	 * @return
-	 */
-	public static int[] orderNumberSort(int departmentA,int departmentB,int departmentC) {
-		int[] arg ={departmentA,departmentB,departmentC};
-		System.out.println("排序前:"+Arrays.toString(arg) );
-		if (departmentA<departmentB) {
-			arg[0] =departmentA;
-			arg[1] =departmentB;
-		}else {
-			arg[0] =departmentB;
-			arg[1] =departmentA;
-		}
-		arg[2] = departmentC;
-		System.out.println("排序后:"+Arrays.toString(arg) );
-		return arg;
-	}
-	
-	private static String getBusinesType (int[] arg) {
-		String type = "";
-		if (arg.length == 2) {
-			type =getBusinesLevel(arg[1]);
-		}else if (arg.length == 3) {
-			type =getBusinesLevel(arg[2],arg[1]);
-		}
-		return type;
-	}
-	
-	public static String getBusinesType (int departmentA,int departmentB) {
-		int[] arg = orderNumberSort(departmentA, departmentB);
-		return getBusinesType(arg);
-	}
-	
-	public static String getBusinesType (int departmentA,int departmentB,int departmentC) {
-		int[] arg = orderNumberSort(departmentA, departmentB, departmentC);
-		return getBusinesType(arg);
-	}
-	
-	private static String getBusinesLevel(int ordernumber) {
-		if (ordernumber>=380) {
-			return "II";
-		}else if (ordernumber>=260) {
-			return "HH";
-		}else if (ordernumber>=160) {
-			return "GG";
-		}else if (ordernumber>=80) {
-			return "FF";
-		}else if (ordernumber>=40) {
-			return "EE";
-		}else if (ordernumber>=20) {
-			return "DD";
-		}else if (ordernumber>=8) {
-			return "CC";
-		}else if (ordernumber>=4) {
-			return "BB";
-		}else if (ordernumber>2) {
-			return "AA";
-		}else {
-			return "";
-		}
-	}
-	
-	private static String getBusinesLevel(int ordernumber,int ordernumber2) {
-		if(ordernumber>=300) {
-			if(ordernumber>=2100 && ordernumber2 >=3000) {
-				return "NNN";
-			}else if(ordernumber>=1800 && ordernumber2 >=2200) {
-				return "MMM";
-			}else if(ordernumber>=1200 && ordernumber2 >=1500) {
-				return "LLL";
-			}else if(ordernumber>=600 && ordernumber2 >=750) {
-				return "KKK";
-			}else if(ordernumber2 >=380) {
-				return "JJJ";
-			}else {
-				return "";
+	public static BusinessEntity getBusinesLevel(long DepartAcount,long DepartBcount,long DepartCcount) {
+		if (businessMap!=null && businessMap.size()>0) {
+			for(BusinessEntity bus : businessMap.values()) {
+				if (bus.getCountA()==DepartAcount&&bus.getCountB()==DepartBcount&&bus.getCountC()==DepartCcount) {
+					return bus;
+				}
 			}
-		}else {
-			return getBusinesLevel(ordernumber2);
 		}
+		return null;
 	}
+	
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 //		个人工单数:[2247,313,582,]
 //				排序后:[2247, 313, 582]
 //				你的等级是：普通会员
-		String type = getBusinesType(247,313,582);
-		test(type);
-		randomtest();
+		BusinessEntity bus = getBusinesLevel(1,1,0);
+		System.out.println(bus);
+		
+//		CheckUtil.printMap(businessMap);
 	}
-	
-	public static void randomtest() {
-		int rand = 500;
-		for (int i = 0; i < 100; i++) {
-			
-			if(i%2==1) {
-				int a = new Random().nextInt(rand)+380;
-				int b = new Random().nextInt(rand)+380;
-				int c = new Random().nextInt(rand);
-				System.out.println("个人工单数:["+a+","+b+","+c+","+"]");
-				String type = getBusinesType(a,b,c);
-				test(type);
-			}else {
-				int a = new Random().nextInt(rand);
-				int b = new Random().nextInt(rand);
-				System.out.println("个人工单数:["+a+","+b+"]");
-				String type = getBusinesType(a,b);
-				test(type);
-			}
-
-		}
-	}
-
 }

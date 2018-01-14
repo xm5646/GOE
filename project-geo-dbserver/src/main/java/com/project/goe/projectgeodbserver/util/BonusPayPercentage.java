@@ -6,8 +6,11 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "bonus.percentage")
 public class BonusPayPercentage {
+	//管理费 0.1
 	private double manageCostPercentage;
+	//奖金  0.81
 	private double bonusNumberPercentage;
+	//产品积分 0.09
 	private double productCoinNumberPercentage;
 
 	public double getManageCostPercentage() {
