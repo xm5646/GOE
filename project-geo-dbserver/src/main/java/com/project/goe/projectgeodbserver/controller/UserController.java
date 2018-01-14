@@ -45,17 +45,17 @@ public class UserController {
 		if (null == u) {
 			throw new RuntimeException("当前用户不存在!");
 		}
-		
+
 		try {
 			if (!(MD5Util.encrypeByMd5(user.getPassword()).equals(u.getPassword()))) {
 				throw new RuntimeException("用户密码输入有误！");
-			}else {
+			} else {
 				RetMsg retMsg = new RetMsg();
 				retMsg.setCode(200);
 				retMsg.setData(UserUtil.UserToUserVO(u));
 				retMsg.setMessage("用户登录成功！");
 				retMsg.setSuccess(true);
-				
+
 				return retMsg;
 			}
 		} catch (Exception e) {
@@ -67,16 +67,12 @@ public class UserController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	@Transactional
 	public RetMsg saveUser(@ModelAttribute User user) {
-		String defaultPassword = "test";
-
 		try {
+			
+			
+			
 			user.setCreateTime(new Date());
-
-			if (user.getPassword() == null) {
-				user.setPassword(MD5Util.encrypeByMd5(defaultPassword));
-			} else {
-				user.setPassword(MD5Util.encrypeByMd5(user.getPassword()));
-			}
+			user.setPassword(MD5Util.encrypeByMd5(user.getPassword()));
 			user.setParentId(user.getParentId());
 			this.userService.save(user);
 			RetMsg retMsg = new RetMsg();
@@ -132,15 +128,15 @@ public class UserController {
 			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
 			@RequestParam(value = "size", defaultValue = "5", required = false) int size,
 			@RequestParam(value = "keyword", required = false, defaultValue = "userId") String keyword,
-			@RequestParam(value = "order",required = false,defaultValue = "desc") String order) {
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		try {
 			Sort sort = null;
-			
-			if(order.equals("asc"))
-				sort = new Sort(Direction.ASC,keyword);
+
+			if (order.equals("asc"))
+				sort = new Sort(Direction.ASC, keyword);
 			else
 				sort = new Sort(Direction.DESC, keyword);
-			
+
 			Pageable pageable = new PageRequest(pageNum, size, sort);
 
 			return this.userService.findAllUserBySort(pageable);

@@ -86,7 +86,7 @@ public class User {
 
 	// 用户考核状态(true:重销日用户考核通过；false：重销日用户考核未通过)
 	@Column
-	private boolean assessStatus;
+	private boolean assessStatus = false;
 
 	// 用户层级数
 	@Column(nullable = false)
