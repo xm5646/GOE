@@ -1,25 +1,23 @@
 package com.project.goe.projectgeodbserver.viewentity;
 
-import java.util.Date;
-
 public class UserVO {
 	private String account;
 	private String nickName;
 	private String userLevel;
 	private String userType;
-	private boolean userStatus;
+	private String userStatus;
 	private String userPhone;
 	private long departmentA;
 	private long departmentB;
 	private long departmentC;
-	private Date createTime;
-	private Date assessDate;
-	private boolean assessStatus;
+	private String createTime;
+	private String assessDate;
+	private String assessStatus;
 	private double bonusCoin;
 	private double consumeCoin;
 	private double productCoin;
-	private Date activateTime;
-
+	private String activateTime;
+	
 	public String getAccount() {
 		return account;
 	}
@@ -50,14 +48,6 @@ public class UserVO {
 
 	public void setUserType(String userType) {
 		this.userType = userType;
-	}
-
-	public boolean isUserStatus() {
-		return userStatus;
-	}
-
-	public void setUserStatus(boolean userStatus) {
-		this.userStatus = userStatus;
 	}
 
 	public String getUserPhone() {
@@ -92,30 +82,6 @@ public class UserVO {
 		this.departmentC = departmentC;
 	}
 
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-
-	public Date getAssessDate() {
-		return assessDate;
-	}
-
-	public void setAssessDate(Date assessDate) {
-		this.assessDate = assessDate;
-	}
-
-	public boolean isAssessStatus() {
-		return assessStatus;
-	}
-
-	public void setAssessStatus(boolean assessStatus) {
-		this.assessStatus = assessStatus;
-	}
-
 	public double getBonusCoin() {
 		return bonusCoin;
 	}
@@ -140,12 +106,44 @@ public class UserVO {
 		this.productCoin = productCoin;
 	}
 
-	public Date getActivateTime() {
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getAssessDate() {
+		return assessDate;
+	}
+
+	public void setAssessDate(String assessDate) {
+		this.assessDate = assessDate;
+	}
+
+	public String getActivateTime() {
 		return activateTime;
 	}
 
-	public void setActivateTime(Date activateTime) {
+	public void setActivateTime(String activateTime) {
 		this.activateTime = activateTime;
+	}
+
+	public String getUserStatus() {
+		return userStatus;
+	}
+
+	public void setUserStatus(String userStatus) {
+		this.userStatus = userStatus;
+	}
+
+	public String getAssessStatus() {
+		return assessStatus;
+	}
+
+	public void setAssessStatus(String assessStatus) {
+		this.assessStatus = assessStatus;
 	}
 
 }
