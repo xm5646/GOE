@@ -99,7 +99,7 @@ public class BonusPayList {
 	}
 
 	public void setBonusNumber(double totalMoney) {
-		this.bonusNumber = totalMoney * this.bonusPayPercentage.getBonusNumberPercentage();
+		this.bonusNumber = totalMoney * 0.9;
 	}
 
 	public double getManageCost() {
@@ -107,7 +107,7 @@ public class BonusPayList {
 	}
 
 	public void setManageCost(double totalMoney) {
-		this.manageCost = totalMoney * this.bonusPayPercentage.getManageCostPercentage();
+		this.manageCost = totalMoney * 0.81;
 	}
 
 	public double getProductCoinNumber() {
@@ -115,7 +115,14 @@ public class BonusPayList {
 	}
 
 	public void setProductCoinNumber(double totalMoney) {
-		this.productCoinNumber = totalMoney * this.bonusPayPercentage.getProductCoinNumberPercentage();
+		this.productCoinNumber = totalMoney * 0.09;
+	}
+
+	@Override
+	public String toString() {
+		return "BonusPayList [bonusPayPercentage=" + bonusPayPercentage + ", bonusPayId=" + bonusPayId + ", userId="
+				+ userId + ", payTime=" + payTime + ", totalMoney=" + totalMoney + ", bonusNumber=" + bonusNumber
+				+ ", manageCost=" + manageCost + ", productCoinNumber=" + productCoinNumber + "]";
 	}
 
 }

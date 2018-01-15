@@ -146,12 +146,13 @@ public class UserController {
 		for (Performance per : pers) {
 			perMap.put(per.getUserId(), per);
 		}
-		// 获得需要更新的收益表数据
+
 		List<Performance> perlist = CheckUtil.computePer(userid, userMap, perMap);
 		for (Performance performance : perlist) {
 			// 更新收益表数据
 			performanceService.save(performance);
 		}
+		//发生变化的业绩更新收益表
 	}
 
 	/**

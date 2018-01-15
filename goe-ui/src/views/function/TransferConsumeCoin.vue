@@ -21,7 +21,7 @@
           <form-item>
             <div class="item-content">
               <div class="item-input">
-                <input type="text" placeholder="请输入与收款人用户编号">
+                <input type="text" placeholder="请输入收款人用户编号">
               </div>
               <div class="item-title label">
                 <m-button type="warning" size="large" @click.native="findUser">查询</m-button>
@@ -31,7 +31,7 @@
         </form-list>
 
           <list v-if="findedUser">
-            <list-item :link="true" @click.native="ViewUserB">
+            <list-item >
               <div class="item-media"><img src="../../assets/images/icon-list.png" width="44"></div>
               <div class="item-content">
                 <div class="item-title-row">
@@ -59,7 +59,7 @@
           </form-list>
           </list>
         <div v-if="NotFindUser">
-          <m-button type="light" @click.native="doLogin">未找到该用户</m-button>
+          <m-button type="light" >未找到该用户</m-button>
         </div>
         <br>
         <toast text="完成!" ref="t1"></toast>
@@ -102,7 +102,7 @@
     },
     methods: {
       findUser () {
-        this.NotFindUser = true
+        this.findedUser = true
       }
     },
     computed: {
