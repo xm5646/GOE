@@ -72,6 +72,16 @@ let router = new Router({
   ]
 })
 
+// 查看是否登录
+router.beforeEach((to, form, next) => {
+  // if (to.name !== 'login') {
+  //   if (window.localStorage.getItem('User') == null) {
+  //     router.push({name: 'login'})
+  //   }
+  // }
+  next()
+})
+
 new Vue({
   router
 }).$mount('#app')

@@ -141,16 +141,14 @@
   import { Header, HeaderLink, HeaderTitle } from '../../../node_modules/vum/src/components/header'
   import Content from '../../../node_modules/vum/src/components/content'
   import { List, ListItem } from '../../../node_modules/vum/src/components/list'
+  import GoeConfig from '../../../config/goe'
 
   export default {
     mounted: function () {
-      if (window.localStorage.getItem('User') == null) {
-        this.$router.push({name: 'login'})
-      } else {
-        this.LoginUser = JSON.parse(window.localStorage.getItem('User'))
-        // 加载首页业绩信息
-        this.getPerformance()
-      }
+      // 设置当前登陆用户
+      this.LoginUser = JSON.parse(window.localStorage.getItem('User'))
+      // 加载首页业绩信息
+      this.getPerformance()
     },
     components: {
       'page-header': Header,
@@ -176,7 +174,7 @@
         this.$router.push({name: 'login'})
       },
       getPerformance () {
-        const url = 'http://192.168.8.102:8088/user/performance?account=' + this.LoginUser.account
+        const url = GoeConfig.apiServer + '/user/performance?account=' + this.LoginUser.account
         this.$http.get(url, {
           _timeout: 3000,
           onTimeout: (request) => {

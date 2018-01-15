@@ -5,11 +5,11 @@
     </page-header>
     <page-content>
 
-      <performence-view :user="ViewUser"  :notFoundUser="notFoundUser"
+      <performence-view :user="ViewUser"
+                        :notFoundUser="notFoundUser"
                         @addUserEvent="AddUser"
                         @viewUsereEvent="changeUser"
                         @backMyUser="ShowMyPerformance">
-
       </performence-view>
     </page-content>
   </div>
@@ -21,6 +21,7 @@
   import Content from '../../../node_modules/vum/src/components/content'
   import { List, ListItem } from '../../../node_modules/vum/src/components/list'
   import { FormList, FormItem } from '../../../node_modules/vum/src/components/form'
+  import GoeConfig from '../../../config/goe'
 
   export default {
     mounted: function () {
@@ -83,7 +84,7 @@
         this.$router.push({name: 'createUser', params: { parentUser: data.parertUser, recomendUser: this.CurrentUser.account, departMent: data.departMent }})
       },
       getPerformance (account) {
-        const url = 'http://192.168.8.102:8088/performance/findUserAndFollowerPerformance?account=' + account
+        const url = GoeConfig.apiServer + '/performance/findUserAndFollowerPerformance?account=' + account
         console.log('url' + url)
         this.$http.get(url, {
           _timeout: 3000,

@@ -128,20 +128,20 @@
       },
       AddUserA () {
         this.$emit('addUserEvent', {
-          'parertUser': this.ViewUser.account,
-          'departMent': 'A'
+          'parentAccount': this.ViewUser.account,
+          'departPlace': 'A'
         })
       },
       AddUserB () {
         this.$emit('addUserEvent', {
-          'parertUser': this.ViewUser.account,
-          'departMent': 'B'
+          'parentAccount': this.ViewUser.account,
+          'departPlace': 'B'
         })
       },
       AddUserC () {
         this.$emit('addUserEvent', {
-          'parertUser': this.ViewUser.account,
-          'departMent': 'C'
+          'parentAccount': this.ViewUser.account,
+          'departPlace': 'C'
         })
       },
       checkUser () {

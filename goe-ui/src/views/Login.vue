@@ -30,12 +30,8 @@
             </div>
           </div>
         </form-item>
-        <div v-if="NotFindUser">
-          <br>
-          <m-button type="danger" >{{ errMsg }}</m-button>
-        </div>
         <br>
-        <m-button type="warning" size="large" @click.native="doLogin">登录</m-button>
+        <m-button type="warning"  @click.native="doLogin">登录</m-button>
       </form-list>
     </content>
   </div>
@@ -48,6 +44,7 @@
   import Content from '../../node_modules/vum/src/components/content'
   import { Button } from '../../node_modules/vum/src/components/buttons'
   import { Form, FormItem } from '../../node_modules/vum/src/components/form'
+  import GoeConfig from '../../config/goe'
 
   export default {
     components: {
@@ -62,13 +59,13 @@
       return {
         username: '',
         password: '',
-        errMsg: '',
-        NotFindUser: false
+        errMsg: ''
       }
     },
     methods: {
       doLogin () {
-        this.$http.post('http://192.168.8.102:8088/user/login',
+        const url = GoeConfig.apiServer + '/user/login'
+        this.$http.post(url,
           {
             account: this.username,
             password: this.password
@@ -76,7 +73,6 @@
           {
             _timeout: 3000,
             onTimeout: (request) => {
-              this.NotFindUser = true
               this.errMsg = '登陆超时'
               this.password = ''
             }
@@ -87,9 +83,9 @@
               console.log('获取的data数据类型' + typeof response.body.data)
               window.localStorage.setItem('User', JSON.stringify(response.body.data))
             } else {
-              this.NotFindUser = true
               this.errMsg = response.body.message
               this.password = ''
+              this.$refs.alert.open()
             }
           }, responseErr => {
             console.log(responseErr.body)
