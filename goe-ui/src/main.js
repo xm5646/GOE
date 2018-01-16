@@ -10,6 +10,7 @@ import ResetPassword from './views/function/ResetPassword'
 import ReConsume from './views/function/ReConsume'
 import ConvertConsume from './views/function/ConvertConsumeCoin'
 import TransferConsumeCoin from './views/function/TransferConsumeCoin'
+import CreateUser from './views/function/CreateUser'
 
 Vue.use(Router)
 Vue.use(Vum)
@@ -49,6 +50,11 @@ let router = new Router({
       component: ResetPassword
     },
     {
+      path: '/createUser',
+      name: 'createUser',
+      component: CreateUser
+    },
+    {
       path: '/reConsume',
       name: 'reConsume',
       component: ReConsume
@@ -64,6 +70,16 @@ let router = new Router({
       component: TransferConsumeCoin
     }
   ]
+})
+
+// 查看是否登录
+router.beforeEach((to, form, next) => {
+  // if (to.name !== 'login') {
+  //   if (window.localStorage.getItem('User') == null) {
+  //     router.push({name: 'login'})
+  //   }
+  // }
+  next()
 })
 
 new Vue({

@@ -9,23 +9,41 @@ import java.util.Date;
 import java.util.Random;
 
 public class UserUtil {
-
+	
 	private UserUtil() {}
 	
 	public static UserVO UserToUserVO(User user) {
 		UserVO userVO = new UserVO();
 		userVO.setAccount(user.getAccount());
-		userVO.setActivateTime(user.getActivateTime());
-		userVO.setAssessStatus(user.isAssessStatus());
+		userVO.setActivateTime(DateFormatUtil.getNowDateShort(user.getActivateTime()));
+		
+		if(user.getAssessDate().equals(user.getCreateTime())) {
+			userVO.setAssessDate("未达到考核级别");
+		}else {
+			userVO.setAssessDate(DateFormatUtil.getNowDateShort(user.getAssessDate()));
+		}
+		
+		if(user.isAssessStatus()) {
+			userVO.setAssessStatus("已通过考核");
+		}else {
+			userVO.setAssessStatus("未通过考核");
+		}
+
 		userVO.setBonusCoin(user.getBonusCoin());
 		userVO.setConsumeCoin(user.getConsumeCoin());
-		userVO.setCreateTime(user.getCreateTime());
+		
+		userVO.setCreateTime(DateFormatUtil.getNowDateShort(user.getCreateTime()));
 		userVO.setDepartmentA(user.getDepartmentA());
 		userVO.setDepartmentB(user.getDepartmentB());
 		userVO.setDepartmentC(user.getDepartmentC());
 		userVO.setProductCoin(user.getProductCoin());
 		userVO.setUserType(user.getUserType());
-		userVO.setUserStatus(user.isUserStatus());
+		
+		if(user.isUserStatus())
+			userVO.setUserStatus("已激活");
+		else 
+			userVO.setUserStatus("未激活");
+		
 		userVO.setUserPhone(user.getUserPhone());
 		userVO.setUserLevel(user.getUserLevel());
 		userVO.setNickName(user.getNickName());

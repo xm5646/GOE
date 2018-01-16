@@ -16,4 +16,8 @@ public class MD5Util {
         return encrypeStr;
     }
 	
+	public static void main(String[] args) throws Exception {
+		System.out.println(encrypeByMd5("admin"));
+	}
+	
 }

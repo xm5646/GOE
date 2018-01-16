@@ -9,8 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.project.goe.projectgeodbserver.statusType.ConsumeType;
-
 @Entity
 @Table(name = "tb_consume")
 public class ConsumeRecord {
