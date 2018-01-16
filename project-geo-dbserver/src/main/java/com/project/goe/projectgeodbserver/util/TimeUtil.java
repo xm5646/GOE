@@ -2,6 +2,8 @@ package com.project.goe.projectgeodbserver.util;
 
 
 
+import static org.assertj.core.api.Assertions.setLenientDateParsing;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,6 +26,22 @@ public class TimeUtil {
 		} catch (ParseException e) {
 			return -1;
 		}
+	}
+	
+	public static boolean getTimeSame(Date d1,Date d2) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String str1 = getDateFormat(d1);
+		String str2 = getDateFormat(d2);
+		try {
+			Date beginDate = df.parse(str1);
+			Date endDate = df.parse(str2);
+			if ((beginDate.getTime()-endDate.getTime())==0) {
+				return true;
+			}
+		} catch (ParseException e) {
+			return false;
+		}
+		return false;
 	}
 	
 	/**
@@ -91,28 +109,33 @@ public class TimeUtil {
 		return false;
 	}
 	
-	public static void main(String[] args) {
-		String date1 = "2017-12-12 23:59:59";
-		String date2 = "2017-11-13 23:59:59";
+	public static void main(String[] args) throws Exception{
+//		String date1 = "2017-12-12 23:59:59";
+//		String date2 = "2017-11-12 23:59:59";
+//		
+////		compareDate(date1, date2);
+//		
+//		int days = getDiscrepantDays(date1,date2);
+//		System.out.println(days);
+//		int cycle = getDateCycle(days);
+//		int cycleR = getDateCycleRemainder(days);
+//		System.out.println(cycle);
+//		System.out.println(cycleR);
+//		
+//		Date date = new Date();
+//		String nowDate = getDateFormat(date);
+//		System.out.println(nowDate);
+//		
+//		Date datea  = addDay(100);
+//		String nowDate1 = getDateFormat(datea);
+//		System.out.println(nowDate1);
+//		
+//		compareDate(date, datea);
+		Date d1 =new Date();
+		Thread.sleep(2000);
+		Date d2 =new Date();
+		System.out.println(getTimeSame(d1, d2));
 		
-//		compareDate(date1, date2);
-		
-		int days = getDiscrepantDays(date1,date2);
-		System.out.println(days);
-		int cycle = getDateCycle(days);
-		int cycleR = getDateCycleRemainder(days);
-		System.out.println(cycle);
-		System.out.println(cycleR);
-		
-		Date date = new Date();
-		String nowDate = getDateFormat(date);
-		System.out.println(nowDate);
-		
-		Date datea  = addDay(100);
-		String nowDate1 = getDateFormat(datea);
-		System.out.println(nowDate1);
-		
-		compareDate(date, datea);
 	}
 
 }
