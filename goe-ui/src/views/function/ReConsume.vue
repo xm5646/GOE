@@ -32,7 +32,7 @@
           <br>
           <div class="row">
             <div class="col-50">原价：</div>
-            <div class="col-50">{{ discotePrice }}</div>
+            <div class="col-50">{{ price }}</div>
           </div>
           <div class="row">
             <div class="col-50">重消优惠价格：</div>

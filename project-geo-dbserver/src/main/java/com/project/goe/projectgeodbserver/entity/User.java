@@ -17,7 +17,7 @@ import com.project.goe.projectgeodbserver.statusType.UserType;
 /**
  * 用户类，映射用户表 注解@Entity一定要带，这个是数据库映射的注解
  */
-@Entity
+@Entity(name = "tuser")
 @Table(name = "tb_user")
 public class User {
 
@@ -40,7 +40,7 @@ public class User {
 
 	// 用户级别
 	@Column(nullable = false)
-	private String userLevel = UserLevel.COMMON_SALEMAN;
+	private String userLevel = UserLevel.CONSUMER;
 
 	// 用户类型
 	@Column(nullable = false)
@@ -86,7 +86,7 @@ public class User {
 
 	// 用户考核状态(true:重销日用户考核通过；false：重销日用户考核未通过)
 	@Column
-	private boolean assessStatus;
+	private boolean assessStatus = false;
 
 	// 用户层级数
 	@Column(nullable = false)
@@ -284,4 +284,16 @@ public class User {
 		this.userType = userType;
 	}
 
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", account=" + account + ", nickName=" + nickName + ", password=" + password
+				+ ", userLevel=" + userLevel + ", userType=" + userType + ", userStatus=" + userStatus + ", userPhone="
+				+ userPhone + ", parentId=" + parentId + ", departmentA=" + departmentA + ", departmentB=" + departmentB
+				+ ", departmentC=" + departmentC + ", recomondId=" + recomondId + ", createTime=" + createTime
+				+ ", assessDate=" + assessDate + ", assessStatus=" + assessStatus + ", weightCode=" + weightCode
+				+ ", bonusCoin=" + bonusCoin + ", consumeCoin=" + consumeCoin + ", productCoin=" + productCoin
+				+ ", activateTime=" + activateTime + "]";
+	}
+
+	
 }

@@ -25,32 +25,34 @@ public class Performance {
 
 	// A市场累积业绩
 	@Column
-	private long departAcount;
+	private long departAcount = 0;
 
 	// B市场累积业绩
 	@Column
-	private long departBcount;
+	private long departBcount = 0;
 
 	// C市场累积业绩
 	@Column
-	private long departCcount;
+	private long departCcount = 0;
 
 	// A市场新增业绩
 	@Column
-	private long addDepartAcount;
+	private long addDepartAcount = 0;
 
 	// B市场新增业绩
 	@Column
-	private long addDepartBcount;
+	private long addDepartBcount = 0;
 
 	// C市场新增业绩
 	@Column
-	private long addDepartCcount;
+	private long addDepartCcount = 0;
 
 	// 新增用户第一次添加至业绩表
+	@Column
 	private Date createTime;
 
 	// 最后一次用户业绩更新的时间
+	@Column
 	private Date updateTime;
 
 	public long getpId() {
