@@ -17,7 +17,7 @@ public class UserUtil {
 		userVO.setAccount(user.getAccount());
 		userVO.setActivateTime(DateFormatUtil.getNowDateShort(user.getActivateTime()));
 		
-		if(user.getAssessDate().equals(user.getCreateTime())) {
+		if(user.getAssessDate().getTime()==user.getCreateTime().getTime()) {
 			userVO.setAssessDate("未达到考核级别");
 		}else {
 			userVO.setAssessDate(DateFormatUtil.getNowDateShort(user.getAssessDate()));

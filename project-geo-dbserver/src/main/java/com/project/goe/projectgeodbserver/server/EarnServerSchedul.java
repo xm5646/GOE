@@ -199,6 +199,7 @@ public class EarnServerSchedul {
 	 */
 	private UserCreatereRecord saveUserCreateEntity(long userId) {
 		UserCreatereRecord ucr = userCreateRecordService.getUserCreatereRecordByUserId(userId);
+		savePer(userId);
 		if (ucr==null) {
 			ucr = new UserCreatereRecord();
 			Date newdate = new Date();
