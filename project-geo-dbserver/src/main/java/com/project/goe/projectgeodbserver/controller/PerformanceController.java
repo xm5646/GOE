@@ -56,6 +56,7 @@ public class PerformanceController {
 		User user = this.userService.findByAccount(account);
 		if (null == user)
 			throw new RuntimeException("用户不存在!");
+		
 		try {
 			long departmentA = user.getDepartmentA();
 			long departmentB = user.getDepartmentB();
@@ -87,7 +88,7 @@ public class PerformanceController {
 			retMsg.setSuccess(true);
 			return retMsg;
 		} catch (Exception e) {
-			throw new RuntimeException("用户及用户关联业绩查询成功>>>>>" +e.getMessage());
+			throw new RuntimeException("用户及用户关联业绩查询失败>>>>>" +e.getMessage());
 		}
 	}
 
@@ -97,6 +98,10 @@ public class PerformanceController {
 
 		// 基于userId，查询用户信息
 		User user = this.userService.findByUserId(userId);
+		
+		if(null == user)
+			return null;
+		
 		// 基于userId，查询用户业绩信息
 		Performance performance = this.performanceService.findByUserId(userId);
 		// 返回UserPerformence对象：用户名，部门A、B、C业绩

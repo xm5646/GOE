@@ -261,19 +261,21 @@ public class UserController {
 				throw new RuntimeException("用户名重复！");
 
 			String password = userSavePostParams.getPassword();
-			long parentId = userSavePostParams.getParentId();
-			long recomondId = userSavePostParams.getRecomondId();
+			String parentAccount = userSavePostParams.getParentAccount();
+			String recomendAccount = userSavePostParams.getRecomendAccount();
 			/*******新增用户*******/
 			// 设置用户名、密码、父id、推荐人id
 			User user = new User();
 			user.setAccount(account);
 			user.setPassword(MD5Util.encrypeByMd5(password));
-			user.setParentId(parentId);
-			user.setRecomondId(recomondId);
+			User parentUser = this.userService.findByAccount(parentAccount);
+			User recomondUser = this.userService.findByAccount(recomendAccount);
+			
+			user.setParentId(parentUser.getUserId());
+			user.setRecomondId(recomondUser.getUserId());
 			
 			// 设置用户的层级数：父节点层级数+1
-			User pUser = this.userService.findByUserId(parentId);
-			user.setWeightCode(pUser.getWeightCode() + 1);
+			user.setWeightCode(parentUser.getWeightCode() + 1);
 
 			// 设置用户创建时间
 			user.setCreateTime(new Date());
@@ -281,37 +283,38 @@ public class UserController {
 			// 设置用户下次考核日期
 			user.setAssessDate(null);
 			// 保存新增用户信息
-			this.userService.save(user);
+			user = this.userService.save(user);
+			
+			System.out.println(user.getUserId());
 			
 			/*******更新用户上级信息********/
 			//父节点位置处添加新用户
 			String position = userSavePostParams.getPosition();
 			//修改父节点下新增用户id
-			User u = this.userService.findByAccount(account);
 			switch(position) {
 				case "A":
-					pUser.setDepartmentA(u.getUserId());
+					parentUser.setDepartmentA(user.getUserId());
 					break;
 				case "B":
-					pUser.setDepartmentB(u.getUserId());
+					parentUser.setDepartmentB(user.getUserId());
 					break;
 				case "C":
-					pUser.setDepartmentC(u.getUserId());
+					parentUser.setDepartmentC(user.getUserId());
 					break;
 				default:
 					throw new RuntimeException("传入的位置参数有误!");
 			}
 			
 			//更新父节点
-			this.userService.updateUserDepartmentId(pUser.getDepartmentA(),pUser.getDepartmentB(),pUser.getDepartmentC(),parentId);
+			this.userService.updateUserDepartmentId(parentUser.getDepartmentA(),parentUser.getDepartmentB(),parentUser.getDepartmentC(),parentUser.getParentId());
 			
 			//更新业绩信息
-			mainUpdatePerformance(u.getUserId());
+			mainUpdatePerformance(user.getUserId());
 			
 			// 返回新增用户信息
 			RetMsg retMsg = new RetMsg();
 			retMsg.setCode(200);
-			retMsg.setData(UserUtil.UserToUserVO(u));
+			retMsg.setData(UserUtil.UserToUserVO(user));
 			retMsg.setMessage("用户添加成功!");
 			retMsg.setSuccess(true);
 			return retMsg;
