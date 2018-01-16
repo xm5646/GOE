@@ -54,6 +54,12 @@ public class CheckUtil {
 		return pers;
 	}
 	
+	/**
+	 * 奖金发放
+	 * @param user
+	 * @param earn
+	 * @return
+	 */
 	public static BonusPayList sendBonusPaylist(User user,Earning earn) {
 		//earn 是当前用户以时间判断-可发的收益，时间最新的
 		if (user!=null && earn != null) {
@@ -64,6 +70,10 @@ public class CheckUtil {
 			bpl.setBonusNumber(earn.getDayMoney());
 			bpl.setManageCost(earn.getDayMoney());
 			bpl.setProductCoinNumber(earn.getDayMoney());
+			
+			//将积分和金钱添加到user表
+			user.setBonusCoin(user.getBonusCoin()+bpl.getBonusNumber());
+			user.setProductCoin(user.getProductCoin()+bpl.getProductCoinNumber());
 			return bpl;
 		}
 		return null;
@@ -150,6 +160,16 @@ public class CheckUtil {
 				System.out.println(e.toString());
 			}
 			System.out.println("总数："+map.size());
+		}
+
+	}
+	
+	public static void printList(List list) {
+		if (list!=null && list.size()>0) {
+			for (Object o : list) {
+				System.out.println(o.toString());
+			}
+			System.out.println("总数："+list.size());
 		}
 
 	}
