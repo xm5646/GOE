@@ -31,4 +31,8 @@ public class PerformanceService {
 	public Performance findByUserId(long userId) {
 		return this.performanceRepository.findByUserId(userId);
 	}
+	
+	public void deleteAllPerformance() {
+		this.performanceRepository.deleteAll();
+	}
 }

@@ -24,7 +24,12 @@ public class UserService {
 	@Transactional
 	public void delete(User user) {
 		this.userRepositoy.delete(user);
-	}	
+	}
+	
+	//删除所有用户数据
+	public void deleteAllUser() {
+		this.userRepositoy.deleteAll();
+	}
 	
 	//更新用户的节点信息
 	@Transactional

@@ -14,7 +14,6 @@ import com.project.goe.projectgeodbserver.entity.Performance;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.service.PerformanceService;
 import com.project.goe.projectgeodbserver.service.UserService;
-import com.project.goe.projectgeodbserver.util.UserUtil;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
 import com.project.goe.projectgeodbserver.viewentity.UserAccumulatePerformence;
 import com.project.goe.projectgeodbserver.viewentity.UserAndFollowerPerformance;
