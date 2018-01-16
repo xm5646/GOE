@@ -8,7 +8,7 @@ public class UserSavePostParams {
 	private String account;
 	private String password;
 	private String parentAccount;
-	private String recomendAccount;
+	private String recommendAccount;
 	private String position;
 
 	public String getParentAccount() {
@@ -19,12 +19,12 @@ public class UserSavePostParams {
 		this.parentAccount = parentAccount;
 	}
 
-	public String getRecomendAccount() {
-		return recomendAccount;
+	public String getRecommendAccount() {
+		return recommendAccount;
 	}
 
-	public void setRecomendAccount(String recomendAccount) {
-		this.recomendAccount = recomendAccount;
+	public void setRecommendAccount(String recommendAccount) {
+		this.recommendAccount = recommendAccount;
 	}
 
 	public UserSavePostParams() {

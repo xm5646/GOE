@@ -1,9 +1,6 @@
 package com.project.goe.projectgeodbserver.controller;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,8 +51,8 @@ public class UserController {
 		earnServerSchedul.mainUpdateUser(puser.getUserId(), type, newuser);
 		return "测试数据插入成功" + type;
 	}
-	
-	//初始化用户
+
+	// 初始化用户
 	@GetMapping("/initUser")
 	public void initUserAndPerformance() {
 		try {
@@ -66,11 +63,12 @@ public class UserController {
 			user.setAccount("admin");
 			user.setPassword(MD5Util.encrypeByMd5("admin"));
 			user.setActivateTime(null);
-			user.setAssessDate(new Date());
+			Date cTime = new Date();
+			user.setAssessDate(cTime);
 			user.setAssessStatus(false);
 			user.setBonusCoin(0f);
 			user.setConsumeCoin(0f);
-			user.setCreateTime(new Date());
+			user.setCreateTime(cTime);
 			user.setDepartmentA(0);
 			user.setDepartmentB(0);
 			user.setDepartmentC(0);
@@ -78,16 +76,16 @@ public class UserController {
 			user.setWeightCode(1);
 
 			User u = this.userService.save(user);
-			
+
 			this.performanceService.deleteAllPerformance();
 			Performance p = new Performance();
 			p.setUserId(u.getUserId());
 			p.setDepartAcount(0);
 			p.setDepartAcount(0);
-			p.setDepartCcount(0);		
+			p.setDepartCcount(0);
 			p.setCreateTime(new Date());
 			p.setUpdateTime(new Date());
-			
+
 			this.performanceService.save(p);
 		} catch (Exception e) {
 			throw new RuntimeException("用户信息初始化失败");
@@ -179,52 +177,50 @@ public class UserController {
 
 			String password = userSavePostParams.getPassword();
 			String parentAccount = userSavePostParams.getParentAccount();
-			String recomendAccount = userSavePostParams.getRecomendAccount();
+			String recommendAccount = userSavePostParams.getRecommendAccount();
+			String position = userSavePostParams.getPosition();
 			/******* 新增用户 *******/
 			// 设置用户名、密码、父id、推荐人id
 			User user = new User();
 			user.setAccount(account);
 			user.setPassword(MD5Util.encrypeByMd5(password));
 			User parentUser = this.userService.findByAccount(parentAccount);
-			User recomondUser = this.userService.findByAccount(recomendAccount);
+			User recommendUser = this.userService.findByAccount(recommendAccount);
 
 			user.setParentId(parentUser.getUserId());
-			user.setRecomondId(recomondUser.getUserId());
+			user.setRecomondId(recommendUser.getUserId());
 
 			// 设置用户的层级数：父节点层级数+1
 			user.setWeightCode(parentUser.getWeightCode() + 1);
 
 			// 设置用户创建时间
-			user.setCreateTime(new Date());
+			Date userCreateTime = new Date();
+			user.setCreateTime(userCreateTime);
 
 			// 设置用户下次考核日期
-			user.setAssessDate(null);
+			user.setAssessDate(userCreateTime);
+
 			// 保存新增用户信息
 			user = this.userService.save(user);
 
-			System.out.println(user.getUserId());
-
 			/******* 更新用户上级信息 ********/
-			// 父节点位置处添加新用户
-			String position = userSavePostParams.getPosition();
 			// 修改父节点下新增用户id
 			switch (position) {
-			case "A":
-				parentUser.setDepartmentA(user.getUserId());
-				break;
-			case "B":
-				parentUser.setDepartmentB(user.getUserId());
-				break;
-			case "C":
-				parentUser.setDepartmentC(user.getUserId());
-				break;
-			default:
-				throw new RuntimeException("传入的位置参数有误!");
+				case "A":
+					parentUser.setDepartmentA(user.getUserId());
+					break;
+				case "B":
+					parentUser.setDepartmentB(user.getUserId());
+					break;
+				case "C":
+					parentUser.setDepartmentC(user.getUserId());
+					break;
+				default:
+					throw new RuntimeException("传入的位置参数有误!");
 			}
 
 			// 更新父节点
-			this.userService.updateUserDepartmentId(parentUser.getDepartmentA(), parentUser.getDepartmentB(),
-					parentUser.getDepartmentC(), parentUser.getParentId());
+			this.userService.save(parentUser);
 
 			// 更新业绩信息
 			earnServerSchedul.mainUpdatePerformance(user.getUserId());
@@ -240,13 +236,6 @@ public class UserController {
 		} catch (Exception e) {
 			throw new RuntimeException("添加用户失败!------->" + e.getMessage());
 		}
-	}
-
-	@GetMapping("/update/{departmentA}/{departmentB}/{departmentC}/{userId}")
-	public String testUpdate(@PathVariable long departmentA, @PathVariable long departmentB,
-			@PathVariable long departmentC, @PathVariable long userId) {
-		this.userService.updateUserDepartmentId(departmentA, departmentB, departmentC, userId);
-		return "success";
 	}
 
 	// 删除用户

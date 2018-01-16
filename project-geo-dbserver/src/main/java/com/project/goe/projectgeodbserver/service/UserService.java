@@ -31,12 +31,6 @@ public class UserService {
 		this.userRepositoy.deleteAll();
 	}
 	
-	//更新用户的节点信息
-	@Transactional
-	public void updateUserDepartmentId(long departmentA,long departmentB,long departmentC,long userId) {
-		this.userRepositoy.updateUserDepartmentId(departmentA, departmentB, departmentC, userId);
-	}
-	
 /****************查询相关*******************************/
 	//基于account，查询用户信息
 	public User findByAccount(String account) {
