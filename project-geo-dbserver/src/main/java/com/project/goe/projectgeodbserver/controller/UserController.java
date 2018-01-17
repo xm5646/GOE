@@ -19,12 +19,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.goe.projectgeodbserver.entity.ConsumeRecord;
 import com.project.goe.projectgeodbserver.entity.Performance;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.server.EarnServerSchedul;
+import com.project.goe.projectgeodbserver.service.ConsumeRecordService;
 import com.project.goe.projectgeodbserver.service.PerformanceService;
 import com.project.goe.projectgeodbserver.service.UserService;
+import com.project.goe.projectgeodbserver.statusType.ConsumeType;
 import com.project.goe.projectgeodbserver.util.UserUtil;
+import com.project.goe.projectgeodbserver.util.BonusPayPercentage;
 import com.project.goe.projectgeodbserver.util.MD5Util;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
 import com.project.goe.projectgeodbserver.viewentity.UserSavePostParams;
@@ -39,6 +43,12 @@ public class UserController {
 
 	@Autowired
 	private PerformanceService performanceService;
+
+	@Autowired
+	private BonusPayPercentage bonusPayPercentage;
+	
+	@Autowired
+	private ConsumeRecordService consumeRecordService;
 
 	// 将业务全部移动到调度服务上
 	@Autowired
@@ -221,10 +231,31 @@ public class UserController {
 
 			// 更新父节点
 			this.userService.save(parentUser);
+			
+			// 更新推荐人激活状态:如果推荐人为未激活状态，则修改其状态，否则不发生变化
+			if(!recommendUser.isAssessStatus()) {
+				recommendUser.setActivateTime(new Date());
+				recommendUser.setAssessStatus(true);
+			}
 
 			// 更新业绩信息
 			earnServerSchedul.mainUpdatePerformance(user.getUserId());
-
+			
+			//更新推荐人的报单币
+			recommendUser.setConsumeCoin(user.getBonusCoin() - this.bonusPayPercentage.getConsumeCoinUnitPrice());
+			
+			//新增推荐人消费记录
+			ConsumeRecord consumeRecord = new ConsumeRecord();
+			consumeRecord.setUserId(recommendUser.getUserId());
+			consumeRecord.setConsumeType(ConsumeType.COIN_TRANSFER_ADDCONSUMER);
+			consumeRecord.setConsumeTime(new Date());
+			consumeRecord.setReceiveUserId(1);//1：公司id
+			consumeRecord.setConsumeNumber(this.bonusPayPercentage.getConsumeCoinUnitPrice());
+			consumeRecord.setConsumeStatus(true);
+			consumeRecord.setDescription(ConsumeType.COIN_TRANSFER_ADDCONSUMER);
+			
+			consumeRecordService.addOneConsumeRecord(consumeRecord);
+			
 			// 返回新增用户信息
 			RetMsg retMsg = new RetMsg();
 			retMsg.setCode(200);
