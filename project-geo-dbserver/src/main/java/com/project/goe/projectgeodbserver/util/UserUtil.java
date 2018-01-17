@@ -15,12 +15,12 @@ public class UserUtil {
 	public static UserVO UserToUserVO(User user) {
 		UserVO userVO = new UserVO();
 		userVO.setAccount(user.getAccount());
-		userVO.setActivateTime(DateFormatUtil.getNowDateShort(user.getActivateTime()));
+		userVO.setActivateTime(DateFormatUtil.DateObjectToString(user.getActivateTime()));
 		
-		if(user.getAssessDate().equals(user.getCreateTime())) {
+		if(DateFormatUtil.compareDateObject(user.getAssessDate(),user.getCreateTime())) {
 			userVO.setAssessDate("未达到考核级别");
 		}else {
-			userVO.setAssessDate(DateFormatUtil.getNowDateShort(user.getAssessDate()));
+			userVO.setAssessDate(DateFormatUtil.DateObjectToString(user.getAssessDate()));
 		}
 		
 		if(user.isAssessStatus()) {
@@ -32,7 +32,7 @@ public class UserUtil {
 		userVO.setBonusCoin(user.getBonusCoin());
 		userVO.setConsumeCoin(user.getConsumeCoin());
 		
-		userVO.setCreateTime(DateFormatUtil.getNowDateShort(user.getCreateTime()));
+		userVO.setCreateTime(DateFormatUtil.DateObjectToString(user.getCreateTime()));
 		userVO.setDepartmentA(user.getDepartmentA());
 		userVO.setDepartmentB(user.getDepartmentB());
 		userVO.setDepartmentC(user.getDepartmentC());

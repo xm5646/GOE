@@ -23,4 +23,8 @@ public class EarningService {
 		return this.earningRepository.save(earning);
 	}
 	
+	@Transactional
+	public Iterable<Earning> getAll(){
+		return earningRepository.findAll();
+	}
 }

@@ -1,9 +1,6 @@
 package com.project.goe.projectgeodbserver.controller;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.goe.projectgeodbserver.entity.Performance;
 import com.project.goe.projectgeodbserver.entity.User;
-import com.project.goe.projectgeodbserver.entity.UserCreatereRecord;
+import com.project.goe.projectgeodbserver.server.EarnServerSchedul;
 import com.project.goe.projectgeodbserver.service.PerformanceService;
-import com.project.goe.projectgeodbserver.service.UserCreateRecordService;
 import com.project.goe.projectgeodbserver.service.UserService;
-import com.project.goe.projectgeodbserver.util.CheckUtil;
 import com.project.goe.projectgeodbserver.util.UserUtil;
 import com.project.goe.projectgeodbserver.util.MD5Util;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
@@ -45,36 +40,56 @@ public class UserController {
 	@Autowired
 	private PerformanceService performanceService;
 
+	// 将业务全部移动到调度服务上
 	@Autowired
-	private UserCreateRecordService userCreateRecordService;
+	private EarnServerSchedul earnServerSchedul;
 
 	@RequestMapping("/testsave/{id}/{type}")
 	public String saveTest(@PathVariable("id") Long id, @PathVariable("type") String type) {
 		User puser = userService.getUserById(id);
 		User newuser = UserUtil.getTestUser();
-		mainUpdateUser(puser.getUserId(), type, newuser);
+		earnServerSchedul.mainUpdateUser(puser.getUserId(), type, newuser);
 		return "测试数据插入成功" + type;
 	}
 
-	private String mainUpdateUser(Long parentId, String type, User newuser) {
-		User puser = userService.getUserById(parentId);
-		if (puser != null) {
-			// User newuser = UserUtil.getTestUser();
-			if ("A".equals(type)) {
-				if (puser.getDepartmentA() != 0) {
-					return "A的下级节点已存在";
-				} else {
-					saveuser(newuser, puser, type);
-				}
-			} else if ("B".equals(type)) {
-				if (puser.getDepartmentB() != 0) {
-					return "B的下级节点已存在";
-				} else {
-					saveuser(newuser, puser, type);
-				}
-			}
+	// 初始化用户
+	@GetMapping("/initUser")
+	public void initUserAndPerformance() {
+		try {
+			// 删除用户表所有数据
+			this.userService.deleteAllUser();
+			// 新增admin用户
+			User user = new User();
+			user.setAccount("admin");
+			user.setPassword(MD5Util.encrypeByMd5("admin"));
+			user.setActivateTime(null);
+			Date cTime = new Date();
+			user.setAssessDate(cTime);
+			user.setAssessStatus(false);
+			user.setBonusCoin(0f);
+			user.setConsumeCoin(0f);
+			user.setCreateTime(cTime);
+			user.setDepartmentA(0);
+			user.setDepartmentB(0);
+			user.setDepartmentC(0);
+			user.setParentId(0);
+			user.setWeightCode(1);
+
+			User u = this.userService.save(user);
+
+			this.performanceService.deleteAllPerformance();
+			Performance p = new Performance();
+			p.setUserId(u.getUserId());
+			p.setDepartAcount(0);
+			p.setDepartAcount(0);
+			p.setDepartCcount(0);
+			p.setCreateTime(new Date());
+			p.setUpdateTime(new Date());
+
+			this.performanceService.save(p);
+		} catch (Exception e) {
+			throw new RuntimeException("用户信息初始化失败");
 		}
-		return "测试数据插入成功" + type;
 	}
 
 	@RequestMapping("/savemain")
@@ -82,113 +97,13 @@ public class UserController {
 		User newuser = UserUtil.getTestUser();
 		newuser.setWeightCode(1);
 		this.userService.save(newuser);
-		savePer(newuser.getUserId());
+		earnServerSchedul.savePer(newuser.getUserId());
 		return "测试数据插入根成功";
-	}
-
-	/**
-	 * 创建新用户，同时更新上级用户的A B节点ID
-	 * 
-	 * @param newuser
-	 * @param puser
-	 * @param type
-	 */
-	private void saveuser(User newuser, User puser, String type) {
-		newuser.setParentId(puser.getUserId());
-		newuser.setWeightCode(puser.getWeightCode() + 1);
-		this.userService.save(newuser);
-		if ("A".equals(type)) {
-			puser.setDepartmentA(newuser.getUserId());
-		} else if ("B".equals(type)) {
-			puser.setDepartmentB(newuser.getUserId());
-		}
-		this.userService.save(puser);
-		savePer(newuser.getUserId());
-		// 用户创建完成后更新用户收益信息
 	}
 
 	@RequestMapping("/testusercreate/{id}")
 	public String saveUserCreate(@PathVariable("id") Long id) {
-		return mainUpdatePerformance(id);
-	}
-
-	/**
-	 * 更新收益表 传递新创建的用户ID
-	 * 
-	 * @param createId
-	 * @return
-	 */
-	private String mainUpdatePerformance(Long createId) {
-		//判断业绩表是否有这个用户对应的业绩，如果有不管，没有就创建
-		savePer(createId);
-		// 创建用户更新收益表，记录是否更新收益数据，如果没有更新数据更新收益表并记录收益表更新状态
-		UserCreatereRecord ucr = saveUserCreateEntity(createId);
-		if (ucr != null && !ucr.isStatus()) {
-			updateUserPerformance(createId);
-			ucr.setStatus(true);
-			userCreateRecordService.save(ucr);
-		} else {
-			return "此用户已更新过收益";
-		}
-		return "更新用户收益成功";
-	}
-
-	private void updateUserPerformance(Long userid) {
-		// 取得所有收益表和用户表数据
-		Iterable<User> userlist = this.userService.getAll();
-		Iterable<Performance> pers = performanceService.getAll();
-
-		Map<Long, User> userMap = new HashMap<Long, User>();
-		Map<Long, Performance> perMap = new HashMap<Long, Performance>();
-		for (User user : userlist) {
-			userMap.put(user.getUserId(), user);
-		}
-		for (Performance per : pers) {
-			perMap.put(per.getUserId(), per);
-		}
-
-		List<Performance> perlist = CheckUtil.computePer(userid, userMap, perMap);
-		for (Performance performance : perlist) {
-			// 更新收益表数据
-			performanceService.save(performance);
-		}
-		//发生变化的业绩更新收益表
-	}
-
-	/**
-	 * 在创建用户的时候同时创建用户更新表默认数据
-	 * 
-	 * @param id
-	 */
-	private UserCreatereRecord saveUserCreateEntity(long userId) {
-		UserCreatereRecord ucr = userCreateRecordService.getUserCreatereRecordByUserId(userId);
-		if (ucr == null) {
-			ucr = new UserCreatereRecord();
-			Date newdate = new Date();
-			ucr.setUserId(userId);
-			ucr.setStatus(false);
-			ucr.setCreateTime(newdate);
-			ucr.setUpdateTime(newdate);
-			userCreateRecordService.save(ucr);
-		}
-		return ucr;
-	}
-
-	/**
-	 * 在创建用户的时候同时创建业绩表默认数据
-	 * 
-	 * @param id
-	 */
-	private void savePer(long id) {
-		Performance per = performanceService.getOne(id);
-		if (per == null) {
-			per = new Performance();
-			Date newdate = new Date();
-			per.setUserId(id);
-			per.setCreateTime(newdate);
-			per.setUpdateTime(newdate);
-			performanceService.save(per);
-		}
+		return earnServerSchedul.mainUpdatePerformance(id);
 	}
 
 	@RequestMapping("/findAll")
@@ -225,17 +140,17 @@ public class UserController {
 			throw new RuntimeException(e.getMessage());
 		}
 	}
-	
-	//返回用户的业绩信息
+
+	// 返回用户的业绩信息
 	@GetMapping("/performance")
 	public RetMsg RetMsg(@RequestParam("account") String account) {
 		User user = this.userService.findByAccount(account);
-		
-		if(null == user)
+
+		if (null == user)
 			throw new RuntimeException("当前用户不存在!");
-		
+
 		long userId = user.getUserId();
-		
+
 		try {
 			Performance p = this.performanceService.findByUserId(userId);
 			RetMsg retMsg = new RetMsg();
@@ -243,9 +158,9 @@ public class UserController {
 			retMsg.setData(p);
 			retMsg.setMessage("查询用户业绩成功!");
 			retMsg.setSuccess(true);
-			
+
 			return retMsg;
-		}catch(Exception e) {
+		} catch (Exception e) {
 			throw new RuntimeException("查询用户业绩失败>>>>>" + e.getMessage());
 		}
 	}
@@ -261,57 +176,59 @@ public class UserController {
 				throw new RuntimeException("用户名重复！");
 
 			String password = userSavePostParams.getPassword();
-			long parentId = userSavePostParams.getParentId();
-			long recomondId = userSavePostParams.getRecomondId();
-			/*******新增用户*******/
+			String parentAccount = userSavePostParams.getParentAccount();
+			String recommendAccount = userSavePostParams.getRecommendAccount();
+			String position = userSavePostParams.getPosition();
+			/******* 新增用户 *******/
 			// 设置用户名、密码、父id、推荐人id
 			User user = new User();
 			user.setAccount(account);
 			user.setPassword(MD5Util.encrypeByMd5(password));
-			user.setParentId(parentId);
-			user.setRecomondId(recomondId);
-			
+			User parentUser = this.userService.findByAccount(parentAccount);
+			User recommendUser = this.userService.findByAccount(recommendAccount);
+
+			user.setParentId(parentUser.getUserId());
+			user.setRecomondId(recommendUser.getUserId());
+
 			// 设置用户的层级数：父节点层级数+1
-			User pUser = this.userService.findByUserId(parentId);
-			user.setWeightCode(pUser.getWeightCode() + 1);
+			user.setWeightCode(parentUser.getWeightCode() + 1);
 
 			// 设置用户创建时间
-			user.setCreateTime(new Date());
+			Date userCreateTime = new Date();
+			user.setCreateTime(userCreateTime);
 
 			// 设置用户下次考核日期
-			user.setAssessDate(null);
+			user.setAssessDate(userCreateTime);
+
 			// 保存新增用户信息
-			this.userService.save(user);
-			
-			/*******更新用户上级信息********/
-			//父节点位置处添加新用户
-			String position = userSavePostParams.getPosition();
-			//修改父节点下新增用户id
-			User u = this.userService.findByAccount(account);
-			switch(position) {
+			user = this.userService.save(user);
+
+			/******* 更新用户上级信息 ********/
+			// 修改父节点下新增用户id
+			switch (position) {
 				case "A":
-					pUser.setDepartmentA(u.getUserId());
+					parentUser.setDepartmentA(user.getUserId());
 					break;
 				case "B":
-					pUser.setDepartmentB(u.getUserId());
+					parentUser.setDepartmentB(user.getUserId());
 					break;
 				case "C":
-					pUser.setDepartmentC(u.getUserId());
+					parentUser.setDepartmentC(user.getUserId());
 					break;
 				default:
 					throw new RuntimeException("传入的位置参数有误!");
 			}
-			
-			//更新父节点
-			this.userService.updateUserDepartmentId(pUser.getDepartmentA(),pUser.getDepartmentB(),pUser.getDepartmentC(),parentId);
-			
-			//更新业绩信息
-			mainUpdatePerformance(u.getUserId());
-			
+
+			// 更新父节点
+			this.userService.save(parentUser);
+
+			// 更新业绩信息
+			earnServerSchedul.mainUpdatePerformance(user.getUserId());
+
 			// 返回新增用户信息
 			RetMsg retMsg = new RetMsg();
 			retMsg.setCode(200);
-			retMsg.setData(UserUtil.UserToUserVO(u));
+			retMsg.setData(UserUtil.UserToUserVO(user));
 			retMsg.setMessage("用户添加成功!");
 			retMsg.setSuccess(true);
 			return retMsg;
@@ -319,13 +236,6 @@ public class UserController {
 		} catch (Exception e) {
 			throw new RuntimeException("添加用户失败!------->" + e.getMessage());
 		}
-	}
-	
-	@GetMapping("/update/{departmentA}/{departmentB}/{departmentC}/{userId}")
-	public String testUpdate(@PathVariable long departmentA,@PathVariable long departmentB,@PathVariable long departmentC,
-			@PathVariable long userId) {
-		this.userService.updateUserDepartmentId(departmentA, departmentB, departmentC, userId);
-		return "success";
 	}
 
 	// 删除用户

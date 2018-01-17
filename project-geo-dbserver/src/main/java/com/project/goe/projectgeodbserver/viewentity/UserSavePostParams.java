@@ -7,19 +7,27 @@ package com.project.goe.projectgeodbserver.viewentity;
 public class UserSavePostParams {
 	private String account;
 	private String password;
-	private long parentId;
-	private long recomondId;
+	private String parentAccount;
+	private String recommendAccount;
 	private String position;
 
+	public String getParentAccount() {
+		return parentAccount;
+	}
+
+	public void setParentAccount(String parentAccount) {
+		this.parentAccount = parentAccount;
+	}
+
+	public String getRecommendAccount() {
+		return recommendAccount;
+	}
+
+	public void setRecommendAccount(String recommendAccount) {
+		this.recommendAccount = recommendAccount;
+	}
+
 	public UserSavePostParams() {
-	}
-
-	public long getRecomondId() {
-		return recomondId;
-	}
-
-	public void setRecomondId(long recomondId) {
-		this.recomondId = recomondId;
 	}
 
 	public String getAccount() {
@@ -36,14 +44,6 @@ public class UserSavePostParams {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public long getParentId() {
-		return parentId;
-	}
-
-	public void setParentId(long parentId) {
-		this.parentId = parentId;
 	}
 
 	public String getPosition() {

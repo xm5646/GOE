@@ -2,8 +2,10 @@ package com.project.goe.projectgeodbserver.util;
 
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import com.project.goe.projectgeodbserver.entity.BusinessEntity;
@@ -28,9 +30,11 @@ public class BusinessUtil {
 	
 	public static Map<String,BusinessEntity> businessMap = new HashMap<>();
 	
+	public static List<BusinessEntity> businessList = new ArrayList<BusinessEntity>();
+	
 	static{
-//		BusinessEntity VIP1 = new BusinessEntity(UserLevel.CONSUMER, UserLevel.CONSUMER_CH, 0, 0, 0, 0);
-//		businessMap.put(UserLevel.CONSUMER, VIP1);
+		BusinessEntity VIP1 = new BusinessEntity(UserLevel.CONSUMER, UserLevel.CONSUMER_CH, 0, 0, 0, 0);
+		businessMap.put(UserLevel.CONSUMER, VIP1);
 		BusinessEntity VIP2 = new BusinessEntity(UserLevel.COMMON_SALEMAN, UserLevel.COMMON_SALEMAN_CH, 4, 4, 0, 40);
 		businessMap.put(UserLevel.COMMON_SALEMAN, VIP2);
 		BusinessEntity VIP3 = new BusinessEntity(UserLevel.GROUP_LEADER, UserLevel.GROUP_LEADER_CH, 10, 10, 0, 140);
@@ -58,17 +62,54 @@ public class BusinessUtil {
 		businessMap.put(UserLevel.CROWN, DS4);
 		BusinessEntity DS5 = new BusinessEntity(UserLevel.CROWN_AMBASSADOR, UserLevel.CROWN_AMBASSADOR_CH, 3000, 3000, 2100, 20000);
 		businessMap.put(UserLevel.CROWN_AMBASSADOR, DS5);
+		
+		businessList.add(VIP1);
+		businessList.add(VIP2);
+		businessList.add(VIP3);
+		businessList.add(VIP4);
+		businessList.add(VIP5);
+		businessList.add(VIP6);
+		businessList.add(VIP7);
+		businessList.add(VIP8);
+		businessList.add(VIP9);
+		
+		businessList.add(DS1);
+		businessList.add(DS2);
+		businessList.add(DS3);
+		businessList.add(DS4);
+		businessList.add(DS5);
 	}
 	
+	/**
+	 * 更加用户的业绩判断用户所处的等级
+	 * @param DepartAcount
+	 * @param DepartBcount
+	 * @param DepartCcount
+	 * @return
+	 */
 	public static BusinessEntity getBusinesLevel(long DepartAcount,long DepartBcount,long DepartCcount) {
-		if (businessMap!=null && businessMap.size()>0) {
-			for(BusinessEntity bus : businessMap.values()) {
-				if (bus.getCountA()==DepartAcount&&bus.getCountB()==DepartBcount&&bus.getCountC()==DepartCcount) {
-					return bus;
+		if (businessList!=null && businessList.size()>0) {
+			for (int i = businessList.size()-1; i >= 0; i--) {
+				if (isSatisfaction(businessList.get(i), DepartAcount, DepartBcount, DepartCcount)) {
+					return businessList.get(i);
 				}
 			}
+			
+//			for (BusinessEntity bus : businessList) {
+//				if (isSatisfaction(bus, DepartAcount, DepartBcount, DepartCcount)) {
+//					return bus;
+//				}
+//			}
+			
 		}
 		return null;
+	}
+	
+	private static boolean isSatisfaction(BusinessEntity bus,long DepartAcount,long DepartBcount,long DepartCcount) {
+		if (bus.getCountA()<=DepartAcount&&bus.getCountB()<=DepartBcount&&bus.getCountC()<=DepartCcount) {
+			return true;
+		}
+		return false;
 	}
 	
 	
@@ -77,7 +118,7 @@ public class BusinessUtil {
 //		个人工单数:[2247,313,582,]
 //				排序后:[2247, 313, 582]
 //				你的等级是：普通会员
-		BusinessEntity bus = getBusinesLevel(1,1,0);
+		BusinessEntity bus = getBusinesLevel(10,11,0);
 		System.out.println(bus);
 		
 //		CheckUtil.printMap(businessMap);

@@ -24,12 +24,11 @@ public class UserService {
 	@Transactional
 	public void delete(User user) {
 		this.userRepositoy.delete(user);
-	}	
+	}
 	
-	//更新用户的节点信息
-	@Transactional
-	public void updateUserDepartmentId(long departmentA,long departmentB,long departmentC,long userId) {
-		this.userRepositoy.updateUserDepartmentId(departmentA, departmentB, departmentC, userId);
+	//删除所有用户数据
+	public void deleteAllUser() {
+		this.userRepositoy.deleteAll();
 	}
 	
 /****************查询相关*******************************/

@@ -232,10 +232,6 @@ public class User {
 		this.consumeCoin = consumeCoin;
 	}
 
-	public void setProductCoin(long productCoin) {
-		this.productCoin = productCoin;
-	}
-
 	public String getNickName() {
 		return nickName;
 	}
