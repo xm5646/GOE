@@ -49,6 +49,14 @@ import ResetPassword from './function/ResetPassword'
 
 console.log(FooterItem)
 export default {
+  mounted: function () {
+    console.log(this.$route.params)
+    if (this.$route.params.view != null) {
+      this.currentView = this.$route.params.view
+    } else {
+      this.currentView = 'home'
+    }
+  },
   components: {
     'home': Home,
     'performance': Performance,

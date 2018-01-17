@@ -4,13 +4,14 @@
       <header-title style="background-color: orange" :back-link="true">会员管理系统</header-title>
     </page-header>
     <page-content>
-
       <performence-view :user="ViewUser"
                         :notFoundUser="notFoundUser"
                         @addUserEvent="AddUser"
                         @viewUsereEvent="changeUser"
                         @backMyUser="ShowMyPerformance">
       </performence-view>
+
+      <toast text="完成!" ref="t1"></toast>
     </page-content>
   </div>
 </template>
@@ -21,11 +22,19 @@
   import Content from '../../../node_modules/vum/src/components/content'
   import { List, ListItem } from '../../../node_modules/vum/src/components/list'
   import { FormList, FormItem } from '../../../node_modules/vum/src/components/form'
+  import Toast from '../../../node_modules/vum/src/components/toast'
   import GoeConfig from '../../../config/goe'
 
   export default {
     mounted: function () {
-      this.getPerformance(JSON.parse(window.localStorage.getItem('User')).account)
+      console.log('新建用户:' + this.$route.params.parentAccount)
+      if (this.$route.params.parentAccount == null) {
+        this.getPerformance(JSON.parse(window.localStorage.getItem('User')).account)
+      } else {
+        console.log('改变当前业绩显示用户为:' + this.$route.params.parentAccount)
+        this.$refs.t1.open()
+        this.changeUser(this.$route.params.parentAccount)
+      }
     },
     data () {
       return {
@@ -68,6 +77,7 @@
       ListItem,
       FormList,
       FormItem,
+      Toast,
       'page-content': Content,
       Grid
     },

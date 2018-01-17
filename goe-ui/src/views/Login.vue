@@ -97,7 +97,6 @@
               console.log(response.body)
               if (response.body.success) {
                 this.$router.push({name: 'index', params: {LoginUser: response.body.data}})
-                console.log('获取的data数据类型' + typeof response.body.data)
                 window.localStorage.setItem('User', JSON.stringify(response.body.data))
               } else {
                 this.isErr = true
@@ -105,6 +104,7 @@
                 this.password = ''
               }
             }, responseErr => {
+              console.log(responseErr)
               this.isErr = true
               this.errMsg = '未知错误'
               this.password = ''
