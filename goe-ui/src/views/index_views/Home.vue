@@ -187,6 +187,10 @@
           }, responseErr => {
             console.log(responseErr.body)
           })
+      },
+      update () {
+        console.log('home update')
+        this.LoginUser = JSON.parse(window.localStorage.getItem('User'))
       }
     }
   }

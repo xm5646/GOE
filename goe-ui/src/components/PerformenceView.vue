@@ -118,12 +118,15 @@
     },
     methods: {
       ViewUserA () {
+        this.checkUserAccount = ''
         this.$emit('viewUsereEvent', this.ViewUser.departUserA.account)
       },
       ViewUserB () {
+        this.checkUserAccount = ''
         this.$emit('viewUsereEvent', this.ViewUser.departUserB.account)
       },
       ViewUserC () {
+        this.checkUserAccount = ''
         this.$emit('viewUsereEvent', this.ViewUser.departUserC.account)
       },
       AddUserA () {

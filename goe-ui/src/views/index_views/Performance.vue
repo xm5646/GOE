@@ -32,8 +32,8 @@
         this.getPerformance(JSON.parse(window.localStorage.getItem('User')).account)
       } else {
         console.log('改变当前业绩显示用户为:' + this.$route.params.parentAccount)
-        this.$refs.t1.open()
         this.changeUser(this.$route.params.parentAccount)
+        this.$refs.t1.open()
       }
     },
     data () {
@@ -82,8 +82,8 @@
       Grid
     },
     methods: {
-      changeUser (userId) {
-        this.getPerformance(userId)
+      changeUser (account) {
+        this.getPerformance(account)
       },
       ShowMyPerformance () {
         this.getPerformance(this.CurrentUser.account)

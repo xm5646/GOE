@@ -101,14 +101,21 @@
     },
     data () {
       return {
-        bonusCoin: 3000,
-        consumeCoin: 2000,
-        productCoin: 10
+        bonusCoin: 0,
+        consumeCoin: 0,
+        productCoin: 0
       }
     },
     methods: {
       linkTo (url) {
         this.$emit('linkTo', url)
+      },
+      update () {
+        console.log('wallet update')
+        const CurrentUser = JSON.parse(window.localStorage.getItem('User'))
+        this.bonusCoin = CurrentUser.bonusCoin
+        this.consumeCoin = CurrentUser.consumeCoin
+        this.productCoin = CurrentUser.productCoin
       }
     }
   }
