@@ -242,7 +242,7 @@ public class UserController {
 			earnServerSchedul.mainUpdatePerformance(user.getUserId());
 			
 			//更新推荐人的报单币
-			recommendUser.setConsumeCoin(user.getBonusCoin() - this.bonusPayPercentage.getConsumeCoinUnitPrice());
+			recommendUser.setConsumeCoin(user.getConsumeCoin() - this.bonusPayPercentage.getConsumeCoinUnitPrice());
 			
 			//新增推荐人消费记录
 			ConsumeRecord consumeRecord = new ConsumeRecord();
