@@ -28,6 +28,7 @@ bonus:
      manageCostPercentage: 0.1
      bonusNumberPercentage: 0.81
      productCoinNumberPercentage: 0.09
+     consumeCoinUnitPrice: 680
    
   
   

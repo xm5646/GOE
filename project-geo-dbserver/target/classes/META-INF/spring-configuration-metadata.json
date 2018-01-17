@@ -15,6 +15,11 @@
     },
     {
       "sourceType": "com.project.goe.projectgeodbserver.util.BonusPayPercentage",
+      "name": "bonus.percentage.consume-coin-unit-price",
+      "type": "java.lang.Double"
+    },
+    {
+      "sourceType": "com.project.goe.projectgeodbserver.util.BonusPayPercentage",
       "name": "bonus.percentage.manage-cost-percentage",
       "type": "java.lang.Double"
     },
