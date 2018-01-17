@@ -233,9 +233,9 @@ public class UserController {
 			this.userService.save(parentUser);
 			
 			// 更新推荐人激活状态:如果推荐人为未激活状态，则修改其状态，否则不发生变化
-			if(!recommendUser.isAssessStatus()) {
+			if(!recommendUser.isUserStatus()) {
 				recommendUser.setActivateTime(new Date());
-				recommendUser.setAssessStatus(true);
+				recommendUser.setUserStatus(true);
 			}
 
 			// 更新业绩信息
