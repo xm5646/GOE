@@ -62,46 +62,6 @@ public class UserController {
 		return "测试数据插入成功" + type;
 	}
 
-	// 初始化用户
-	@GetMapping("/initUser")
-	public void initUserAndPerformance() {
-		try {
-			// 删除用户表所有数据
-			this.userService.deleteAllUser();
-			// 新增admin用户
-			User user = new User();
-			user.setAccount("admin");
-			user.setPassword(MD5Util.encrypeByMd5("admin"));
-			user.setActivateTime(null);
-			Date cTime = new Date();
-			user.setAssessDate(cTime);
-			user.setAssessStatus(false);
-			user.setBonusCoin(0f);
-			user.setConsumeCoin(0f);
-			user.setCreateTime(cTime);
-			user.setDepartmentA(0);
-			user.setDepartmentB(0);
-			user.setDepartmentC(0);
-			user.setParentId(0);
-			user.setWeightCode(1);
-
-			User u = this.userService.save(user);
-
-			this.performanceService.deleteAllPerformance();
-			Performance p = new Performance();
-			p.setUserId(u.getUserId());
-			p.setDepartAcount(0);
-			p.setDepartAcount(0);
-			p.setDepartCcount(0);
-			p.setCreateTime(new Date());
-			p.setUpdateTime(new Date());
-
-			this.performanceService.save(p);
-		} catch (Exception e) {
-			throw new RuntimeException("用户信息初始化失败");
-		}
-	}
-
 	@RequestMapping("/savemain")
 	public String saveMain() {
 		User newuser = UserUtil.getTestUser();
@@ -296,12 +256,21 @@ public class UserController {
 	/************************** 用户查询方法 *******************************/
 
 	// 根据用户名查找用户信息
-	@RequestMapping("/findByAccount/{account}")
-	public User findUserByAccount(@PathVariable String account) {
+	@GetMapping("/findByAccount")
+	public RetMsg findUserByAccount(@RequestParam("account") String account) {
+		if(null == account)
+			throw new RuntimeException("用户账户名不能为null");
+		
 		try {
-			return this.userService.findByAccount(account);
+			User u = this.userService.findByAccount(account);
+			RetMsg retMsg = new RetMsg();
+			retMsg.setCode(200);
+			retMsg.setData(UserUtil.UserToUserVO(u));
+			retMsg.setMessage("用户查询成功!");
+			retMsg.setSuccess(true);
+			return retMsg;
 		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
+			throw new RuntimeException("用户账户不存在！");
 		}
 	}
 
