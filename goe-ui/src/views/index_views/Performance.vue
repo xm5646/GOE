@@ -34,18 +34,18 @@
           account: JSON.parse(window.localStorage.getItem('User')).account
         },
         ViewUser: {
-          account: 'lixiaoming',
+          account: '',
           performanceA: 12,
           performanceB: 12,
           performanceC: 0,
           departUserA: {
-            account: 'lxmA',
+            account: '',
             performanceA: 12,
             performanceB: 6,
             performanceC: 0
           },
           departUserB: {
-            account: 'lxmB',
+            account: '',
             performanceA: 12,
             performanceB: 6,
             performanceC: 0
@@ -79,9 +79,9 @@
         this.getPerformance(this.CurrentUser.account)
       },
       AddUser (data) {
-        console.log('上级ID' + data.parertUser + '放置节点位置:' + data.departMent)
+        console.log('上级ID' + data.parentAccount + '放置节点位置:' + data.departPlace)
         console.log('当前登录用户账号' + this.CurrentUser.account)
-        this.$router.push({name: 'createUser', params: { parentUser: data.parertUser, recomendUser: this.CurrentUser.account, departMent: data.departMent }})
+        this.$router.push({name: 'createUser', params: { parentAccount: data.parentAccount, recommendAccount: this.CurrentUser.account, departPlace: data.departPlace }})
       },
       getPerformance (account) {
         const url = GoeConfig.apiServer + '/performance/findUserAndFollowerPerformance?account=' + account

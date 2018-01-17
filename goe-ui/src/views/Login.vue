@@ -1,6 +1,8 @@
 <template>
   <div class="page">
-    <simple-header title="会员管理系统"></simple-header>
+    <page-header>
+      <header-title style="background-color: orange" :back-link="true">会员管理系统</header-title>
+    </page-header>
     <content>
       <br><br>
       <div id="img-div">
@@ -15,7 +17,7 @@
           <div class="item-content">
             &nbsp;&nbsp;
             <div class="item-input">
-              <input type="text" placeholder="请输入您的账号" v-model="username">
+              <input type="text" placeholder="请输入您的账号" v-model="username" @focus="userInput">
             </div>
           </div>
         </form-item>
@@ -26,12 +28,16 @@
           <div class="item-content">
             &nbsp;&nbsp;
             <div class="item-input">
-              <input type="password" placeholder="请输入密码" class="" v-model="password">
+              <input type="password" placeholder="请输入密码" class="" v-model="password" @focus="userInput">
             </div>
           </div>
         </form-item>
+        <div v-if="isErr">
+          <m-button type="warning" :disabled="true">{{ errMsg }}</m-button>
+        </div>
+
         <br>
-        <m-button type="warning"  @click.native="doLogin">登录</m-button>
+        <m-button type="warning" @click.native="doLogin">登录</m-button>
       </form-list>
     </content>
   </div>
@@ -40,7 +46,7 @@
 
 <script>
   import Page from '../../node_modules/vum/src/components/page'
-  import { SimpleHeader } from '../../node_modules/vum/src/components/header'
+  import { Header, HeaderLink, HeaderTitle } from '../../node_modules/vum/src/components/header'
   import Content from '../../node_modules/vum/src/components/content'
   import { Button } from '../../node_modules/vum/src/components/buttons'
   import { Form, FormItem } from '../../node_modules/vum/src/components/form'
@@ -50,7 +56,9 @@
     components: {
       Page,
       Content,
-      SimpleHeader,
+      'page-header': Header,
+      HeaderLink,
+      HeaderTitle,
       'form-list': Form,
       FormItem,
       'm-button': Button
@@ -59,37 +67,49 @@
       return {
         username: '',
         password: '',
-        errMsg: ''
+        errMsg: '',
+        isErr: false
       }
     },
     methods: {
+      userInput () {
+        this.isErr = false
+      },
       doLogin () {
-        const url = GoeConfig.apiServer + '/user/login'
-        this.$http.post(url,
-          {
-            account: this.username,
-            password: this.password
-          },
-          {
-            _timeout: 3000,
-            onTimeout: (request) => {
-              this.errMsg = '登陆超时'
+        if (this.account === '' || this.password === '') {
+          this.isErr = true
+          this.errMsg = '用户账户输入不完整'
+        } else {
+          const url = GoeConfig.apiServer + '/user/login'
+          this.$http.post(url,
+            {
+              account: this.username,
+              password: this.password
+            },
+            {
+              _timeout: 3000,
+              onTimeout: (request) => {
+                this.errMsg = '登陆超时'
+                this.password = ''
+              }
+            })
+            .then(response => {
+              console.log(response.body)
+              if (response.body.success) {
+                this.$router.push({name: 'index', params: {LoginUser: response.body.data}})
+                console.log('获取的data数据类型' + typeof response.body.data)
+                window.localStorage.setItem('User', JSON.stringify(response.body.data))
+              } else {
+                this.isErr = true
+                this.errMsg = response.body.message
+                this.password = ''
+              }
+            }, responseErr => {
+              this.isErr = true
+              this.errMsg = '未知错误'
               this.password = ''
-            }
-          }).then(response => {
-            console.log(response.body)
-            if (response.body.success) {
-              this.$router.push({name: 'index', params: { LoginUser: response.body.data }})
-              console.log('获取的data数据类型' + typeof response.body.data)
-              window.localStorage.setItem('User', JSON.stringify(response.body.data))
-            } else {
-              this.errMsg = response.body.message
-              this.password = ''
-              this.$refs.alert.open()
-            }
-          }, responseErr => {
-            console.log(responseErr.body)
-          })
+            })
+        }
       }
     }
   }

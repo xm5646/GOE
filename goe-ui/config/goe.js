@@ -4,5 +4,5 @@ module.exports = {
     price: 660,
     reConsumeDiscount: 0.7
   },
-  apiServer: 'http://192.168.111.111:8088'
+  apiServer: 'http://192.168.191.3:8088'
 }

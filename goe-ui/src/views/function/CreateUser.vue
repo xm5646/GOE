@@ -12,7 +12,7 @@
             </div>
             <div class="item-content">
               <div class="item-input">
-                <input type="text" placeholder="请输入用户账户" class="" v-model="account">
+                <input type="text" placeholder="请输入用户账户" class="" v-model="account" @focus="userInput">
               </div>
             </div>
           </form-item>
@@ -22,7 +22,7 @@
             </div>
             <div class="item-content">
               <div class="item-input">
-                <input type="password" placeholder="请输入新密码" class="" v-model="password">
+                <input type="password" placeholder="请输入新密码" class="" v-model="password" @focus="userInput">
               </div>
             </div>
           </form-item>
@@ -32,21 +32,20 @@
             </div>
             <div class="item-content">
               <div class="item-input">
-                <input type="password" placeholder="请再次输入新密码" class="" v-model="SecondPassword">
+                <input type="password" placeholder="请再次输入新密码" class="" v-model="SecondPassword" @focus="userInput">
               </div>
             </div>
           </form-item>
+          <div v-if="isErr">
+            <m-button type="warning" :disabled="true" >{{ errMsg }}</m-button>
+          </div>
+
           <br>
           <m-button type="warning" size="large" @click.native="createUser">创建</m-button>
           <toast text="完成!" ref="t1"></toast>
           <toast text="失败!" type="error" ref="t2"></toast>
         </form-list>
       </div>
-      上级用户: {{ parentAccount }}
-      推荐用户: {{ recommendAccount }}
-      存放位置: {{ departPlace }}
-      创建用户编号:  {{ account }}
-      新用户密码: {{ password }}
     </page-content>
   </div>
 </template>
@@ -60,9 +59,10 @@
   import GoeConfig from '../../../config/goe'
   export default {
     mounted: function () {
+      console.log('设置创建用户参数')
       this.parentAccount = this.$route.params.parentAccount
       this.departPlace = this.$route.params.departPlace
-      this.recommendAccount = JSON.parse(window.localStorage.getItem('User')).account
+      this.recommendAccount = this.$route.params.recommendAccount
     },
     components: {
       SimpleHeader,
@@ -80,44 +80,60 @@
         account: '',
         parentAccount: '',
         recommendAccount: '',
-        departPlace: ''
+        departPlace: '',
+        isErr: false,
+        errMsg: ''
       }
     },
     methods: {
+      userInput () {
+        this.isErr = false
+      },
       createUser () {
         if (this.account === '' || this.password === '' || this.SecondPassword === '') {
-          console.log('用户信息输入不完整')
+          this.isErr = true
+          this.errMsg = '用户账户输入不完整'
         } else if (this.password !== this.SecondPassword) {
-          console.log('密码输入不一致')
+          this.isErr = true
+          this.errMsg = '密码输入不一致'
         } else {
-          const url = GoeConfig.apiServer + '/user/create'
+          const url = GoeConfig.apiServer + '/user/save'
+          this.isErr = false
           this.$http.post(url,
             {
-              account: this.username,
+              account: this.account,
               password: this.password,
               parentAccount: this.parentAccount,
-              departPlace: this.departPlace,
-              recommendAccount: this.recommendAccount
+              position: this.departPlace,
+              recomendAccount: this.recommendAccount
             },
             {
               _timeout: 3000,
               onTimeout: (request) => {
-                this.errMsg = '登陆超时'
+                this.isErr = true
+                this.errMsg = '请求超时'
                 this.password = ''
+                this.SecondPassword = ''
               }
             })
             .then(response => {
               console.log(response.body)
               if (response.body.success) {
-                this.$router.push({name: 'index', params: { LoginUser: response.body.data }})
-                console.log('获取的data数据类型' + typeof response.body.data)
-                window.localStorage.setItem('User', JSON.stringify(response.body.data))
+                this.password = ''
+                this.SecondPassword = ''
+                this.account = ''
+                this.$refs.t1.open()
               } else {
+                this.isErr = true
                 this.errMsg = response.body.message
                 this.password = ''
+                this.SecondPassword = ''
               }
             }, responseErr => {
-              console.log(responseErr.body)
+              this.isErr = true
+              this.errMsg = '未知错误'
+              this.password = ''
+              this.SecondPassword = ''
             })
         }
       }
