@@ -1,23 +1,26 @@
 <template>
   <div class="page">
-    <simple-header title="会员管理系统" ></simple-header>
+    <page-header>
+      <header-title style="background-color: orange" :back-link="true">会员管理系统</header-title>
+    </page-header>
     <page-content>
         <v-table :rows="rows" :pageInfo="pageInfo" @changePageEvent="changePage">
-
         </v-table>
     </page-content>
   </div>
 </template>
 
 <script>
-  import { SimpleHeader } from '../../../node_modules/vum/src/components/header'
+  import { Header, HeaderLink, HeaderTitle } from '../../../node_modules/vum/src/components/header'
   import Content from '../../../node_modules/vum/src/components/content'
   import Scroll from '../../../node_modules/vum/src/components/scroll'
   import VTable from '../../components/Table'
 
   export default {
     components: {
-      SimpleHeader,
+      'page-header': Header,
+      HeaderLink,
+      HeaderTitle,
       'page-content': Content,
       Scroll,
       VTable
@@ -56,7 +59,6 @@
         }, 2000)
       },
       onInfinite (done) {
-        console.log('infinite')
         setTimeout(function () {
           var f = document.createDocumentFragment()
           for (let i = 0; i < 10; i++) {

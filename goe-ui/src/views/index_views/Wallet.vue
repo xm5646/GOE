@@ -80,6 +80,12 @@
   import { Form, FormItem } from '../../../node_modules/vum/src/components/form'
 
   export default {
+    mounted: function () {
+      const CurrentUser = JSON.parse(window.localStorage.getItem('User'))
+      this.bonusCoin = CurrentUser.bonusCoin
+      this.consumeCoin = CurrentUser.consumeCoin
+      this.productCoin = CurrentUser.productCoin
+    },
     components: {
       'page-header': Header,
       HeaderLink,

@@ -14,7 +14,7 @@
                 <div class="item-after">{{ LoginUser.userStatus }}</div>
               </div>
               <div class="item-subtitle">
-                【{{ LoginUser.userLevel }}】
+                {{ LoginUser.userLevel }}
               </div>
               <div class="item-text">
                 考核状态: {{ LoginUser.assessStatus }}  <br>

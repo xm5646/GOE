@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div class="">
     <page-content>
       <table class="imagetable">
         <tr>
@@ -36,7 +36,7 @@
           <m-button :disabled="isFirstPage" @click.native="changePage('firstPage')">首页</m-button>
           <m-button :disabled="isFirstPage" @click.native="changePage('prePage')">上一页</m-button>
           <m-button :disabled="isEndPage" @click.native="changePage('nextPage')">下一页</m-button>
-          <p><m-button  :disabled="isEndPage" @click.native="changePage('lastPage')">末页</m-button></p>
+          <m-button  :disabled="isEndPage" @click.native="changePage('lastPage')">末页</m-button>
         </button-group>
       </div>
     </page-content>
