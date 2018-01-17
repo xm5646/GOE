@@ -247,6 +247,7 @@ public class UserController {
 			//新增推荐人消费记录
 			ConsumeRecord consumeRecord = new ConsumeRecord();
 			consumeRecord.setUserId(recommendUser.getUserId());
+			consumeRecord.setSendUserId(recommendUser.getUserId());
 			consumeRecord.setConsumeType(ConsumeType.COIN_TRANSFER_ADDCONSUMER);
 			consumeRecord.setConsumeTime(new Date());
 			consumeRecord.setReceiveUserId(1);//1：公司id
