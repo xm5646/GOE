@@ -46,7 +46,7 @@ public class UserController {
 
 	@Autowired
 	private BonusPayPercentage bonusPayPercentage;
-	
+
 	@Autowired
 	private ConsumeRecordService consumeRecordService;
 
@@ -176,47 +176,51 @@ public class UserController {
 			/******* 更新用户上级信息 ********/
 			// 修改父节点下新增用户id
 			switch (position) {
-				case "A":
-					parentUser.setDepartmentA(user.getUserId());
-					break;
-				case "B":
-					parentUser.setDepartmentB(user.getUserId());
-					break;
-				case "C":
-					parentUser.setDepartmentC(user.getUserId());
-					break;
-				default:
-					throw new RuntimeException("传入的位置参数有误!");
+			case "A":
+				parentUser.setDepartmentA(user.getUserId());
+				break;
+			case "B":
+				parentUser.setDepartmentB(user.getUserId());
+				break;
+			case "C":
+				parentUser.setDepartmentC(user.getUserId());
+				break;
+			default:
+				throw new RuntimeException("传入的位置参数有误!");
 			}
 
 			// 更新父节点
 			this.userService.save(parentUser);
-			
+
 			// 更新推荐人激活状态:如果推荐人为未激活状态，则修改其状态，否则不发生变化
-			if(!recommendUser.isUserStatus()) {
+
+			if (!recommendUser.isUserStatus()) {
 				recommendUser.setActivateTime(new Date());
 				recommendUser.setUserStatus(true);
 			}
 
 			// 更新业绩信息
-//			earnServerSchedul.mainUpdatePerformance(user.getUserId());
-			
-			//更新推荐人的报单币
+			earnServerSchedul.mainUpdatePerformance(user.getUserId());
+
+			// 更新推荐人的报单币
 			recommendUser.setConsumeCoin(recommendUser.getConsumeCoin() - this.bonusPayPercentage.getConsumeCoinUnitPrice());
-			
-			//新增推荐人消费记录
+
+			// 新增推荐人消费记录
 			ConsumeRecord consumeRecord = new ConsumeRecord();
 			consumeRecord.setUserId(recommendUser.getUserId());
 			consumeRecord.setSendUserId(recommendUser.getUserId());
 			consumeRecord.setConsumeType(ConsumeType.COIN_TRANSFER_ADDCONSUMER);
 			consumeRecord.setConsumeTime(new Date());
-			consumeRecord.setReceiveUserId(0);//公司id 0
+			
+			//查询公司id
+			User company = this.userService.findByAccount("管理员");
+			consumeRecord.setReceiveUserId(company.getUserId());
 			consumeRecord.setConsumeNumber(this.bonusPayPercentage.getConsumeCoinUnitPrice());
 			consumeRecord.setConsumeStatus(true);
 			consumeRecord.setDescription(ConsumeType.COIN_TRANSFER_ADDCONSUMER);
-			
+
 			consumeRecordService.addOneConsumeRecord(consumeRecord);
-			
+
 			// 返回新增用户信息
 			RetMsg retMsg = new RetMsg();
 			retMsg.setCode(200);
@@ -258,9 +262,9 @@ public class UserController {
 	// 根据用户名查找用户信息
 	@GetMapping("/findByAccount")
 	public RetMsg findUserByAccount(@RequestParam("account") String account) {
-		if(null == account)
+		if (null == account)
 			throw new RuntimeException("用户账户名不能为null");
-		
+
 		try {
 			User u = this.userService.findByAccount(account);
 			RetMsg retMsg = new RetMsg();
@@ -278,9 +282,8 @@ public class UserController {
 	public void deleteOne(@PathVariable("id") Long id) {
 		this.userService.delete(id);
 	}
-	
-	//用户转账
-	
+
+	// 用户转账
 
 	// 基于单个关键字进行分页查询：默认按照userId字段j查询；默认显示第一页；默认每页显示5条数据
 	@GetMapping("/findUsersBySort")

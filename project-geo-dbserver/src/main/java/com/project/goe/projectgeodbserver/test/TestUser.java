@@ -53,12 +53,13 @@ public class TestUser {
 			u.setPassword(MD5Util.encrypeByMd5("admin"));
 			u.setCreateTime(cTime);
 			u.setUserType(UserType.COMPANY);
-			this.userService.save(u);
+			
 			this.userService.save(user);
+			this.userService.save(u);
 			
 			this.performanceService.deleteAllPerformance();
 			Performance p = new Performance();
-			p.setUserId(u.getUserId());
+			p.setUserId(user.getUserId());
 			p.setDepartAcount(0);
 			p.setDepartAcount(0);
 			p.setDepartCcount(0);
