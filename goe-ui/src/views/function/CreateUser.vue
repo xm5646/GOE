@@ -70,6 +70,7 @@
 
   export default {
     mounted: function () {
+      console.log('mount createUser')
       this.parentAccount = this.$route.params.parentAccount
       this.departPlace = this.$route.params.departPlace
       this.recommendAccount = this.$route.params.recommendAccount

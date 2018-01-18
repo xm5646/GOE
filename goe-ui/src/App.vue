@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import Hello from './components/Hello'
+import Hello from './components/Loading'
 
 export default {
   components: {

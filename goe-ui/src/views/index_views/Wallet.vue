@@ -69,6 +69,7 @@
 
 
     </page-content>
+    <preloader ref="preloader"></preloader>
   </div>
 </template>
 <script>
@@ -77,10 +78,20 @@
   import Content from '../../../node_modules/vum/src/components/content'
   import {List, ListItem} from '../../../node_modules/vum/src/components/list'
   import { Button, ButtonGroup } from '../../../node_modules/vum/src/components/buttons'
+  import Preloader from '../../../node_modules/vum/src/components/preloader'
   import { Form, FormItem } from '../../../node_modules/vum/src/components/form'
-
+  import Bus from '../../../src/EventBus.js'
   export default {
     mounted: function () {
+//      Bus.$on('isLoading', (status) => {
+//        if (status) {
+//          console.log('触发请求拦截器Y')
+//          this.$refs.preloader.open()
+//        } else {
+//          console.log('触发请求拦截器N')
+//          this.$refs.preloader.close()
+//        }
+//      })
       const CurrentUser = JSON.parse(window.localStorage.getItem('User'))
       this.bonusCoin = CurrentUser.bonusCoin
       this.consumeCoin = CurrentUser.consumeCoin
@@ -92,7 +103,9 @@
       HeaderTitle,
       List,
       ListItem,
+      Preloader,
       FormItem,
+      Bus,
       'form-list': Form,
       'page-content': Content,
       Grid,

@@ -40,6 +40,7 @@
         <m-button type="warning" @click.native="doLogin">登录</m-button>
       </form-list>
     </content>
+    <loading :LoadingStatus="isLoading"></loading>
   </div>
 
 </template>
@@ -50,10 +51,22 @@
   import Content from '../../node_modules/vum/src/components/content'
   import { Button } from '../../node_modules/vum/src/components/buttons'
   import { Form, FormItem } from '../../node_modules/vum/src/components/form'
+  import Loading from '../components/Loading'
   import GoeConfig from '../../config/goe'
 
   export default {
+    mounted: function () {
+      this.$bus.on('isLoading', (status) => {
+        console.log('接收到loading event,状态是:' + status)
+        if (status) {
+          this.isLoading = true
+        } else {
+          this.isLoading = false
+        }
+      })
+    },
     components: {
+      Loading,
       Page,
       Content,
       'page-header': Header,
@@ -68,7 +81,8 @@
         username: '',
         password: '',
         errMsg: '',
-        isErr: false
+        isErr: false,
+        isLoading: false
       }
     },
     methods: {
@@ -94,6 +108,7 @@
               }
             })
             .then(response => {
+              console.log(response.headers)
               console.log(response.body)
               if (response.body.success) {
                 this.$router.push({name: 'index', params: {LoginUser: response.body.data}})

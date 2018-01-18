@@ -78,7 +78,6 @@
           &nbsp;&nbsp;&nbsp;<m-button size="warning" @click.native="AddUserC">新增</m-button>
         </list-item>
       </list>
-
       <m-button type="warning" size="warning" @click.native="goBackMyPer">返回我的业绩</m-button>
     </content>
   </div>

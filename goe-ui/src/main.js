@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import VueResource from 'vue-resource'
 import FastClick from 'fastclick'
 import Vum from 'vum'
+import VueBus from 'vue-bus'
 // my components
 import Index from './views/Index'
 import Login from './views/Login'
@@ -14,11 +15,13 @@ import CreateUser from './views/function/CreateUser'
 
 Vue.use(Router)
 Vue.use(Vum)
+Vue.use(VueBus)
 Vue.use(VueResource)
 Vue.http.options.emulateJSON = true
 Vue.http.options.timeout = 3000
 
 Vue.http.interceptors.push((request, next) => {
+  Vue.bus.emit('isLoading', true)
   var timeout
   if (request._timeout) {
     timeout = setTimeout(() => {
@@ -27,6 +30,7 @@ Vue.http.interceptors.push((request, next) => {
     }, request._timeout)
   }
   next((response) => {
+    Vue.bus.emit('isLoading', false)
     clearTimeout(timeout)
   })
 })

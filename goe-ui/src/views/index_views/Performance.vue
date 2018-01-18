@@ -4,19 +4,18 @@
       <header-title style="background-color: orange" :back-link="true">会员管理系统</header-title>
     </page-header>
     <page-content>
-      <performence-view :user="ViewUser"
+      <performance-view :user="ViewUser"
                         :notFoundUser="notFoundUser"
                         @addUserEvent="AddUser"
                         @viewUsereEvent="changeUser"
                         @backMyUser="ShowMyPerformance">
-      </performence-view>
-
+      </performance-view>
       <toast text="完成!" ref="t1"></toast>
     </page-content>
   </div>
 </template>
 <script>
-  import PerformenceView from '../../components/PerformenceView'
+  import PerformanceView from '../../components/PerformenceView'
   import Grid from '../../../node_modules/vum/src/components/grid'
   import { Header, HeaderLink, HeaderTitle } from '../../../node_modules/vum/src/components/header'
   import Content from '../../../node_modules/vum/src/components/content'
@@ -69,7 +68,7 @@
       }
     },
     components: {
-      PerformenceView,
+      PerformanceView,
       'page-header': Header,
       HeaderLink,
       HeaderTitle,
