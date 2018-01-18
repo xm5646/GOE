@@ -70,10 +70,10 @@
 
   export default {
     mounted: function () {
-      console.log('设置创建用户参数')
       this.parentAccount = this.$route.params.parentAccount
       this.departPlace = this.$route.params.departPlace
       this.recommendAccount = this.$route.params.recommendAccount
+      this.consumeCoin = JSON.parse(window.localStorage.getItem('User')).consumeCoin
     },
     components: {
       SimpleHeader,
@@ -91,7 +91,7 @@
         password: '',
         SecondPassword: '',
         account: '',
-        consumeCoin: 6880,
+        consumeCoin: 0,
         parentAccount: '',
         recommendAccount: '',
         departPlace: '',

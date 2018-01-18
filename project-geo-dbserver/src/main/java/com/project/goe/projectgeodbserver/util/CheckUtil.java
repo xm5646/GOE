@@ -33,8 +33,10 @@ public class CheckUtil {
 		User u = userMap.get(userid);
 		Long pid = u.getParentId();
 		int weightCode = u.getWeightCode();
+		// for循环内终止条件应该是 i >=1 
 		for (int i = weightCode; i >1; i--) {
 			//增加业绩之前做判断，未激活用户不增加任何业绩
+			//增加新增业绩前判断,(当前用户级别>=业务员  或者当前业绩>=4:4, 或者判断该用户的考核日期和创建时间不一致)三个条件任何一个都行,才会计入新增
 			//新增业绩增加前判断用户是否有未领取完的累计升级奖励
 			User pu = userMap.get(pid);
 			if(userid == pu.getDepartmentA()) {

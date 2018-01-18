@@ -23,7 +23,7 @@
       </footer-item>
     </page-footer>
     <keep-alive>
-      <component :is="currentView" @linkTo="changeView"></component>
+      <component :is="currentView" @linkTo="changeView" ref="nowView"></component>
     </keep-alive>
 
   </div>
@@ -46,6 +46,7 @@ import Wallet from './index_views/Wallet'
 import Salary from './index_views/Salary'
 import Consume from './index_views/Consume'
 import ResetPassword from './function/ResetPassword'
+import GoeConfig from '../../config/goe'
 
 console.log(FooterItem)
 export default {
@@ -75,11 +76,38 @@ export default {
   },
   data () {
     return {
-      currentView: 'home'
+      currentView: 'home',
+      errMsg: ''
     }
   },
   methods: {
     changeView (view) {
+      // update user wallet info
+      if (view === 'wallet' || view === 'home') {
+        const url = GoeConfig.apiServer + '/user/findByAccount?account=' + JSON.parse(window.localStorage.getItem('User')).account
+        this.$http.get(url,
+          {
+            _timeout: 3000,
+            onTimeout: (request) => {
+              console.log('请求超时')
+              this.errMsg = '请求超时'
+            }
+          })
+          .then(response => {
+            if (response.body.success) {
+              console.log(response.body.data)
+              window.localStorage.setItem('User', JSON.stringify(response.body.data))
+              this.$refs.nowView.update()
+            } else {
+              console.log('error:' + response.body.message)
+              this.errMsg = response.body.message
+            }
+          }, responseErr => {
+            console.log(responseErr)
+            this.errMsg = '未知错误'
+          })
+      }
+      // 切换视图
       this.currentView = view
     }
   }

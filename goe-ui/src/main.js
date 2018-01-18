@@ -87,5 +87,4 @@ new Vue({
 }).$mount('#app')
 
 Vum.router(router)  // config router by vum
-
 FastClick.attach(document.body)
