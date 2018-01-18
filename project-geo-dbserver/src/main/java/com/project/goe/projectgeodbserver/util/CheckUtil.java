@@ -2,6 +2,7 @@ package com.project.goe.projectgeodbserver.util;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,23 +39,38 @@ public class CheckUtil {
 			//增加业绩之前做判断，未激活用户不增加任何业绩
 			//增加新增业绩前判断,(当前用户级别>=业务员  或者当前业绩>=4:4, 或者判断该用户的考核日期和创建时间不一致)三个条件任何一个都行,才会计入新增
 			//新增业绩增加前判断用户是否有未领取完的累计升级奖励
+			//这里如果累计业绩没有超过4：4 不增加新增业绩
 			User pu = userMap.get(pid);
-			if(userid == pu.getDepartmentA()) {
-				perMap.get(pid).setAddDepartAcount(perMap.get(pid).getAddDepartAcount()+1);
-				perMap.get(pid).setDepartAcount(perMap.get(pid).getDepartAcount()+1);
-			}else if(userid == pu.getDepartmentB()) {
-				perMap.get(pid).setAddDepartBcount(perMap.get(pid).getAddDepartBcount()+1);
-				perMap.get(pid).setDepartBcount(perMap.get(pid).getDepartBcount()+1);
-			}else if(userid == pu.getDepartmentC()) {
-				perMap.get(pid).setAddDepartCcount(perMap.get(pid).getAddDepartCcount()+1);
-				perMap.get(pid).setDepartCcount(perMap.get(pid).getDepartCcount()+1);
-			}	
-			pers.add(perMap.get(pid));
+			if (pu.isUserStatus()) {
+				//用户已激活
+				Performance pm = perMap.get(pid);
+				//计算累计
+				if(userid == pu.getDepartmentA()) {
+					pm.setDepartAcount(pm.getDepartAcount()+1);
+				}else if(userid == pu.getDepartmentB()) {
+					pm.setDepartBcount(pm.getDepartBcount()+1);
+				}else if(userid == pu.getDepartmentC()) {
+					pm.setDepartCcount(pm.getDepartCcount()+1);
+				}	
+				//计算新增
+				//这里如果累计业绩没有超过4：4 不增加新增业绩
+				if (pm.getDepartAcount()>4&&pm.getDepartBcount()>4) {
+					if(userid == pu.getDepartmentA()) {
+						pm.setAddDepartAcount(pm.getAddDepartAcount()+1);
+					}else if(userid == pu.getDepartmentB()) {
+						pm.setAddDepartBcount(pm.getAddDepartBcount()+1);
+					}else if(userid == pu.getDepartmentC()) {
+						pm.setAddDepartCcount(pm.getAddDepartCcount()+1);
+					}
+				}
+				pers.add(pm);
+			}
 			userid = pu.getUserId();
 			pid = pu.getParentId();
 		}
 		return pers;
 	}
+	
 	
 	/**
 	 * 奖金发放
@@ -138,10 +154,49 @@ public class CheckUtil {
 				e.setDayMoney(busentity.getMoney());
 				e.setUserLevel(busentity.getUserLevel());
 				e.setCreateTime(createTime);
+				e.setEndTime(TimeUtil.addDay(createTime,30));
 				return e;
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * 计算累计业绩是否有重复的
+	 * @param earns
+	 * @param earnList
+	 */
+	public static void computeEarn(Iterable<Earning> earns,List<Earning> earnList) {
+		if (earns!=null && earnList !=null&&earnList.size()>0) {
+			//将获得的对象封装成MAP
+			Map<String,Earning> earnMap = new HashMap<String,Earning>();
+			for (Earning earn : earns) {
+				String key = getEarnKey(earn);
+				if (key!=null && key.length()>0) {
+					earnMap.put(key, earn);
+				}
+			}
+			//遍历要保存的业绩，去除重复的保存
+			for (Earning earn : earnList) {
+				String key = getEarnKey(earn);
+				if (key!=null && key.length()>0) {
+					Earning em = earnMap.get(key);
+					if (em!=null) {
+						earnList.remove(earn);
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 判断KEY，元数据中是否存在
+	 * @param earn
+	 * @return
+	 */
+	private static String getEarnKey(Earning earn) {
+		String key = earn.getUserid()+earn.getUserLevel()+earn.getTouchType();
+		return key;
 	}
 	
 	public void auditDay() {
@@ -149,11 +204,16 @@ public class CheckUtil {
 	}
 	
 	public static void main(String[] args) {
-		User user = new User();
-		Earning earn = new Earning();
-		earn.setDayMoney(100);
-		BonusPayList bpl = sendBonusPaylist(user, earn);
-		System.out.println(bpl);
+//		User user = new User();
+//		Earning earn = new Earning();
+//		earn.setDayMoney(100);
+//		BonusPayList bpl = sendBonusPaylist(user, earn);
+//		System.out.println(bpl);
+		Map<String,String> map = new HashMap<String,String>();
+		map.put("123", "1234");
+		map.put("123", "12344");
+		System.out.println(map.get("12"));
+		printMap(map);
 	}
 	
 	public static void printMap(Map map) {
