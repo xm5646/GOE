@@ -199,7 +199,7 @@ public class UserController {
 			}
 
 			// 更新业绩信息
-			earnServerSchedul.mainUpdatePerformance(user.getUserId());
+//			earnServerSchedul.mainUpdatePerformance(user.getUserId());
 			
 			//更新推荐人的报单币
 			recommendUser.setConsumeCoin(recommendUser.getConsumeCoin() - this.bonusPayPercentage.getConsumeCoinUnitPrice());
@@ -210,7 +210,7 @@ public class UserController {
 			consumeRecord.setSendUserId(recommendUser.getUserId());
 			consumeRecord.setConsumeType(ConsumeType.COIN_TRANSFER_ADDCONSUMER);
 			consumeRecord.setConsumeTime(new Date());
-			consumeRecord.setReceiveUserId(1);//1：公司id
+			consumeRecord.setReceiveUserId(0);//公司id 0
 			consumeRecord.setConsumeNumber(this.bonusPayPercentage.getConsumeCoinUnitPrice());
 			consumeRecord.setConsumeStatus(true);
 			consumeRecord.setDescription(ConsumeType.COIN_TRANSFER_ADDCONSUMER);
@@ -226,7 +226,7 @@ public class UserController {
 			return retMsg;
 
 		} catch (Exception e) {
-			throw new RuntimeException("添加用户失败!------->" + e.getMessage());
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 
@@ -278,6 +278,9 @@ public class UserController {
 	public void deleteOne(@PathVariable("id") Long id) {
 		this.userService.delete(id);
 	}
+	
+	//用户转账
+	
 
 	// 基于单个关键字进行分页查询：默认按照userId字段j查询；默认显示第一页；默认每页显示5条数据
 	@GetMapping("/findUsersBySort")
