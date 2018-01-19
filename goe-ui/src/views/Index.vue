@@ -59,6 +59,10 @@ export default {
         this.isLoading = false
       }
     })
+    // 判断是否是从 创建用户页面创建成功之后传过来的
+    if (this.$route.params.view === 'performance') {
+      this.currentView = 'performance'
+    }
   },
   components: {
     'home': Home,

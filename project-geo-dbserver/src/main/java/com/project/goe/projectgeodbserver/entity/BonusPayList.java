@@ -23,10 +23,6 @@ import com.project.goe.projectgeodbserver.util.BonusPayPercentage;
 @Table(name = "tb_bonuspaylist")
 public class BonusPayList {
 
-	@Autowired
-	@Transient
-	private BonusPayPercentage bonusPayPercentage;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long bonusPayId;
@@ -70,14 +66,6 @@ public class BonusPayList {
 		this.userId = userId;
 	}
 
-	public BonusPayPercentage getBonusPayPercentage() {
-		return bonusPayPercentage;
-	}
-
-	public void setBonusPayPercentage(BonusPayPercentage bonusPayPercentage) {
-		this.bonusPayPercentage = bonusPayPercentage;
-	}
-
 	public Date getPayTime() {
 		return payTime;
 	}
@@ -99,7 +87,7 @@ public class BonusPayList {
 	}
 
 	public void setBonusNumber(double totalMoney) {
-		this.bonusNumber = totalMoney * 0.9;
+		this.bonusNumber = totalMoney ;
 	}
 
 	public double getManageCost() {
@@ -107,7 +95,7 @@ public class BonusPayList {
 	}
 
 	public void setManageCost(double totalMoney) {
-		this.manageCost = totalMoney * 0.81;
+		this.manageCost = totalMoney;
 	}
 
 	public double getProductCoinNumber() {
@@ -115,14 +103,15 @@ public class BonusPayList {
 	}
 
 	public void setProductCoinNumber(double totalMoney) {
-		this.productCoinNumber = totalMoney * 0.09;
+		this.productCoinNumber = totalMoney;
 	}
 
 	@Override
 	public String toString() {
-		return "BonusPayList [bonusPayPercentage=" + bonusPayPercentage + ", bonusPayId=" + bonusPayId + ", userId="
-				+ userId + ", payTime=" + payTime + ", totalMoney=" + totalMoney + ", bonusNumber=" + bonusNumber
-				+ ", manageCost=" + manageCost + ", productCoinNumber=" + productCoinNumber + "]";
+		return "BonusPayList [bonusPayId=" + bonusPayId + ", userId=" + userId + ", payTime=" + payTime
+				+ ", totalMoney=" + totalMoney + ", bonusNumber=" + bonusNumber + ", manageCost=" + manageCost
+				+ ", productCoinNumber=" + productCoinNumber + "]";
 	}
 
+	
 }

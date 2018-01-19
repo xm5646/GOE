@@ -44,7 +44,7 @@
               <div class="item-media"><img src="../../assets/images/coin.png" width="44"></div>
               <div class="item-content">
                 <div class="item-title-row">
-                  <div class="item-title">报单币余额:  {{ consumeCoin }}元</div>
+                  <div class="item-title">报单币余额:  {{ consumeCoin.toFixed(2) }}元</div>
                 </div>
               </div>
             </list-item>
@@ -140,7 +140,7 @@
                   this.$router.push({name: 'index', params: {view: 'performance', parentAccount: this.parentAccount}})
                 } else {
                   this.isErr = true
-                  this.errMsg = response.body.message
+                  this.errMsg = (response.body.message || '未知错误')
                   this.password = ''
                   this.SecondPassword = ''
                 }
@@ -156,7 +156,7 @@
     },
     computed: {
       cantCreate: function () {
-        return this.consumeCoin < 660
+        return this.consumeCoin < GoeConfig.goe.price
       }
     }
   }

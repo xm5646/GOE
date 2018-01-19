@@ -32,7 +32,7 @@
               <div class="item-title">奖金余额</div>
             </div>
             <div class="item-subtitle">
-              <span class="span-performance">￥{{ bonusCoin }}</span>
+              <span class="span-performance">￥{{ bonusCoin.toFixed(2) }}</span>
             </div>
           </div>
         </list-item>
@@ -43,7 +43,7 @@
               <div class="item-title">报单币余额</div>
             </div>
             <div class="item-subtitle">
-              <span class="span-performance">￥{{ consumeCoin }}</span>
+              <span class="span-performance">￥{{ consumeCoin.toFixed(2) }}</span>
             </div>
           </div>
         </list-item>
@@ -54,7 +54,7 @@
               <div class="item-title">产品积分余额</div>
             </div>
             <div class="item-subtitle">
-              <span class="span-performance">￥{{ productCoin }}</span>
+              <span class="span-performance">￥{{ productCoin.toFixed(2) }}</span>
             </div>
           </div>
         </list-item>
