@@ -38,9 +38,9 @@
                   <div class="item-title"> {{ user.account }}</div>
                 </div>
                 <div class="item-subtitle">
-                  <span class="performence-span">A:1</span>&nbsp;&nbsp;
-                  <span class="performence-span">B:2</span>&nbsp;&nbsp;
-                  <span class="performence-span">C:3</span>&nbsp;&nbsp;
+                  <span class="performence-span">A:{{user.preformanceA}}</span>&nbsp;&nbsp;
+                  <span class="performence-span">B:{{user.preformanceB}}</span>&nbsp;&nbsp;
+                  <span class="performence-span">C:{{user.preformanceC}}</span>&nbsp;&nbsp;
                 </div>
               </div>
             </list-item>
@@ -51,11 +51,10 @@
                   <input type="number" placeholder="请输入转账金额" v-model="convertNumber">
                 </div>
                 <div class="item-title label">
-                  <m-button type="warning" size="large" @click.native="findUser" :disabled="transferBtnStatus">转账</m-button>
+                  <m-button type="warning" size="large" @click.native="transfer" :disabled="transferBtnStatus">转账</m-button>
                 </div>
               </div>
             </form-item>
-            {{ convertNumber }}
           </form-list>
           </list>
         <div v-if="NotFindUser">
@@ -102,7 +101,10 @@
         convertNumber: null,
         isFindedUser: false,
         user: {
-          account: ''
+          account: '',
+          preformanceA: '',
+          preformanceB: '',
+          preformanceC: ''
         },
         NotFindUser: false,
         findAccount: '',
@@ -111,11 +113,12 @@
     },
     methods: {
       findUser () {
-        this.NotFindUser = true
-        this.errMsg = '未找到该用户'
+        this.queryUser()
+      },
+      transfer () {
       },
       queryUser () {
-        const url = GoeConfig.apiServer + '/user/performance?account=' + this.LoginUser.account
+        const url = GoeConfig.apiServer + '/user/performance?account=' + this.findAccount
         this.$http.get(url, {
           _timeout: 3000,
           onTimeout: (request) => {
@@ -124,6 +127,18 @@
           }
         })
           .then(response => {
+            if (response.body.success) {
+              this.isFindedUser = true
+              this.NotFindUser = false
+              this.user.account = this.findAccount
+              this.user.preformanceA = response.body.data.departAcount
+              this.user.preformanceB = response.body.data.departBcount
+              this.user.preformanceC = response.body.data.departCcount
+            } else {
+              this.isFindedUser = false
+              this.NotFindUser = true
+              this.errMsg = response.body.message
+            }
             this.MyPerformance = response.body.data
           }, responseErr => {
             console.log(responseErr.body)
