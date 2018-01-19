@@ -18,12 +18,16 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
-myconfg:
+        
+myconfg: 
   servername: goe-server
   ishave: true
-bonus:
-  percentage:
-    manageCostPercentage: 0.1
-    bonusNumberPercentage: 0.9
-    productCoinNumberPercentage: 0
-    consumeCoinUnitPrice: 680
+
+bonus: 
+  percentage: 
+     manageCostPercentage: 0.1
+     bonusNumberPercentage: 0.9
+     productCoinNumberPercentage: 0
+     consumeCoinUnitPrice: 680
+   
+

@@ -41,7 +41,7 @@
           </div>
           <list>
             <list-item>
-              <div class="item-media"><img src="../../assets/images/coin.png" width="44"></div>
+              <div class="item-media"><img src="../../assets/images/rmb.png" width="44"></div>
               <div class="item-content">
                 <div class="item-title-row">
                   <div class="item-title">报单币余额:  {{ consumeCoin.toFixed(2) }}元</div>

@@ -111,8 +111,13 @@ public class BusinessUtil {
 	 * @param userLevel
 	 * @return
 	 */
-	public static BusinessEntity getBusinessEntity(String userTouchType) {
-		return businessMap.get(userTouchType);
+	public static BusinessEntity getBusinessEntity(String userLevel) {
+		return businessMap.get(userLevel);
+	}
+	
+	//整合
+	public static boolean isFirstEarn(String userLevel) {
+		return false;
 	}
 	
 	public static Earning isBigBus(Earning ea,Earning eb) {

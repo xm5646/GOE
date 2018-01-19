@@ -76,7 +76,7 @@ public class UserUtil {
 		u.setCreateTime(createDate);
 		u.setUserLevel(UserLevel.CONSUMER);
 		u.setUserType(UserType.COMMON);
-		u.setAssessStatus(false);
+		u.setAssessStatus(true);
 		u.setAssessDate(createDate);
 		return u;
 	}

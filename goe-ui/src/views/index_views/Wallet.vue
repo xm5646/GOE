@@ -26,7 +26,7 @@
       <!--业绩显示-->
       <list>
         <list-item>
-          <div class="item-media"><img src="../../assets/images/coin.png" width="44"></div>
+          <div class="item-media"><img src="../../assets/images/rmb.png" width="34"></div>
           <div class="item-content">
             <div class="item-title-row">
               <div class="item-title">奖金余额</div>
@@ -37,7 +37,7 @@
           </div>
         </list-item>
         <list-item>
-          <div class="item-media"><img src="../../assets/images/coin.png" width="44"></div>
+          <div class="item-media"><img src="../../assets/images/rmb.png" width="34"></div>
           <div class="item-content">
             <div class="item-title-row">
               <div class="item-title">报单币余额</div>
@@ -48,7 +48,7 @@
           </div>
         </list-item>
         <list-item>
-          <div class="item-media"><img src="../../assets/images/coin.png" width="44"></div>
+          <div class="item-media"><img src="../../assets/images/rmb.png" width="34"></div>
           <div class="item-content">
             <div class="item-title-row">
               <div class="item-title">产品积分余额</div>

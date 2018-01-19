@@ -28,7 +28,7 @@
           <div class="item-content">
             &nbsp;&nbsp;
             <div class="item-input">
-              <input type="password" placeholder="请输入密码" class="" v-model="password" @focus="userInput">
+              <input type="password" placeholder="请输入密码" class="" v-model="password" @focus="userInput" @keyup.enter="doLogin">
             </div>
           </div>
         </form-item>
@@ -37,7 +37,7 @@
         </div>
 
         <br>
-        <m-button type="warning" @click.native="doLogin">登录</m-button>
+        <m-button type="warning" @click.native="doLogin" >登录</m-button>
       </form-list>
     </content>
     <loading :LoadingStatus="isLoading"></loading>
