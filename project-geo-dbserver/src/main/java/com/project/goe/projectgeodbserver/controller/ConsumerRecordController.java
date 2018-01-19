@@ -19,6 +19,7 @@ import com.project.goe.projectgeodbserver.service.ConsumeRecordService;
 import com.project.goe.projectgeodbserver.service.UserService;
 import com.project.goe.projectgeodbserver.statusType.ConsumeType;
 import com.project.goe.projectgeodbserver.viewentity.ConsumeRecordRequest;
+import com.project.goe.projectgeodbserver.viewentity.RetMsg;
 
 @RestController
 @RequestMapping("/consumerRecord")
@@ -33,7 +34,7 @@ public class ConsumerRecordController {
 	//新增一条消费记录
 	@PostMapping("/save")
 	@Transactional
-	public ConsumeRecord addOneConsumeRecord(@ModelAttribute ConsumeRecordRequest consumeRecordRequest) {
+	public RetMsg addOneConsumeRecord(@ModelAttribute ConsumeRecordRequest consumeRecordRequest) {
 		//请求参数：description可以为null
 		int consumeTypeCode = consumeRecordRequest.getConsumeTypeCode();
 		String sendUserAccount = consumeRecordRequest.getSendUserAccount();
@@ -121,7 +122,13 @@ public class ConsumerRecordController {
 		else
 			consumeRecord.setDescription(description);
 		
-		return this.consumeRecordService.addOneConsumeRecord(consumeRecord);
+		RetMsg retMsg = new RetMsg();
+		retMsg.setCode(200);
+		retMsg.setData(this.consumeRecordService.addOneConsumeRecord(consumeRecord));
+		retMsg.setMessage("消费记录添加成功！");
+		retMsg.setSuccess(true);
+		
+		return retMsg;
 	}
 	
 	// 按照用户id查询所有消费记录
