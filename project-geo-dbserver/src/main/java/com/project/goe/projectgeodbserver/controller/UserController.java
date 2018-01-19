@@ -78,7 +78,7 @@ public class UserController {
 				throw new RuntimeException("用户不存在!");
 		
 			//判断旧密码是否正确
-			if (MD5Util.encrypeByMd5(oldPassword).equals(user.getPassword())) {
+			if (!MD5Util.encrypeByMd5(oldPassword).equals(user.getPassword())) {
 				throw new RuntimeException("旧密码不正确!");
 			}
 			
