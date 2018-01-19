@@ -89,8 +89,8 @@
     methods: {
       ConvertConsumeCoin () {
         if (!this.convertBtnEnable) {
-          const url = GoeConfig.apiServer + '/consumerRecord/save'
           this.isErr = false
+          const url = GoeConfig.apiServer + '/consumerRecord/save'
           this.$http.post(url,
             {
               sendUserAccount: this.currentUser.account,

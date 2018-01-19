@@ -30,7 +30,7 @@ Vue.http.interceptors.push((request, next) => {
     }, request._timeout)
   }
   next((response) => {
-    console.log('请求返回结果:' + response.body)
+    console.log(response.body)
     Vue.bus.emit('isLoading', false)
     clearTimeout(timeout)
   })
