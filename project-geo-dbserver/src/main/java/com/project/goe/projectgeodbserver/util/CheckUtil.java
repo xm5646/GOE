@@ -178,11 +178,13 @@ public class CheckUtil {
 			}
 			//遍历要保存的业绩，去除重复的保存
 			for (Earning earn : earnList) {
-				String key = getEarnKey(earn);
-				if (key!=null && key.length()>0) {
-					Earning em = earnMap.get(key);
-					if (em!=null) {
-						earnList.remove(earn);
+				if(earn != null) {
+					String key = getEarnKey(earn);
+					if (key!=null && key.length()>0) {
+						Earning em = earnMap.get(key);
+						if (em!=null) {
+							earnList.remove(earn);
+						}
 					}
 				}
 			}

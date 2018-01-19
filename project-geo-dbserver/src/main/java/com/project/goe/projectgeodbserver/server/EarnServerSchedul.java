@@ -262,10 +262,12 @@ public class EarnServerSchedul {
 		//发生变化的业绩更新收益表
 		List<Earning> earnList = CheckUtil.userEarning(perlist);
 		Iterable<Earning> earns = earningService.getAll();
-		CheckUtil.computeEarn(earns,earnList);
 		if (earnList!=null && earnList.size()>0) {
+			CheckUtil.computeEarn(earns,earnList);
 			for (Earning earn : earnList) {
-				earningService.save(earn);
+				if(earn != null) {
+					earningService.save(earn);
+				}
 			}
 		}
 	}
