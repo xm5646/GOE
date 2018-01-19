@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.project.goe.projectgeodbserver.entity.BonusPayList;
-import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.repository.BonusPayListRepository;
 
 @Service
@@ -29,9 +28,19 @@ public class BonusPayListService {
 		}
 		return bonusPaylists;
 	}
+	
+	@Transactional
+	public BonusPayList save(BonusPayList bonusPaylist) {
+		return this.bonusPayListRepository.save(bonusPaylist);
+	}
 
 	// 分页查询
-	public Page<User> findAllUserBySort(Pageable pageable) {
+	public Page<BonusPayList> findAllBonusBySort(Pageable pageable) {
 		return this.bonusPayListRepository.findAll(pageable);
+	}
+	
+	//删除所有数据
+	public void deleteAllBonus() {
+		this.bonusPayListRepository.deleteAll();
 	}
 }
