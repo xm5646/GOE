@@ -211,6 +211,7 @@ public class UserController {
 				recommendUser.setUserStatus(true);
 			}
 
+			
 			// 更新业绩信息
 			earnServerSchedul.mainUpdatePerformance(user.getUserId());
 
