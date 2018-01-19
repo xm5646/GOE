@@ -1,0 +1,35 @@
+server:
+  port: 8088
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/goe?characterEncoding=utf8&useSSL=false
+    username: root
+    password: clmAdm1n
+    driver-class-name: com.mysql.jdbc.Driver
+    tomcat:
+      max-active: 20
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+        
+myconfg: 
+  servername: goe-server
+  ishave: true
+
+bonus: 
+  percentage: 
+     manageCostPercentage: 0.1
+     bonusNumberPercentage: 0.9
+     productCoinNumberPercentage: 0
+     consumeCoinUnitPrice: 680
+   
+  
+  
+  
