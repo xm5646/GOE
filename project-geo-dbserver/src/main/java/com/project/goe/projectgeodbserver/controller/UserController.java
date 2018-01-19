@@ -67,33 +67,28 @@ public class UserController {
 		String account = uerPasswordUpdateRequest.getAccount();
 		String oldPassword = uerPasswordUpdateRequest.getOldPassword();
 		String newPassword = uerPasswordUpdateRequest.getNewPassword();
-		
+
 		// 查询用户信息
 		User user = this.userService.findByAccount(account);
-		
-		//修改用户密码
-		try {
-			//判断用户是否存在
-			if (null == user)
-				throw new RuntimeException("用户不存在!");
-		
-			//判断旧密码是否正确
-			if (!MD5Util.encrypeByMd5(oldPassword).equals(user.getPassword())) {
-				throw new RuntimeException("旧密码不正确!");
-			}
-			
-			user.setPassword(MD5Util.encrypeByMd5(newPassword));
 
-			RetMsg retMsg = new RetMsg();
-			retMsg.setCode(200);
-			retMsg.setData(user.getAccount());
-			retMsg.setMessage("用户密码更新成功!");
-			retMsg.setSuccess(true);
+		// 判断用户是否存在
+		if (null == user)
+			throw new RuntimeException("用户不存在!");
 
-			return retMsg;
-		} catch (Exception e) {
-			throw new RuntimeException("用户密码更新失败!");
+		// 判断旧密码是否正确
+		if (!MD5Util.encrypeByMd5(oldPassword).equals(user.getPassword())) {
+			throw new RuntimeException("旧密码不正确!");
 		}
+
+		user.setPassword(MD5Util.encrypeByMd5(newPassword));
+
+		RetMsg retMsg = new RetMsg();
+		retMsg.setCode(200);
+		retMsg.setData(user.getAccount());
+		retMsg.setMessage("用户密码更新成功!");
+		retMsg.setSuccess(true);
+
+		return retMsg;
 
 	}
 
@@ -113,11 +108,12 @@ public class UserController {
 		earnServerSchedul.savePer(newuser.getUserId());
 		return "测试数据插入根成功";
 	}
+
 	@RequestMapping("/saveall")
 	public String saveTestAll() throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		
+
 		earnServerSchedul.mainTest();
-		
+
 		return "测试数据插入根成功";
 	}
 

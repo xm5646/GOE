@@ -98,29 +98,46 @@
         this.isErr = false
       },
       updateUserPassword () {
-        const url = GoeConfig.apiServer + '/user/findByAccount?account=' + JSON.parse(window.localStorage.getItem('User')).account
-        this.$http.get(url,
+        const url = GoeConfig.apiServer + '/user/updatePassword'
+        this.$http.post(url,
+          {
+            account: this.currentUserAccount,
+            oldPassword: this.oldPassword,
+            newPassword: this.newPassword
+          },
           {
             _timeout: 3000,
             onTimeout: (request) => {
-              console.log('请求超时')
-              this.errMsg = '请求超时'
               this.isErr = true
+              this.errMsg = '请求超时'
+              this.$refs.t2.open()
+              this.firstPassword = ''
+              this.newPassword = ''
+              this.oldPassword = ''
             }
           })
           .then(response => {
             if (response.body.success) {
               this.isErr = false
               this.$refs.t1.open()
+              this.firstPassword = ''
+              this.newPassword = ''
+              this.oldPassword = ''
             } else {
               this.isErr = true
-              this.errMsg = response.body.message
               this.$refs.t2.open()
+              this.errMsg = (response.body.message || '未知错误')
+              this.firstPassword = ''
+              this.newPassword = ''
+              this.oldPassword = ''
             }
           }, responseErr => {
-            console.log(responseErr)
-            this.errMsg = '未知错误'
             this.isErr = true
+            this.$refs.t2.open()
+            this.errMsg = '未知错误'
+            this.firstPassword = ''
+            this.newPassword = ''
+            this.oldPassword = ''
           })
       }
     },
