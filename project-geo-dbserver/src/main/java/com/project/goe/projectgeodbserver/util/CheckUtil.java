@@ -201,6 +201,10 @@ public class CheckUtil {
 						}
 					}
 				}
+				if (earnList==null || earnList.size()==0) {
+					//如果没数据跳出循环
+					return;
+				}
 			}
 		}
 	}
