@@ -5,6 +5,8 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.project.goe.projectgeodbserver.entity.BonusPayList;
@@ -16,15 +18,20 @@ public class BonusPayListService {
 
 	@Autowired
 	private BonusPayListRepository bonusPayListRepository;
-	
-	//批量更新或者新加用户
+
+	// 批量更新或者新加用户
 	@Transactional
 	public List<BonusPayList> saveAll(List<BonusPayList> bonusPaylists) {
-		if (bonusPaylists!=null && bonusPaylists.size()>0) {
+		if (bonusPaylists != null && bonusPaylists.size() > 0) {
 			for (BonusPayList bonusPaylist : bonusPaylists) {
 				this.bonusPayListRepository.save(bonusPaylist);
 			}
 		}
 		return bonusPaylists;
+	}
+
+	// 分页查询
+	public Page<User> findAllUserBySort(Pageable pageable) {
+		return this.bonusPayListRepository.findAll(pageable);
 	}
 }
