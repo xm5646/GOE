@@ -1,6 +1,11 @@
 package com.project.goe.projectgeodbserver.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +73,13 @@ public class UserController {
 		newuser.setWeightCode(1);
 		this.userService.save(newuser);
 		earnServerSchedul.savePer(newuser.getUserId());
+		return "测试数据插入根成功";
+	}
+	@RequestMapping("/saveall")
+	public String saveTestAll() throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		
+		earnServerSchedul.mainTest();
+		
 		return "测试数据插入根成功";
 	}
 

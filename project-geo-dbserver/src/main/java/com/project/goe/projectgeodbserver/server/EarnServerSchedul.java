@@ -1,5 +1,7 @@
 package com.project.goe.projectgeodbserver.server;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,7 +28,9 @@ import com.project.goe.projectgeodbserver.statusType.UserLevel;
 import com.project.goe.projectgeodbserver.statusType.UserType;
 import com.project.goe.projectgeodbserver.util.BusinessUtil;
 import com.project.goe.projectgeodbserver.util.CheckUtil;
+import com.project.goe.projectgeodbserver.util.MD5Util;
 import com.project.goe.projectgeodbserver.util.TimeUtil;
+import com.project.goe.projectgeodbserver.util.UserUtil;
 
 @Service
 public class EarnServerSchedul {
@@ -70,7 +74,36 @@ public class EarnServerSchedul {
 				}
 			}
 		}
-		return "测试数据插入成功" + type;
+		return "测试数据插入成功";
+	}
+	
+	@Transactional
+	public void mainTest() throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		Map<Long,Boolean> map = new HashMap<Long,Boolean>();
+		User newuser = UserUtil.getTestUser();
+		newuser.setAccount("admin");
+		newuser.setPassword(MD5Util.encrypeByMd5("admin"));
+		newuser.setWeightCode(1);
+		userService.save(newuser);
+		savePer(newuser.getUserId());
+		map.put(newuser.getUserId(), false);
+		
+		testsave(newuser, map);
+	}
+	
+	
+	private void testsave(User puser,Map<Long,Boolean> map) {
+		User newuserA = UserUtil.getTestUser();
+		User newuserB = UserUtil.getTestUser();
+		String a = mainUpdateUser(puser.getUserId(), "A", newuserA);
+		String b = mainUpdateUser(puser.getUserId(), "B", newuserB);
+		if ("测试数据插入成功".equals(a)) {
+			System.out.println(newuserA.toString());
+			
+		}
+		if ("测试数据插入成功".equals(b)) {
+			System.out.println(newuserB.toString());
+		}
 	}
 	
 	/**
@@ -217,6 +250,7 @@ public class EarnServerSchedul {
 		this.userService.save(puser);
 		savePer(newuser.getUserId());
 		//用户创建完成后更新用户收益信息
+		updateUserPerformance(newuser.getUserId());
 	}
 	
 	/**
@@ -259,13 +293,26 @@ public class EarnServerSchedul {
 			//更新收益表数据
 			performanceService.save(performance);
 		}
+
+		Iterable<Earning> earns = earningService.getAll();		
+		// 将获得的对象封装成MAP
+		Map<String, Earning> earnMap = new HashMap<String, Earning>();
+		for (Earning earn : earns) {
+			String key = CheckUtil.getEarnKey(earn);
+			if (key != null && key.length() > 0) {
+				earnMap.put(key, earn);
+			}
+		}
+		
 		//发生变化的业绩更新收益表
-		List<Earning> earnList = CheckUtil.userEarning(perlist);
-		Iterable<Earning> earns = earningService.getAll();
+		List<Earning> earnList = CheckUtil.userEarning(earnMap,perlist);
+		
 		if (earnList!=null && earnList.size()>0) {
-			CheckUtil.computeEarn(earns,earnList);
+			CheckUtil.computeEarn(earnMap,earnList);
 			for (Earning earn : earnList) {
 				if(earn != null) {
+					//在这里判断如果是第一次触发累计4：4更新user表考核时间
+					
 					earningService.save(earn);
 				}
 			}

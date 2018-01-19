@@ -110,22 +110,54 @@ public class CheckUtil {
 	/**
 	 * 根据用户的业绩更新用户的收益
 	 */
-	public static List<Earning> userEarning(List<Performance> pers) {
+	public static List<Earning> userEarning(Map<String, Earning> earnMap,List<Performance> pers) {
 		List<Earning> earnList = new ArrayList<>();
 		// earns 只取得还可以获得收益的数据当前时间-30天
 		if (pers != null && pers.size() > 0) {
 			for (Performance per : pers) {
 				// 这里是计算累计业绩
-				Earning e = accumulativeEarning(per);
-				if (e == null) {
+				Earning e = accumulativeEarning(per);				
+				if (isHaveEarning(e,earnMap)) {
+					// 保存需要的业绩数据
+					earnList.add(e);
+				}else {
 					// 这里是计算新增业绩
 					e = increasedEarning(per);
+					if (isHaveEarning(e, earnMap)) {
+						// 保存需要的业绩数据
+						earnList.add(e);
+					}
 				}
-				// 保存需要的业绩数据
-				earnList.add(e);
 			}
 		}
 		return earnList;
+	}
+	
+	/**
+	 * 判断是否已经有存储了
+	 * @param e
+	 * @param earnMap
+	 * @return
+	 */
+	private static boolean isHaveEarning(Earning e,Map<String, Earning> earnMap) {
+		String key = getEarnKey(e);
+		if (key != null && key.length() > 0) {
+			Earning em = earnMap.get(key);
+			if (em!=null) {
+				//ishava 已经存储，不需要存储
+				return false;
+			}else {
+				//需要存储
+			    return true;
+			}
+		}
+		return false;
+	}
+	
+	public void theFirstEarning(Earning e,Map<String, Earning> earnMap) {
+		String key = getEarnKey(e);
+		//String key = earn.getUserid() + earn.getUserLevel() + earn.getTouchType();
+		
 	}
 
 	/**
@@ -137,6 +169,7 @@ public class CheckUtil {
 					per.getDepartCcount());
 			if (busentity != null) {
 				Earning e = new Earning();
+				Date createTime = new Date();
 				e.setUserid(per.getUserId());
 				e.setTouchType(TouchType.ACCUMULATION);
 				// 剩余发放天数
@@ -144,6 +177,7 @@ public class CheckUtil {
 				// 级别对应的金钱
 				e.setDayMoney(busentity.getMoney());
 				e.setUserLevel(busentity.getUserLevel());
+				e.setCreateTime(createTime);
 				return e;
 			}
 		}
@@ -180,16 +214,8 @@ public class CheckUtil {
 	 * @param earns
 	 * @param earnList
 	 */
-	public static void computeEarn(Iterable<Earning> earns, List<Earning> earnList) {
-		if (earns != null && earnList != null && earnList.size() > 0) {
-			// 将获得的对象封装成MAP
-			Map<String, Earning> earnMap = new HashMap<String, Earning>();
-			for (Earning earn : earns) {
-				String key = getEarnKey(earn);
-				if (key != null && key.length() > 0) {
-					earnMap.put(key, earn);
-				}
-			}
+	public static void computeEarn(Map<String, Earning> earnMap, List<Earning> earnList) {
+		if (earnMap != null && earnList != null && earnList.size() > 0) {
 			// 遍历要保存的业绩，去除重复的保存
 			for (Earning earn : earnList) {
 				if (earn != null) {
@@ -215,7 +241,7 @@ public class CheckUtil {
 	 * @param earn
 	 * @return
 	 */
-	private static String getEarnKey(Earning earn) {
+	public static String getEarnKey(Earning earn) {
 		String key = earn.getUserid() + earn.getUserLevel() + earn.getTouchType();
 		return key;
 	}
