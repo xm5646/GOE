@@ -28,7 +28,7 @@
       <!--业绩显示-->
       <list>
         <list-item>
-          <div class="item-media"><img src="../../assets/images/icon-list.png" width="44"></div>
+          <div class="item-media"><img src="../../assets/images/performance.png" width="44"></div>
           <div class="item-content">
             <div class="item-title-row">
               <div class="item-title">累计业绩</div>
@@ -41,7 +41,7 @@
           </div>
         </list-item>
         <list-item>
-          <div class="item-media"><img src="../../assets/images/icon-list.png" width="44"></div>
+          <div class="item-media"><img src="../../assets/images/performance.png" width="44"></div>
           <div class="item-content">
             <div class="item-title-row">
               <div class="item-title">新增业绩</div>
@@ -62,7 +62,7 @@
             <img src="../../assets/images/home/form.png" width="30">
           </div>
           <div class="item-content">
-            <router-link :to="{ name: 'convertConsumeCoin' }">
+            <router-link :to="{ name: 'convertConsumeCoin'}">
               <div class="item-title-row">
                 <div class="item-title">奖金转换报单币</div>
                 <div class="item-after">
@@ -191,6 +191,7 @@
       update () {
         console.log('home update')
         this.LoginUser = JSON.parse(window.localStorage.getItem('User'))
+        this.getPerformance()
       }
     }
   }

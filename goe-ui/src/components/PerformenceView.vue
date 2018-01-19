@@ -5,7 +5,7 @@
         <form-item>
           <div class="item-content">
             <div class="item-input">
-              <input type="text" placeholder="请输入用户编号" v-model="checkUserAccount">
+              <input type="text" placeholder="请输入用户编号" v-model="checkUserAccount" @keyup.enter="checkUser" @focus="userInput">
             </div>
             <div class="item-title label">
               <m-button type="warning" size="large" @click.native="checkUser">查询</m-button>
@@ -27,7 +27,7 @@
           </div>
         </list-item>
         <list-item :link="true" @click.native="ViewUserA" v-if="hasUserA">
-          <div class="item-media"><img src="../assets/images/icon-list.png" width="44"></div>
+          <div class="item-media"><img src="../assets/images/partABC/A.png" width="44"></div>
           <div class="item-content">
             <div class="item-title-row">
               <div class="item-title"> {{ ViewUser.departUserA.account }}</div>
@@ -40,11 +40,11 @@
           </div>
         </list-item>
         <list-item v-if="!hasUserA">
-          <div class="item-media"><img src="../assets/images/icon-list.png" width="44"></div>
+          <div class="item-media"><img src="../assets/images/partABC/A.png" width="44"></div>
           &nbsp;&nbsp;&nbsp;<m-button size="warning" @click.native="AddUserA">新增</m-button>
         </list-item>
         <list-item :link="true" @click.native="ViewUserB" v-if="hasUserB">
-          <div class="item-media"><img src="../assets/images/icon-list.png" width="44"></div>
+          <div class="item-media"><img src="../assets/images/partABC/B.png" width="44"></div>
           <div class="item-content">
             <div class="item-title-row">
               <div class="item-title">{{ ViewUser.departUserB.account }}</div>
@@ -57,11 +57,11 @@
           </div>
         </list-item>
         <list-item v-if="!hasUserB">
-          <div class="item-media"><img src="../assets/images/icon-list.png" width="44"></div>
+          <div class="item-media"><img src="../assets/images/partABC/B.png" width="44"></div>
           &nbsp;&nbsp;&nbsp;<m-button size="warning" @click.native="AddUserB">新增</m-button>
         </list-item>
         <list-item :link="true" @click.native="ViewUserC" v-if="hasUserC">
-          <div class="item-media"><img src="../assets/images/icon-list.png" width="44"></div>
+          <div class="item-media"><img src="../assets/images/partABC/C.png" width="44"></div>
           <div class="item-content">
             <div class="item-title-row">
               <div class="item-title">{{ ViewUser.departUserC.account }}</div>
@@ -74,7 +74,7 @@
           </div>
         </list-item>
         <list-item v-if="!hasUserC">
-          <div class="item-media"><img src="../assets/images/icon-list.png" width="44"></div>
+          <div class="item-media"><img src="../assets/images/partABC/C.png" width="44"></div>
           &nbsp;&nbsp;&nbsp;<m-button size="warning" @click.native="AddUserC">新增</m-button>
         </list-item>
       </list>
@@ -116,6 +116,9 @@
       }
     },
     methods: {
+      userInput () {
+        this.notFoundUser = false
+      },
       ViewUserA () {
         this.checkUserAccount = ''
         this.$emit('viewUsereEvent', this.ViewUser.departUserA.account)
