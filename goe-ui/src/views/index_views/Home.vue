@@ -17,7 +17,7 @@
                 {{ LoginUser.userLevel }}
               </div>
               <div class="item-text">
-                考核状态: {{ LoginUser.assessStatus }}  <br>
+                考核状态: {{ LoginUser.assessStatus }}<br>
                 距离下次重销日：  {{ LoginUser.assessDate}}
 
               </div>

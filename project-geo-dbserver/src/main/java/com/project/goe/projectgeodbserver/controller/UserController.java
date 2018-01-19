@@ -77,7 +77,7 @@ public class UserController {
 
 		// 判断旧密码是否正确
 		if (!MD5Util.encrypeByMd5(oldPassword).equals(user.getPassword())) {
-			throw new RuntimeException("旧密码不正确!");
+			throw new RuntimeException("原密码不正确!");
 		}
 
 		user.setPassword(MD5Util.encrypeByMd5(newPassword));
