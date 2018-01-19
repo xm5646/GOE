@@ -18,6 +18,7 @@ public class BonusPayPercentage {
 		return manageCostPercentage;
 	}
 
+	
 	@Value("${bonus.percentage.manageCostPercentage}")
 	public void setManageCostPercentage(double manageCostPercentage) {
 		BonusPayPercentage.manageCostPercentage = manageCostPercentage;
