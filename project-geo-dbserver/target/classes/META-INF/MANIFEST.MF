@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Implementation-Title: project-geo-dbserver
 Implementation-Version: 0.0.1-SNAPSHOT
-Built-By: zhangqiankun
+Built-By: ming
 Implementation-Vendor-Id: com.project.goe
-Build-Jdk: 1.8.0_121
+Build-Jdk: 1.8.0_40
 Implementation-URL: http://projects.spring.io/spring-boot/project-geo-
  dbserver/
 Created-By: Maven Integration for Eclipse

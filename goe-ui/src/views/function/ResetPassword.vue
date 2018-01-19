@@ -12,7 +12,7 @@
             </div>
             <div class="item-content">
               <div class="item-input">
-                <input type="password" placeholder="请输入原密码" class="" v-model="password">
+                <input type="password" placeholder="请输入原密码" class="" v-model="oldPassword" @focus="userInput">
               </div>
             </div>
           </form-item>
@@ -23,7 +23,7 @@
             </div>
             <div class="item-content">
               <div class="item-input">
-                <input type="password" placeholder="请输入新密码" class="" v-model="password">
+                <input type="password" placeholder="请输入新密码" class="" v-model="firstPassword" @focus="userInput">
               </div>
             </div>
           </form-item>
@@ -34,12 +34,15 @@
             </div>
             <div class="item-content">
               <div class="item-input">
-                <input type="password" placeholder="请再次输入新密码" class="" v-model="password">
+                <input type="password" placeholder="请再次输入新密码" class="" v-model="newPassword" @focus="userInput">
               </div>
             </div>
           </form-item>
+          <div v-if="isErr">
+            <m-button type="warning" :disabled="true">{{ errMsg }}</m-button>
+          </div>
           <br>
-          <m-button type="warning" size="large" @click.native="doLogin">更改</m-button>
+          <m-button type="warning" size="large" @click.native="changePassword" :disabled="isDisenableBtn">更改</m-button>
           <toast text="完成!" ref="t1"></toast>
           <toast text="失败!" type="error" ref="t2"></toast>
         </form-list>
@@ -54,7 +57,11 @@
   import Content from '../../../node_modules/vum/src/components/content'
   import { Form, FormItem } from '../../../node_modules/vum/src/components/form'
   import Toast from '../../../node_modules/vum/src/components/toast'
+  import GoeConfig from '../../../config/goe'
   export default {
+    mounted: function () {
+      this.currentUserAccount = JSON.parse(window.localStorage.getItem('User')).account
+    },
     components: {
       SimpleHeader,
       'page-content': Content,
@@ -66,13 +73,60 @@
     },
     data () {
       return {
-        password: '',
-        newPassword: ''
+        oldPassword: '',
+        firstPassword: '',
+        newPassword: '',
+        currentUserAccount: '',
+        isErr: false,
+        errMsg: ''
       }
     },
     methods: {
-      doLogin () {
-        this.$refs.t1.open()
+      changePassword () {
+        if (this.isDisenableBtn) {
+          console.log('not do submit')
+        } else {
+          if (this.firstPassword !== this.newPassword) {
+            this.isErr = true
+            this.errMsg = '新密码输入不一致'
+          } else {
+            this.updateUserPassword()
+          }
+        }
+      },
+      userInput () {
+        this.isErr = false
+      },
+      updateUserPassword () {
+        const url = GoeConfig.apiServer + '/user/findByAccount?account=' + JSON.parse(window.localStorage.getItem('User')).account
+        this.$http.get(url,
+          {
+            _timeout: 3000,
+            onTimeout: (request) => {
+              console.log('请求超时')
+              this.errMsg = '请求超时'
+              this.isErr = true
+            }
+          })
+          .then(response => {
+            if (response.body.success) {
+              this.isErr = false
+              this.$refs.t1.open()
+            } else {
+              this.isErr = true
+              this.errMsg = response.body.message
+              this.$refs.t2.open()
+            }
+          }, responseErr => {
+            console.log(responseErr)
+            this.errMsg = '未知错误'
+            this.isErr = true
+          })
+      }
+    },
+    computed: {
+      isDisenableBtn: function () {
+        return (this.oldPassword === '' || this.firstPassword === '' || this.newPassword === '')
       }
     }
   }

@@ -103,11 +103,9 @@ export default {
           })
           .then(response => {
             if (response.body.success) {
-              console.log(response.body.data)
               window.localStorage.setItem('User', JSON.stringify(response.body.data))
               this.$refs.nowView.update()
             } else {
-              console.log('error:' + response.body.message)
               this.errMsg = response.body.message
             }
           }, responseErr => {

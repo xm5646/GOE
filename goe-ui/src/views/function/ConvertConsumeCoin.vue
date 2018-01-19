@@ -88,43 +88,46 @@
     },
     methods: {
       ConvertConsumeCoin () {
-        const url = GoeConfig.apiServer + '/consumerRecord/save'
-        this.isErr = false
-        this.$http.post(url,
-          {
-            sendUserAccount: this.currentUser.account,
-            receiveUserAccount: this.currentUser.account,
-            consumeTypeCode: 2,
-            consumeNumber: this.convertNumber,
-            description: '用户:' + this.currentUser.account + '使用奖金转换报单币'
-          },
-          {
-            _timeout: 3000,
-            onTimeout: (request) => {
+        if (!this.convertBtnEnable) {
+          const url = GoeConfig.apiServer + '/consumerRecord/save'
+          this.isErr = false
+          this.$http.post(url,
+            {
+              sendUserAccount: this.currentUser.account,
+              receiveUserAccount: this.currentUser.account,
+              consumeTypeCode: 2,
+              consumeNumber: this.convertNumber,
+              description: '用户:' + this.currentUser.account + '使用奖金转换报单币'
+            },
+            {
+              _timeout: 3000,
+              onTimeout: (request) => {
+                this.isErr = true
+                this.errMsg = '请求超时'
+                this.password = ''
+                this.SecondPassword = ''
+              }
+            })
+            .then(response => {
+              if (response.body.success) {
+                this.convertNumber = ''
+                this.isErr = false
+                this.updateUser()
+                this.$refs.t1.open()
+              } else {
+                this.isErr = true
+                this.errMsg = (response.body.message || '未知错误')
+                this.password = ''
+                this.SecondPassword = ''
+              }
+            }, responseErr => {
               this.isErr = true
-              this.errMsg = '请求超时'
+              this.errMsg = '未知错误'
               this.password = ''
               this.SecondPassword = ''
-            }
-          })
-          .then(response => {
-            if (response.body.success) {
-              this.convertNumber = ''
-              this.updateUser()
-              this.$refs.t1.open()
-              console.log(response.body)
-            } else {
-              this.isErr = true
-              this.errMsg = (response.body.message || '未知错误')
-              this.password = ''
-              this.SecondPassword = ''
-            }
-          }, responseErr => {
-            this.isErr = true
-            this.errMsg = '未知错误'
-            this.password = ''
-            this.SecondPassword = ''
-          })
+            })
+        } else {
+        }
       },
       updateUser () {
         const url = GoeConfig.apiServer + '/user/findByAccount?account=' + JSON.parse(window.localStorage.getItem('User')).account
@@ -132,20 +135,17 @@
           {
             _timeout: 3000,
             onTimeout: (request) => {
-              console.log('请求超时')
               this.errMsg = '请求超时'
             }
           })
           .then(response => {
             if (response.body.success) {
-              this.currentUser = response.bonusCoin.data
+              this.currentUser = response.body.data
               window.localStorage.setItem('User', JSON.stringify(response.body.data))
             } else {
-              console.log('error:' + response.body.message)
               this.errMsg = response.body.message
             }
           }, responseErr => {
-            console.log(responseErr)
             this.errMsg = '未知错误'
           })
       }
