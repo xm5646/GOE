@@ -1,0 +1,32 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.project.goe.projectgeodbserver.util.BonusPayPercentage",
+      "name": "bonus.percentage",
+      "type": "com.project.goe.projectgeodbserver.util.BonusPayPercentage"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.project.goe.projectgeodbserver.util.BonusPayPercentage",
+      "name": "bonus.percentage.bonus-number-percentage",
+      "type": "java.lang.Double"
+    },
+    {
+      "sourceType": "com.project.goe.projectgeodbserver.util.BonusPayPercentage",
+      "name": "bonus.percentage.consume-coin-unit-price",
+      "type": "java.lang.Double"
+    },
+    {
+      "sourceType": "com.project.goe.projectgeodbserver.util.BonusPayPercentage",
+      "name": "bonus.percentage.manage-cost-percentage",
+      "type": "java.lang.Double"
+    },
+    {
+      "sourceType": "com.project.goe.projectgeodbserver.util.BonusPayPercentage",
+      "name": "bonus.percentage.product-coin-number-percentage",
+      "type": "java.lang.Double"
+    }
+  ]
+}
