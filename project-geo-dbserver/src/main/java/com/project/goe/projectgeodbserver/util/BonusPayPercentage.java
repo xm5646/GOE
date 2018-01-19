@@ -3,6 +3,7 @@ package com.project.goe.projectgeodbserver.util;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+//相关比例
 @Component
 public class BonusPayPercentage {
 	// 管理费比例

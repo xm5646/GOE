@@ -117,6 +117,7 @@ public class ConsumerRecordController {
 		consumeRecord.setConsumeStatus(true);
 		consumeRecord.setConsumeType(consumeType);
 		
+		//如果描述信息为空
 		if(null == description)
 			consumeRecord.setDescription(consumeType);
 		else
