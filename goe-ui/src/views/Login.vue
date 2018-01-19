@@ -108,8 +108,6 @@
               }
             })
             .then(response => {
-              console.log(response.headers)
-              console.log(response.body)
               if (response.body.success) {
                 this.$router.push({name: 'index', params: {LoginUser: response.body.data}})
                 window.localStorage.setItem('User', JSON.stringify(response.body.data))
@@ -119,7 +117,6 @@
                 this.password = ''
               }
             }, responseErr => {
-              console.log(responseErr)
               this.isErr = true
               this.errMsg = '未知错误'
               this.password = ''

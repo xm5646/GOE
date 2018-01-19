@@ -6,7 +6,7 @@
         <h1 class="demos-title">报单币转账</h1>
         <list>
           <list-item>
-            <div class="item-media"><img src="../../assets/images/icon-list.png" width="44"></div>
+            <div class="item-media"><img src="../../assets/images/rmb.png" width="44"></div>
             <div class="item-content">
               <div class="item-title-row">
                 <div class="item-title">报单币余额</div>
@@ -32,7 +32,7 @@
 
           <list v-if="findedUser">
             <list-item >
-              <div class="item-media"><img src="../../assets/images/icon-list.png" width="44"></div>
+              <div class="item-media"><img src="../../assets/images/person.png" width="44"></div>
               <div class="item-content">
                 <div class="item-title-row">
                   <div class="item-title">username</div>
