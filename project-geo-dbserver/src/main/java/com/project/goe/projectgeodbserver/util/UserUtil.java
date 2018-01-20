@@ -8,7 +8,6 @@ import com.project.goe.projectgeodbserver.viewentity.UserVO;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.Random;
 
 public class UserUtil {
 	
@@ -83,9 +82,7 @@ public class UserUtil {
 		u.setAccount(name);
 		try {
 			u.setPassword(MD5Util.encrypeByMd5("1"));
-		} catch (NoSuchAlgorithmException e) {
-			u.setPassword("1");
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			u.setPassword("1");
 		}
 		u.setCreateTime(createDate);

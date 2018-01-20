@@ -30,6 +30,7 @@ Vue.http.interceptors.push((request, next) => {
     }, request._timeout)
   }
   next((response) => {
+    console.log(response.body)
     Vue.bus.emit('isLoading', false)
     clearTimeout(timeout)
   })

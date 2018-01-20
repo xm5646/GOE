@@ -36,6 +36,7 @@ import com.project.goe.projectgeodbserver.util.UserUtil;
 import com.project.goe.projectgeodbserver.util.BonusPayPercentage;
 import com.project.goe.projectgeodbserver.util.MD5Util;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
+import com.project.goe.projectgeodbserver.viewentity.UserPasswordUpdateRequest;
 import com.project.goe.projectgeodbserver.viewentity.UserSavePostParams;
 
 @RestController
@@ -59,6 +60,38 @@ public class UserController {
 	@Autowired
 	private EarnServerSchedul earnServerSchedul;
 
+	// 更新用户密码
+	@PostMapping("/updatePassword")
+	@Transactional
+	public RetMsg updatePassword(@ModelAttribute UserPasswordUpdateRequest uerPasswordUpdateRequest) {
+		String account = uerPasswordUpdateRequest.getAccount();
+		String oldPassword = uerPasswordUpdateRequest.getOldPassword();
+		String newPassword = uerPasswordUpdateRequest.getNewPassword();
+
+		// 查询用户信息
+		User user = this.userService.findByAccount(account);
+
+		// 判断用户是否存在
+		if (null == user)
+			throw new RuntimeException("用户不存在!");
+
+		// 判断旧密码是否正确
+		if (!MD5Util.encrypeByMd5(oldPassword).equals(user.getPassword())) {
+			throw new RuntimeException("原密码不正确!");
+		}
+
+		user.setPassword(MD5Util.encrypeByMd5(newPassword));
+
+		RetMsg retMsg = new RetMsg();
+		retMsg.setCode(200);
+		retMsg.setData(user.getAccount());
+		retMsg.setMessage("用户密码更新成功!");
+		retMsg.setSuccess(true);
+
+		return retMsg;
+
+	}
+
 	@RequestMapping("/testsave/{id}/{type}")
 	public String saveTest(@PathVariable("id") Long id, @PathVariable("type") String type) {
 		User puser = userService.getUserById(id);
@@ -75,11 +108,12 @@ public class UserController {
 		earnServerSchedul.savePer(newuser.getUserId());
 		return "测试数据插入根成功";
 	}
+
 	@RequestMapping("/saveall")
 	public String saveTestAll() throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		
+
 		earnServerSchedul.mainTest();
-		
+
 		return "测试数据插入根成功";
 	}
 
@@ -205,18 +239,18 @@ public class UserController {
 			this.userService.save(parentUser);
 
 			// 更新推荐人激活状态:如果推荐人为未激活状态，则修改其状态，否则不发生变化
-			
+
 			if (!recommendUser.isUserStatus()) {
 				recommendUser.setActivateTime(new Date());
 				recommendUser.setUserStatus(true);
 			}
 
-			
 			// 更新业绩信息
 			earnServerSchedul.mainUpdatePerformance(user.getUserId());
 
 			// 更新推荐人的报单币
-			recommendUser.setConsumeCoin(recommendUser.getConsumeCoin() - this.bonusPayPercentage.getConsumeCoinUnitPrice());
+			recommendUser
+					.setConsumeCoin(recommendUser.getConsumeCoin() - this.bonusPayPercentage.getConsumeCoinUnitPrice());
 
 			// 新增推荐人消费记录
 			ConsumeRecord consumeRecord = new ConsumeRecord();
@@ -224,8 +258,8 @@ public class UserController {
 			consumeRecord.setSendUserId(recommendUser.getUserId());
 			consumeRecord.setConsumeType(ConsumeType.COIN_TRANSFER_ADDCONSUMER);
 			consumeRecord.setConsumeTime(new Date());
-			
-			//查询公司id
+
+			// 查询公司id
 			User company = this.userService.findByAccount("管理员");
 			consumeRecord.setReceiveUserId(company.getUserId());
 			consumeRecord.setConsumeNumber(this.bonusPayPercentage.getConsumeCoinUnitPrice());

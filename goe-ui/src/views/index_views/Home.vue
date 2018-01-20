@@ -7,7 +7,7 @@
       <header class='demos-header'>
         <list style="margin: 0px">
           <list-item>
-            <div class="item-media"><img src="../../assets/goe_logo.png" width="80"></div>
+            <div class="item-media"><img src="../../assets/images/person.png" width="80"></div>
             <div class="item-content">
               <div class="item-title-row">
                 <div class="item-title">{{ LoginUser.account}}</div>
@@ -17,7 +17,7 @@
                 {{ LoginUser.userLevel }}
               </div>
               <div class="item-text">
-                考核状态: {{ LoginUser.assessStatus }}  <br>
+                考核状态: {{ LoginUser.assessStatus }}<br>
                 距离下次重销日：  {{ LoginUser.assessDate}}
 
               </div>
