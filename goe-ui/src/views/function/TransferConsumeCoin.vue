@@ -6,7 +6,7 @@
         <h1 class="demos-title">报单币转账</h1>
         <list>
           <list-item>
-            <div class="item-media"><img src="../../assets/images/icon-list.png" width="44"></div>
+            <div class="item-media"><img src="../../assets/images/rmb.png" width="44"></div>
             <div class="item-content">
               <div class="item-title-row">
                 <div class="item-title">报单币余额</div>
@@ -21,7 +21,7 @@
           <form-item>
             <div class="item-content">
               <div class="item-input">
-                <input type="text" placeholder="请输入收款人用户编号">
+                <input type="text" placeholder="请输入收款人用户编号" v-model="findAccount">
               </div>
               <div class="item-title label">
                 <m-button type="warning" size="large" @click.native="findUser">查询</m-button>
@@ -30,17 +30,17 @@
           </form-item>
         </form-list>
 
-          <list v-if="findedUser">
+          <list v-if="isFindedUser">
             <list-item >
-              <div class="item-media"><img src="../../assets/images/icon-list.png" width="44"></div>
+              <div class="item-media"><img src="../../assets/images/person.png" width="44"></div>
               <div class="item-content">
                 <div class="item-title-row">
-                  <div class="item-title">username</div>
+                  <div class="item-title"> {{ user.account }}</div>
                 </div>
                 <div class="item-subtitle">
-                  <span class="performence-span">A:1</span>&nbsp;&nbsp;
-                  <span class="performence-span">B:2</span>&nbsp;&nbsp;
-                  <span class="performence-span">C:3</span>&nbsp;&nbsp;
+                  <span class="performence-span">A:{{user.preformanceA}}</span>&nbsp;&nbsp;
+                  <span class="performence-span">B:{{user.preformanceB}}</span>&nbsp;&nbsp;
+                  <span class="performence-span">C:{{user.preformanceC}}</span>&nbsp;&nbsp;
                 </div>
               </div>
             </list-item>
@@ -51,15 +51,14 @@
                   <input type="number" placeholder="请输入转账金额" v-model="convertNumber">
                 </div>
                 <div class="item-title label">
-                  <m-button type="warning" size="large" @click.native="findUser" :disabled="transferBtnStatus">转账</m-button>
+                  <m-button type="warning" size="large" @click.native="transfer" :disabled="transferBtnStatus">转账</m-button>
                 </div>
               </div>
             </form-item>
-            {{ convertNumber }}
           </form-list>
           </list>
         <div v-if="NotFindUser">
-          <m-button type="light" >未找到该用户</m-button>
+          <m-button type="light" >{{ errMsg }}</m-button>
         </div>
         <br>
         <toast text="完成!" ref="t1"></toast>
@@ -77,8 +76,13 @@
   import Toast from '../../../node_modules/vum/src/components/toast'
   import Column from '../../../node_modules/vum/src/components/column'
   import { List, ListItem } from '../../../node_modules/vum/src/components/list'
+  import GoeConfig from '../../../config/goe'
 
   export default {
+    mounted: function () {
+      console.log('mounted transfer')
+      this.consumeCoin = JSON.parse(window.localStorage.getItem('User')).consumeCoin
+    },
     components: {
       SimpleHeader,
       'page-content': Content,
@@ -93,16 +97,52 @@
     },
     data () {
       return {
-        bonusCoin: 1500,
         consumeCoin: 2000,
         convertNumber: null,
-        findedUser: false,
-        NotFindUser: false
+        isFindedUser: false,
+        user: {
+          account: '',
+          preformanceA: '',
+          preformanceB: '',
+          preformanceC: ''
+        },
+        NotFindUser: false,
+        findAccount: '',
+        errMsg: ''
       }
     },
     methods: {
       findUser () {
-        this.findedUser = true
+        this.queryUser()
+      },
+      transfer () {
+      },
+      queryUser () {
+        const url = GoeConfig.apiServer + '/user/performance?account=' + this.findAccount
+        this.$http.get(url, {
+          _timeout: 3000,
+          onTimeout: (request) => {
+//              this.errMsg = '请求超时超时'
+//              this.password = ''
+          }
+        })
+          .then(response => {
+            if (response.body.success) {
+              this.isFindedUser = true
+              this.NotFindUser = false
+              this.user.account = this.findAccount
+              this.user.preformanceA = response.body.data.departAcount
+              this.user.preformanceB = response.body.data.departBcount
+              this.user.preformanceC = response.body.data.departCcount
+            } else {
+              this.isFindedUser = false
+              this.NotFindUser = true
+              this.errMsg = response.body.message
+            }
+            this.MyPerformance = response.body.data
+          }, responseErr => {
+            console.log(responseErr.body)
+          })
       }
     },
     computed: {

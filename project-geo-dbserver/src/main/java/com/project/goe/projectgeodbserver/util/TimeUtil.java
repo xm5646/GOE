@@ -135,6 +135,7 @@ public class TimeUtil {
 		Thread.sleep(2000);
 		Date d2 =new Date();
 		System.out.println(getTimeSame(d1, d2));
+		System.out.println(d1.before(d2));
 		
 	}
 

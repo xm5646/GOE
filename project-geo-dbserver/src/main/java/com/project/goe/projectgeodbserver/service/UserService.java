@@ -1,5 +1,7 @@
 package com.project.goe.projectgeodbserver.service;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,17 @@ public class UserService {
 	@Transactional
 	public User save(User user) {
 		return this.userRepositoy.save(user);
+	}
+	
+	//批量更新或者新加用户
+	@Transactional
+	public List<User> saveAll(List<User> userupdate) {
+		if (userupdate!=null && userupdate.size()>0) {
+			for (User user : userupdate) {
+				this.userRepositoy.save(user);
+			}
+		}
+		return userupdate;
 	}
 	
 	//删除用户

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import com.project.goe.projectgeodbserver.entity.BusinessEntity;
+import com.project.goe.projectgeodbserver.entity.Earning;
 import com.project.goe.projectgeodbserver.statusType.UserLevel;
 
 public class BusinessUtil {
@@ -33,34 +34,34 @@ public class BusinessUtil {
 	public static List<BusinessEntity> businessList = new ArrayList<BusinessEntity>();
 	
 	static{
-		BusinessEntity VIP1 = new BusinessEntity(UserLevel.CONSUMER, UserLevel.CONSUMER_CH, 0, 0, 0, 0);
+		BusinessEntity VIP1 = new BusinessEntity(1,UserLevel.CONSUMER, UserLevel.CONSUMER_CH, 0, 0, 0, 0);
 		businessMap.put(UserLevel.CONSUMER, VIP1);
-		BusinessEntity VIP2 = new BusinessEntity(UserLevel.COMMON_SALEMAN, UserLevel.COMMON_SALEMAN_CH, 4, 4, 0, 40);
+		BusinessEntity VIP2 = new BusinessEntity(2,UserLevel.COMMON_SALEMAN, UserLevel.COMMON_SALEMAN_CH, 4, 4, 0, 40);
 		businessMap.put(UserLevel.COMMON_SALEMAN, VIP2);
-		BusinessEntity VIP3 = new BusinessEntity(UserLevel.GROUP_LEADER, UserLevel.GROUP_LEADER_CH, 10, 10, 0, 140);
+		BusinessEntity VIP3 = new BusinessEntity(3,UserLevel.GROUP_LEADER, UserLevel.GROUP_LEADER_CH, 10, 10, 0, 140);
 		businessMap.put(UserLevel.GROUP_LEADER, VIP3);
-		BusinessEntity VIP4 = new BusinessEntity(UserLevel.DIRECOTR, UserLevel.DIRECOTR_CH, 20, 20, 0, 180);
+		BusinessEntity VIP4 = new BusinessEntity(4,UserLevel.DIRECOTR, UserLevel.DIRECOTR_CH, 20, 20, 0, 180);
 		businessMap.put(UserLevel.DIRECOTR, VIP4);
-		BusinessEntity VIP5 = new BusinessEntity(UserLevel.MANAGEAR, UserLevel.MANAGEAR_CH, 40, 40, 0, 330);
+		BusinessEntity VIP5 = new BusinessEntity(5,UserLevel.MANAGEAR, UserLevel.MANAGEAR_CH, 40, 40, 0, 330);
 		businessMap.put(UserLevel.MANAGEAR, VIP5);
-		BusinessEntity VIP6 = new BusinessEntity(UserLevel.BRANCH_MANAGER, UserLevel.BRANCH_MANAGER_CH, 80, 80, 0, 660);
+		BusinessEntity VIP6 = new BusinessEntity(6,UserLevel.BRANCH_MANAGER, UserLevel.BRANCH_MANAGER_CH, 80, 80, 0, 660);
 		businessMap.put(UserLevel.BRANCH_MANAGER, VIP6);
-		BusinessEntity VIP7 = new BusinessEntity(UserLevel.ADVANCE_MANAGER, UserLevel.ADVANCE_MANAGER_CH, 160, 160, 0, 990);
+		BusinessEntity VIP7 = new BusinessEntity(7,UserLevel.ADVANCE_MANAGER, UserLevel.ADVANCE_MANAGER_CH, 160, 160, 0, 990);
 		businessMap.put(UserLevel.ADVANCE_MANAGER, VIP7);
-		BusinessEntity VIP8 = new BusinessEntity(UserLevel.MARKET_DIRECTOR, UserLevel.MARKET_DIRECTOR_CH, 260, 260, 0, 1200);
+		BusinessEntity VIP8 = new BusinessEntity(8,UserLevel.MARKET_DIRECTOR, UserLevel.MARKET_DIRECTOR_CH, 260, 260, 0, 1200);
 		businessMap.put(UserLevel.MARKET_DIRECTOR, VIP8);
-		BusinessEntity VIP9 = new BusinessEntity(UserLevel.ADVANCED_DIRECTOR, UserLevel.ADVANCED_DIRECTOR_CH, 380, 380, 0, 1800);
+		BusinessEntity VIP9 = new BusinessEntity(9,UserLevel.ADVANCED_DIRECTOR, UserLevel.ADVANCED_DIRECTOR_CH, 380, 380, 0, 1800);
 		businessMap.put(UserLevel.ADVANCED_DIRECTOR, VIP9);
 		
-		BusinessEntity DS1 = new BusinessEntity(UserLevel.BOARD_DIRECOTR, UserLevel.BOARD_DIRECOTR_CH, 380, 380, 300, 3000);
+		BusinessEntity DS1 = new BusinessEntity(10,UserLevel.BOARD_DIRECOTR, UserLevel.BOARD_DIRECOTR_CH, 380, 380, 300, 3000);
 		businessMap.put(UserLevel.BOARD_DIRECOTR, DS1);
-		BusinessEntity DS2 = new BusinessEntity(UserLevel.EXECUTIVE_PRESIDEANT, UserLevel.EXECUTIVE_PRESIDEANT_CH, 750, 750, 600, 5000);
+		BusinessEntity DS2 = new BusinessEntity(11,UserLevel.EXECUTIVE_PRESIDEANT, UserLevel.EXECUTIVE_PRESIDEANT_CH, 750, 750, 600, 5000);
 		businessMap.put(UserLevel.EXECUTIVE_PRESIDEANT, DS2);
-		BusinessEntity DS3 = new BusinessEntity(UserLevel.PRESIDEANT, UserLevel.PRESIDEANT_CH, 1500, 1500, 1200, 6000);
+		BusinessEntity DS3 = new BusinessEntity(12,UserLevel.PRESIDEANT, UserLevel.PRESIDEANT_CH, 1500, 1500, 1200, 6000);
 		businessMap.put(UserLevel.PRESIDEANT, DS3);
-		BusinessEntity DS4 = new BusinessEntity(UserLevel.CROWN, UserLevel.CROWN_CH, 2200, 2200, 1800, 13000);
+		BusinessEntity DS4 = new BusinessEntity(13,UserLevel.CROWN, UserLevel.CROWN_CH, 2200, 2200, 1800, 13000);
 		businessMap.put(UserLevel.CROWN, DS4);
-		BusinessEntity DS5 = new BusinessEntity(UserLevel.CROWN_AMBASSADOR, UserLevel.CROWN_AMBASSADOR_CH, 3000, 3000, 2100, 20000);
+		BusinessEntity DS5 = new BusinessEntity(14,UserLevel.CROWN_AMBASSADOR, UserLevel.CROWN_AMBASSADOR_CH, 3000, 3000, 2100, 20000);
 		businessMap.put(UserLevel.CROWN_AMBASSADOR, DS5);
 		
 		businessList.add(VIP1);
@@ -103,6 +104,30 @@ public class BusinessUtil {
 			
 		}
 		return null;
+	}
+	
+	/**
+	 * 根据用户业绩的等级返回业绩的对象
+	 * @param userLevel
+	 * @return
+	 */
+	public static BusinessEntity getBusinessEntity(String userLevel) {
+		return businessMap.get(userLevel);
+	}
+	
+	//整合
+	public static boolean isFirstEarn(String userLevel) {
+		return false;
+	}
+	
+	public static Earning isBigBus(Earning ea,Earning eb) {
+		BusinessEntity bus1 = businessMap.get(ea.getTouchType());
+		BusinessEntity bus2 = businessMap.get(eb.getTouchType());
+		if (bus1.getCode()>bus2.getCode()) {
+			return ea;
+		}else {
+			return eb;
+		}
 	}
 	
 	private static boolean isSatisfaction(BusinessEntity bus,long DepartAcount,long DepartBcount,long DepartCcount) {

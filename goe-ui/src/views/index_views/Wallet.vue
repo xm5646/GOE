@@ -26,35 +26,35 @@
       <!--业绩显示-->
       <list>
         <list-item>
-          <div class="item-media"><img src="../../assets/images/coin.png" width="44"></div>
+          <div class="item-media"><img src="../../assets/images/rmb.png" width="34"></div>
           <div class="item-content">
             <div class="item-title-row">
               <div class="item-title">奖金余额</div>
             </div>
             <div class="item-subtitle">
-              <span class="span-performance">￥{{ bonusCoin }}</span>
+              <span class="span-performance">￥{{ bonusCoin.toFixed(2) }}</span>
             </div>
           </div>
         </list-item>
         <list-item>
-          <div class="item-media"><img src="../../assets/images/coin.png" width="44"></div>
+          <div class="item-media"><img src="../../assets/images/rmb.png" width="34"></div>
           <div class="item-content">
             <div class="item-title-row">
               <div class="item-title">报单币余额</div>
             </div>
             <div class="item-subtitle">
-              <span class="span-performance">￥{{ consumeCoin }}</span>
+              <span class="span-performance">￥{{ consumeCoin.toFixed(2) }}</span>
             </div>
           </div>
         </list-item>
         <list-item>
-          <div class="item-media"><img src="../../assets/images/coin.png" width="44"></div>
+          <div class="item-media"><img src="../../assets/images/rmb.png" width="34"></div>
           <div class="item-content">
             <div class="item-title-row">
               <div class="item-title">产品积分余额</div>
             </div>
             <div class="item-subtitle">
-              <span class="span-performance">￥{{ productCoin }}</span>
+              <span class="span-performance">￥{{ productCoin.toFixed(2) }}</span>
             </div>
           </div>
         </list-item>
@@ -69,6 +69,7 @@
 
 
     </page-content>
+    <preloader ref="preloader"></preloader>
   </div>
 </template>
 <script>
@@ -77,10 +78,20 @@
   import Content from '../../../node_modules/vum/src/components/content'
   import {List, ListItem} from '../../../node_modules/vum/src/components/list'
   import { Button, ButtonGroup } from '../../../node_modules/vum/src/components/buttons'
+  import Preloader from '../../../node_modules/vum/src/components/preloader'
   import { Form, FormItem } from '../../../node_modules/vum/src/components/form'
-
+  import Bus from '../../../src/EventBus.js'
   export default {
     mounted: function () {
+//      Bus.$on('isLoading', (status) => {
+//        if (status) {
+//          console.log('触发请求拦截器Y')
+//          this.$refs.preloader.open()
+//        } else {
+//          console.log('触发请求拦截器N')
+//          this.$refs.preloader.close()
+//        }
+//      })
       const CurrentUser = JSON.parse(window.localStorage.getItem('User'))
       this.bonusCoin = CurrentUser.bonusCoin
       this.consumeCoin = CurrentUser.consumeCoin
@@ -92,7 +103,9 @@
       HeaderTitle,
       List,
       ListItem,
+      Preloader,
       FormItem,
+      Bus,
       'form-list': Form,
       'page-content': Content,
       Grid,

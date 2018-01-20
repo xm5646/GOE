@@ -1,50 +1,55 @@
 package com.project.goe.projectgeodbserver.util;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+//相关比例
 @Component
-@ConfigurationProperties(prefix = "bonus.percentage")
 public class BonusPayPercentage {
-	// 管理费 0.1
-	private double manageCostPercentage;
-	// 奖金 0.81
-	private double bonusNumberPercentage;
-	// 产品积分 0.09
-	private double productCoinNumberPercentage;
-	// 产品报单币单价
-	private double consumeCoinUnitPrice;
+	// 管理费比例
+	private static double manageCostPercentage;
+	// 奖金比例
+	private static double bonusNumberPercentage;
+	// 产品积分比例
+	private static double productCoinNumberPercentage;
+	// 重销产品单价
+	private static double consumeCoinUnitPrice;
 
-	public double getManageCostPercentage() {
+	public static double getManageCostPercentage() {
 		return manageCostPercentage;
 	}
 
+	
+	@Value("${bonus.percentage.manageCostPercentage}")
 	public void setManageCostPercentage(double manageCostPercentage) {
-		this.manageCostPercentage = manageCostPercentage;
+		BonusPayPercentage.manageCostPercentage = manageCostPercentage;
 	}
 
-	public double getBonusNumberPercentage() {
+	public static double getBonusNumberPercentage() {
 		return bonusNumberPercentage;
 	}
 
+	@Value("${bonus.percentage.bonusNumberPercentage}")
 	public void setBonusNumberPercentage(double bonusNumberPercentage) {
-		this.bonusNumberPercentage = bonusNumberPercentage;
+		BonusPayPercentage.bonusNumberPercentage = bonusNumberPercentage;
 	}
 
-	public double getProductCoinNumberPercentage() {
+	public static double getProductCoinNumberPercentage() {
 		return productCoinNumberPercentage;
 	}
 
+	@Value("${bonus.percentage.productCoinNumberPercentage}")
 	public void setProductCoinNumberPercentage(double productCoinNumberPercentage) {
-		this.productCoinNumberPercentage = productCoinNumberPercentage;
+		BonusPayPercentage.productCoinNumberPercentage = productCoinNumberPercentage;
 	}
 
-	public double getConsumeCoinUnitPrice() {
+	public static double getConsumeCoinUnitPrice() {
 		return consumeCoinUnitPrice;
 	}
 
+	@Value("${bonus.percentage.consumeCoinUnitPrice}")
 	public void setConsumeCoinUnitPrice(double consumeCoinUnitPrice) {
-		this.consumeCoinUnitPrice = consumeCoinUnitPrice;
+		BonusPayPercentage.consumeCoinUnitPrice = consumeCoinUnitPrice;
 	}
 
 }

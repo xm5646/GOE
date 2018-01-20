@@ -1,8 +1,9 @@
 package com.project.goe.projectgeodbserver.entity;
 
 public class BusinessEntity {
-	public BusinessEntity(String userLevel, String userLevel_CH, long countA, long countB, long countC, double money) {
+	public BusinessEntity(int code,String userLevel, String userLevel_CH, long countA, long countB, long countC, double money) {
 		super();
+		this.code = code;
 		this.userLevel = userLevel;
 		this.userLevel_CH = userLevel_CH;
 		this.countA = countA;
@@ -77,6 +78,18 @@ public class BusinessEntity {
 	 */
 	private double money;
 	
+	private int code;
+	
+	
+	
+	public int getCode() {
+		return code;
+	}
+
+	public void setCode(int code) {
+		this.code = code;
+	}
+
 	public String getUserLevel() {
 		return userLevel;
 	}
@@ -117,8 +130,9 @@ public class BusinessEntity {
 	@Override
 	public String toString() {
 		return "BusinessEntity [userLevel=" + userLevel + ", userLevel_CH=" + userLevel_CH + ", countA=" + countA
-				+ ", countB=" + countB + ", countC=" + countC + ", money=" + money + "]";
+				+ ", countB=" + countB + ", countC=" + countC + ", money=" + money + ", code=" + code + "]";
 	}
+
 	
 	
 }

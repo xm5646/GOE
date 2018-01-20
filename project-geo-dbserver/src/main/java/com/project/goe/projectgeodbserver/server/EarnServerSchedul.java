@@ -1,10 +1,14 @@
 package com.project.goe.projectgeodbserver.server;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,12 +18,19 @@ import com.project.goe.projectgeodbserver.entity.Earning;
 import com.project.goe.projectgeodbserver.entity.Performance;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.entity.UserCreatereRecord;
+import com.project.goe.projectgeodbserver.service.BonusPayListService;
 import com.project.goe.projectgeodbserver.service.EarningService;
 import com.project.goe.projectgeodbserver.service.PerformanceService;
 import com.project.goe.projectgeodbserver.service.UserCreateRecordService;
 import com.project.goe.projectgeodbserver.service.UserService;
 import com.project.goe.projectgeodbserver.statusType.TouchType;
+import com.project.goe.projectgeodbserver.statusType.UserLevel;
+import com.project.goe.projectgeodbserver.statusType.UserType;
+import com.project.goe.projectgeodbserver.util.BusinessUtil;
 import com.project.goe.projectgeodbserver.util.CheckUtil;
+import com.project.goe.projectgeodbserver.util.MD5Util;
+import com.project.goe.projectgeodbserver.util.TimeUtil;
+import com.project.goe.projectgeodbserver.util.UserUtil;
 
 @Service
 public class EarnServerSchedul {
@@ -35,6 +46,9 @@ public class EarnServerSchedul {
 	
 	@Autowired
 	private EarningService earningService;
+	
+	@Autowired
+	private BonusPayListService bonusPayListService;
 	
 	/**
 	 * 传递
@@ -60,7 +74,36 @@ public class EarnServerSchedul {
 				}
 			}
 		}
-		return "测试数据插入成功" + type;
+		return "测试数据插入成功";
+	}
+	
+	@Transactional
+	public void mainTest() throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		Map<Long,Boolean> map = new HashMap<Long,Boolean>();
+		User newuser = UserUtil.getTestUser();
+		newuser.setAccount("admin");
+		newuser.setPassword(MD5Util.encrypeByMd5("admin"));
+		newuser.setWeightCode(1);
+		userService.save(newuser);
+		savePer(newuser.getUserId());
+		map.put(newuser.getUserId(), false);
+		
+		testsave(newuser, map);
+	}
+	
+	
+	private void testsave(User puser,Map<Long,Boolean> map) {
+		User newuserA = UserUtil.getTestUser();
+		User newuserB = UserUtil.getTestUser();
+		String a = mainUpdateUser(puser.getUserId(), "A", newuserA);
+		String b = mainUpdateUser(puser.getUserId(), "B", newuserB);
+		if ("测试数据插入成功".equals(a)) {
+			System.out.println(newuserA.toString());
+			
+		}
+		if ("测试数据插入成功".equals(b)) {
+			System.out.println(newuserB.toString());
+		}
 	}
 	
 	/**
@@ -69,21 +112,23 @@ public class EarnServerSchedul {
 	 * @return
 	 */
 	public String mainUpdatePerformance(Long createId) {
-		//创建用户更新收益表，记录是否更新收益数据，如果没有更新数据更新收益表并记录收益表更新状态
+		//创建用户更新业绩表，记录是否更新业绩数据，如果没有更新数据更新业绩表并记录业绩表更新状态
 		UserCreatereRecord ucr  = saveUserCreateEntity(createId);
 		if (ucr!=null && !ucr.isStatus()) {
+			//在更新业绩的时候判断是否触发新增或者累计收益
 			updateUserPerformance(createId);
 			ucr.setStatus(true);
 			userCreateRecordService.save(ucr);
 		}else {
-			return "此用户已更新过收益";
+			return "此用户已更新过业绩";
 		}
-		return "更新用户收益成功";
+		return "更新用户业绩成功";
 	}
 	
 	/**
 	 * 每天计算收益
 	 */
+	@Transactional
 	public void mainComperBonuspaylist() {
 		//取得所有收益表和用户表数据
 		Iterable<User> userlist = this.userService.getAll();
@@ -93,9 +138,9 @@ public class EarnServerSchedul {
 //		Map<Long,User> userMap = new HashMap<Long,User>();
 		Map<Long,Earning> earnsMap = new HashMap<Long,Earning>();
 		
-		for (Earning earn : earns) {
-			earnsMap.put(earn.getUserid(), earn);
-		}
+		//这里由于时间关系不操作数据库了，直接代码实现时间的处理
+		conductEarnTime(earns, earnsMap);
+		
 		List<BonusPayList> buslist = new ArrayList<BonusPayList>();
 		List<User> userupdate = new ArrayList<User>();
 		for (User user : userlist) {
@@ -110,7 +155,59 @@ public class EarnServerSchedul {
 		}
 		CheckUtil.printList(buslist);
 		CheckUtil.printList(userupdate);
-
+		bonusPayListService.saveAll(buslist);
+		userService.saveAll(userupdate);
+	}
+	
+	private void conductEarnTime(Iterable<Earning> earns,Map<Long,Earning> earnsMap) {
+		for (Earning earn : earns) {
+			Earning em = earnsMap.get(earn.getUserid());
+			if (em!=null) {
+				//得到可用使用的业绩对象
+				Earning eu = getUsedEarning(earn, em);
+				if (eu!=null) {
+					earnsMap.put(eu.getUserid(), eu);
+				}
+				
+			}else {
+				if (TouchType.ADDITION.equals(earn.getTouchType())) {
+					if (earn.getEndTime()!=null && earn.getEndTime().after(new Date())) {
+						earnsMap.put(earn.getUserid(), earn);
+					}
+				}else {
+					if (earn.getDayMoney()>0) {
+						earnsMap.put(earn.getUserid(), earn);
+					}
+				}
+			}
+		}
+	}
+	
+	//得到可用Earning对象
+	//这里是复杂的业务逻辑
+	private Earning getUsedEarning(Earning earn,Earning em) {
+		//earn 是新要插入的数据 em是已经插入MAP的数据
+		//如果存在userID对应的业绩对象，比较用户级别
+		if (TouchType.ADDITION.equals(earn.getTouchType()) && TouchType.ADDITION.equals(em.getTouchType())) {
+			//新增 判断结束时间是不是已经结束
+			if (earn.getEndTime()!=null && earn.getEndTime().after(new Date())) {
+				return BusinessUtil.isBigBus(earn, em);
+			}
+		}else if (TouchType.ADDITION.equals(earn.getTouchType()) && TouchType.ACCUMULATION.equals(em.getTouchType())) {
+			//新增 return null 或者return em都可以，但是em 已经在map中，直接是替换了
+			return null;
+		}else if (TouchType.ACCUMULATION.equals(earn.getTouchType()) && TouchType.ADDITION.equals(em.getTouchType())) {
+			//累计
+			if (earn.getDayMoney()>0) {
+				return earn;
+			}
+		}else if (TouchType.ACCUMULATION.equals(earn.getTouchType()) && TouchType.ACCUMULATION.equals(em.getTouchType())) {
+			//累计
+			if (earn.getDayMoney()>0) {
+				return BusinessUtil.isBigBus(earn, em);
+			}
+		}
+		return null;
 	}
 	
 	/**
@@ -119,7 +216,7 @@ public class EarnServerSchedul {
 	 */
 	private boolean updateComperBonuspayForEarning(Earning earn) {
 		if(earn!=null) {
-			if (TouchType.ADDITION.equals(earn.getTouchType())) {
+			if (TouchType.ACCUMULATION.equals(earn.getTouchType())) {
 				if (earn.getSurplusNumber()>0) {
 					earn.setSurplusNumber(earn.getSurplusNumber()-1);
 					return true;
@@ -153,6 +250,7 @@ public class EarnServerSchedul {
 		this.userService.save(puser);
 		savePer(newuser.getUserId());
 		//用户创建完成后更新用户收益信息
+		updateUserPerformance(newuser.getUserId());
 	}
 	
 	/**
@@ -171,6 +269,10 @@ public class EarnServerSchedul {
 		}
 	}
 	
+	/**
+	 * 更加用户ID更新用户上级的所有业绩，并在所有业绩更新后判断业绩能否触发收益，并保存
+	 * @param userid
+	 */
 	private void updateUserPerformance(Long userid) {
 		//取得所有收益表和用户表数据
 		Iterable<User> userlist = this.userService.getAll();
@@ -186,11 +288,35 @@ public class EarnServerSchedul {
 		}
 		//获得需要更新的业绩表数据
 		List<Performance> perlist = CheckUtil.computePer(userid, userMap, perMap);
+		//在checkUtil中已经做了为空判断，这里不需要做
 		for (Performance performance : perlist) {
 			//更新收益表数据
 			performanceService.save(performance);
 		}
+
+		Iterable<Earning> earns = earningService.getAll();		
+		// 将获得的对象封装成MAP
+		Map<String, Earning> earnMap = new HashMap<String, Earning>();
+		for (Earning earn : earns) {
+			String key = CheckUtil.getEarnKey(earn);
+			if (key != null && key.length() > 0) {
+				earnMap.put(key, earn);
+			}
+		}
+		
 		//发生变化的业绩更新收益表
+		List<Earning> earnList = CheckUtil.userEarning(earnMap,perlist);
+		
+		if (earnList!=null && earnList.size()>0) {
+			CheckUtil.computeEarn(earnMap,earnList);
+			for (Earning earn : earnList) {
+				if(earn != null) {
+					//在这里判断如果是第一次触发累计4：4更新user表考核时间
+					
+					earningService.save(earn);
+				}
+			}
+		}
 	}
 	
 	/**

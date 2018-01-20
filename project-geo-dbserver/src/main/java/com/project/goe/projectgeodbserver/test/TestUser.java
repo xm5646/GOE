@@ -11,6 +11,7 @@ import com.project.goe.projectgeodbserver.entity.Performance;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.service.PerformanceService;
 import com.project.goe.projectgeodbserver.service.UserService;
+import com.project.goe.projectgeodbserver.statusType.UserType;
 import com.project.goe.projectgeodbserver.util.MD5Util;
 
 @RestController
@@ -36,20 +37,29 @@ public class TestUser {
 			Date cTime = new Date();
 			user.setAssessDate(cTime);
 			user.setAssessStatus(false);
-			user.setBonusCoin(0f);
-			user.setConsumeCoin(0f);
+			user.setBonusCoin(10000f);
+			user.setConsumeCoin(10000f);
 			user.setCreateTime(cTime);
 			user.setDepartmentA(0);
 			user.setDepartmentB(0);
 			user.setDepartmentC(0);
 			user.setParentId(0);
 			user.setWeightCode(1);
-
-			User u = this.userService.save(user);
-
+			user.setUserType(UserType.ADMIN);
+			
+			//新增公司管理员账户
+			User u = new User();
+			u.setAccount("管理员");
+			u.setPassword(MD5Util.encrypeByMd5("admin"));
+			u.setCreateTime(cTime);
+			u.setUserType(UserType.COMPANY);
+			
+			this.userService.save(user);
+			this.userService.save(u);
+			
 			this.performanceService.deleteAllPerformance();
 			Performance p = new Performance();
-			p.setUserId(u.getUserId());
+			p.setUserId(user.getUserId());
 			p.setDepartAcount(0);
 			p.setDepartAcount(0);
 			p.setDepartCcount(0);

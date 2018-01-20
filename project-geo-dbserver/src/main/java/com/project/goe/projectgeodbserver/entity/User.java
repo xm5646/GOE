@@ -17,7 +17,7 @@ import com.project.goe.projectgeodbserver.statusType.UserType;
 /**
  * 用户类，映射用户表 注解@Entity一定要带，这个是数据库映射的注解
  */
-@Entity(name = "tuser")
+@Entity
 @Table(name = "tb_user")
 public class User {
 

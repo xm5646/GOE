@@ -25,9 +25,8 @@
     <keep-alive>
       <component :is="currentView" @linkTo="changeView" ref="nowView"></component>
     </keep-alive>
-
+    <loading :LoadingStatus="isLoading"></loading>
   </div>
-
 </template>
 
 <script>
@@ -47,15 +46,22 @@ import Salary from './index_views/Salary'
 import Consume from './index_views/Consume'
 import ResetPassword from './function/ResetPassword'
 import GoeConfig from '../../config/goe'
+import Loading from '../components/Loading'
 
 console.log(FooterItem)
 export default {
   mounted: function () {
-    console.log(this.$route.params)
-    if (this.$route.params.view != null) {
-      this.currentView = this.$route.params.view
-    } else {
-      this.currentView = 'home'
+    this.$bus.on('isLoading', (status) => {
+      console.log('接收到loading event,状态是:' + status)
+      if (status) {
+        this.isLoading = true
+      } else {
+        this.isLoading = false
+      }
+    })
+    // 判断是否是从 创建用户页面创建成功之后传过来的
+    if (this.$route.params.view === 'performance') {
+      this.currentView = 'performance'
     }
   },
   components: {
@@ -67,6 +73,7 @@ export default {
     'resetPassword': ResetPassword,
     Page,
     Content,
+    Loading,
     SimpleHeader,
     'form-list': Form,
     FormItem,
@@ -77,7 +84,8 @@ export default {
   data () {
     return {
       currentView: 'home',
-      errMsg: ''
+      errMsg: '',
+      isLoading: false
     }
   },
   methods: {
@@ -95,11 +103,9 @@ export default {
           })
           .then(response => {
             if (response.body.success) {
-              console.log(response.body.data)
               window.localStorage.setItem('User', JSON.stringify(response.body.data))
               this.$refs.nowView.update()
             } else {
-              console.log('error:' + response.body.message)
               this.errMsg = response.body.message
             }
           }, responseErr => {

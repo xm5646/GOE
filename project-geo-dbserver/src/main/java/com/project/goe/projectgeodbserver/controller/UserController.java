@@ -1,6 +1,11 @@
 package com.project.goe.projectgeodbserver.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +36,7 @@ import com.project.goe.projectgeodbserver.util.UserUtil;
 import com.project.goe.projectgeodbserver.util.BonusPayPercentage;
 import com.project.goe.projectgeodbserver.util.MD5Util;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
+import com.project.goe.projectgeodbserver.viewentity.UserPasswordUpdateRequest;
 import com.project.goe.projectgeodbserver.viewentity.UserSavePostParams;
 
 @RestController
@@ -46,13 +52,45 @@ public class UserController {
 
 	@Autowired
 	private BonusPayPercentage bonusPayPercentage;
-	
+
 	@Autowired
 	private ConsumeRecordService consumeRecordService;
 
 	// 将业务全部移动到调度服务上
 	@Autowired
 	private EarnServerSchedul earnServerSchedul;
+
+	// 更新用户密码
+	@PostMapping("/updatePassword")
+	@Transactional
+	public RetMsg updatePassword(@ModelAttribute UserPasswordUpdateRequest uerPasswordUpdateRequest) {
+		String account = uerPasswordUpdateRequest.getAccount();
+		String oldPassword = uerPasswordUpdateRequest.getOldPassword();
+		String newPassword = uerPasswordUpdateRequest.getNewPassword();
+
+		// 查询用户信息
+		User user = this.userService.findByAccount(account);
+
+		// 判断用户是否存在
+		if (null == user)
+			throw new RuntimeException("用户不存在!");
+
+		// 判断旧密码是否正确
+		if (!MD5Util.encrypeByMd5(oldPassword).equals(user.getPassword())) {
+			throw new RuntimeException("原密码不正确!");
+		}
+
+		user.setPassword(MD5Util.encrypeByMd5(newPassword));
+
+		RetMsg retMsg = new RetMsg();
+		retMsg.setCode(200);
+		retMsg.setData(user.getAccount());
+		retMsg.setMessage("用户密码更新成功!");
+		retMsg.setSuccess(true);
+
+		return retMsg;
+
+	}
 
 	@RequestMapping("/testsave/{id}/{type}")
 	public String saveTest(@PathVariable("id") Long id, @PathVariable("type") String type) {
@@ -68,6 +106,14 @@ public class UserController {
 		newuser.setWeightCode(1);
 		this.userService.save(newuser);
 		earnServerSchedul.savePer(newuser.getUserId());
+		return "测试数据插入根成功";
+	}
+
+	@RequestMapping("/saveall")
+	public String saveTestAll() throws NoSuchAlgorithmException, UnsupportedEncodingException {
+
+		earnServerSchedul.mainTest();
+
 		return "测试数据插入根成功";
 	}
 
@@ -176,47 +222,52 @@ public class UserController {
 			/******* 更新用户上级信息 ********/
 			// 修改父节点下新增用户id
 			switch (position) {
-				case "A":
-					parentUser.setDepartmentA(user.getUserId());
-					break;
-				case "B":
-					parentUser.setDepartmentB(user.getUserId());
-					break;
-				case "C":
-					parentUser.setDepartmentC(user.getUserId());
-					break;
-				default:
-					throw new RuntimeException("传入的位置参数有误!");
+			case "A":
+				parentUser.setDepartmentA(user.getUserId());
+				break;
+			case "B":
+				parentUser.setDepartmentB(user.getUserId());
+				break;
+			case "C":
+				parentUser.setDepartmentC(user.getUserId());
+				break;
+			default:
+				throw new RuntimeException("传入的位置参数有误!");
 			}
 
 			// 更新父节点
 			this.userService.save(parentUser);
-			
+
 			// 更新推荐人激活状态:如果推荐人为未激活状态，则修改其状态，否则不发生变化
-			if(!recommendUser.isUserStatus()) {
+
+			if (!recommendUser.isUserStatus()) {
 				recommendUser.setActivateTime(new Date());
 				recommendUser.setUserStatus(true);
 			}
 
 			// 更新业绩信息
 			earnServerSchedul.mainUpdatePerformance(user.getUserId());
-			
-			//更新推荐人的报单币
-			recommendUser.setConsumeCoin(recommendUser.getConsumeCoin() - this.bonusPayPercentage.getConsumeCoinUnitPrice());
-			
-			//新增推荐人消费记录
+
+			// 更新推荐人的报单币
+			recommendUser
+					.setConsumeCoin(recommendUser.getConsumeCoin() - this.bonusPayPercentage.getConsumeCoinUnitPrice());
+
+			// 新增推荐人消费记录
 			ConsumeRecord consumeRecord = new ConsumeRecord();
 			consumeRecord.setUserId(recommendUser.getUserId());
 			consumeRecord.setSendUserId(recommendUser.getUserId());
 			consumeRecord.setConsumeType(ConsumeType.COIN_TRANSFER_ADDCONSUMER);
 			consumeRecord.setConsumeTime(new Date());
-			consumeRecord.setReceiveUserId(1);//1：公司id
+
+			// 查询公司id
+			User company = this.userService.findByAccount("管理员");
+			consumeRecord.setReceiveUserId(company.getUserId());
 			consumeRecord.setConsumeNumber(this.bonusPayPercentage.getConsumeCoinUnitPrice());
 			consumeRecord.setConsumeStatus(true);
 			consumeRecord.setDescription(ConsumeType.COIN_TRANSFER_ADDCONSUMER);
-			
+
 			consumeRecordService.addOneConsumeRecord(consumeRecord);
-			
+
 			// 返回新增用户信息
 			RetMsg retMsg = new RetMsg();
 			retMsg.setCode(200);
@@ -226,7 +277,7 @@ public class UserController {
 			return retMsg;
 
 		} catch (Exception e) {
-			throw new RuntimeException("添加用户失败!------->" + e.getMessage());
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 
@@ -258,9 +309,9 @@ public class UserController {
 	// 根据用户名查找用户信息
 	@GetMapping("/findByAccount")
 	public RetMsg findUserByAccount(@RequestParam("account") String account) {
-		if(null == account)
+		if (null == account)
 			throw new RuntimeException("用户账户名不能为null");
-		
+
 		try {
 			User u = this.userService.findByAccount(account);
 			RetMsg retMsg = new RetMsg();
@@ -278,6 +329,8 @@ public class UserController {
 	public void deleteOne(@PathVariable("id") Long id) {
 		this.userService.delete(id);
 	}
+
+	// 用户转账
 
 	// 基于单个关键字进行分页查询：默认按照userId字段j查询；默认显示第一页；默认每页显示5条数据
 	@GetMapping("/findUsersBySort")

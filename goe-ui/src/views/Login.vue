@@ -28,7 +28,7 @@
           <div class="item-content">
             &nbsp;&nbsp;
             <div class="item-input">
-              <input type="password" placeholder="请输入密码" class="" v-model="password" @focus="userInput">
+              <input type="password" placeholder="请输入密码" class="" v-model="password" @focus="userInput" @keyup.enter="doLogin">
             </div>
           </div>
         </form-item>
@@ -37,9 +37,10 @@
         </div>
 
         <br>
-        <m-button type="warning" @click.native="doLogin">登录</m-button>
+        <m-button type="warning" @click.native="doLogin" >登录</m-button>
       </form-list>
     </content>
+    <loading :LoadingStatus="isLoading"></loading>
   </div>
 
 </template>
@@ -50,10 +51,22 @@
   import Content from '../../node_modules/vum/src/components/content'
   import { Button } from '../../node_modules/vum/src/components/buttons'
   import { Form, FormItem } from '../../node_modules/vum/src/components/form'
+  import Loading from '../components/Loading'
   import GoeConfig from '../../config/goe'
 
   export default {
+    mounted: function () {
+      this.$bus.on('isLoading', (status) => {
+        console.log('接收到loading event,状态是:' + status)
+        if (status) {
+          this.isLoading = true
+        } else {
+          this.isLoading = false
+        }
+      })
+    },
     components: {
+      Loading,
       Page,
       Content,
       'page-header': Header,
@@ -68,7 +81,8 @@
         username: '',
         password: '',
         errMsg: '',
-        isErr: false
+        isErr: false,
+        isLoading: false
       }
     },
     methods: {
@@ -94,7 +108,6 @@
               }
             })
             .then(response => {
-              console.log(response.body)
               if (response.body.success) {
                 this.$router.push({name: 'index', params: {LoginUser: response.body.data}})
                 window.localStorage.setItem('User', JSON.stringify(response.body.data))
@@ -104,7 +117,6 @@
                 this.password = ''
               }
             }, responseErr => {
-              console.log(responseErr)
               this.isErr = true
               this.errMsg = '未知错误'
               this.password = ''

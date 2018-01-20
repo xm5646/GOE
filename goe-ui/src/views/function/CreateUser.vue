@@ -41,10 +41,10 @@
           </div>
           <list>
             <list-item>
-              <div class="item-media"><img src="../../assets/images/coin.png" width="44"></div>
+              <div class="item-media"><img src="../../assets/images/rmb.png" width="44"></div>
               <div class="item-content">
                 <div class="item-title-row">
-                  <div class="item-title">报单币余额:  {{ consumeCoin }}元</div>
+                  <div class="item-title">报单币余额:  {{ consumeCoin.toFixed(2) }}元</div>
                 </div>
               </div>
             </list-item>
@@ -70,10 +70,12 @@
 
   export default {
     mounted: function () {
+      console.log('mount createUser')
       this.parentAccount = this.$route.params.parentAccount
       this.departPlace = this.$route.params.departPlace
       this.recommendAccount = this.$route.params.recommendAccount
       this.consumeCoin = JSON.parse(window.localStorage.getItem('User')).consumeCoin
+      this.updateUser()
     },
     components: {
       SimpleHeader,
@@ -139,7 +141,7 @@
                   this.$router.push({name: 'index', params: {view: 'performance', parentAccount: this.parentAccount}})
                 } else {
                   this.isErr = true
-                  this.errMsg = response.body.message
+                  this.errMsg = (response.body.message || '未知错误')
                   this.password = ''
                   this.SecondPassword = ''
                 }
@@ -151,11 +153,34 @@
               })
           }
         }
+      },
+      updateUser () {
+        const url = GoeConfig.apiServer + '/user/findByAccount?account=' + JSON.parse(window.localStorage.getItem('User')).account
+        this.$http.get(url,
+          {
+            _timeout: 3000,
+            onTimeout: (request) => {
+              console.log('请求超时')
+              this.errMsg = '请求超时'
+            }
+          })
+          .then(response => {
+            if (response.body.success) {
+              this.consumeCoin = response.body.data.consumeCoin
+              window.localStorage.setItem('User', JSON.stringify(response.body.data))
+            } else {
+              console.log('error:' + response.body.message)
+              this.errMsg = response.body.message
+            }
+          }, responseErr => {
+            console.log(responseErr)
+            this.errMsg = '未知错误'
+          })
       }
     },
     computed: {
       cantCreate: function () {
-        return this.consumeCoin < 660
+        return this.consumeCoin < GoeConfig.goe.price
       }
     }
   }

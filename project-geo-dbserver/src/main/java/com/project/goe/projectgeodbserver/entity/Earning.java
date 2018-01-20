@@ -31,6 +31,12 @@ public class Earning {
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createTime;
+	
+	// 收益创建日期：产生收益的时间
+	@Column
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date endTime;
+	
 	//用户的级别{组长,主任,董事 。。。}
 	private String userLevel = UserLevel.COMMON_SALEMAN;
 	// 触发类型
@@ -101,10 +107,21 @@ public class Earning {
 		this.createTime = createTime;
 	}
 
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
 	@Override
 	public String toString() {
-		return "Earning [earningId=" + earningId + ", userid=" + userid + ", createTime=" + createTime + ", touchType="
-				+ touchType + ", dayMoney=" + dayMoney + ", surplusNumber=" + surplusNumber + "]";
+		return "Earning [earningId=" + earningId + ", userid=" + userid + ", createTime=" + createTime + ", endTime="
+				+ endTime + ", userLevel=" + userLevel + ", touchType=" + touchType + ", dayMoney=" + dayMoney
+				+ ", surplusNumber=" + surplusNumber + "]";
 	}
+	
+	
 
 }

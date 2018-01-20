@@ -4,19 +4,18 @@
       <header-title style="background-color: orange" :back-link="true">会员管理系统</header-title>
     </page-header>
     <page-content>
-      <performence-view :user="ViewUser"
+      <performance-view :user="ViewUser"
                         :notFoundUser="notFoundUser"
                         @addUserEvent="AddUser"
                         @viewUsereEvent="changeUser"
                         @backMyUser="ShowMyPerformance">
-      </performence-view>
-
+      </performance-view>
       <toast text="完成!" ref="t1"></toast>
     </page-content>
   </div>
 </template>
 <script>
-  import PerformenceView from '../../components/PerformenceView'
+  import PerformanceView from '../../components/PerformenceView'
   import Grid from '../../../node_modules/vum/src/components/grid'
   import { Header, HeaderLink, HeaderTitle } from '../../../node_modules/vum/src/components/header'
   import Content from '../../../node_modules/vum/src/components/content'
@@ -42,6 +41,7 @@
         CurrentUser: {
           account: JSON.parse(window.localStorage.getItem('User')).account
         },
+        consumeCoin: 0,
         ViewUser: {
           account: '',
           performanceA: 12,
@@ -69,7 +69,7 @@
       }
     },
     components: {
-      PerformenceView,
+      PerformanceView,
       'page-header': Header,
       HeaderLink,
       HeaderTitle,
@@ -91,7 +91,7 @@
       AddUser (data) {
         console.log('上级ID' + data.parentAccount + '放置节点位置:' + data.departPlace)
         console.log('当前登录用户账号' + this.CurrentUser.account)
-        this.$router.push({name: 'createUser', params: { parentAccount: data.parentAccount, recommendAccount: this.CurrentUser.account, departPlace: data.departPlace }})
+        this.$router.push({name: 'createUser', params: { parentAccount: data.parentAccount, recommendAccount: this.CurrentUser.account, departPlace: data.departPlace, consumeCoin: this.consumeCoin }})
       },
       getPerformance (account) {
         const url = GoeConfig.apiServer + '/performance/findUserAndFollowerPerformance?account=' + account
@@ -107,6 +107,7 @@
             if (response.body.success) {
               this.notFoundUser = false
               const ViewUserTemp = response.body.data
+              this.consumeCoin = ViewUserTemp.consumeCoin
               this.ViewUser.account = ViewUserTemp.account
               this.ViewUser.performanceA = ViewUserTemp.performanceA
               this.ViewUser.performanceB = ViewUserTemp.performanceB
