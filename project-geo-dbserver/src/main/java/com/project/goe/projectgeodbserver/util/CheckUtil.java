@@ -116,16 +116,42 @@ public class CheckUtil {
 		if (pers != null && pers.size() > 0) {
 			for (Performance per : pers) {
 				// 这里是计算累计业绩
-				Earning e = accumulativeEarning(per);				
-				if (isHaveEarning(e,earnMap)) {
-					// 保存需要的业绩数据
-					earnList.add(e);
-				}else {
+				Earning e = accumulativeEarning(per);	
+				
+				if (e==null) {
+					continue;
+				}
+				boolean isincreased = false;
+				String key = getEarnKey(e);
+				if (key != null && key.length() > 0) {
+					Earning em = earnMap.get(key);
+					if (em!=null) {
+						//ishava 已经存储，不需要存储
+						if (em.getSurplusNumber()<0) {
+							isincreased = true;
+						}
+					}else {
+						//需要存储
+						earnList.add(e);
+					}
+				}
+				
+				if (isincreased) {
 					// 这里是计算新增业绩
 					e = increasedEarning(per);
-					if (isHaveEarning(e, earnMap)) {
-						// 保存需要的业绩数据
-						earnList.add(e);
+					if (e==null) {
+						continue;
+					}else {
+						String keyin = getEarnKey(e);
+						if (keyin != null && keyin.length() > 0) {
+							Earning em = earnMap.get(keyin);
+							if (em!=null) {
+								//ishava 已经存储，不需要存储
+							}else {
+								//需要存储
+								earnList.add(e);
+							}
+						}
 					}
 				}
 			}
@@ -139,19 +165,22 @@ public class CheckUtil {
 	 * @param earnMap
 	 * @return
 	 */
-	private static boolean isHaveEarning(Earning e,Map<String, Earning> earnMap) {
+	private static Earning isHaveEarning(Earning e,Map<String, Earning> earnMap) {
+		if (e==null) {
+			return null;
+		}
 		String key = getEarnKey(e);
 		if (key != null && key.length() > 0) {
 			Earning em = earnMap.get(key);
 			if (em!=null) {
 				//ishava 已经存储，不需要存储
-				return false;
+				return em;
 			}else {
 				//需要存储
-			    return true;
+			    return e;
 			}
 		}
-		return false;
+		return null;
 	}
 	
 	public void theFirstEarning(Earning e,Map<String, Earning> earnMap) {
@@ -261,6 +290,9 @@ public class CheckUtil {
 		map.put("123", "12344");
 		System.out.println(map.get("12"));
 		printMap(map);
+		for (int i = 0; i < 4; i++) {
+			System.out.println(i);
+		}
 	}
 
 	public static void printMap(Map map) {

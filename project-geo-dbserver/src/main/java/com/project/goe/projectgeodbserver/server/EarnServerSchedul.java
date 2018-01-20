@@ -5,6 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -59,7 +60,7 @@ public class EarnServerSchedul {
 	 */
 	public String mainUpdateUser(Long parentId,String type,User newuser) {
 		User puser = userService.getUserById(parentId);
-		if (puser != null) {
+		if (puser != null && puser.getWeightCode()<4) {
 			if ("A".equals(type)) {
 				if (puser.getDepartmentA() != 0) {
 					return "A的下级节点已存在";
@@ -72,6 +73,12 @@ public class EarnServerSchedul {
 				} else {
 					saveuser(newuser, puser, type);
 				}
+			}else if ("C".equals(type)) {
+				if (puser.getDepartmentC() != 0) {
+					return "B的下级节点已存在";
+				} else {
+					saveuser(newuser, puser, type);
+				}
 			}
 		}
 		return "测试数据插入成功";
@@ -79,31 +86,51 @@ public class EarnServerSchedul {
 	
 	@Transactional
 	public void mainTest() throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		Map<Long,Boolean> map = new HashMap<Long,Boolean>();
+		
 		User newuser = UserUtil.getTestUser();
 		newuser.setAccount("admin");
 		newuser.setPassword(MD5Util.encrypeByMd5("admin"));
 		newuser.setWeightCode(1);
 		userService.save(newuser);
 		savePer(newuser.getUserId());
+		mainUpdatePerformance(newuser.getUserId());
+		Map<Long,Boolean> map = new HashMap<Long,Boolean>();
 		map.put(newuser.getUserId(), false);
-		
-		testsave(newuser, map);
+		Iterable<Long> mapkey = map.keySet();
+		Map<Long,Boolean> mapnew = new HashMap<Long,Boolean>();
+//		testsave(newuser.getUserId(), map);
+		for (int i = 0; i < 4; i++) {
+			for (Long userid : mapkey) {
+				if (!map.get(userid)) {
+					testsave(userid, map,mapnew);
+				}
+			}
+			map.putAll(mapnew);
+		}
 	}
 	
 	
-	private void testsave(User puser,Map<Long,Boolean> map) {
+	private void testsave(Long puserid,Map<Long,Boolean> map,Map<Long,Boolean> mapnew) {
 		User newuserA = UserUtil.getTestUser();
 		User newuserB = UserUtil.getTestUser();
-		String a = mainUpdateUser(puser.getUserId(), "A", newuserA);
-		String b = mainUpdateUser(puser.getUserId(), "B", newuserB);
+
+		User pwd = userService.getUserById(puserid);
+		String a = mainUpdateUser(puserid, "A", newuserA);
+		String b = mainUpdateUser(puserid, "B", newuserB);
+		if (pwd!=null && pwd.getWeightCode()==1) {
+			User newuserC = UserUtil.getTestUser();
+			String c = mainUpdateUser(puserid, "C", newuserC);
+			if ("测试数据插入成功".equals(c)) {
+				mapnew.put(newuserC.getUserId(), false);
+			}
+		}
 		if ("测试数据插入成功".equals(a)) {
-			System.out.println(newuserA.toString());
-			
+			mapnew.put(newuserA.getUserId(), false);
 		}
 		if ("测试数据插入成功".equals(b)) {
-			System.out.println(newuserB.toString());
+			mapnew.put(newuserB.getUserId(), false);
 		}
+		map.put(puserid, true);
 	}
 	
 	/**
@@ -246,6 +273,8 @@ public class EarnServerSchedul {
 			puser.setDepartmentA(newuser.getUserId());
 		}else if ("B".equals(type)) {
 			puser.setDepartmentB(newuser.getUserId());
+		}else if ("C".equals(type)) {
+			puser.setDepartmentC(newuser.getUserId());
 		}
 		this.userService.save(puser);
 		savePer(newuser.getUserId());

@@ -43,22 +43,23 @@ public class BonusPaylistScheduling {
     
     @Scheduled(fixedDelay=ONE_Minute)
     public void fixedDelayJob(){
-        System.out.println(TimeUtil.getDateFormat(new Date())+" >>fixedDelay执行....");
+//        System.out.println(TimeUtil.getDateFormat(new Date())+" >>fixedDelay执行....");
     }
     
     @Scheduled(fixedRate=ONE_Minute)
     public void fixedRateJob(){
-        System.out.println(TimeUtil.getDateFormat(new Date())+" >>fixedRate执行....");
+//        System.out.println(TimeUtil.getDateFormat(new Date())+" >>fixedRate执行....");
     }
 
     @Scheduled(cron="0 * * * * ?")
     public void cronJob(){
-        System.out.println(TimeUtil.getDateFormat(new Date())+" >>cron执行....");
-        earnServerSchedul.mainComperBonuspaylist();
+//        System.out.println(TimeUtil.getDateFormat(new Date())+" >>cron执行....");
+//        earnServerSchedul.mainComperBonuspaylist();
     }
     
     @Scheduled(cron="0/5 * * * * ?")
     public void cronJobForFiveSecond(){
-        System.out.println(TimeUtil.getDateFormat(new Date())+" >>5秒cron执行....");
+//        System.out.println(TimeUtil.getDateFormat(new Date())+" >>5秒cron执行....");
+    		  earnServerSchedul.mainComperBonuspaylist();
     }
 }

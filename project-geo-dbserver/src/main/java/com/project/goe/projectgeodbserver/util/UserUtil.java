@@ -5,6 +5,8 @@ import com.project.goe.projectgeodbserver.statusType.UserLevel;
 import com.project.goe.projectgeodbserver.statusType.UserType;
 import com.project.goe.projectgeodbserver.viewentity.UserVO;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Random;
 
@@ -69,15 +71,29 @@ public class UserUtil {
 	public static User getTestUser() {
 		Date createDate = new Date();
 		User u = new User();
-		String name = "zs001"+new Random().nextInt(10000);
+		try {
+			Thread.sleep(10);
+			System.out.println("休息10毫秒");
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		String name = "zs"+createDate.getTime();
 		u.setNickName(name);
 		u.setAccount(name);
-		u.setPassword("123456");
+		try {
+			u.setPassword(MD5Util.encrypeByMd5("1"));
+		} catch (NoSuchAlgorithmException e) {
+			u.setPassword("1");
+		} catch (UnsupportedEncodingException e) {
+			u.setPassword("1");
+		}
 		u.setCreateTime(createDate);
 		u.setUserLevel(UserLevel.CONSUMER);
 		u.setUserType(UserType.COMMON);
 		u.setAssessStatus(true);
 		u.setAssessDate(createDate);
+		u.setUserStatus(true);
 		return u;
 	}
 

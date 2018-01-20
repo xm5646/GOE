@@ -121,8 +121,8 @@ public class BusinessUtil {
 	}
 	
 	public static Earning isBigBus(Earning ea,Earning eb) {
-		BusinessEntity bus1 = businessMap.get(ea.getTouchType());
-		BusinessEntity bus2 = businessMap.get(eb.getTouchType());
+		BusinessEntity bus1 = businessMap.get(ea.getUserLevel());
+		BusinessEntity bus2 = businessMap.get(eb.getUserLevel());
 		if (bus1.getCode()>bus2.getCode()) {
 			return ea;
 		}else {
