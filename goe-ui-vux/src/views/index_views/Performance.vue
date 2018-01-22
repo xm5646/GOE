@@ -1,6 +1,6 @@
 <template>
   <div class="my-page">
-    <x-header :left-options="{showBack: false}">会员管理系统</x-header>
+    <x-header :left-options="{showBack: false}" style="background-color: #303135">会员管理系统</x-header>
     <search
       @result-click="resultClick"
       @on-change="getResult"

@@ -1,6 +1,6 @@
 <template>
   <div class="my-page">
-    <x-header :left-options="{showBack: false}">会员管理系统</x-header>
+    <x-header :left-options="{showBack: false}" style="background-color: #303135">会员管理系统</x-header>
     <card :header="{title: '我的钱包'}">
       <div slot="content" class="card-demo-flex card-demo-content01">
         <div class="vux-1px-r">
