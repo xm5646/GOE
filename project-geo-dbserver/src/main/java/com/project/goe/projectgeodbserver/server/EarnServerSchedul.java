@@ -60,7 +60,7 @@ public class EarnServerSchedul {
 	 */
 	public String mainUpdateUser(Long parentId,String type,User newuser) {
 		User puser = userService.getUserById(parentId);
-		if (puser != null && puser.getWeightCode()<4) {
+		if (puser != null && puser.getWeightCode()<11) {
 			if ("A".equals(type)) {
 				if (puser.getDepartmentA() != 0) {
 					return "A的下级节点已存在";
@@ -83,40 +83,81 @@ public class EarnServerSchedul {
 		}
 		return "测试数据插入成功";
 	}
-	
-	@Transactional
-	public void mainTest() throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		
-		User newuser = UserUtil.getTestUser();
-		newuser.setAccount("admin");
-		newuser.setPassword(MD5Util.encrypeByMd5("admin"));
-		newuser.setWeightCode(1);
-		userService.save(newuser);
-		savePer(newuser.getUserId());
-		mainUpdatePerformance(newuser.getUserId());
-		Map<Long,Boolean> map = new HashMap<Long,Boolean>();
-		map.put(newuser.getUserId(), false);
-		Iterable<Long> mapkey = map.keySet();
-		Map<Long,Boolean> mapnew = new HashMap<Long,Boolean>();
-//		testsave(newuser.getUserId(), map);
-		for (int i = 0; i < 4; i++) {
-			for (Long userid : mapkey) {
-				if (!map.get(userid)) {
-					testsave(userid, map,mapnew);
+	public String mainUpdateUser(Long parentId,String type,User newuser,long count) {
+		User puser = userService.getUserById(parentId);
+		if (puser != null && puser.getWeightCode()<count) {
+			if ("A".equals(type)) {
+				if (puser.getDepartmentA() != 0) {
+					return "A的下级节点已存在";
+				} else {
+					saveuser(newuser, puser, type);
+				}
+			} else if ("B".equals(type)) {
+				if (puser.getDepartmentB() != 0) {
+					return "B的下级节点已存在";
+				} else {
+					saveuser(newuser, puser, type);
+				}
+			}else if ("C".equals(type)) {
+				if (puser.getDepartmentC() != 0) {
+					return "B的下级节点已存在";
+				} else {
+					saveuser(newuser, puser, type);
 				}
 			}
-			map.putAll(mapnew);
+		}
+		return "测试数据插入成功";
+	}
+	@Transactional
+	public void mainTest(long parentid,long count) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		if (parentid!=0 && count!=0) {
+			User puser = userService.findByUserId(parentid);
+			mainUpdatePerformance(puser.getUserId());
+			Map<Long,Boolean> map = new HashMap<Long,Boolean>();
+			map.put(puser.getUserId(), false);
+			Iterable<Long> mapkey = map.keySet();
+			Map<Long,Boolean> mapnew = new HashMap<Long,Boolean>();
+//			testsave(newuser.getUserId(), map);
+			for (int i = 0; i < count; i++) {
+				for (Long userid : mapkey) {
+					if (!map.get(userid)) {
+						testsave(userid, map,mapnew,count);
+					}
+				}
+				map.putAll(mapnew);
+			}
+		}else {
+			User newuser = UserUtil.getTestUser();
+			newuser.setAccount("admin");
+			newuser.setPassword(MD5Util.encrypeByMd5("admin"));
+			newuser.setWeightCode(1);
+			userService.save(newuser);
+			savePer(newuser.getUserId());
+			mainUpdatePerformance(newuser.getUserId());
+			Map<Long,Boolean> map = new HashMap<Long,Boolean>();
+			map.put(newuser.getUserId(), false);
+			Iterable<Long> mapkey = map.keySet();
+			Map<Long,Boolean> mapnew = new HashMap<Long,Boolean>();
+//			testsave(newuser.getUserId(), map);
+			for (int i = 0; i < 2; i++) {
+				for (Long userid : mapkey) {
+					if (!map.get(userid)) {
+						testsave(userid, map,mapnew,count);
+					}
+				}
+				map.putAll(mapnew);
+			}
 		}
 	}
 	
 	
-	private void testsave(Long puserid,Map<Long,Boolean> map,Map<Long,Boolean> mapnew) {
+	private void testsave(Long puserid,Map<Long,Boolean> map,Map<Long,Boolean> mapnew,long count) {
 		User newuserA = UserUtil.getTestUser();
 		User newuserB = UserUtil.getTestUser();
 
 		User pwd = userService.getUserById(puserid);
-		String a = mainUpdateUser(puserid, "A", newuserA);
-		String b = mainUpdateUser(puserid, "B", newuserB);
+		String a = mainUpdateUser(puserid, "A", newuserA,count);
+		String b = mainUpdateUser(puserid, "B", newuserB,count);
 		if (pwd!=null && pwd.getWeightCode()==1) {
 			User newuserC = UserUtil.getTestUser();
 			String c = mainUpdateUser(puserid, "C", newuserC);
@@ -180,10 +221,28 @@ public class EarnServerSchedul {
 				}
 			}
 		}
-		CheckUtil.printList(buslist);
-		CheckUtil.printList(userupdate);
 		bonusPayListService.saveAll(buslist);
 		userService.saveAll(userupdate);
+	}
+	
+	public void mainAssessInspect() {
+		//检查每个用户的考核时间是否是考核日
+		//如果为考核日，查看消费记录表是否有重销 考核日期加30天
+		//有考核状态为true，没有考核状态为false
+		Iterable<User> userlist = this.userService.getAll();
+		if (userlist!=null) {
+			for (User user : userlist) {
+				if (user!=null) {
+					//默认在考核的下一天执行,如果前一天是考核时间则更新考核状态和考核时间
+					boolean issame = TimeUtil.getTimeSameDay(user.getAssessDate(), TimeUtil.addDay(new Date(),-1));
+					//需要判断考核
+					if (issame) {
+						user.setAssessDate(TimeUtil.addDay(user.getAssessDate(),30));
+						user.setAssessStatus(false); //or set assessStatus ture;
+					}
+				}
+			}
+		}
 	}
 	
 	private void conductEarnTime(Iterable<Earning> earns,Map<Long,Earning> earnsMap) {
@@ -337,10 +396,29 @@ public class EarnServerSchedul {
 		List<Earning> earnList = CheckUtil.userEarning(earnMap,perlist);
 		
 		if (earnList!=null && earnList.size()>0) {
+			
+			//清除不需要保存的收益表信息
 			CheckUtil.computeEarn(earnMap,earnList);
 			for (Earning earn : earnList) {
 				if(earn != null) {
 					//在这里判断如果是第一次触发累计4：4更新user表考核时间
+					User upUser = userService.getUserById(earn.getUserid());
+					if(CheckUtil.theFirstEarning(earn)) {
+						//更新考核日期和考核状态
+						if (upUser!=null) {
+							CheckUtil.updateUserForFirstEarning(upUser);
+							userService.save(upUser);
+						}
+					}
+					//如果是累计考核更新考核状态
+					if (TouchType.ACCUMULATION.equals(earn.getTouchType())) {
+						if(BusinessUtil.isBigBus(earn.getUserLevel(), upUser.getUserLevel())) {
+							if (upUser!=null) {
+								upUser.setUserLevel(earn.getUserLevel());
+								userService.save(upUser);
+							}
+						}
+					}
 					
 					earningService.save(earn);
 				}

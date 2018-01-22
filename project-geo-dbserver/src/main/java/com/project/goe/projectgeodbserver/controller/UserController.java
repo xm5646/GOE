@@ -121,7 +121,23 @@ public class UserController {
 	@RequestMapping("/saveall")
 	public String saveTestAll() throws NoSuchAlgorithmException, UnsupportedEncodingException {
 
-		earnServerSchedul.mainTest();
+		earnServerSchedul.mainTest(0,0);
+
+		return "测试数据插入根成功";
+	}
+	
+	//在某个节点下添N层用户
+	@RequestMapping("/testuser/{pid}/{weight}")
+	public String saveUserCreate(@PathVariable("pid") Long pid,@PathVariable("weight") Long weight) {
+		try {
+			earnServerSchedul.mainTest(pid,weight);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		return "测试数据插入根成功";
 	}
@@ -129,6 +145,15 @@ public class UserController {
 	@RequestMapping("/testusercreate/{id}")
 	public String saveUserCreate(@PathVariable("id") Long id) {
 		return earnServerSchedul.mainUpdatePerformance(id);
+	}
+	
+	//发放N天薪水
+	@RequestMapping("/testbonus/{count}")
+	public String testbonus(@PathVariable("count") Long count) {
+		for (int i = 0; i < count; i++) {
+			earnServerSchedul.mainComperBonuspaylist();
+		}
+		return "";
 	}
 
 	@RequestMapping("/findAll")

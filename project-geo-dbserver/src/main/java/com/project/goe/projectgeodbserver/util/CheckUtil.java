@@ -17,6 +17,7 @@ import com.project.goe.projectgeodbserver.entity.Performance;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.statusType.ConfigConstant;
 import com.project.goe.projectgeodbserver.statusType.TouchType;
+import com.project.goe.projectgeodbserver.statusType.UserLevel;
 
 public class CheckUtil {
 
@@ -183,10 +184,16 @@ public class CheckUtil {
 		return null;
 	}
 	
-	public void theFirstEarning(Earning e,Map<String, Earning> earnMap) {
-		String key = getEarnKey(e);
-		//String key = earn.getUserid() + earn.getUserLevel() + earn.getTouchType();
-		
+	/**
+	 * 第一次累计业绩触发
+	 * @param e
+	 * @param earnMap
+	 */
+	public static boolean theFirstEarning(Earning e) {
+		if (UserLevel.COMMON_SALEMAN.equals(e.getUserLevel()) && TouchType.ACCUMULATION.equals(e.getTouchType())) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -263,7 +270,19 @@ public class CheckUtil {
 			}
 		}
 	}
-
+	/**
+	 * 第一次触发累计更新考核日期和考核状态
+	 * @param user
+	 */
+	public static void updateUserForFirstEarning(User user) {
+		if (user!=null) {
+			Date assessDate = TimeUtil.addDay(user.getCreateTime(), 30);
+			user.setActivateTime(assessDate);
+			user.setAssessStatus(true);
+			user.setUserLevel(UserLevel.COMMON_SALEMAN);
+		}
+	}
+	
 	/**
 	 * 判断KEY，元数据中是否存在
 	 * 
