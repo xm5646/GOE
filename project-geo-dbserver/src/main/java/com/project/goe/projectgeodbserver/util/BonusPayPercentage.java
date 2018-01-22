@@ -14,12 +14,22 @@ public class BonusPayPercentage {
 	private static double productCoinNumberPercentage;
 	// 重销产品单价
 	private static double consumeCoinUnitPrice;
+	// 重销折扣
+	private static double reconsumeDiscount;
+
+	public static double getReconsumeDiscount() {
+		return reconsumeDiscount;
+	}
+	
+	@Value("${bonus.percentage.reconsumeDiscount}")
+	public static void setReconsumeDiscount(double reconsumeDiscount) {
+		BonusPayPercentage.reconsumeDiscount = reconsumeDiscount;
+	}
 
 	public static double getManageCostPercentage() {
 		return manageCostPercentage;
 	}
 
-	
 	@Value("${bonus.percentage.manageCostPercentage}")
 	public void setManageCostPercentage(double manageCostPercentage) {
 		BonusPayPercentage.manageCostPercentage = manageCostPercentage;

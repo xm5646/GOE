@@ -108,6 +108,61 @@ public class User {
 	@Column
 	private Date activateTime;
 
+	// 用户身份证号码
+	private String identityNo;
+
+	// 密码重置标识
+	private boolean passwordReset = false;
+
+	// 用户交易密码
+	private String paymentPassword;
+
+	// 省区
+	private String province;
+
+	// 市区
+	private String city;
+
+	public String getIdentityNo() {
+		return identityNo;
+	}
+
+	public void setIdentityNo(String identityNo) {
+		this.identityNo = identityNo;
+	}
+
+	public boolean isPasswordReset() {
+		return passwordReset;
+	}
+
+	public void setPasswordReset(boolean passwordReset) {
+		this.passwordReset = passwordReset;
+	}
+
+	public String getPaymentPassword() {
+		return paymentPassword;
+	}
+
+	public void setPaymentPassword(String paymentPassword) {
+		this.paymentPassword = paymentPassword;
+	}
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
 	public long getUserId() {
 		return userId;
 	}
@@ -279,17 +334,4 @@ public class User {
 	public void setUserType(String userType) {
 		this.userType = userType;
 	}
-
-	@Override
-	public String toString() {
-		return "User [userId=" + userId + ", account=" + account + ", nickName=" + nickName + ", password=" + password
-				+ ", userLevel=" + userLevel + ", userType=" + userType + ", userStatus=" + userStatus + ", userPhone="
-				+ userPhone + ", parentId=" + parentId + ", departmentA=" + departmentA + ", departmentB=" + departmentB
-				+ ", departmentC=" + departmentC + ", recomondId=" + recomondId + ", createTime=" + createTime
-				+ ", assessDate=" + assessDate + ", assessStatus=" + assessStatus + ", weightCode=" + weightCode
-				+ ", bonusCoin=" + bonusCoin + ", consumeCoin=" + consumeCoin + ", productCoin=" + productCoin
-				+ ", activateTime=" + activateTime + "]";
-	}
-
-	
 }

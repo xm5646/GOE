@@ -5,9 +5,8 @@ import com.project.goe.projectgeodbserver.statusType.UserLevel;
 import com.project.goe.projectgeodbserver.statusType.UserType;
 import com.project.goe.projectgeodbserver.viewentity.UserVO;
 
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.Random;
 
 public class UserUtil {
 	
@@ -18,7 +17,7 @@ public class UserUtil {
 		userVO.setAccount(user.getAccount());
 		userVO.setActivateTime(DateFormatUtil.DateObjectToString(user.getActivateTime()));
 		
-		if(DateFormatUtil.compareDateObject(user.getAssessDate(),user.getCreateTime())) {
+		if(DateFormatUtil.compareDateObject(user.getAssessDate(),user.getCreateTime()) == 0) {
 			userVO.setAssessDate("未达到考核级别");
 		}else {
 			userVO.setAssessDate(DateFormatUtil.DateObjectToString(user.getAssessDate()));
@@ -49,6 +48,10 @@ public class UserUtil {
 		userVO.setUserLevel(user.getUserLevel());
 		userVO.setNickName(user.getNickName());
 		userVO.setUserPhone(user.getUserPhone());
+		userVO.setIdentityNo(user.getIdentityNo());
+		userVO.setProvince(user.getProvince());
+		userVO.setCity(user.getCity());
+		userVO.setPasswordReset(user.isPasswordReset());
 		
 		return userVO;
 	}
@@ -70,27 +73,15 @@ public class UserUtil {
 	public static User getTestUser() {
 		Date createDate = new Date();
 		User u = new User();
-		try {
-			Thread.sleep(10);
-			System.out.println("休息10毫秒");
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		String name = "zs"+createDate.getTime();
+		String name = "zs001"+new Random().nextInt(10000);
 		u.setNickName(name);
 		u.setAccount(name);
-		try {
-			u.setPassword(MD5Util.encrypeByMd5("1"));
-		} catch (Exception e) {
-			u.setPassword("1");
-		}
+		u.setPassword("123456");
 		u.setCreateTime(createDate);
 		u.setUserLevel(UserLevel.CONSUMER);
 		u.setUserType(UserType.COMMON);
 		u.setAssessStatus(true);
 		u.setAssessDate(createDate);
-		u.setUserStatus(true);
 		return u;
 	}
 

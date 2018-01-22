@@ -16,7 +16,7 @@ public class DateFormatUtil {
 		return dateString;
 	}
 
-	public static boolean compareDateObject(Date srcDate, Date destDate) {
+	public static int compareDateObject(Date srcDate, Date destDate) {
 		if((null == srcDate) || (null == destDate) ) 
 			throw new RuntimeException("比较日期不能为null");
 		
@@ -25,9 +25,11 @@ public class DateFormatUtil {
 		long gap = destMillsecond - srcMillisecond;
 		
 		if(0 == gap)
-			return true;
-		else
-			return true;
+			return 0;
+		else if(gap > 0)
+			return 1;
+		else 
+			return -1;
 	}
 
 }

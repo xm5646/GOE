@@ -17,7 +17,43 @@ public class UserVO {
 	private double consumeCoin;
 	private double productCoin;
 	private String activateTime;
-	
+	private String identityNo;
+	private boolean passwordReset;
+	private String province;
+	private String city;
+
+	public String getIdentityNo() {
+		return identityNo;
+	}
+
+	public void setIdentityNo(String identityNo) {
+		this.identityNo = identityNo;
+	}
+
+	public boolean isPasswordReset() {
+		return passwordReset;
+	}
+
+	public void setPasswordReset(boolean passwordReset) {
+		this.passwordReset = passwordReset;
+	}
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
 	public String getAccount() {
 		return account;
 	}

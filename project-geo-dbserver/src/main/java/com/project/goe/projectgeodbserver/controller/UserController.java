@@ -3,20 +3,18 @@ package com.project.goe.projectgeodbserver.controller;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,11 +31,14 @@ import com.project.goe.projectgeodbserver.service.PerformanceService;
 import com.project.goe.projectgeodbserver.service.UserService;
 import com.project.goe.projectgeodbserver.statusType.ConsumeType;
 import com.project.goe.projectgeodbserver.util.UserUtil;
+import com.project.goe.projectgeodbserver.util.ValidateErrorUtil;
 import com.project.goe.projectgeodbserver.util.BonusPayPercentage;
 import com.project.goe.projectgeodbserver.util.MD5Util;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
-import com.project.goe.projectgeodbserver.viewentity.UserPasswordUpdateRequest;
-import com.project.goe.projectgeodbserver.viewentity.UserSavePostParams;
+import com.project.goe.projectgeodbserver.viewentity.UserLoginRequest;
+import com.project.goe.projectgeodbserver.viewentity.UserLoginSettingRequest;
+import com.project.goe.projectgeodbserver.viewentity.UserLoginPasswordUpdateRequest;
+import com.project.goe.projectgeodbserver.viewentity.UserSaveRequest;
 
 @RestController
 @RequestMapping("/user")
@@ -60,32 +61,40 @@ public class UserController {
 	@Autowired
 	private EarnServerSchedul earnServerSchedul;
 
-	// 更新用户密码
-	@PostMapping("/updatePassword")
+	/**
+	 * @Description：更新用户登录密码
+	 * @return：RetMsg
+	 */
+	@PostMapping("/updateLoginPassword")
 	@Transactional
-	public RetMsg updatePassword(@ModelAttribute UserPasswordUpdateRequest uerPasswordUpdateRequest) {
-		String account = uerPasswordUpdateRequest.getAccount();
-		String oldPassword = uerPasswordUpdateRequest.getOldPassword();
-		String newPassword = uerPasswordUpdateRequest.getNewPassword();
+	public RetMsg updatePassword(@Validated UserLoginPasswordUpdateRequest userPasswordUpdateRequest,
+			BindingResult bindingResult) {
+		// 如果数据校验有误，则直接返回校验错误信息
+		RetMsg retMsg = ValidateErrorUtil.getInstance().errorList(bindingResult);
+		if (null != retMsg)
+			return retMsg;
 
-		// 查询用户信息
+		String account = userPasswordUpdateRequest.getAccount();
+		String oldPassword = userPasswordUpdateRequest.getOldPassword();
+		String newPassword = userPasswordUpdateRequest.getNewPassword();
+
+		// 验证用户是否存在
 		User user = this.userService.findByAccount(account);
-
-		// 判断用户是否存在
 		if (null == user)
 			throw new RuntimeException("用户不存在!");
 
-		// 判断旧密码是否正确
+		// 判断原密码是否正确
 		if (!MD5Util.encrypeByMd5(oldPassword).equals(user.getPassword())) {
 			throw new RuntimeException("原密码不正确!");
 		}
 
 		user.setPassword(MD5Util.encrypeByMd5(newPassword));
+		this.userService.save(user);
 
-		RetMsg retMsg = new RetMsg();
+		retMsg = new RetMsg();
 		retMsg.setCode(200);
 		retMsg.setData(user.getAccount());
-		retMsg.setMessage("用户密码更新成功!");
+		retMsg.setMessage("用户登录密码更新成功!");
 		retMsg.setSuccess(true);
 
 		return retMsg;
@@ -127,34 +136,84 @@ public class UserController {
 		return userService.getAll();
 	}
 
-	// 用户登录
+	/**
+	 * @Description：用户登录,passwordReset：密码重置标识，true：密码已重置；false：密码未重置
+	 * @return：retMsg
+	 */
 	@PostMapping("/login")
-	public RetMsg login(@ModelAttribute User user) {
-		if ((null == user) || (null == user.getAccount()) || (null == user.getPassword())) {
-			throw new RuntimeException("用户登录信息为空！");
-		}
+	public RetMsg login(@Validated UserLoginRequest userLoginRequest, BindingResult bindingResult) {
+		String account = userLoginRequest.getAccount();
+		String password = userLoginRequest.getPassword();
 
-		String account = user.getAccount();
-		User u = this.userService.findByAccount(account);
-		if (null == u) {
+		// 如果数据校验有误，则直接返回校验错误信息
+		RetMsg retMsg = ValidateErrorUtil.getInstance().errorList(bindingResult);
+		if (null != retMsg)
+			return retMsg;
+
+		// 验证账户是否存在
+		User user = this.userService.findByAccount(account);
+		if (null == user) {
 			throw new RuntimeException("当前用户不存在!");
 		}
 
-		try {
-			if (!(MD5Util.encrypeByMd5(user.getPassword()).equals(u.getPassword()))) {
-				throw new RuntimeException("用户密码输入有误！");
-			} else {
-				RetMsg retMsg = new RetMsg();
-				retMsg.setCode(200);
-				retMsg.setData(UserUtil.UserToUserVO(u));
-				retMsg.setMessage("用户登录成功！");
-				retMsg.setSuccess(true);
-
-				return retMsg;
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
+		// 验证用户的密码是否正确
+		if (!(MD5Util.encrypeByMd5(password).equals(user.getPassword()))) {
+			throw new RuntimeException("用户密码输入有误！");
 		}
+
+		retMsg = new RetMsg();
+
+		retMsg.setCode(200);
+		retMsg.setSuccess(true);
+		retMsg.setData(UserUtil.UserToUserVO(user));
+
+		return retMsg;
+	}
+
+	/**
+	 * @Description：重置登录密码，设置支付密码和用户电话号码
+	 * @return：RetMsg
+	 */
+	@PostMapping("/userLoginSettings")
+	@Transactional
+	public RetMsg UserFirstLoginSettings(@Validated UserLoginSettingRequest userLoginSettingRequest,
+			BindingResult bindingResult) {
+		String account = userLoginSettingRequest.getAccount();
+		String oldPassword = userLoginSettingRequest.getOldPassword();
+		String newPassword = userLoginSettingRequest.getNewPassword();
+		String paymentPassword = userLoginSettingRequest.getPaymentPassword();
+		String userPhone = userLoginSettingRequest.getUserPhone();
+
+		// 如果数据校验有误，则直接返回校验错误信息
+		RetMsg retMsg = ValidateErrorUtil.getInstance().errorList(bindingResult);
+		if (null != retMsg)
+			return retMsg;
+
+		// 验证用户是否存在
+		User user = this.userService.findByAccount(account);
+		if (null == user)
+			throw new RuntimeException("用户账号不存在!");
+
+		// 验证用户原密码是否正确
+		if (!(MD5Util.encrypeByMd5(oldPassword)).equals(user.getPassword()))
+			throw new RuntimeException("用户原密码错误！");
+
+		// 设置用户登录新密码、支付密码和手机号码
+		user.setPassword(MD5Util.encrypeByMd5(newPassword));
+		user.setPaymentPassword(MD5Util.encrypeByMd5(paymentPassword));
+		user.setUserPhone(userPhone);
+		user.setPasswordReset(true);
+
+		// 更新用户信息
+		this.userService.save(user);
+
+		retMsg = new RetMsg();
+		retMsg.setCode(200);
+		retMsg.setData(UserUtil.UserToUserVO(user));
+		retMsg.setSuccess(true);
+		retMsg.setMessage("用户设置成功！");
+
+		return retMsg;
 	}
 
 	// 返回用户的业绩信息
@@ -181,27 +240,50 @@ public class UserController {
 		}
 	}
 
-	// 新增用户
+	/**
+	 * @Description：新增用户
+	 */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	@Transactional
-	public RetMsg saveUser(@ModelAttribute UserSavePostParams userSavePostParams) {
-		try {
-			String account = userSavePostParams.getAccount();
-			// account不允许重复
-			if (null != this.userService.findByAccount(account))
-				throw new RuntimeException("用户名重复！");
+	public RetMsg saveUser(@Validated UserSaveRequest userSavePostParams, BindingResult bindingResult) {
+		String account = userSavePostParams.getAccount();
+		String password = userSavePostParams.getPassword();
+		String parentAccount = userSavePostParams.getParentAccount();
+		String recommendAccount = userSavePostParams.getRecommendAccount();
+		String position = userSavePostParams.getPosition();
 
-			String password = userSavePostParams.getPassword();
-			String parentAccount = userSavePostParams.getParentAccount();
-			String recommendAccount = userSavePostParams.getRecommendAccount();
-			String position = userSavePostParams.getPosition();
+		// 如果数据校验有误，则直接返回校验错误信息
+		RetMsg retMsg = ValidateErrorUtil.getInstance().errorList(bindingResult);
+		if (null != retMsg)
+			return retMsg;
+
+		// account不允许重复
+		if (null != this.userService.findByAccount(account))
+			throw new RuntimeException("用户名重复！");
+
+		User parentUser = null;
+		User recommendUser = null;
+
+		// 查询推荐人和父对象
+		// 父节点和推荐人为同一个人
+		if (parentAccount.equals(recommendAccount)) {
+			parentUser = recommendUser = this.userService.findByAccount(parentAccount);
+		} else {
+			parentUser = this.userService.findByAccount(parentAccount);
+			recommendUser = this.userService.findByAccount(recommendAccount);
+		}
+
+		// 判断父节点或推荐人节点是否为null
+		if (null == parentUser || null == recommendUser) {
+			throw new RuntimeException("父节点或推荐人节点不存在!");
+		}
+
+		try {
 			/******* 新增用户 *******/
 			// 设置用户名、密码、父id、推荐人id
 			User user = new User();
 			user.setAccount(account);
 			user.setPassword(MD5Util.encrypeByMd5(password));
-			User parentUser = this.userService.findByAccount(parentAccount);
-			User recommendUser = this.userService.findByAccount(recommendAccount);
 
 			user.setParentId(parentUser.getUserId());
 			user.setRecomondId(recommendUser.getUserId());
@@ -239,7 +321,6 @@ public class UserController {
 			this.userService.save(parentUser);
 
 			// 更新推荐人激活状态:如果推荐人为未激活状态，则修改其状态，否则不发生变化
-
 			if (!recommendUser.isUserStatus()) {
 				recommendUser.setActivateTime(new Date());
 				recommendUser.setUserStatus(true);
@@ -269,7 +350,7 @@ public class UserController {
 			consumeRecordService.addOneConsumeRecord(consumeRecord);
 
 			// 返回新增用户信息
-			RetMsg retMsg = new RetMsg();
+			retMsg = new RetMsg();
 			retMsg.setCode(200);
 			retMsg.setData(UserUtil.UserToUserVO(user));
 			retMsg.setMessage("用户添加成功!");

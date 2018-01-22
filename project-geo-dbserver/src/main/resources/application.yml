@@ -29,5 +29,5 @@ bonus:
      bonusNumberPercentage: 0.9
      productCoinNumberPercentage: 0
      consumeCoinUnitPrice: 680
-   
+     reconsumeDiscount: 0.7
 
