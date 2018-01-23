@@ -103,7 +103,7 @@ public class ReconsumeRecordController {
 		consumeRecord.setUserId(user.getUserId());
 		consumeRecord.setReceiveUserId(this.userService.findByAccount("管理员").getUserId());
 		consumeRecord.setConsumeNumber(reConsumeCost);
-		consumeRecord.setConsumeStatus(true);
+		consumeRecord.setConsumeStatus(false);
 		consumeRecord.setDescription(ConsumeType.COIN_TRANSFER_RECONSUME);
 		this.consumeRecordService.addOneConsumeRecord(consumeRecord);
 		
