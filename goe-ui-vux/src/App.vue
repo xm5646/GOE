@@ -1,21 +1,34 @@
 <template>
-  <div id="app">
-    <transition name='transitionName'>
-    <router-view></router-view>
-    </transition>
+  <div style="height:100%;">
+      <router-view class="router-view" style="height:100%;"></router-view>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'app'
-}
+  import { ViewBox } from 'vux'
+
+  export default {
+    name: 'app',
+    components: {
+      ViewBox
+    },
+    data () {
+      return {
+      }
+    },
+    computed: {
+    }
+  }
 </script>
 
 <style lang="less">
-@import '~vux/src/styles/reset.less';
+  @import '~vux/src/styles/reset.less';
 
-body {
-  background-color: #fbf9fe;
-}
+  body {
+    background-color: #fbf9fe;
+  }
+  .router-view {
+    width: 100%;
+    top: 46px;
+  }
 </style>

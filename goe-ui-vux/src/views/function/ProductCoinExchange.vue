@@ -45,7 +45,7 @@
     },
     data () {
       return {
-        productCoin: 400,
+        productCoin: 4000,
         exchangeNumber: 1,
         orderInfo: [{
           label: '兑换数量',

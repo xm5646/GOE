@@ -45,8 +45,18 @@
         <!--type==='2'-->
         <template v-if="type === '2'">
           <div class="weui-media-box weui-media-box_text" v-for="item in list" @click.prevent="onItemClick(item)">
-            <h4 class="weui-media-box__title" v-html="item.title"></h4>
-            <p class="weui-media-box__desc" v-html="item.desc"></p>
+            <h4 class="weui-media-box__title" v-html="item.bankName"></h4>
+            <span class="weui-media-box__desc" v-html="item.ownerName" style="float: left"></span><a type="button" style="float: right" class="weui-btn weui-btn_mini weui-btn_default">删除</a>
+            <span class="weui-media-box__desc" v-html="item.cardNumber" style="padding-left: 10px"></span>
+          </div>
+        </template>
+        <template v-if="type === '6'">
+          <div class="weui-media-box weui-media-box_text" v-for="item in list" @click.prevent="onItemClick(item)">
+            <h4 class="weui-media-box__title" v-html="item.receivePeople"></h4>
+            <span class="weui-media-box__desc" v-html="item.address" style="float: left"></span>
+            <div style="float: left">
+              <x-button mini>编辑</x-button>
+            </div>
           </div>
         </template>
         <!--type==='3'-->
@@ -108,9 +118,12 @@
 
 <script>
   import { go, getUrl } from '../../node_modules/vux/src/libs/router'
-  import { XButton } from 'vux'
+  import { XButton, Divider } from 'vux'
   export default {
-    components: {XButton},
+    components: {
+      XButton,
+      Divider
+    },
     name: 'panel',
     props: {
       header: String,

@@ -31,6 +31,9 @@
       <cell title='银行卡信息管理' is-link @click.native="goTo('bankCardManagement')">
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/form.png">
       </cell>
+      <cell title='收货地址管理' is-link @click.native="goTo('addressManagement')">
+        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/form.png">
+      </cell>
       <cell title='产品积分兑换' is-link @click.native="goTo('productCoinExchange')">
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/form.png">
       </cell>

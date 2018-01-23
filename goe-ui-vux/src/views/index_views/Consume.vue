@@ -1,20 +1,18 @@
 <template>
   <div class="my-page">
     <x-header :left-options="{showBack: false}" style="background-color: #303135">会员管理系统</x-header>
-    <group>
-      <div style="width: 100%;overflow:scroll;-webkit-overflow-scrolling:touch;">
-        <tab style="width: 100%;" bar-active-color="#668599" :line-width="1" >
-          <tab-item selected @on-item-click="onItemClick">报单记录</tab-item>
-          <tab-item @on-item-click="onItemClick">重销记录</tab-item>
-          <tab-item @on-item-click="onItemClick">报单币转账</tab-item>
-          <tab-item @on-item-click="onItemClick">积分兑换</tab-item>
-          <tab-item @on-item-click="onItemClick">奖金转报单币</tab-item>
-        </tab>
-      </div>
-      <keep-alive>
-        <component :is="currentViewTable" @linkTo="changeTable" ref="nowViewTable" :list="pageInfo"></component>
-      </keep-alive>
-    </group>
+    <div style="width: 100%;overflow:scroll;-webkit-overflow-scrolling:touch;">
+      <tab style="width: 100%;" bar-active-color="#668599" :line-width="1">
+        <tab-item selected @on-item-click="onItemClick">报单记录</tab-item>
+        <tab-item @on-item-click="onItemClick">重销记录</tab-item>
+        <tab-item @on-item-click="onItemClick">报单币转账</tab-item>
+        <tab-item @on-item-click="onItemClick">积分兑换</tab-item>
+        <tab-item @on-item-click="onItemClick">奖金转报单币</tab-item>
+      </tab>
+    </div>
+    <keep-alive>
+      <component :is="currentViewTable" @linkTo="changeTable" ref="nowViewTable" :list="pageInfo"></component>
+    </keep-alive>
   </div>
 </template>
 <script>
@@ -23,7 +21,13 @@
   import XButton from '../../../node_modules/vux/src/components/x-button/index.vue'
   import GridItem from '../../../node_modules/vux/src/components/grid/grid-item.vue'
   import Group from '../../../node_modules/vux/src/components/group/index.vue'
-  import { ReportOrdrerTable, ReConsumeTable, ProductCoinTable, TransferConsumeTable, ConvertConsumeTable } from './ConsumeTabels'
+  import {
+    ReportOrdrerTable,
+    ReConsumeTable,
+    ProductCoinTable,
+    TransferConsumeTable,
+    ConvertConsumeTable
+  } from './ConsumeTabels'
 
   export default {
     data () {

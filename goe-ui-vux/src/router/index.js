@@ -10,6 +10,8 @@ import ResetPassword from '../views/function/ResetPassword'
 import ResetPayPassword from '../views/function/ResetPayPassword'
 import ProductCoinExchange from '../views/function/ProductCoinExchange'
 import BankCardManagement from '../views/function/BankCardManagement'
+import AddBankCard from '../views/function/AddBankCard'
+import AddressManagement from '../views/function/AddressManagement'
 
 Vue.use(Router)
 
@@ -65,6 +67,16 @@ export default new Router({
       path: '/bankCardManagement',
       name: 'bankCardManagement',
       component: BankCardManagement
+    },
+    {
+      path: '/addBankCard',
+      name: 'addBankCard',
+      component: AddBankCard
+    },
+    {
+      path: '/addressManagement',
+      name: 'addressManagement',
+      component: AddressManagement
     }
   ]
 })

@@ -1,13 +1,13 @@
 <template>
   <div class="page">
     <x-header :left-options="{showBack: true}" style="background-color: #303135">会员管理系统</x-header>
-    <group title="银行卡信息管理">
-      <cell title='添加银行卡' is-link @click.native="addCard">
+    <group title="收货地址管理">
+      <cell title='添加收货地址' is-link @click.native="addAddress">
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/plus.png">
       </cell>
     </group>
     <performance-view
-      :list="cards"
+      :list="Addresses"
       :type="type">
     </performance-view>
 
@@ -31,24 +31,21 @@
     },
     data () {
       return {
-        type: '2',
-        cards: [{
-          ownerName: '李晓明',
-          bankName: '招商银行',
-          cardNumber: '**** **** **** 7228'
+        type: '6',
+        Addresses: [{
+          receivePeople: '李晓明 135****0169',
+          address: '北京市海淀区清河小营东路15号'
         }, {
-          ownerName: '李晓明',
-          bankName: '招商银行',
-          cardNumber: '**** **** **** 7228'
+          receivePeople: '李晓明 135****0169',
+          address: '北京市海淀区清河小营东路15号'
         }, {
-          ownerName: '李晓明',
-          bankName: '招商银行',
-          cardNumber: '**** **** **** 7228'
+          receivePeople: '李晓明 135****0169',
+          address: '北京市海淀区清河小营东路15号'
         }]
       }
     },
     methods: {
-      addCard () {
+      addAddress () {
         this.$router.push({name: 'addBankCard'})
       }
     },
