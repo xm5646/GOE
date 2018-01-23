@@ -43,6 +43,36 @@ public class TimeUtil {
 		}
 		return false;
 	}
+	public static boolean getTimeSameDay(Date d1,Date d2) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		String str1 = getDateFormat(d1);
+		String str2 = getDateFormat(d2);
+		try {
+			Date beginDate = df.parse(str1);
+			Date endDate = df.parse(str2);
+			if ((beginDate.getTime()-endDate.getTime())==0) {
+				return true;
+			}
+		} catch (ParseException e) {
+			return false;
+		}
+		return false;
+	}
+	
+	public static boolean getTimeSameDay(String str1,String str2) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			Date beginDate = df.parse(str1);
+			Date endDate = df.parse(str2);
+//			endDate = addDay(endDate,-1);
+			if ((beginDate.getTime()-endDate.getTime())==0) {
+				return true;
+			}
+		} catch (ParseException e) {
+			return false;
+		}
+		return false;
+	}
 	
 	/**
 	 * 将时间格式化
@@ -51,6 +81,11 @@ public class TimeUtil {
 	 */
 	public static String getDateFormat(Date date) {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return df.format(date);
+	}
+	
+	public static String getDateFormatDay(Date date) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		return df.format(date);
 	}
 	/**
@@ -110,13 +145,16 @@ public class TimeUtil {
 	}
 	
 	public static void main(String[] args) throws Exception{
-//		String date1 = "2017-12-12 23:59:59";
-//		String date2 = "2017-11-12 23:59:59";
-//		
-////		compareDate(date1, date2);
-//		
-//		int days = getDiscrepantDays(date1,date2);
-//		System.out.println(days);
+		String date1 = "2017-12-11 23:59:59";
+		String date2 = "2017-12-12 00:00:01";
+		
+//		String date1 = "2017-12-11";
+//		String date2 = "2017-12-12";
+		System.out.println(getTimeSameDay(date1, date2));
+//		compareDate(date1, date2);
+		
+		int days = getDiscrepantDays(date1,date2);
+		System.out.println(days);
 //		int cycle = getDateCycle(days);
 //		int cycleR = getDateCycleRemainder(days);
 //		System.out.println(cycle);
