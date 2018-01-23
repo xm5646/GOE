@@ -32,6 +32,30 @@
       return {
         findAccount: '',
         currentView: '当前查看用户: admin (A:12 B:12 C:0)',
+        ViewUserModel: {
+          currentViewAccount: '',
+          currentCountA: '',
+          CurrentCountB: '',
+          currentCountC: '',
+          departUserA: {
+            userAAccount: '',
+            userACountA: '',
+            userACountB: '',
+            userACountC: ''
+          },
+          departUserB: {
+            userBAccount: '',
+            userBCountA: '',
+            userBCountB: '',
+            userBCountC: ''
+          },
+          departUserC: {
+            userCAccount: '',
+            userCCountA: '',
+            userCCountB: '',
+            userCCountC: ''
+          }
+        },
         type: '1',
         list: [{
           isHasUser: true,

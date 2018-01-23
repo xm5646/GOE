@@ -28,10 +28,10 @@
       <cell title='提现记录查询' is-link>
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/form.png">
       </cell>
-      <cell title='添加银行卡' is-link>
+      <cell title='银行卡信息管理' is-link @click.native="goTo('bankCardManagement')">
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/form.png">
       </cell>
-      <cell title='产品积分兑换' is-link>
+      <cell title='产品积分兑换' is-link @click.native="goTo('productCoinExchange')">
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/form.png">
       </cell>
     </group>
@@ -56,6 +56,9 @@
       }
     },
     methods: {
+      goTo (url) {
+        this.$router.push({name: url})
+      }
     }
   }
 </script>

@@ -15,18 +15,17 @@
         </div>
       </div>
     </card>
-    <div v-if="isEnableAccess">
+    <div v-if="!isEnableAccess">
       <message title="未达到考核日期" description="请在考核日当天进行重销" :buttons="buttons"></message>
     </div>
-    <div v-else>
+    <div v-else-if="isEnableBuy">
+      <message title="报单币余额不足" description="请使用奖金转换报单币,或进行报单币充值" :buttons="buttons"></message>
+    </div>
+    <div v-else="">
       <group>
         <form-preview :body-items="list2" :footer-buttons="buttons2"
                       name="demo"></form-preview>
       </group>
-    </div>
-
-    <div v-if="isEnableBuy">
-      <message title="购买失败" description="请确认报单币余额是否充足" :buttons="buttons"></message>
     </div>
   </div>
 </template>
@@ -50,8 +49,7 @@
       return {
         bonusCoin: 2000,
         consumeCoin: 2000,
-        isEnableAccess: false,
-        isEnableBuy: true,
+        isEnableAccess: true,
         price: GoeConfig.goe.price,
         reConsumePrice: GoeConfig.goe.reConsumePrice,
         buttons2: [{
@@ -68,12 +66,15 @@
       list2: function () {
         const list = [{
           label: '商品原价',
-          value: '￥' + this.price
+          value: '报单币￥' + this.price
         }, {
           label: '重销优惠价格',
-          value: '￥' + this.reConsumePrice
+          value: '报单币￥' + this.reConsumePrice
         }]
         return list
+      },
+      isEnableBuy: function () {
+        return Number(this.consumeCoin) < Number(this.reConsumePrice)
       }
     }
   }

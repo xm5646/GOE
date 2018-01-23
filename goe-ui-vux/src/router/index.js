@@ -6,6 +6,10 @@ import InitPassword from '../views/function/InitPassword'
 import ConvertConsumeCoin from '../views/function/ConvertConsumeCoin'
 import TransferConsumeCoin from '../views/function/TransferConsumeCoin'
 import ReConsume from '../views/function/ReConsume'
+import ResetPassword from '../views/function/ResetPassword'
+import ResetPayPassword from '../views/function/ResetPayPassword'
+import ProductCoinExchange from '../views/function/ProductCoinExchange'
+import BankCardManagement from '../views/function/BankCardManagement'
 
 Vue.use(Router)
 
@@ -41,6 +45,26 @@ export default new Router({
       path: '/reConsume',
       name: 'reConsume',
       component: ReConsume
+    },
+    {
+      path: '/resetPassword',
+      name: 'resetPassword',
+      component: ResetPassword
+    },
+    {
+      path: '/resetPayPassword',
+      name: 'resetPayPassword',
+      component: ResetPayPassword
+    },
+    {
+      path: '/productCoinExchange',
+      name: 'productCoinExchange',
+      component: ProductCoinExchange
+    },
+    {
+      path: '/bankCardManagement',
+      name: 'bankCardManagement',
+      component: BankCardManagement
     }
   ]
 })

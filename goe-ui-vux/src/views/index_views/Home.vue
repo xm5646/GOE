@@ -9,16 +9,19 @@
     </card>
 
     <group title='常用功能'>
-      <cell title='奖金转换报单币' is-link>
+      <cell title='奖金转换报单币' is-link @click.native="goTo('convertConsumeCoin')">
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/form.png">
       </cell>
-      <cell title='报单币转账' is-link>
+      <cell title='报单币转账' is-link @click.native="goTo('transferConsumeCoin')">
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/form.png">
       </cell>
-      <cell title='重复消费' is-link>
+      <cell title='重复消费' is-link @click.native="goTo('reConsume')">
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/form.png">
       </cell>
-      <cell title='修改密码' is-link>
+      <cell title='修改登录密码' is-link @click.native="goTo('resetPassword')">
+        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/form.png">
+      </cell>
+      <cell title='修改交易密码' is-link @click.native="goTo('resetPayPassword')">
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/form.png">
       </cell>
       <cell title='退出登录' is-link @click.native="logout">
@@ -54,6 +57,9 @@
     methods: {
       logout () {
         this.$router.push({name: 'login'})
+      },
+      goTo (url) {
+        this.$router.push({name: url})
       }
     }
   }
