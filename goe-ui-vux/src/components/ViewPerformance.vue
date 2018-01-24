@@ -9,7 +9,7 @@
         <template v-if="type === '1'">
           <div v-for="item in list">
             <div v-if="item.isHasUser">
-              <a  @click.prevent="onItemClick(item)" class="weui-media-box weui-media-box_appmsg">
+              <a @click.prevent="onItemClick(item)" class="weui-media-box weui-media-box_appmsg">
                 <div class="weui-media-box__hd" v-if="item.src">
                   <img class="weui-media-box__thumb" :src="item.src" alt="">
                 </div>
@@ -46,26 +46,33 @@
         <template v-if="type === '2'">
           <div class="weui-media-box weui-media-box_text" v-for="item in list" @click.prevent="onItemClick(item)">
             <h4 class="weui-media-box__title" v-html="item.bankName"></h4>
-            <span class="weui-media-box__desc" v-html="item.ownerName" style="float: left"></span><a type="button" style="float: right" class="weui-btn weui-btn_mini weui-btn_default">删除</a>
+            <span class="weui-media-box__desc" v-html="item.ownerName" style="float: left"></span><a type="button"
+                                                                                                     style="float: right"
+                                                                                                     class="weui-btn weui-btn_mini weui-btn_default">删除</a>
             <span class="weui-media-box__desc" v-html="item.cardNumber" style="padding-left: 10px"></span>
           </div>
         </template>
         <template v-if="type === '6'">
           <div class="weui-media-box weui-media-box_text" v-for="item in list" @click.prevent="onItemClick(item)">
-            <h4 class="weui-media-box__title" v-html="item.receivePeople"></h4>
-            <span class="weui-media-box__desc" v-html="item.address" style="float: left"></span>
-            <div style="float: left">
-              <x-button mini>编辑</x-button>
-            </div>
+            <
+            <!--<h4 class="weui-media-box__title" v-html="item.receivePeople"></h4>-->
+            <!--<span class="weui-media-box__desc" v-html="" style="float: left"></span>-->
+            <!--<span style="float: right">-->
+              <!--<a onclick="" class="weui-btn weui-btn_mini weui-btn_default">编辑</a>-->
+              <!--<a onclick="" class="weui-btn weui-btn_mini weui-btn_default">删除</a>-->
+            <!--</span>-->
+            <!--<span class="weui-media-box__desc" v-html="item.address" style="padding-left: 0px"></span>-->
           </div>
         </template>
         <!--type==='3'-->
         <template v-if="type === '3'">
           <div class="weui-media-box weui-media-box_small-appmsg">
             <div class="weui-cells">
-              <a class="weui-cell weui-cell_access" :href="getUrl(item.url)" v-for="item in list" @click.prevent="onItemClick(item)">
+              <a class="weui-cell weui-cell_access" :href="getUrl(item.url)" v-for="item in list"
+                 @click.prevent="onItemClick(item)">
                 <div class="weui-cell__hd">
-                  <img :src="item.src" alt="" @error="onImgError(item, $event)" style="width:20px;margin-right:5px;display:block">
+                  <img :src="item.src" alt="" @error="onImgError(item, $event)"
+                       style="width:20px;margin-right:5px;display:block">
                 </div>
                 <div class="weui-cell__bd">
                   <p v-html="item.title"></p>
@@ -109,7 +116,8 @@
       </slot>
     </div>
     <div class="weui-panel__ft">
-      <a class="weui-cell weui-cell_access weui-cell_link" :href="getUrl(footer.url)" v-if="footer && type !== '3'" @click.prevent="onClickFooter">
+      <a class="weui-cell weui-cell_access weui-cell_link" :href="getUrl(footer.url)" v-if="footer && type !== '3'"
+         @click.prevent="onClickFooter">
         <div class="weui-cell__bd" v-html="footer.title"></div>
       </a>
     </div>
@@ -119,6 +127,7 @@
 <script>
   import { go, getUrl } from '../../node_modules/vux/src/libs/router'
   import { XButton, Divider } from 'vux'
+
   export default {
     components: {
       XButton,
@@ -167,6 +176,7 @@
   @import '../../node_modules/vux/src/styles/weui/widget/weui_cell/weui_access';
   @import '../../node_modules/vux/src/styles/weui/widget/weui_panel/weui_panel';
   @import '../../node_modules/vux/src/styles/weui/widget/weui_media_box/weui_media_box';
+
   a.disable-click {
     pointer-events: none;
   }
