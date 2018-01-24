@@ -6,17 +6,30 @@
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/plus.png">
       </cell>
     </group>
-    <performance-view
-      :list="Addresses"
-      :type="type">
-    </performance-view>
-
-
+    <div v-for="address in Addresses">
+      <div class="weui-cells">
+        <div class="weui-cell">
+          <div class="weui-cell__bd">
+            <p>{{address.receivedInfo}}</p>
+          </div>
+        </div>
+        <p class="weui-cells__title" style="">{{address.address}}</p>
+        <div class="weui-cell weui-cell_swiped">
+          <div class="weui-cell__bd" style="transform: translateX(0px)">
+            <div class="weui-cell">
+            </div>
+          </div>
+          <div class="weui-cell__ft">
+            <a class="weui-swiped-btn weui-swiped-btn_warn" href="javascript:">编辑</a>
+            <a class="weui-swiped-btn weui-swiped-btn_warn" href="javascript:">删除</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
-  import { XHeader, Group, Panel, Divider, Card, Cell } from 'vux'
-  import PerformanceView from '../../components/ViewPerformance.vue'
+  import { XHeader, Group, Panel, Divider, Card, Cell, FormPreview } from 'vux'
   export default {
     mounted: function () {
     },
@@ -27,29 +40,29 @@
       Divider,
       Card,
       Cell,
-      PerformanceView
+      FormPreview
     },
     data () {
       return {
         type: '6',
         Addresses: [{
-          receivePeople: '李晓明 135****0169',
-          address: '北京市海淀区清河小营东路15号'
-        }, {
-          receivePeople: '李晓明 135****0169',
-          address: '北京市海淀区清河小营东路15号'
-        }, {
-          receivePeople: '李晓明 135****0169',
+          receivedInfo: '李晓明 135****0169',
           address: '北京市海淀区清河小营东路15号中国电力科学研究院'
         }, {
-          receivePeople: '李晓明 135****0169',
+          receivedInfo: '李晓明 135****0169',
+          address: '北京市海淀区清河小营东路15号'
+        }, {
+          receivedInfo: '李晓明 135****0169',
+          address: '北京市海淀区清河小营东路15号中国电力科学研究院'
+        }, {
+          receivedInfo: '李晓明 135****0169',
           address: '北京市海淀区清河小营东路15号'
         }]
       }
     },
     methods: {
       addAddress () {
-        this.$router.push({name: 'addBankCard'})
+        this.$router.push({name: 'addAddress'})
       }
     },
     computed: {},

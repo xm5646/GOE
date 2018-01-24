@@ -53,16 +53,15 @@
           </div>
         </template>
         <template v-if="type === '6'">
-          <div class="weui-media-box weui-media-box_text" v-for="item in list" @click.prevent="onItemClick(item)">
-            <
-            <!--<h4 class="weui-media-box__title" v-html="item.receivePeople"></h4>-->
-            <!--<span class="weui-media-box__desc" v-html="" style="float: left"></span>-->
-            <!--<span style="float: right">-->
-              <!--<a onclick="" class="weui-btn weui-btn_mini weui-btn_default">编辑</a>-->
-              <!--<a onclick="" class="weui-btn weui-btn_mini weui-btn_default">删除</a>-->
-            <!--</span>-->
-            <!--<span class="weui-media-box__desc" v-html="item.address" style="padding-left: 0px"></span>-->
-          </div>
+          <group>
+            <div class="page__bd page__bd_spacing" v-for="item in list" @click.prevent="onItemClick(item)">
+              <div class="weui-flex">
+                <div class="weui-flex__item">
+                  <div class="placeholder" style="text-align: left">weui</div>
+                </div>
+              </div>
+            </div>
+          </group>
         </template>
         <!--type==='3'-->
         <template v-if="type === '3'">
@@ -127,9 +126,11 @@
 <script>
   import { go, getUrl } from '../../node_modules/vux/src/libs/router'
   import { XButton, Divider } from 'vux'
+  import Group from '../../node_modules/vux/src/components/group/index.vue'
 
   export default {
     components: {
+      Group,
       XButton,
       Divider
     },

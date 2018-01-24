@@ -3,7 +3,7 @@
     <x-header :left-options="{showBack: false}" style="background-color: #303135">会员管理系统</x-header>
     <div id="img-div">
       <br>
-      <img src="../assets/images/goe_logo.png" width="150px" height="150px">
+      <img src="../assets/images/logo1.png" width="100%">
       <group title="">
         <x-input title="用户名" name="username" placeholder="请输入用户编号" is-type="china-name" v-model="account">
           <img slot="label" style="padding-right:10px;display:block;" src="../assets/images/form/i-form-name.png" width="24" height="24">
