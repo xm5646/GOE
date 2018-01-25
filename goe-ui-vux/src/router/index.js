@@ -12,6 +12,7 @@ import ProductCoinExchange from '../views/function/ProductCoinExchange'
 import BankCardManagement from '../views/function/BankCardManagement'
 import AddBankCard from '../views/function/AddBankCard'
 import AddressManagement from '../views/function/AddressManagement'
+import AddAddress from '../views/function/AddAddress'
 
 Vue.use(Router)
 
@@ -77,6 +78,11 @@ export default new Router({
       path: '/addressManagement',
       name: 'addressManagement',
       component: AddressManagement
+    },
+    {
+      path: '/addAddress',
+      name: 'addAddress',
+      component: AddAddress
     }
   ]
 })
