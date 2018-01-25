@@ -71,16 +71,23 @@ public class UserUtil {
 	}
 	
 	public static User getTestUser() {
+		try {
+			Thread.sleep(10);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Date createDate = new Date();
 		User u = new User();
-		String name = "zs001"+new Random().nextInt(10000);
+		String name = "zs"+createDate.getTime();
 		u.setNickName(name);
 		u.setAccount(name);
-		u.setPassword("123456");
+		u.setPassword(MD5Util.encrypeByMd5("1"));
 		u.setCreateTime(createDate);
 		u.setUserLevel(UserLevel.CONSUMER);
 		u.setUserType(UserType.COMMON);
 		u.setAssessStatus(true);
+		u.setUserStatus(true);
 		u.setAssessDate(createDate);
 		return u;
 	}

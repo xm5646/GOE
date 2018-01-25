@@ -60,7 +60,7 @@ public class EarnServerSchedul {
 	 */
 	public String mainUpdateUser(Long parentId,String type,User newuser) {
 		User puser = userService.getUserById(parentId);
-		if (puser != null && puser.getWeightCode()<11) {
+		if (puser != null) {
 			if ("A".equals(type)) {
 				if (puser.getDepartmentA() != 0) {
 					return "A的下级节点已存在";
@@ -83,31 +83,7 @@ public class EarnServerSchedul {
 		}
 		return "测试数据插入成功";
 	}
-	public String mainUpdateUser(Long parentId,String type,User newuser,long count) {
-		User puser = userService.getUserById(parentId);
-		if (puser != null && puser.getWeightCode()<count) {
-			if ("A".equals(type)) {
-				if (puser.getDepartmentA() != 0) {
-					return "A的下级节点已存在";
-				} else {
-					saveuser(newuser, puser, type);
-				}
-			} else if ("B".equals(type)) {
-				if (puser.getDepartmentB() != 0) {
-					return "B的下级节点已存在";
-				} else {
-					saveuser(newuser, puser, type);
-				}
-			}else if ("C".equals(type)) {
-				if (puser.getDepartmentC() != 0) {
-					return "B的下级节点已存在";
-				} else {
-					saveuser(newuser, puser, type);
-				}
-			}
-		}
-		return "测试数据插入成功";
-	}
+	
 	@Transactional
 	public void mainTest(long parentid,long count) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		if (parentid!=0 && count!=0) {
@@ -156,20 +132,25 @@ public class EarnServerSchedul {
 		User newuserB = UserUtil.getTestUser();
 
 		User pwd = userService.getUserById(puserid);
-		String a = mainUpdateUser(puserid, "A", newuserA,count);
-		String b = mainUpdateUser(puserid, "B", newuserB,count);
-		if (pwd!=null && pwd.getWeightCode()==1) {
-			User newuserC = UserUtil.getTestUser();
-			String c = mainUpdateUser(puserid, "C", newuserC);
-			if ("测试数据插入成功".equals(c)) {
-				mapnew.put(newuserC.getUserId(), false);
+		if (pwd!=null) {
+			if (pwd.getWeightCode()==1) {
+				User newuserC = UserUtil.getTestUser();
+				String c = mainUpdateUser(puserid, "C", newuserC);
+				if ("测试数据插入成功".equals(c)) {
+					mainUpdatePerformance(newuserC.getUserId());
+					mapnew.put(newuserC.getUserId(), false);
+				}
 			}
-		}
-		if ("测试数据插入成功".equals(a)) {
-			mapnew.put(newuserA.getUserId(), false);
-		}
-		if ("测试数据插入成功".equals(b)) {
-			mapnew.put(newuserB.getUserId(), false);
+			String a = mainUpdateUser(puserid, "A", newuserA);
+			String b = mainUpdateUser(puserid, "B", newuserB);
+			if ("测试数据插入成功".equals(a)) {
+				mainUpdatePerformance(newuserA.getUserId());
+				mapnew.put(newuserA.getUserId(), false);
+			}
+			if ("测试数据插入成功".equals(b)) {
+				mainUpdatePerformance(newuserB.getUserId());
+				mapnew.put(newuserB.getUserId(), false);
+			}
 		}
 		map.put(puserid, true);
 	}
