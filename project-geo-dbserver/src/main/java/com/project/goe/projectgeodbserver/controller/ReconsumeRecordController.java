@@ -1,6 +1,7 @@
 package com.project.goe.projectgeodbserver.controller;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -12,9 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.goe.projectgeodbserver.entity.ConsumeRecord;
+import com.project.goe.projectgeodbserver.entity.ExpressAddress;
+import com.project.goe.projectgeodbserver.entity.OrderInfo;
 import com.project.goe.projectgeodbserver.entity.ReconsumeRecord;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.service.ConsumeRecordService;
+import com.project.goe.projectgeodbserver.service.ExpressAddressService;
+import com.project.goe.projectgeodbserver.service.OrderInfoService;
 import com.project.goe.projectgeodbserver.service.ReconsumeRecordService;
 import com.project.goe.projectgeodbserver.service.UserService;
 import com.project.goe.projectgeodbserver.statusType.ConsumeType;
@@ -40,10 +45,17 @@ public class ReconsumeRecordController {
 
 	@Autowired
 	private BonusPayPercentage bonusPayPercentage;
+	
+	@Autowired
+	private OrderInfoService orderInfoService;
+	
+	@Autowired
+	private ExpressAddressService expressAddressService;
+	
 
 	@PostMapping("/purchaseReconsume")
 	@Transactional
-	public RetMsg purchaseReconsume(@Validated UserReConsumeRequest userReConsumeRequest, BindingResult bindingResult) {
+	public RetMsg purchaseReconsume(@Validated UserReConsumeRequest userReConsumeRequest,BindingResult bindingResult) {
 		// 如果数据校验有误，则直接返回校验错误信息
 		RetMsg retMsg = ValidateErrorUtil.getInstance().errorList(bindingResult);
 		if (null != retMsg)
@@ -51,6 +63,7 @@ public class ReconsumeRecordController {
 
 		String account = userReConsumeRequest.getAccount();
 		String paymentPassword = userReConsumeRequest.getPaymentPassword();
+		long expressId = userReConsumeRequest.getExpressId();
 
 		// 验证用户是否存在
 		User user = this.userService.findByAccount(account);
@@ -82,7 +95,6 @@ public class ReconsumeRecordController {
 		if ((consumeCoin - reConsumeCost) < 0)
 			throw new RuntimeException("用户报单币余额不足！");
 
-		// 用户购买重销
 		// 更新用户表
 		user.setConsumeCoin(consumeCoin - reConsumeCost);
 		user.setAssessStatus(true);
@@ -106,6 +118,37 @@ public class ReconsumeRecordController {
 		consumeRecord.setConsumeStatus(false);
 		consumeRecord.setDescription(ConsumeType.COIN_TRANSFER_RECONSUME);
 		this.consumeRecordService.addOneConsumeRecord(consumeRecord);
+		
+		// 生成用户订单列表
+		OrderInfo orderInfo = new OrderInfo();
+		orderInfo.setCreateTime(new Date());
+		orderInfo.setDelivery(false);
+		orderInfo.setDescription(ConsumeType.COIN_TRANSFER_RECONSUME);
+		orderInfo.setExpressNo(null);
+		
+		//如果expressId没有数据，则使用用户的默认收货地址
+		if(expressId <0 ) {
+			List<ExpressAddress> expressAddresses = this.expressAddressService.findByUserId(user.getUserId());
+			for(ExpressAddress expressAddress : expressAddresses) {
+				if(expressAddress.isDefaultAddress()) {
+					orderInfo.setExpressId(expressAddress.getExpressId());
+					break;
+				}
+			}
+		}else {
+			//验证expressId是否存在
+			ExpressAddress expressAddress = this.expressAddressService.findByExpressId(expressId);
+			if(null == expressAddress) {
+				throw new RuntimeException("未找到快递地址!");
+			}
+			orderInfo.setExpressId(expressId);
+		}
+		orderInfo.setOrderType(ConsumeType.COIN_TRANSFER_RECONSUME);
+		orderInfo.setUserId(user.getUserId());
+		orderInfo.setProductCount(1);
+		
+		//新增订单
+		this.orderInfoService.save(orderInfo);
 		
 		retMsg =  new RetMsg();
 		retMsg.setCode(200);
