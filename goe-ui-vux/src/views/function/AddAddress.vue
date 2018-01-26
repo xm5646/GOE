@@ -2,21 +2,21 @@
   <div >
     <x-header :left-options="{showBack: true}" style="background-color: #303135">会员管理系统</x-header>
     <group title="添加收货地址">
-      <x-input title="收货人" placeholder="" is-type="china-name" v-model="ownerName">
+      <x-input title="收货人" placeholder="" is-type="china-name" v-model="receiveName">
       </x-input>
-      <x-address :title="title" @on-hide="logHide" v-model="value_0_1" :list="addressData" placeholder="请选择地址">
+      <x-address  title="" v-model="addressArray" :list="addressData" placeholder="请选择地址" @on-shadow-change="changeAddress">
         <template slot="title" slot-scope="props"><!-- use scope="props" when vue < 2.5.0 -->
           <span :class="props.labelClass" :style="props.labelStyle" style="height:24px;">
           <span class="demo-icon demo-icon-big" style="font-size:20px;vertical-align:middle;">
             <img src="../../assets/images/home/location.png" width="20px" height="20px"/>
           </span>
-          <span style="vertical-align:middle;">地址</span>
+          <span style="vertical-align:middle;">地区</span>
         </span>
         </template>
       </x-address>
-      <x-input title="详细地址" placeholder="" type="text" v-model="ownerName">
+      <x-input title="详细地址" placeholder="" type="text" v-model="detail">
       </x-input>
-      <x-input title="手机号码" type="number" is-type="china-mobile"  v-model="cardNumber" >
+      <x-input title="手机号码" type="number" is-type="china-mobile"  v-model="tel" >
       </x-input>
     </group>
     <br>
@@ -39,11 +39,13 @@
     data () {
       return {
         msg: 'Login',
-        cardNumber: '',
         addressData: ChinaAddressV4Data,
-        ownerName: '',
-        bankName: '',
-        bankList: ['农业银行', '建设银行', '工商银行', '中国银行', '中国邮政储蓄银行']
+        addressArray: [],
+        addressIds: [],
+        addressNameArray: '',
+        receiveName: '',
+        detail: '',
+        tel: ''
       }
     },
     methods: {
@@ -53,6 +55,10 @@
       },
       changeBank (bank) {
         this.bankName = bank
+      },
+      changeAddress (ids, names) {
+        this.addressIds = ids
+        this.addressNameArray = names
       }
     }
   }

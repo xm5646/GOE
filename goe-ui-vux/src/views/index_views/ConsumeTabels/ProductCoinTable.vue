@@ -1,5 +1,5 @@
 <template>
-  <div class="my-page">
+  <div>
     <x-table :cell-bordered="false" :content-bordered="true" style="background-color:#fff;">
       <thead>
       <tr style="background-color: darkgray">
