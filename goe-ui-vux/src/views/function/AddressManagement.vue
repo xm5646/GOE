@@ -10,10 +10,10 @@
       <div class="weui-cells">
         <div class="weui-cell">
           <div class="weui-cell__bd">
-            <p>{{address.receivedInfo}}</p>
+            <p>{{address.receivedName}}&nbsp;&nbsp;{{address.tel}}</p>
           </div>
         </div>
-        <p class="weui-cells__title" style="">{{address.address}}</p>
+        <p class="weui-cells__title" style="">{{address.address[0]}}{{address.address[1]}}{{address.address[2]}}{{address.detail}}</p>
         <div class="weui-cell weui-cell_swiped">
           <div class="weui-cell__bd" style="transform: translateX(0px)">
             <div class="weui-cell">
@@ -46,17 +46,25 @@
       return {
         type: '6',
         Addresses: [{
-          receivedInfo: '李晓明 135****0169',
-          address: '北京市海淀区清河小营东路15号中国电力科学研究院'
+          receivedName: '李晓明',
+          tel: '135****0169',
+          address: [ '北京市', '市辖区', '海淀区' ],
+          detail: '清河小营东路15号院中国电力科学研究院'
         }, {
-          receivedInfo: '李晓明 135****0169',
-          address: '北京市海淀区清河小营东路15号'
+          receivedName: '李晓明',
+          tel: '135****0169',
+          address: [ '北京市', '市辖区', '海淀区' ],
+          detail: '清河小营东路15号院中国电力科学研究院'
         }, {
-          receivedInfo: '李晓明 135****0169',
-          address: '北京市海淀区清河小营东路15号中国电力科学研究院'
+          receivedName: '李晓明',
+          tel: '135****0169',
+          address: [ '北京市', '市辖区', '海淀区' ],
+          detail: '清河小营东路15号院中国电力科学研究院'
         }, {
-          receivedInfo: '李晓明 135****0169',
-          address: '北京市海淀区清河小营东路15号'
+          receivedName: '李晓明',
+          tel: '135****0169',
+          address: [ '北京市', '市辖区', '海淀区' ],
+          detail: '清河小营东路15号院中国电力科学研究院'
         }]
       }
     },
