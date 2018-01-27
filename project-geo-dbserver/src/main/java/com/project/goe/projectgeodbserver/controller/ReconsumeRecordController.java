@@ -6,10 +6,16 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.goe.projectgeodbserver.entity.ConsumeRecord;
@@ -156,6 +162,36 @@ public class ReconsumeRecordController {
 		retMsg.setSuccess(true);
 		retMsg.setData(reconsumeRecord);
 		return retMsg;
+	}
+	
+	//分页查询指定用户所有的重销记录
+	public Page<ReconsumeRecord> findAllCardInfoByAccoun(@RequestParam("account") String account,
+			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
+			@RequestParam(value = "size", defaultValue = "5", required = false) int size,
+			@RequestParam(value = "keyword", required = false, defaultValue = "createTime") String keyword,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
+
+		if (account == null)
+			throw new RuntimeException("用户名不能为空!");
+
+		User user = this.userService.findByAccount(account);
+		if (null == user)
+			throw new RuntimeException("用户不存在!");
+
+		try {
+			Sort sort = null;
+
+			if (order.equals("asc"))
+				sort = new Sort(Direction.ASC, keyword);
+			else
+				sort = new Sort(Direction.DESC, keyword);
+
+			Pageable pageable = new PageRequest(pageNum, size, sort);
+
+			return this.reconsumeRecordService.findAllReconsumeRecordBySort(pageable);
+		} catch (Exception e) {
+			throw new RuntimeException("查询用户重销记录失败!");
+		}
 	}
 
 }

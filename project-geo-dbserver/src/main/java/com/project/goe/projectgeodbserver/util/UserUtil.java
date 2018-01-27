@@ -45,7 +45,8 @@ public class UserUtil {
 			userVO.setUserStatus("未激活");
 		
 		userVO.setUserPhone(user.getUserPhone());
-		userVO.setUserLevel(user.getUserLevel());
+		String  userLevelCH = BusinessUtil.getBusinessEntity(user.getUserLevel()).getUserLevel_CH();
+		userVO.setUserLevel(userLevelCH);
 		userVO.setNickName(user.getNickName());
 		userVO.setUserPhone(user.getUserPhone());
 		userVO.setIdentityNo(user.getIdentityNo());

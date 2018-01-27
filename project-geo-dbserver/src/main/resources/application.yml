@@ -30,4 +30,5 @@ bonus:
      productCoinNumberPercentage: 0
      consumeCoinUnitPrice: 680
      reconsumeDiscount: 0.7
+     drawCostPercentage: 0.05
 
