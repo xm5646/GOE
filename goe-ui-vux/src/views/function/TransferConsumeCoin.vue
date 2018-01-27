@@ -12,7 +12,7 @@
     </card>
     <divider title="收款用户查询">收款用户查询</divider>
     <group title="" class="weui-cells_form">
-      <x-input title="" class="weui-vcode" placeholder="请输入收款用的编号">
+      <x-input class="weui-vcode" placeholder="请输入收款用的编号" v-model="receiveAccount">
         <x-button slot="right" type="primary" mini @click.native="findUser">查找</x-button>
       </x-input>
     </group>
@@ -21,7 +21,7 @@
       <x-input title="￥" type="number" placeholder="请输入转帐金额" v-model="transferNumber" :min="1" :max="12" ></x-input>
     </div>
     <div v-if="isNotFinded">
-      <message title="未找到用户" description="请确认要查找的用户编号是否正确" :buttons="buttons"></message>
+      <message title="未找到用户" description="请确认要查找的用户编号是否正确"></message>
     </div>
     <div v-if="isInput">
       <form-preview header-label="转账金额" :header-value="showConvertNumber" :body-items="list2" :footer-buttons="buttons2" name="demo"></form-preview>
@@ -34,8 +34,12 @@
   import { XHeader, XInput, Group, XButton, Card, FormPreview, Search, Divider, Panel, Msg } from 'vux'
   import Message from '../../components/msg'
   import PayPassword from '../../components/PayPassword'
+  import GoeConfig from '../../../config/goe'
   export default {
     mounted: function () {
+      const userObj = JSON.parse(window.localStorage.getItem('User'))
+      this.user = userObj
+      this.consumeCoin = userObj.consumeCoin
     },
     components: {
       XHeader,
@@ -53,10 +57,13 @@
     },
     data () {
       return {
+        user: '',
         consumeCoin: 2000,
         isFinded: false,
         isNotFinded: false,
+        receiveAccount: '',
         transferNumber: '',
+        payPassword: '',
         showPayPasswordStatus: false,
         type: '1',
         list: [{
@@ -79,15 +86,99 @@
     },
     methods: {
       findUser () {
-        this.isFinded = true
+        if (this.receiveAccount.length > 0) {
+          this.getPerformance()
+        }
       },
       submitPay (payPassword) {
         this.showPayPasswordStatus = false
-        console.log(payPassword)
+        this.payPassword = payPassword
+        this.doTransfer()
       },
       cancelPay () {
         console.log('close')
         this.showPayPasswordStatus = false
+      },
+      getPerformance () {
+        const url = GoeConfig.apiServer + '/user/performance?account=' + this.receiveAccount
+        this.$http.get(url, {
+          _timeout: 3000,
+          onTimeout: (request) => {
+            alert('请求超时')
+          }
+        })
+          .then(response => {
+            if (response.body.success) {
+              const info = response.body.data
+              this.isFinded = true
+              this.isNotFinded = false
+              this.list[0].title = this.receiveAccount + ' [' + info.userLevel + ']'
+              this.list[0].desc = 'A:' + info.performance.departAcount + '  B:' + info.performance.departBcount + ':  C:' + info.performance.departCcount
+              this.list2[0].value = this.receiveAccount
+              console.log(this.performance)
+            } else {
+              if (response.body.message === '当前用户不存在!') {
+                this.isFinded = false
+                this.isNotFinded = true
+              } else {
+                alert(response.body.message)
+              }
+            }
+          }, responseErr => {
+            alert('未知错误')
+          })
+      },
+      doTransfer () {
+        const url = GoeConfig.apiServer + '/consumerRecord/save'
+        this.$http.post(url,
+          {
+            sendUserAccount: this.user.account,
+            receiveUserAccount: this.receiveAccount,
+            consumeTypeCode: 3,
+            consumeNumber: this.transferNumber,
+            paymentPassword: this.payPassword,
+            description: '用户:' + this.user.account + '转帐报单币' + this.transferNumber + '元到用户' + this.receiveAccount
+          },
+          {
+            _timeout: 3000,
+            onTimeout: (request) => {
+              alert('请求超时')
+            }
+          })
+          .then(response => {
+            if (response.body.success) {
+              this.updateUser()
+              this.showPayPasswordStatus = false
+              alert('转换成功')
+            } else {
+              alert(response.body.message || '未知错误')
+            }
+          }, responseErr => {
+            alert('未知错误')
+          })
+      },
+      updateUser () {
+        const url = GoeConfig.apiServer + '/user/findByAccount?account=' + this.user.account
+        this.$http.get(url,
+          {
+            _timeout: 3000,
+            onTimeout: (request) => {
+              alert('请求超时')
+            }
+          })
+          .then(response => {
+            if (response.body.success) {
+              this.consumeCoin = response.body.data.consumeCoin
+              this.isFinded = false
+              this.isNotFinded = false
+              window.localStorage.setItem('User', JSON.stringify(response.body.data))
+            } else {
+              this.errMsg = response.body.message
+            }
+          }, responseErr => {
+            console.log(responseErr)
+            this.errMsg = '未知错误'
+          })
       }
     },
     computed: {

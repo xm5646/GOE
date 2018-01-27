@@ -3,7 +3,7 @@
     <x-header :left-options="{showBack: false}" style="background-color: #303135">会员管理系统</x-header>
     <group>
       <div>
-        <x-table :cell-bordered="false" :content-bordered="true" style="background-color:#fff;">
+        <x-table :cell-bordered="false" :content-bordered="true" style="background-color:#fff; font-size: small">
           <thead>
           <tr style="background-color: darkgray">
             <th>发放总额</th>

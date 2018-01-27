@@ -4,17 +4,17 @@
     <card :header="{title: '我的钱包'}">
       <div slot="content" class="card-demo-flex card-demo-content01">
         <div class="vux-1px-r">
-          ￥<span>1130</span>
+          ￥<span>{{bonusCoin.toFixed(2)}}</span>
           <br/>
           奖金
         </div>
         <div class="vux-1px-r">
-          ￥<span>15</span>
+          ￥<span>{{consumeCoin.toFixed(2)}}</span>
           <br/>
           报单币
         </div>
         <div class="vux-1px-r">
-          ￥<span>0</span>
+          ￥<span>{{productCoin.toFixed(2)}}</span>
           <br/>
           产品积分
         </div>
@@ -44,6 +44,11 @@
   import { XHeader, Group, Panel, Divider, Card, Cell } from 'vux'
   export default {
     mounted: function () {
+      const userObj = JSON.parse(window.localStorage.getItem('User'))
+      this.user = userObj
+      this.bonusCoin = userObj.bonusCoin
+      this.consumeCoin = userObj.consumeCoin
+      this.productCoin = userObj.productCoin
     },
     components: {
       XHeader,
@@ -55,12 +60,23 @@
     },
     data () {
       return {
-        title1: '我的钱包'
+        title1: '我的钱包',
+        user: '',
+        bonusCoin: 0,
+        consumeCoin: 0,
+        productCoin: 0
       }
     },
     methods: {
       goTo (url) {
         this.$router.push({name: url})
+      },
+      update () {
+        console.log('wallet update')
+        const CurrentUser = JSON.parse(window.localStorage.getItem('User'))
+        this.bonusCoin = CurrentUser.bonusCoin
+        this.consumeCoin = CurrentUser.consumeCoin
+        this.productCoin = CurrentUser.productCoin
       }
     }
   }

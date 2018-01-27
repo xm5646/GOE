@@ -3,7 +3,7 @@
     <popup v-model="showPayPasswordInput" height="270px" is-transparent>
       <div style="width: 95%;background-color:#fff;height:250px;margin:0 auto;border-radius:5px;padding-top:10px;">
         <group title="安全验证">
-          <x-input title="密码" type="password" placeholder="请输入六位数字交易密码" v-model="password" :min="6" :max="6"  @on-enter="login">
+          <x-input title="密码" type="password" placeholder="请输入六位数字交易密码" v-model="password" :min="6" :max="6">
             <img slot="label" style="padding-right:10px;display:block;" src="../assets/images/form/i-form-password.png" width="24" height="24">
           </x-input>
         </group>
@@ -32,7 +32,7 @@
         if (this.password.length === 6) {
           this.$emit('paySubmitEvent', this.password)
         } else {
-          console.log('is not allowed')
+          alert('密码长度不正确')
         }
       },
       cancelPay () {
