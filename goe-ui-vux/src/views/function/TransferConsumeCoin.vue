@@ -26,12 +26,14 @@
     <div v-if="isInput">
       <form-preview header-label="转账金额" :header-value="showConvertNumber" :body-items="list2" :footer-buttons="buttons2" name="demo"></form-preview>
     </div>
+    <pay-password :showPayPasswordInput="showPayPasswordStatus" @paySubmitEvent="submitPay" @cancelPayEvent="cancelPay"></pay-password>
   </div>
 </template>
 
 <script>
-  import {XHeader, XInput, Group, XButton, Card, FormPreview, Search, Divider, Panel, Msg} from 'vux'
+  import { XHeader, XInput, Group, XButton, Card, FormPreview, Search, Divider, Panel, Msg } from 'vux'
   import Message from '../../components/msg'
+  import PayPassword from '../../components/PayPassword'
   export default {
     mounted: function () {
     },
@@ -46,7 +48,8 @@
       Divider,
       Panel,
       Msg,
-      Message
+      Message,
+      PayPassword
     },
     data () {
       return {
@@ -54,6 +57,7 @@
         isFinded: false,
         isNotFinded: false,
         transferNumber: '',
+        showPayPasswordStatus: false,
         type: '1',
         list: [{
           src: require('../../assets/images/person.png'),
@@ -68,7 +72,7 @@
           style: 'primary',
           text: '转账',
           onButtonClick: (name) => {
-            alert(`clicking ${name}`)
+            this.showPayPasswordStatus = true
           }
         }]
       }
@@ -76,6 +80,14 @@
     methods: {
       findUser () {
         this.isFinded = true
+      },
+      submitPay (payPassword) {
+        this.showPayPasswordStatus = false
+        console.log(payPassword)
+      },
+      cancelPay () {
+        console.log('close')
+        this.showPayPasswordStatus = false
       }
     },
     computed: {

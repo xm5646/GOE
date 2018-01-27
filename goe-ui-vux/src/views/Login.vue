@@ -17,12 +17,23 @@
 
     </div>
     <loading></loading>
+    <div v-transfer-dom>
+      <confirm v-model="show1"
+               title="Confirm deleting the item"
+               @on-cancel="onCancel"
+               @on-confirm="onConfirm">
+        <p style="text-align:center;">确定吗?</p>
+      </confirm>
+    </div>
   </div>
 
 </template>
 <script>
-  import { XHeader, XInput, Group, XButton, Loading } from 'vux'
+  import { XHeader, XInput, Group, XButton, Loading, Confirm, TransferDomDirective as TransferDom } from 'vux'
   export default {
+    directives: {
+      TransferDom
+    },
     mounted: function () {
     },
     components: {
@@ -30,13 +41,16 @@
       XInput,
       Group,
       XButton,
-      Loading
+      Loading,
+      Confirm
     },
     data () {
       return {
         msg: 'Login',
         password: '',
         account: '',
+        show: false,
+        show1: false,
         request: {
           url: 'saveuser',
           params: {
@@ -48,10 +62,34 @@
     },
     methods: {
       login () {
-        const result = this.api('login', this.request)
-        console.log(result)
+        if (this.account.length > 0 && this.password.length >= 6) {
+          this.request = {
+            url: '/user/login',
+            params: {
+              account: this.account,
+              password: this.password
+            }
+          }
+          this.api('login')
+//          if (result !== '') {
+//            this.$router.push({name: 'index'})
+//          }
+//        this.show = true
+//        n
 //        console.log(this.password)
 //        this.$router.push({name: 'index'})
+        } else {
+          console.log('信息不完整')
+        }
+      },
+      onCancel () {
+        console.log('on cancel')
+      },
+      onConfirm (msg) {
+        console.log('on confirm')
+        if (msg) {
+          alert(msg)
+        }
       }
     }
   }

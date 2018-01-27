@@ -14,6 +14,20 @@ Vue.use(VueRouter)
 Vue.use(Vuex)
 Vue.use(API)
 
+// Vue.http.interceptors.push((request, next) => {
+//   var timeout
+//   if (request._timeout) {
+//     timeout = setTimeout(() => {
+//       if (request.onTimeout) request.onTimeout(request)
+//       request.abort()
+//     }, request._timeout)
+//   }
+//   next((response) => {
+//     console.log(response.body)
+//     clearTimeout(timeout)
+//   })
+// })
+
 // plugins
 Vue.use(DevicePlugin)
 Vue.use(ToastPlugin)
