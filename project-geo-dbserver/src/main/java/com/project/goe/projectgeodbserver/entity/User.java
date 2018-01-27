@@ -1,5 +1,6 @@
 package com.project.goe.projectgeodbserver.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -19,7 +20,9 @@ import com.project.goe.projectgeodbserver.statusType.UserType;
  */
 @Entity
 @Table(name = "tb_user")
-public class User {
+public class User implements Serializable {
+	@Column
+	private String salt;//加密密码的盐
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -334,4 +337,23 @@ public class User {
 	public void setUserType(String userType) {
 		this.userType = userType;
 	}
+	
+	
+	
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+
+	/**
+     * 密码盐.
+     * @return
+     */
+    public String getCredentialsSalt(){
+        return this.account+this.salt;
+    }
+    //重新对盐重新进行了定义，用户名+salt，这样就更加不容易被破解
 }

@@ -18,6 +18,9 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
+  thymeleaf:
+    cache: false
+    mode: LEGACYHTML5
         
 myconfg: 
   servername: goe-server
@@ -30,4 +33,5 @@ bonus:
      productCoinNumberPercentage: 0
      consumeCoinUnitPrice: 680
      reconsumeDiscount: 0.7
+     
 
