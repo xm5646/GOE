@@ -24,6 +24,10 @@ public class CardInfoService {
 	public List<CardInfo> findByUserId(long userId) {
 		return this.cardInfoRepository.findByUserId(userId);
 	}
+	
+	public CardInfo findByCardNumber(String cardNumber) {
+		return this.findByCardNumber(cardNumber);
+	}
 
 	// 更新或新增银行卡信息
 	@Transactional

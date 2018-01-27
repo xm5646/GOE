@@ -46,6 +46,7 @@ public class CardInfoController {
 		String bankName = userCardInfoRequest.getBankName();
 		String cardNo = userCardInfoRequest.getCardNo();
 		String ownerName = userCardInfoRequest.getCardOwnerName();
+		String phone = userCardInfoRequest.getPhone();
 		// 验证用户是否存在
 		User user = this.userService.findByAccount(account);
 		if (null == user)
@@ -55,6 +56,7 @@ public class CardInfoController {
 		cardInfo.setBankName(bankName);
 		cardInfo.setCardNumber(cardNo);
 		cardInfo.setCardOwnerName(ownerName);
+		cardInfo.setPhone(phone);
 		
 		//新增银行卡信息
 		cardInfo = this.cardInfoService.save(cardInfo);
@@ -156,7 +158,7 @@ public class CardInfoController {
 
 	// 分页查询指定用户的银行卡信息
 	@GetMapping("/findAllCardInfoByAccount")
-	public Page<CardInfo> findAllCardInfoByAccoun(@RequestParam("account") String account,
+	public Page<CardInfo> findAllCardInfoByAccount(@RequestParam("account") String account,
 			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
 			@RequestParam(value = "size", defaultValue = "5", required = false) int size,
 			@RequestParam(value = "keyword", required = false, defaultValue = "createTime") String keyword,

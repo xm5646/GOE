@@ -33,7 +33,9 @@ import com.project.goe.projectgeodbserver.statusType.ConsumeType;
 import com.project.goe.projectgeodbserver.util.UserUtil;
 import com.project.goe.projectgeodbserver.util.ValidateErrorUtil;
 import com.project.goe.projectgeodbserver.util.BonusPayPercentage;
+import com.project.goe.projectgeodbserver.util.BusinessUtil;
 import com.project.goe.projectgeodbserver.util.MD5Util;
+import com.project.goe.projectgeodbserver.viewentity.PerformanceLevel;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
 import com.project.goe.projectgeodbserver.viewentity.UserLoginRequest;
 import com.project.goe.projectgeodbserver.viewentity.UserLoginSettingRequest;
@@ -199,15 +201,15 @@ public class UserController {
 	 * @Description：重置登录密码，设置支付密码和用户电话号码
 	 * @return：RetMsg
 	 */
-	@PostMapping("/userLoginSettings")
+	@PostMapping("/initUserInfo")
 	@Transactional
-	public RetMsg UserFirstLoginSettings(@Validated UserLoginSettingRequest userLoginSettingRequest,
+	public RetMsg initUserInfo(@Validated UserLoginSettingRequest userLoginSettingRequest,
 			BindingResult bindingResult) {
 		String account = userLoginSettingRequest.getAccount();
-		String oldPassword = userLoginSettingRequest.getOldPassword();
 		String newPassword = userLoginSettingRequest.getNewPassword();
 		String paymentPassword = userLoginSettingRequest.getPaymentPassword();
 		String userPhone = userLoginSettingRequest.getUserPhone();
+		String nickName = userLoginSettingRequest.getNickName();
 
 		// 如果数据校验有误，则直接返回校验错误信息
 		RetMsg retMsg = ValidateErrorUtil.getInstance().errorList(bindingResult);
@@ -219,15 +221,12 @@ public class UserController {
 		if (null == user)
 			throw new RuntimeException("用户账号不存在!");
 
-		// 验证用户原密码是否正确
-		if (!(MD5Util.encrypeByMd5(oldPassword)).equals(user.getPassword()))
-			throw new RuntimeException("用户原密码错误！");
-
 		// 设置用户登录新密码、支付密码和手机号码
 		user.setPassword(MD5Util.encrypeByMd5(newPassword));
 		user.setPaymentPassword(MD5Util.encrypeByMd5(paymentPassword));
 		user.setUserPhone(userPhone);
 		user.setPasswordReset(true);
+		user.setNickName(nickName);
 
 		// 更新用户信息
 		this.userService.save(user);
@@ -244,6 +243,9 @@ public class UserController {
 	// 返回用户的业绩信息
 	@GetMapping("/performance")
 	public RetMsg RetMsg(@RequestParam("account") String account) {
+		if(null == account)
+			throw new RuntimeException("用户名不能为空!");
+		
 		User user = this.userService.findByAccount(account);
 
 		if (null == user)
@@ -253,15 +255,19 @@ public class UserController {
 
 		try {
 			Performance p = this.performanceService.findByUserId(userId);
+			PerformanceLevel pLevel = new PerformanceLevel();
+			pLevel.setPerformance(p);
+			String  userLevelCH = BusinessUtil.getBusinessEntity(user.getUserLevel()).getUserLevel_CH();
+			pLevel.setUserLevel(userLevelCH);
 			RetMsg retMsg = new RetMsg();
 			retMsg.setCode(200);
-			retMsg.setData(p);
+			retMsg.setData(pLevel);
 			retMsg.setMessage("查询用户业绩成功!");
 			retMsg.setSuccess(true);
 
 			return retMsg;
 		} catch (Exception e) {
-			throw new RuntimeException("查询用户业绩失败>>>>>" + e.getMessage());
+			throw new RuntimeException("查询用户业绩失败!");
 		}
 	}
 
@@ -302,6 +308,10 @@ public class UserController {
 		if (null == parentUser || null == recommendUser) {
 			throw new RuntimeException("父节点或推荐人节点不存在!");
 		}
+		
+		//判断推荐人的报单币余额
+		if(recommendUser.getConsumeCoin() < this.bonusPayPercentage.getConsumeCoinUnitPrice())
+			throw new RuntimeException("报单币余额不足，请充值!");
 
 		try {
 			/******* 新增用户 *******/
@@ -357,6 +367,9 @@ public class UserController {
 			// 更新推荐人的报单币
 			recommendUser
 					.setConsumeCoin(recommendUser.getConsumeCoin() - this.bonusPayPercentage.getConsumeCoinUnitPrice());
+			
+			//更新推荐人信息
+			this.userService.save(recommendUser);
 
 			// 新增推荐人消费记录
 			ConsumeRecord consumeRecord = new ConsumeRecord();
