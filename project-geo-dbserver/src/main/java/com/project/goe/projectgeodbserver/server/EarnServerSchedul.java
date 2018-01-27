@@ -206,6 +206,9 @@ public class EarnServerSchedul {
 		userService.saveAll(userupdate);
 	}
 	
+	/**
+	 * 每天定时检查考核状态
+	 */
 	public void mainAssessInspect() {
 		//检查每个用户的考核时间是否是考核日
 		//如果为考核日，查看消费记录表是否有重销 考核日期加30天
