@@ -33,14 +33,17 @@
       return {
         type: '2',
         cards: [{
+          id: '2',
           ownerName: '李晓明',
           bankName: '招商银行',
           cardNumber: '**** **** **** 7228'
         }, {
+          id: '4',
           ownerName: '李晓明',
           bankName: '招商银行',
           cardNumber: '**** **** **** 7228'
         }, {
+          id: '8',
           ownerName: '李晓明',
           bankName: '招商银行',
           cardNumber: '**** **** **** 7228'

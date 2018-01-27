@@ -13,6 +13,8 @@ import BankCardManagement from '../views/function/BankCardManagement'
 import AddBankCard from '../views/function/AddBankCard'
 import AddressManagement from '../views/function/AddressManagement'
 import AddAddress from '../views/function/AddAddress'
+import EditAddress from '../views/function/EditAddress'
+import GetCash from '../views/function/GetCash'
 
 Vue.use(Router)
 
@@ -83,6 +85,16 @@ export default new Router({
       path: '/addAddress',
       name: 'addAddress',
       component: AddAddress
+    },
+    {
+      path: '/editAddress',
+      name: 'editAddress',
+      component: EditAddress
+    },
+    {
+      path: '/getCash',
+      name: 'getCash',
+      component: GetCash
     }
   ]
 })

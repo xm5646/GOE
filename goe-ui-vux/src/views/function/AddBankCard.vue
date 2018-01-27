@@ -7,6 +7,10 @@
       <selector v-model="bankName" placeholder="请选择银行"  :options="bankList" @on-change="changeBank"></selector>
       <x-input title="卡号" type="number"   v-model="cardNumber" :min="16" :max="19">
       </x-input>
+      <x-input title="手机号" type="number" is-type="china-mobile" placeholder="请输入手机号" v-model="tel" :min="11"
+               :max="11">
+        <img slot="label" style="padding-right:10px;display:block;" src="../../assets/images/form/i-form-tel.png" width="24" height="24">
+      </x-input>
     </group>
     <br>
     <x-button @click.native="viewMyPerformance">添加</x-button>
@@ -28,6 +32,7 @@
       return {
         msg: 'Login',
         cardNumber: '',
+        tel: '',
         ownerName: '',
         bankName: '',
         bankList: ['农业银行', '建设银行', '工商银行', '中国银行', '中国邮政储蓄银行']

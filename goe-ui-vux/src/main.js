@@ -8,9 +8,11 @@ import App from './App'
 import router from './router/index'
 import { sync } from 'vuex-router-sync'
 import { DatetimePlugin, BusPlugin, DevicePlugin, ToastPlugin, AlertPlugin, ConfirmPlugin, LoadingPlugin, WechatPlugin, AjaxPlugin } from 'vux'
+import API from './js/api'
 
 Vue.use(VueRouter)
 Vue.use(Vuex)
+Vue.use(API)
 
 // plugins
 Vue.use(DevicePlugin)

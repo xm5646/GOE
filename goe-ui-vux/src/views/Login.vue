@@ -16,11 +16,12 @@
       <x-button type="primary" action-type="submit" @click.native="login">登陆</x-button>
 
     </div>
+    <loading></loading>
   </div>
 
 </template>
 <script>
-  import { XHeader, XInput, Group, XButton } from 'vux'
+  import { XHeader, XInput, Group, XButton, Loading } from 'vux'
   export default {
     mounted: function () {
     },
@@ -28,19 +29,29 @@
       XHeader,
       XInput,
       Group,
-      XButton
+      XButton,
+      Loading
     },
     data () {
       return {
         msg: 'Login',
         password: '',
-        account: ''
+        account: '',
+        request: {
+          url: 'saveuser',
+          params: {
+            'account': 'admin',
+            'password': 'admin'
+          }
+        }
       }
     },
     methods: {
       login () {
-        console.log(this.password)
-        this.$router.push({name: 'index'})
+        const result = this.api('login', this.request)
+        console.log(result)
+//        console.log(this.password)
+//        this.$router.push({name: 'index'})
       }
     }
   }

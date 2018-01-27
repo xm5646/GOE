@@ -17,16 +17,18 @@ public class UserUtil {
 		userVO.setAccount(user.getAccount());
 		userVO.setActivateTime(DateFormatUtil.DateObjectToString(user.getActivateTime()));
 		
-		if(DateFormatUtil.compareDateObject(user.getAssessDate(),user.getCreateTime()) == 0) {
-			userVO.setAssessDate("未达到考核级别");
-		}else {
-			userVO.setAssessDate(DateFormatUtil.DateObjectToString(user.getAssessDate()));
-		}
+//		if(DateFormatUtil.compareDateObject(user.getAssessDate(),user.getCreateTime()) == 0) {
+//			userVO.setAssessDate("未达到考核级别");
+//		}else {
+//			userVO.setAssessDate(DateFormatUtil.DateObjectToString(user.getAssessDate()));
+//		}
 		
 		if(user.isAssessStatus()) {
 			userVO.setAssessStatus("已通过考核");
+			userVO.setAssessDate(DateFormatUtil.DateObjectToString(user.getAssessDate()));
 		}else {
 			userVO.setAssessStatus("未通过考核");
+			userVO.setAssessDate("未达到考核级别");
 		}
 
 		userVO.setBonusCoin(user.getBonusCoin());
@@ -72,16 +74,23 @@ public class UserUtil {
 	}
 	
 	public static User getTestUser() {
+		try {
+			Thread.sleep(10);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Date createDate = new Date();
 		User u = new User();
-		String name = "zs001"+new Random().nextInt(10000);
+		String name = "zs"+createDate.getTime();
 		u.setNickName(name);
 		u.setAccount(name);
-		u.setPassword("123456");
+		u.setPassword(MD5Util.encrypeByMd5("123456"));
 		u.setCreateTime(createDate);
 		u.setUserLevel(UserLevel.CONSUMER);
 		u.setUserType(UserType.COMMON);
 		u.setAssessStatus(true);
+		u.setUserStatus(true);
 		u.setAssessDate(createDate);
 		return u;
 	}

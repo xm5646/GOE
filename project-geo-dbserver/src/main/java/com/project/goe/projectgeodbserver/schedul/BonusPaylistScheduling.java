@@ -51,8 +51,18 @@ public class BonusPaylistScheduling {
 //        System.out.println(TimeUtil.getDateFormat(new Date())+" >>fixedRate执行....");
     }
 
-    @Scheduled(cron="0 * * * * ?")
+    @Scheduled(cron="0 0 0 * * ?")
     public void cronJob(){
+        System.out.println(TimeUtil.getDateFormat(new Date())+" >>每天00:00:00定时任务执行....");
+        //优先执行考核状态再计算收益
+        //每天定时检查考核状态
+        earnServerSchedul.mainAssessInspect();
+        //每天计算收益
+        earnServerSchedul.mainComperBonuspaylist();
+    }
+    
+    @Scheduled(cron="0 * * * * ?")
+    public void cronJobDay(){
 //        System.out.println(TimeUtil.getDateFormat(new Date())+" >>cron执行....");
 //        earnServerSchedul.mainComperBonuspaylist();
     }

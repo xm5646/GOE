@@ -22,7 +22,7 @@
     </card>
 
     <group title='余额相关'>
-      <cell title='申请提现' is-link>
+      <cell title='申请提现' is-link @click.native="goTo('getCash')">
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/form.png">
       </cell>
       <cell title='提现记录查询' is-link>
