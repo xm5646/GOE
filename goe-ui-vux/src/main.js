@@ -4,26 +4,44 @@ import Vue from 'vue'
 import FastClick from 'fastclick'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
+import VueResource from 'vue-resource'
 import App from './App'
 import router from './router/index'
 import { sync } from 'vuex-router-sync'
-import { DatetimePlugin, BusPlugin, DevicePlugin, ToastPlugin, AlertPlugin, ConfirmPlugin, LoadingPlugin, WechatPlugin, AjaxPlugin } from 'vux'
-import API from './js/api'
+// import { DatetimePlugin, BusPlugin, DevicePlugin, ToastPlugin, AlertPlugin, ConfirmPlugin, LoadingPlugin, WechatPlugin } from 'vux'
+// import API from './js/api'
 
 Vue.use(VueRouter)
+Vue.use(VueResource)
 Vue.use(Vuex)
-Vue.use(API)
+// Vue.use(API)
+
+Vue.http.options.emulateJSON = true
+
+Vue.http.interceptors.push((request, next) => {
+  console.log(request)
+  var timeout
+  if (request._timeout) {
+    timeout = setTimeout(() => {
+      if (request.onTimeout) request.onTimeout(request)
+      request.abort()
+    }, request._timeout)
+  }
+  next((response) => {
+    console.log(response.body)
+    clearTimeout(timeout)
+  })
+})
 
 // plugins
-Vue.use(DevicePlugin)
-Vue.use(ToastPlugin)
-Vue.use(AlertPlugin)
-Vue.use(ConfirmPlugin)
-Vue.use(LoadingPlugin)
-Vue.use(WechatPlugin)
-Vue.use(AjaxPlugin)
-Vue.use(BusPlugin)
-Vue.use(DatetimePlugin)
+// Vue.use(DevicePlugin)
+// Vue.use(ToastPlugin)
+// Vue.use(AlertPlugin)
+// Vue.use(ConfirmPlugin)
+// Vue.use(LoadingPlugin)
+// Vue.use(WechatPlugin)
+// Vue.use(BusPlugin)
+// Vue.use(DatetimePlugin)
 
 FastClick.attach(document.body)
 
@@ -48,12 +66,11 @@ store.registerModule('vux', {
 sync(store, router)
 
 router.beforeEach(function (to, from, next) {
-  store.commit('updateLoadingStatus', {isLoading: true})
-  // if (to.name !== 'login') {
-  //   if (window.localStorage.getItem('User') == null) {
-  //     router.push({name: 'login'})
-  //   }
-  // }
+  if (to.name !== 'login') {
+    if (window.localStorage.getItem('User') == null) {
+      router.push({name: 'login'})
+    }
+  }
   next()
 })
 

@@ -15,6 +15,7 @@ import AddressManagement from '../views/function/AddressManagement'
 import AddAddress from '../views/function/AddAddress'
 import EditAddress from '../views/function/EditAddress'
 import GetCash from '../views/function/GetCash'
+import AddUser from '../views/function/AddUser'
 
 Vue.use(Router)
 
@@ -95,6 +96,11 @@ export default new Router({
       path: '/getCash',
       name: 'getCash',
       component: GetCash
+    },
+    {
+      path: '/addUser',
+      name: 'addUser',
+      component: AddUser
     }
   ]
 })

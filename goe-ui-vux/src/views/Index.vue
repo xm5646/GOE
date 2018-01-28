@@ -35,6 +35,7 @@
   import Wallet from './index_views/Wallet'
   import Salary from './index_views/Salary'
   import Consume from './index_views/Consume'
+  import GoeConfig from '../../config/goe'
 
   export default {
     mounted: function () {
@@ -59,6 +60,28 @@
     },
     methods: {
       changeView (view) {
+        if (view === 'wallet' || view === 'home') {
+          const url = GoeConfig.apiServer + '/user/findByAccount?account=' + JSON.parse(window.localStorage.getItem('User')).account
+          this.$http.get(url,
+            {
+              _timeout: 3000,
+              onTimeout: (request) => {
+                alert('请求超时')
+              }
+            })
+            .then(response => {
+              if (response.body.success) {
+                window.localStorage.setItem('User', JSON.stringify(response.body.data))
+                this.$refs.nowView.update()
+              } else {
+                this.errMsg = response.body.message
+              }
+            }, responseErr => {
+              console.log(responseErr)
+              this.errMsg = '未知错误'
+            })
+        }
+        // 切换视图
         this.currentView = view
       }
     }

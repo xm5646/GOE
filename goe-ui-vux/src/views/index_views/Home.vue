@@ -5,8 +5,8 @@
     <panel :list="list" :type="type"></panel>
 
     <card :header="{title: '业绩信息'}">
-      <p slot="content" class="card-padding performance-info">累计业绩:&nbsp;&nbsp;A:{{content}}&nbsp;&nbsp; B:{{content}}&nbsp;&nbsp; C:{{content}}</p>
-      <p slot="content" class="card-padding performance-info">新增业绩:&nbsp;&nbsp;A:{{content}}&nbsp;&nbsp; B:{{content}}&nbsp;&nbsp; C:{{content}}</p>
+      <p slot="content" class="card-padding performance-info">累计业绩:&nbsp;&nbsp;A:{{performance.totalPerformanceA}}&nbsp;&nbsp; B:{{performance.totalPerformanceB}}&nbsp;&nbsp; C:{{performance.totalPerformanceC}}</p>
+      <p slot="content" class="card-padding performance-info">新增业绩:&nbsp;&nbsp;A:{{performance.newPerformanceA}}&nbsp;&nbsp; B:{{performance.newPerformanceB}}&nbsp;&nbsp; C:{{performance.newPerformanceC}}</p>
     </card>
 
     <group title='常用功能'>
@@ -35,9 +35,18 @@
 </template>
 <script>
   import { XHeader, Group, Panel, Divider, Card, Cell } from 'vux'
-
+  import GoeConfig from '../../../config/goe'
   export default {
     mounted: function () {
+      const userOjb = JSON.parse(window.localStorage.getItem('User'))
+      this.user = userOjb
+      this.list[0].title = userOjb.nickName + ' [' + userOjb.userLevel + ']'
+      if (userOjb.assessStatus === '未通过考核') {
+        this.list[0].desc = '<strong>' + userOjb.assessStatus + '</strong><br>' + '下次考核日期:' + userOjb.assessDate
+      } else {
+        this.list[0].desc = '<strong>' + userOjb.assessStatus + '</strong><br>' + '下次考核日期:' + userOjb.assessDate
+      }
+      this.getPerformance()
     },
     components: {
       XHeader,
@@ -49,21 +58,82 @@
     },
     data () {
       return {
+        user: '',
         type: '1',
         list: [{
           src: require('../../assets/images/person.png'),
           title: '张三 [组长]',
           desc: '<strong>已通过考核</strong><br>下次考核日期:2018-01-20'
         }],
-        content: '12'
+        performance: {
+          totalPerformanceA: 0,
+          totalPerformanceB: 0,
+          totalPerformanceC: 0,
+          newPerformanceA: 0,
+          newPerformanceB: 0,
+          newPerformanceC: 0
+        }
       }
     },
     methods: {
       logout () {
+        window.localStorage.clear()
         this.$router.push({name: 'login'})
       },
       goTo (url) {
         this.$router.push({name: url})
+      },
+      getPerformance () {
+        const url = GoeConfig.apiServer + '/user/performance?account=' + this.user.account
+        this.$http.get(url, {
+          _timeout: 3000,
+          onTimeout: (request) => {
+            alert('请求超时')
+          }
+        })
+          .then(response => {
+            if (response.body.success) {
+              const performanceObj = response.body.data.performance
+              console.log(performanceObj)
+              this.performance.totalPerformanceA = performanceObj.departAcount
+              this.performance.totalPerformanceB = performanceObj.departBcount
+              this.performance.totalPerformanceC = performanceObj.departCcount
+              this.performance.newPerformanceA = performanceObj.addDepartAcount
+              this.performance.newPerformanceB = performanceObj.addDepartBcount
+              this.performance.newPerformanceC = performanceObj.addDepartCcount
+              console.log(this.performance)
+            } else {
+              alert(response.body.message)
+            }
+          }, responseErr => {
+            alert('未知错误')
+          })
+      },
+      getUserInfo () {
+        const url = GoeConfig.apiServer + '/user/findByAccount?account=' + this.user.account
+        this.$http.get(url, {
+          _timeout: 3000,
+          onTimeout: (request) => {
+            alert('请求超时')
+          }
+        })
+          .then(response => {
+            if (response.body.success) {
+              const result = response.body.data
+              console.log('getuserinfo' + result)
+              window.localStorage.setItem('User', JSON.stringify(result))
+              console.log(this.performance)
+            } else {
+              alert(response.body.message)
+            }
+          }, responseErr => {
+            alert('未知错误')
+          })
+      },
+      update () {
+        console.log('home update')
+        this.user = JSON.parse(window.localStorage.getItem('User'))
+        this.getPerformance()
       }
     }
   }

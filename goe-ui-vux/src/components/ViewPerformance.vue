@@ -19,7 +19,7 @@
                     <p class="weui-media-box__desc" v-html="item.desc"></p>
                   </div>
                   <div v-else>
-                    <x-button mini v-on:click.native="submitCreateUserEvent">新增用户</x-button>
+
                   </div>
                 </div>
               </a>
@@ -35,7 +35,12 @@
                     <p class="weui-media-box__desc" v-html="item.desc"></p>
                   </div>
                   <div v-else>
-                    <x-button mini v-on:click.native="submitCreateUserEvent">新增用户</x-button>
+                    <div v-if="item.disableCreate">
+                      <x-button mini  disabled>新增用户</x-button>
+                    </div>
+                    <div v-else>
+                      <x-button mini v-on:click.native="submitCreateUserEvent(item)">新增用户</x-button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -165,8 +170,8 @@
         this.$emit('on-click-item', item)
         go(item.url, this.$router)
       },
-      submitCreateUserEvent () {
-        this.$emit('createUserEvent')
+      submitCreateUserEvent (item) {
+        this.$emit('createUserEvent', item)
       }
     }
   }

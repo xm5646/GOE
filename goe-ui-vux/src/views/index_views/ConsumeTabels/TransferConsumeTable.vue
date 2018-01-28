@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="divFont">
     <x-table :cell-bordered="false" :content-bordered="true" style="background-color:#fff;">
       <thead>
       <tr style="background-color: darkgray">
@@ -60,3 +60,9 @@
     }
   }
 </script>
+<style scoped>
+  .divFont {
+    font-size: small;
+  }
+</style>
+
