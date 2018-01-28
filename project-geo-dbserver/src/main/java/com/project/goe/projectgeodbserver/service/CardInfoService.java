@@ -26,7 +26,7 @@ public class CardInfoService {
 	}
 	
 	public CardInfo findByCardNumber(String cardNumber) {
-		return this.findByCardNumber(cardNumber);
+		return this.cardInfoRepository.findByCardNumber(cardNumber);
 	}
 
 	// 更新或新增银行卡信息
