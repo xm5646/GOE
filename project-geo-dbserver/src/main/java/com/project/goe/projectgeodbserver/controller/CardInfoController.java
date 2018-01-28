@@ -1,5 +1,7 @@
 package com.project.goe.projectgeodbserver.controller;
 
+import java.util.Date;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,6 +119,7 @@ public class CardInfoController {
 		cardInfo.setBankName(userCardInfoRequest.getBankName());
 		cardInfo.setCardNumber(userCardInfoRequest.getCardNo());
 		cardInfo.setCardOwnerName(userCardInfoRequest.getCardOwnerName());
+		cardInfo.setCreateTime(new Date());
 		
 		this.cardInfoService.save(cardInfo);
 		
@@ -156,8 +159,8 @@ public class CardInfoController {
 		return retMsg;
 	}
 
-	// 分页查询指定用户的银行卡信息
-	@GetMapping("/findAllCardInfoByAccount")
+	// 分页查询所有银行卡信息(基于银行卡时间分页)
+	@GetMapping("/findAllCardInfoBySort")
 	public Page<CardInfo> findAllCardInfoByAccount(@RequestParam("account") String account,
 			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
 			@RequestParam(value = "size", defaultValue = "5", required = false) int size,

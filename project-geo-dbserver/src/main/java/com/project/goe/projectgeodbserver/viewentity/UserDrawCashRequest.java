@@ -21,7 +21,14 @@ public class UserDrawCashRequest {
 	@NotNull(message = "提现金额不能为空!")
 	@Min(value = 0, message = "提取金额不合法!")
 	@Max(value = Long.MAX_VALUE, message = "提取金额不合法!")
-	private double drawNumber;
+	private Double drawNumber;
+
+	@NotNull(message = "电话号码不能为空!")
+	private String phone;
+
+	@NotBlank(message = "用户支付密码不能为空")
+	@Pattern(regexp = "[0-9]{6}", message = "支付密码只能是6位数字")
+	private String paymentPassword;
 
 	public String getAccount() {
 		return account;
@@ -39,12 +46,28 @@ public class UserDrawCashRequest {
 		this.cardNumber = cardNumber;
 	}
 
-	public double getDrawNumber() {
+	public Double getDrawNumber() {
 		return drawNumber;
 	}
 
-	public void setDrawNumber(double drawNumber) {
+	public void setDrawNumber(Double drawNumber) {
 		this.drawNumber = drawNumber;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getPaymentPassword() {
+		return paymentPassword;
+	}
+
+	public void setPaymentPassword(String paymentPassword) {
+		this.paymentPassword = paymentPassword;
 	}
 
 }

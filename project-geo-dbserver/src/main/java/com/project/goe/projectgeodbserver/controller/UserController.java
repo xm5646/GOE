@@ -37,6 +37,7 @@ import com.project.goe.projectgeodbserver.util.BusinessUtil;
 import com.project.goe.projectgeodbserver.util.MD5Util;
 import com.project.goe.projectgeodbserver.viewentity.PerformanceLevel;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
+import com.project.goe.projectgeodbserver.viewentity.UpdatePaymentPasswordRequest;
 import com.project.goe.projectgeodbserver.viewentity.UserLoginRequest;
 import com.project.goe.projectgeodbserver.viewentity.UserLoginSettingRequest;
 import com.project.goe.projectgeodbserver.viewentity.UserLoginPasswordUpdateRequest;
@@ -123,16 +124,16 @@ public class UserController {
 	@RequestMapping("/saveall")
 	public String saveTestAll() throws NoSuchAlgorithmException, UnsupportedEncodingException {
 
-		earnServerSchedul.mainTest(0,0);
+		earnServerSchedul.mainTest(0, 0);
 
 		return "测试数据插入根成功";
 	}
-	
-	//在某个节点下添N层用户
+
+	// 在某个节点下添N层用户
 	@RequestMapping("/testuser/{pid}/{weight}")
-	public String saveUserCreate(@PathVariable("pid") Long pid,@PathVariable("weight") Long weight) {
+	public String saveUserCreate(@PathVariable("pid") Long pid, @PathVariable("weight") Long weight) {
 		try {
-			earnServerSchedul.mainTest(pid,weight);
+			earnServerSchedul.mainTest(pid, weight);
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -148,8 +149,8 @@ public class UserController {
 	public String saveUserCreate(@PathVariable("id") Long id) {
 		return earnServerSchedul.mainUpdatePerformance(id);
 	}
-	
-	//发放N天薪水
+
+	// 发放N天薪水
 	@RequestMapping("/testbonus/{count}")
 	public String testbonus(@PathVariable("count") Long count) {
 		for (int i = 0; i < count; i++) {
@@ -243,9 +244,9 @@ public class UserController {
 	// 返回用户的业绩信息
 	@GetMapping("/performance")
 	public RetMsg RetMsg(@RequestParam("account") String account) {
-		if(null == account)
+		if (null == account)
 			throw new RuntimeException("用户名不能为空!");
-		
+
 		User user = this.userService.findByAccount(account);
 
 		if (null == user)
@@ -257,7 +258,7 @@ public class UserController {
 			Performance p = this.performanceService.findByUserId(userId);
 			PerformanceLevel pLevel = new PerformanceLevel();
 			pLevel.setPerformance(p);
-			String  userLevelCH = BusinessUtil.getBusinessEntity(user.getUserLevel()).getUserLevel_CH();
+			String userLevelCH = BusinessUtil.getBusinessEntity(user.getUserLevel()).getUserLevel_CH();
 			pLevel.setUserLevel(userLevelCH);
 			RetMsg retMsg = new RetMsg();
 			retMsg.setCode(200);
@@ -308,9 +309,9 @@ public class UserController {
 		if (null == parentUser || null == recommendUser) {
 			throw new RuntimeException("父节点或推荐人节点不存在!");
 		}
-		
-		//判断推荐人的报单币余额
-		if(recommendUser.getConsumeCoin() < this.bonusPayPercentage.getConsumeCoinUnitPrice())
+
+		// 判断推荐人的报单币余额
+		if (recommendUser.getConsumeCoin() < this.bonusPayPercentage.getConsumeCoinUnitPrice())
 			throw new RuntimeException("报单币余额不足，请充值!");
 
 		try {
@@ -367,8 +368,8 @@ public class UserController {
 			// 更新推荐人的报单币
 			recommendUser
 					.setConsumeCoin(recommendUser.getConsumeCoin() - this.bonusPayPercentage.getConsumeCoinUnitPrice());
-			
-			//更新推荐人信息
+
+			// 更新推荐人信息
 			this.userService.save(recommendUser);
 
 			// 新增推荐人消费记录
@@ -449,7 +450,44 @@ public class UserController {
 		this.userService.delete(id);
 	}
 
-	// 用户转账
+	// 修改用户的交易密码
+	@PostMapping("/updatePaymentPassword")
+	public RetMsg updatePaymentPassword(@Validated UpdatePaymentPasswordRequest updatePaymentPasswordRequest,
+			BindingResult bindingResult) {
+		// 如果数据校验有误，则直接返回校验错误信息
+		RetMsg retMsg = ValidateErrorUtil.getInstance().errorList(bindingResult);
+		if (null != retMsg)
+			return retMsg;
+
+		String account = updatePaymentPasswordRequest.getAccount();
+		String oldPassword = updatePaymentPasswordRequest.getOldPaymentpassword();
+		String newPassword = updatePaymentPasswordRequest.getNewPaymentPassword();
+		String newPassword2 = updatePaymentPasswordRequest.getNewPaymentPassword2();
+
+		User user = this.userService.findByAccount(account);
+		if (null == user)
+			throw new RuntimeException("用户不存在!");
+
+		if (!(MD5Util.encrypeByMd5(oldPassword)).equals(user.getPaymentPassword()))
+			throw new RuntimeException("原支付密码输入错误!");
+
+		if (!newPassword.equals(newPassword2))
+			throw new RuntimeException("两次密码输入不一致!");
+
+		try {
+			user.setPaymentPassword(MD5Util.encrypeByMd5(newPassword));
+
+			retMsg = new RetMsg();
+			retMsg.setCode(200);
+			retMsg.setData(UserUtil.UserToUserVO(user));
+			retMsg.setMessage("支付密码修改成功!");
+			retMsg.setSuccess(true);
+
+			return retMsg;
+		} catch (Exception e) {
+			throw new RuntimeException("支付密码修改失败!");
+		}
+	}
 
 	// 基于单个关键字进行分页查询：默认按照userId字段j查询；默认显示第一页；默认每页显示5条数据
 	@GetMapping("/findUsersBySort")

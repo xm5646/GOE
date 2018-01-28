@@ -1,6 +1,5 @@
 package com.project.goe.projectgeodbserver.viewentity;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -16,37 +15,18 @@ public class ConsumeRecordRequest {
 	private String receiveUserAccount;
 
 	@NotNull(message = "消费类型不能为空!")
-	@Range(min = 1, max = 6, message = "消费类型参数不合法!")
-	private int consumeTypeCode;
+	@Range(min = 1, max = 4, message = "消费类型参数不合法!")
+	private Integer consumeTypeCode;
 
 	@NotNull(message = "消费金额不能为空!")
 	@Min(0)
-	private double consumeNumber;
-	
-	//快递id(用于重销或积分兑换
-	private long expressId = -1;
-	
+	private Double consumeNumber;
+
 	@NotBlank(message = "用户支付密码不能为空")
 	@Pattern(regexp = "[0-9]{6}", message = "支付密码只能是6位数字")
 	private String paymentPassword;
 
 	private String description;
-
-	public String getPaymentPassword() {
-		return paymentPassword;
-	}
-
-	public void setPaymentPassword(String paymentPassword) {
-		this.paymentPassword = paymentPassword;
-	}
-
-	public long getExpressId() {
-		return expressId;
-	}
-
-	public void setExpressId(long expressId) {
-		this.expressId = expressId;
-	}
 
 	public String getSendUserAccount() {
 		return sendUserAccount;
@@ -64,20 +44,28 @@ public class ConsumeRecordRequest {
 		this.receiveUserAccount = receiveUserAccount;
 	}
 
-	public int getConsumeTypeCode() {
+	public Integer getConsumeTypeCode() {
 		return consumeTypeCode;
 	}
 
-	public void setConsumeTypeCode(int consumeTypeCode) {
+	public void setConsumeTypeCode(Integer consumeTypeCode) {
 		this.consumeTypeCode = consumeTypeCode;
 	}
 
-	public double getConsumeNumber() {
+	public Double getConsumeNumber() {
 		return consumeNumber;
 	}
 
-	public void setConsumeNumber(double consumeNumber) {
+	public void setConsumeNumber(Double consumeNumber) {
 		this.consumeNumber = consumeNumber;
+	}
+
+	public String getPaymentPassword() {
+		return paymentPassword;
+	}
+
+	public void setPaymentPassword(String paymentPassword) {
+		this.paymentPassword = paymentPassword;
 	}
 
 	public String getDescription() {

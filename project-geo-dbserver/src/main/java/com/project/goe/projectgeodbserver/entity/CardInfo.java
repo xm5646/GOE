@@ -1,5 +1,7 @@
 package com.project.goe.projectgeodbserver.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,6 +35,17 @@ public class CardInfo {
 	// 电话号码
 	@Column
 	private String phone;
+
+	@Column
+	private Date createTime;
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 
 	public String getPhone() {
 		return phone;
