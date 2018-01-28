@@ -39,7 +39,7 @@ public class CheckUtil {
 	 * @param perMap
 	 * @return
 	 */
-	public static List<Performance> computePer(Long userid, Map<Long, User> userMap, Map<Long, Performance> perMap) {
+	public static List<Performance> computePer(Long userid, Map<Long, User> userMap, Map<Long, Performance> perMap,Map<Long,Boolean>  isHaveTotalEarningMap) {
 		List<Performance> pers = new ArrayList<Performance>();
 		// 添加最下级节点的时候的用户信息
 		User u = userMap.get(userid);
@@ -65,7 +65,8 @@ public class CheckUtil {
 				}
 				// 计算新增
 				// 这里如果累计业绩没有超过4：4 不增加新增业绩
-				if (pm.getDepartAcount() > 4 && pm.getDepartBcount() > 4) {
+				boolean isHaveTotalEarning = isHaveTotalEarningMap.get(pu.getUserId());
+				if (pm.getDepartAcount() > 4 && pm.getDepartBcount() > 4 && !isHaveTotalEarning) {
 					if (userid == pu.getDepartmentA()) {
 						pm.setAddDepartAcount(pm.getAddDepartAcount() + 1);
 					} else if (userid == pu.getDepartmentB()) {
@@ -128,7 +129,7 @@ public class CheckUtil {
 					Earning em = earnMap.get(key);
 					if (em!=null) {
 						//ishava 已经存储，不需要存储
-						if (em.getSurplusNumber()<0) {
+						if (em.getSurplusNumber()<=0) {
 							isincreased = true;
 						}
 					}else {
@@ -224,7 +225,7 @@ public class CheckUtil {
 	 * 计算新增业绩
 	 */
 	private static Earning increasedEarning(Performance per) {
-		if (per != null && per.getDepartAcount() >= 4 && per.getDepartBcount() >= 4) {
+		if (per != null && per.getAddDepartAcount() >= 4 && per.getAddDepartBcount() >= 4) {
 			BusinessEntity busentity = BusinessUtil.getBusinesLevel(per.getAddDepartAcount(), per.getAddDepartBcount(),
 					per.getAddDepartCcount());
 			if (busentity != null) {

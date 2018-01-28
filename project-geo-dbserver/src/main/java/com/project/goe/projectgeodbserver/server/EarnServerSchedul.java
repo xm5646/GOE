@@ -115,7 +115,7 @@ public class EarnServerSchedul {
 			Iterable<Long> mapkey = map.keySet();
 			Map<Long,Boolean> mapnew = new HashMap<Long,Boolean>();
 //			testsave(newuser.getUserId(), map);
-			for (int i = 0; i < 2; i++) {
+			for (int i = 0; i < 1; i++) {
 				for (Long userid : mapkey) {
 					if (!map.get(userid)) {
 						testsave(userid, map,mapnew,count);
@@ -352,14 +352,17 @@ public class EarnServerSchedul {
 		
 		Map<Long,User> userMap = new HashMap<Long,User>();
 		Map<Long,Performance> perMap = new HashMap<Long,Performance>();
+		Map<Long,Boolean> isHaveTotalEarningMap = new HashMap<Long,Boolean>();
 		for (User user : userlist) {
 			userMap.put(user.getUserId(), user);
+			//取得可发放的累计收益
+			isHaveTotalEarningMap.put(user.getUserId(), earningService.isHaveTotalEarning(user.getUserId()));
 		}
 		for (Performance per : pers) {
 			perMap.put(per.getUserId(), per);
 		}
 		//获得需要更新的业绩表数据
-		List<Performance> perlist = CheckUtil.computePer(userid, userMap, perMap);
+		List<Performance> perlist = CheckUtil.computePer(userid, userMap, perMap,isHaveTotalEarningMap);
 		//在checkUtil中已经做了为空判断，这里不需要做
 		for (Performance performance : perlist) {
 			//更新收益表数据

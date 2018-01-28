@@ -18,7 +18,7 @@ public class ProjectGeoDbserverApplicationTests {
 
 	@Test
 	public void contextLoads() {
-		int count = earningRepository.getEarningExist(127, 0, TouchType.ACCUMULATION);
+		int count = earningRepository.getEarningExist(1, 0, TouchType.ACCUMULATION);
 		System.out.println(count);
 	}
 
