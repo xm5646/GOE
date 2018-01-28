@@ -9,8 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.project.goe.projectgeodbserver.statusType.DrawStatus;
-
 /*
  * 提现记录实体类
  */
@@ -48,6 +46,18 @@ public class DrawCashRecord {
 	// 公司打款时间
 	@Column
 	private Date payTime;
+	
+	//电话号码
+	@Column
+	private String phone;
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
 
 	public Date getPayTime() {
 		return payTime;
@@ -112,12 +122,4 @@ public class DrawCashRecord {
 	public void setDrawCommitTime(Date drawCommitTime) {
 		this.drawCommitTime = drawCommitTime;
 	}
-
-	@Override
-	public String toString() {
-		return "DrawCashRecord [drawId=" + drawId + ", userId=" + userId + ", cardNumber=" + cardNumber
-				+ ", drawnumber=" + drawnumber + ", finalNumber=" + finalNumber + ", drawStatus=" + drawStatus
-				+ ", drawCommitTime=" + drawCommitTime + "]";
-	}
-
 }

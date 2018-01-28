@@ -17,16 +17,18 @@ public class UserUtil {
 		userVO.setAccount(user.getAccount());
 		userVO.setActivateTime(DateFormatUtil.DateObjectToString(user.getActivateTime()));
 		
-		if(DateFormatUtil.compareDateObject(user.getAssessDate(),user.getCreateTime()) == 0) {
-			userVO.setAssessDate("未达到考核级别");
-		}else {
-			userVO.setAssessDate(DateFormatUtil.DateObjectToString(user.getAssessDate()));
-		}
+//		if(DateFormatUtil.compareDateObject(user.getAssessDate(),user.getCreateTime()) == 0) {
+//			userVO.setAssessDate("未达到考核级别");
+//		}else {
+//			userVO.setAssessDate(DateFormatUtil.DateObjectToString(user.getAssessDate()));
+//		}
 		
 		if(user.isAssessStatus()) {
 			userVO.setAssessStatus("已通过考核");
+			userVO.setAssessDate(DateFormatUtil.DateObjectToString(user.getAssessDate()));
 		}else {
 			userVO.setAssessStatus("未通过考核");
+			userVO.setAssessDate("未达到考核级别");
 		}
 
 		userVO.setBonusCoin(user.getBonusCoin());
@@ -45,7 +47,8 @@ public class UserUtil {
 			userVO.setUserStatus("未激活");
 		
 		userVO.setUserPhone(user.getUserPhone());
-		userVO.setUserLevel(user.getUserLevel());
+		String  userLevelCH = BusinessUtil.getBusinessEntity(user.getUserLevel()).getUserLevel_CH();
+		userVO.setUserLevel(userLevelCH);
 		userVO.setNickName(user.getNickName());
 		userVO.setUserPhone(user.getUserPhone());
 		userVO.setIdentityNo(user.getIdentityNo());
@@ -82,7 +85,7 @@ public class UserUtil {
 		String name = "zs"+createDate.getTime();
 		u.setNickName(name);
 		u.setAccount(name);
-		u.setPassword(MD5Util.encrypeByMd5("1"));
+		u.setPassword(MD5Util.encrypeByMd5("123456"));
 		u.setCreateTime(createDate);
 		u.setUserLevel(UserLevel.CONSUMER);
 		u.setUserType(UserType.COMMON);

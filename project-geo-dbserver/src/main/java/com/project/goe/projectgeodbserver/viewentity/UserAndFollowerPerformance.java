@@ -2,6 +2,7 @@ package com.project.goe.projectgeodbserver.viewentity;
 
 public class UserAndFollowerPerformance {
 	private String account;
+	private String userLevel;
 	private long performanceA;
 	private long performanceB;
 	private long performanceC;
@@ -11,6 +12,14 @@ public class UserAndFollowerPerformance {
 	private UserAccumulatePerformence departUserC;
 
 	public UserAndFollowerPerformance() {
+	}
+
+	public String getUserLevel() {
+		return userLevel;
+	}
+
+	public void setUserLevel(String userLevel) {
+		this.userLevel = userLevel;
 	}
 
 	public String getAccount() {

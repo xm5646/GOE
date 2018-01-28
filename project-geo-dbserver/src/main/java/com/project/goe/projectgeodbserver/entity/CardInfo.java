@@ -13,22 +13,34 @@ public class CardInfo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long cardInfoId;
-	
-	//用户id
+
+	// 用户id
 	@Column(nullable = false)
 	private long userId;
-	
-	//用户银行卡号
+
+	// 用户银行卡号
 	@Column
 	private String cardNumber;
-	
-	//银行卡户主名
+
+	// 银行卡户主名
 	@Column
 	private String cardOwnerName;
-	
-	//银行卡所属银行
+
+	// 银行卡所属银行
 	@Column
 	private String bankName;
+
+	// 电话号码
+	@Column
+	private String phone;
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
 
 	public long getCardInfoId() {
 		return cardInfoId;
@@ -69,4 +81,4 @@ public class CardInfo {
 	public void setBankName(String bankName) {
 		this.bankName = bankName;
 	}
-}	
+}

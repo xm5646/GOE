@@ -11,4 +11,5 @@ import com.project.goe.projectgeodbserver.entity.CardInfo;
 public interface CardInfoRepository extends JpaRepository<CardInfo, Long> {
 	public CardInfo findByCardInfoId(long cardInfoId);
 	public List<CardInfo> findByUserId(long userId);
+	public CardInfo findByCardNumber(String cardNumber);
 }

@@ -31,8 +31,8 @@ public class TestUser {
 			this.userService.deleteAllUser();
 			// 新增admin用户
 			User user = new User();
-			user.setAccount("admin");
-			user.setPassword(MD5Util.encrypeByMd5("admin"));
+			user.setAccount("admin001");
+			user.setPassword(MD5Util.encrypeByMd5("admin001"));
 			user.setActivateTime(null);
 			Date cTime = new Date();
 			user.setAssessDate(cTime);
@@ -50,7 +50,7 @@ public class TestUser {
 			//新增公司管理员账户
 			User u = new User();
 			u.setAccount("管理员");
-			u.setPassword(MD5Util.encrypeByMd5("admin"));
+			u.setPassword(MD5Util.encrypeByMd5("admin001"));
 			u.setCreateTime(cTime);
 			u.setUserType(UserType.COMPANY);
 			

@@ -105,7 +105,7 @@ public class EarnServerSchedul {
 		}else {
 			User newuser = UserUtil.getTestUser();
 			newuser.setAccount("admin");
-			newuser.setPassword(MD5Util.encrypeByMd5("admin"));
+			newuser.setPassword(MD5Util.encrypeByMd5("123456"));
 			newuser.setWeightCode(1);
 			userService.save(newuser);
 			savePer(newuser.getUserId());

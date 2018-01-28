@@ -14,6 +14,7 @@ import com.project.goe.projectgeodbserver.entity.Performance;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.service.PerformanceService;
 import com.project.goe.projectgeodbserver.service.UserService;
+import com.project.goe.projectgeodbserver.util.BusinessUtil;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
 import com.project.goe.projectgeodbserver.viewentity.UserAccumulatePerformence;
 import com.project.goe.projectgeodbserver.viewentity.UserAndFollowerPerformance;
@@ -51,6 +52,9 @@ public class PerformanceController {
 	// 根据userId，查询当前用户业绩信息和子节点业绩信息
 	@GetMapping("/findUserAndFollowerPerformance")
 	public RetMsg findUserAndFollowerPerformance(@RequestParam("account") String account) {
+		if(null == account) 
+			throw new RuntimeException("用户名不能为空!");
+		
 		// 查询当前用户
 		User user = this.userService.findByAccount(account);
 		if (null == user)
@@ -72,6 +76,8 @@ public class PerformanceController {
 
 			UserAndFollowerPerformance userAndFollowerPerformance = new UserAndFollowerPerformance();
 			userAndFollowerPerformance.setAccount(user.getAccount());
+			String  userLevelCH = BusinessUtil.getBusinessEntity(user.getUserLevel()).getUserLevel_CH();
+			userAndFollowerPerformance.setUserLevel(userLevelCH);
 			userAndFollowerPerformance.setPerformanceA(u.getPerformanceA());
 			userAndFollowerPerformance.setPerformanceB(u.getPerformanceB());
 			userAndFollowerPerformance.setPerformanceC(u.getPerformanceC());
@@ -87,7 +93,7 @@ public class PerformanceController {
 			retMsg.setSuccess(true);
 			return retMsg;
 		} catch (Exception e) {
-			throw new RuntimeException("用户及用户关联业绩查询失败>>>>>" +e.getMessage());
+			throw new RuntimeException("用户及用户关联业绩查询失败!");
 		}
 	}
 
