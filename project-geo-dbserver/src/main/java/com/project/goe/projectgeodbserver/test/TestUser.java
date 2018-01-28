@@ -49,7 +49,7 @@ public class TestUser {
 			
 			//新增公司管理员账户
 			User u = new User();
-			u.setAccount("管理员");
+			u.setAccount("administrator");
 			u.setPassword(MD5Util.encrypeByMd5("admin001"));
 			u.setCreateTime(cTime);
 			u.setUserType(UserType.COMPANY);
