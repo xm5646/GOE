@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
@@ -44,19 +45,21 @@ public class BonusPayListService {
 		return this.bonusPayListRepository.findAll(pageable);
 	}
 	
-	//多条件分页查询
-	public Page<BonusPayList> findBonusPageByAccout(BonusPayList bonusPayList, Pageable pageable) {
+	//多条件分页查询:按用户名
+	public Page<BonusPayList> findBonusPageByAccount(BonusPayList bonusPayList, Pageable pageable) {
 		Specification<BonusPayList> spec = new Specification<BonusPayList>() {
 
 			@Override
 			public Predicate toPredicate(Root<BonusPayList> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-				// TODO Auto-generated method stub
-				return null;
+				Path<Long> userId = root.get("userId");
+				
+				Predicate p = cb.equal(userId, bonusPayList.getUserId());
+				return p;
 			}
+			
 		};
 		
-		
-		return null;
+		return bonusPayListRepository.findAll(spec, pageable);
 	}
 	
 	//删除所有数据

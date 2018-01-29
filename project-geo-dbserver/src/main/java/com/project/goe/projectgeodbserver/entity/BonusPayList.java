@@ -44,6 +44,17 @@ public class BonusPayList {
 	// 产品积分
 	@Column
 	private double productCoinNumber;
+	
+	@Column
+	private Date createTime;
+	
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 
 	public long getBonusPayId() {
 		return bonusPayId;
@@ -100,13 +111,5 @@ public class BonusPayList {
 	public void setProductCoinNumber(double totalMoney) {
 		this.productCoinNumber = totalMoney;
 	}
-
-	@Override
-	public String toString() {
-		return "BonusPayList [bonusPayId=" + bonusPayId + ", userId=" + userId + ", payTime=" + payTime
-				+ ", totalMoney=" + totalMoney + ", bonusNumber=" + bonusNumber + ", manageCost=" + manageCost
-				+ ", productCoinNumber=" + productCoinNumber + "]";
-	}
-
 	
 }
