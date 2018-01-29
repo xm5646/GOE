@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,32 +37,32 @@ import com.project.goe.projectgeodbserver.util.ValidateErrorUtil;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
 import com.project.goe.projectgeodbserver.viewentity.UserReConsumeRequest;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/reconsumeRecord")
 public class ReconsumeRecordController {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private ReconsumeRecordService reconsumeRecordService;
-	
+
 	@Autowired
 	private ConsumeRecordService consumeRecordService;
 
 	@Autowired
 	private BonusPayPercentage bonusPayPercentage;
-	
+
 	@Autowired
 	private OrderInfoService orderInfoService;
-	
+
 	@Autowired
 	private ExpressAddressService expressAddressService;
-	
 
 	@PostMapping("/purchaseReconsume")
 	@Transactional
-	public RetMsg purchaseReconsume(@Validated UserReConsumeRequest userReConsumeRequest,BindingResult bindingResult) {
+	public RetMsg purchaseReconsume(@Validated UserReConsumeRequest userReConsumeRequest, BindingResult bindingResult) {
 		// 如果数据校验有误，则直接返回校验错误信息
 		RetMsg retMsg = ValidateErrorUtil.getInstance().errorList(bindingResult);
 		if (null != retMsg)
@@ -84,10 +85,17 @@ public class ReconsumeRecordController {
 		if (DateFormatUtil.compareDateObject(user.getCreateTime(), user.getAssessDate()) == 0)
 			throw new RuntimeException("用户没有达到考核级别！");
 
+		if (user.isAssessStatus()) {
+			Date nowDate = new Date();
+			Date assDate = user.getAssessDate();
+			if (!DateFormatUtil.DateObjectToString(nowDate).equals(DateFormatUtil.DateObjectToString(assDate))) {
+				throw new RuntimeException("用户未达到考核日期！");
+			}
+		}
 		// 验证用户的考核状态
 		// 用户通过考核状态:用户考核状态为通过状态，则不需要重销
-		if (user.isAssessStatus())
-			throw new RuntimeException("用户通过考核，不需要重销！");
+		// if (user.isAssessStatus())
+		// throw new RuntimeException("用户通过考核，不需要重销！");
 
 		// 验证支付密码是否正确
 		if (!(MD5Util.encrypeByMd5(paymentPassword)).equals(user.getPaymentPassword())) {
@@ -124,27 +132,27 @@ public class ReconsumeRecordController {
 		consumeRecord.setConsumeStatus(false);
 		consumeRecord.setDescription(ConsumeType.COIN_TRANSFER_RECONSUME);
 		this.consumeRecordService.addOneConsumeRecord(consumeRecord);
-		
+
 		// 生成用户订单列表
 		OrderInfo orderInfo = new OrderInfo();
 		orderInfo.setCreateTime(new Date());
 		orderInfo.setDelivery(false);
 		orderInfo.setDescription(ConsumeType.COIN_TRANSFER_RECONSUME);
 		orderInfo.setExpressNo(null);
-		
-		//如果expressId没有数据，则使用用户的默认收货地址
-		if(expressId <0 ) {
+
+		// 如果expressId没有数据，则使用用户的默认收货地址
+		if (expressId < 0) {
 			List<ExpressAddress> expressAddresses = this.expressAddressService.findByUserId(user.getUserId());
-			for(ExpressAddress expressAddress : expressAddresses) {
-				if(expressAddress.isDefaultAddress()) {
+			for (ExpressAddress expressAddress : expressAddresses) {
+				if (expressAddress.isDefaultAddress()) {
 					orderInfo.setExpressId(expressAddress.getExpressId());
 					break;
 				}
 			}
-		}else {
-			//验证expressId是否存在
+		} else {
+			// 验证expressId是否存在
 			ExpressAddress expressAddress = this.expressAddressService.findByExpressId(expressId);
-			if(null == expressAddress) {
+			if (null == expressAddress) {
 				throw new RuntimeException("未找到快递地址!");
 			}
 			orderInfo.setExpressId(expressId);
@@ -152,19 +160,19 @@ public class ReconsumeRecordController {
 		orderInfo.setOrderType(ConsumeType.COIN_TRANSFER_RECONSUME);
 		orderInfo.setUserId(user.getUserId());
 		orderInfo.setProductCount(1);
-		
-		//新增订单
+
+		// 新增订单
 		this.orderInfoService.save(orderInfo);
-		
-		retMsg =  new RetMsg();
+
+		retMsg = new RetMsg();
 		retMsg.setCode(200);
 		retMsg.setMessage("用户重销成功!");
 		retMsg.setSuccess(true);
 		retMsg.setData(reconsumeRecord);
 		return retMsg;
 	}
-	
-	//分页查询指定用户所有的重销记录
+
+	// 分页查询指定用户所有的重销记录
 	public Page<ReconsumeRecord> findAllCardInfoByAccoun(@RequestParam("account") String account,
 			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
 			@RequestParam(value = "size", defaultValue = "5", required = false) int size,

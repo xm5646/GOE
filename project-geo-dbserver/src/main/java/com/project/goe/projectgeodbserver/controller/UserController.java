@@ -378,6 +378,7 @@ public class UserController {
 			consumeRecord.setSendUserId(recommendUser.getUserId());
 			consumeRecord.setConsumeType(ConsumeType.COIN_TRANSFER_ADDCONSUMER);
 			consumeRecord.setConsumeTime(new Date());
+			consumeRecord.setDescription("推荐新用户:" + user.getAccount());
 
 			// 查询公司id
 			User company = this.userService.findByAccount("管理员");

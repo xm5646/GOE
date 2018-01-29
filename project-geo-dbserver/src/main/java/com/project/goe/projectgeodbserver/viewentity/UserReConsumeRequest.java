@@ -10,13 +10,13 @@ public class UserReConsumeRequest {
 	@NotBlank(message = "用户名不能为空")
 	private String account;
 
+//	@Pattern(regexp = "[0-9]{6}", message = "支付密码只能是6位数字")
 	@NotBlank(message = "用户支付密码不能为空")
-	@Pattern(regexp = "[0-9]{6}", message = "支付密码只能是6位数字")
 	private String paymentPassword;
 
-	@Min(0)
-	@Max(Long.MAX_VALUE)
-	private long expressId = -1;
+//	@Min(0)
+//	@Max(Long.MAX_VALUE)
+	private long expressId;
 
 	public long getExpressId() {
 		return expressId;
