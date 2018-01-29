@@ -111,19 +111,26 @@
           {
             _timeout: 3000,
             onTimeout: (request) => {
-              alert('请求超时')
             }
           })
           .then(response => {
             if (response.body.success) {
               this.convertNumber = ''
               this.updateUser()
-              alert('转换成功')
+              this.$vux.toast.show({
+                text: '转换成功'
+              })
             } else {
-              alert(response.body.message || '未知错误')
+              this.$vux.toast.show({
+                type: 'cancel',
+                text: (response.body.message || '系统异常')
+              })
             }
           }, responseErr => {
-            alert('未知错误')
+            this.$vux.toast.show({
+              type: 'cancel',
+              text: '系统异常'
+            })
           })
       },
       updateUser () {
@@ -132,7 +139,6 @@
           {
             _timeout: 3000,
             onTimeout: (request) => {
-              alert('请求超时')
             }
           })
           .then(response => {
@@ -142,10 +148,16 @@
               this.consumeCoin = this.user.consumeCoin
               window.localStorage.setItem('User', JSON.stringify(response.body.data))
             } else {
-              this.errMsg = response.body.message
+              this.$vux.toast.show({
+                type: 'cancel',
+                text: (response.body.message || '系统异常')
+              })
             }
           }, responseErr => {
-            alert('未知错误')
+            this.$vux.toast.show({
+              type: 'cancel',
+              text: '系统异常'
+            })
           })
       }
     },

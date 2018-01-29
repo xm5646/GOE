@@ -61,6 +61,7 @@
         consumeCoin: 2000,
         isFinded: false,
         isNotFinded: false,
+        isInput: false,
         receiveAccount: '',
         transferNumber: '',
         payPassword: '',
@@ -104,7 +105,6 @@
         this.$http.get(url, {
           _timeout: 3000,
           onTimeout: (request) => {
-            alert('请求超时')
           }
         })
           .then(response => {
@@ -121,11 +121,17 @@
                 this.isFinded = false
                 this.isNotFinded = true
               } else {
-                alert(response.body.message)
+                this.$vux.toast.show({
+                  type: 'cancel',
+                  text: (response.body.message || '系统异常')
+                })
               }
             }
           }, responseErr => {
-            alert('未知错误')
+            this.$vux.toast.show({
+              type: 'cancel',
+              text: '系统异常'
+            })
           })
       },
       doTransfer () {
@@ -142,19 +148,28 @@
           {
             _timeout: 3000,
             onTimeout: (request) => {
-              alert('请求超时')
             }
           })
           .then(response => {
             if (response.body.success) {
               this.updateUser()
               this.showPayPasswordStatus = false
-              alert('转换成功')
+              this.isInput = false
+              this.receiveAccount = ''
+              this.$vux.toast.show({
+                text: '转账成功'
+              })
             } else {
-              alert(response.body.message || '未知错误')
+              this.$vux.toast.show({
+                type: 'cancel',
+                text: (response.body.message || '系统异常')
+              })
             }
           }, responseErr => {
-            alert('未知错误')
+            this.$vux.toast.show({
+              type: 'cancel',
+              text: '系统异常'
+            })
           })
       },
       updateUser () {
@@ -163,7 +178,6 @@
           {
             _timeout: 3000,
             onTimeout: (request) => {
-              alert('请求超时')
             }
           })
           .then(response => {
@@ -173,11 +187,16 @@
               this.isNotFinded = false
               window.localStorage.setItem('User', JSON.stringify(response.body.data))
             } else {
-              this.errMsg = response.body.message
+              this.$vux.toast.show({
+                type: 'cancel',
+                text: (response.body.message || '系统异常')
+              })
             }
           }, responseErr => {
-            console.log(responseErr)
-            this.errMsg = '未知错误'
+            this.$vux.toast.show({
+              type: 'cancel',
+              text: '系统异常'
+            })
           })
       }
     },
@@ -188,6 +207,7 @@
     },
     watch: {
       transferNumber (newValue, oldValue) {
+        this.isInput = true
         this.showConvertNumber = '￥' + newValue
       }
     }

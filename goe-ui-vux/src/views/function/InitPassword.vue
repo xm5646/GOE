@@ -67,13 +67,29 @@
         console.log('secondPayPassword' + this.secondPayPassword.length)
         console.log('phoneNumber' + this.phoneNumber.length)
         if (this.firstPassword === '' || this.secondPassword === '' || this.chinaName === '' || this.firstPayPassword === '' || this.secondPayPassword === '' || this.phoneNumber === '') {
-          alert('输入信息不完整')
+          this.$vux.toast.show({
+            type: 'text',
+            width: '10em',
+            text: '输入信息不完整'
+          })
         } else if (this.firstPassword.length < 6 || this.secondPassword.length < 6 || this.firstPayPassword.length !== 6 || this.secondPayPassword.length !== 6 || this.phoneNumber.length !== 11) {
-          alert('输入长度不匹配')
+          this.$vux.toast.show({
+            type: 'text',
+            width: '10em',
+            text: '输入长度不匹配'
+          })
         } else if (this.firstPassword !== this.secondPassword) {
-          alert('两次输入的登陆密码不一致')
+          this.$vux.toast.show({
+            type: 'text',
+            width: '10em',
+            text: '两次输入的登陆密码不一致'
+          })
         } else if (this.firstPayPassword !== this.secondPayPassword) {
-          alert('两次输入的交易密码不一致')
+          this.$vux.toast.show({
+            type: 'text',
+            width: '10em',
+            text: '两次输入的交易密码不一致'
+          })
         } else {
           const url = GoeConfig.apiServer + '/user/initUserInfo'
           const currentAccount = JSON.parse(window.localStorage.getItem('User')).account
@@ -88,23 +104,27 @@
             {
               _timeout: 3000,
               onTimeout: (request) => {
-                alert('登陆超时')
               }
             })
             .then(response => {
               if (response.body.success) {
                 const userObj = response.body.data
+                this.$vux.toast.show({
+                  text: '设置成功'
+                })
                 window.localStorage.setItem('User', JSON.stringify(userObj))
-                if (userObj.passwordReset) {
-                  this.$router.push({name: 'index', params: {LoginUser: response.body.data}})
-                } else {
-                  this.$router.push({name: 'initPassword'})
-                }
+                this.$router.push({name: 'index', params: {LoginUser: response.body.data}})
               } else {
-                alert(response.body.message)
+                this.$vux.toast.show({
+                  type: 'text',
+                  text: response.body.message
+                })
               }
             }, responseErr => {
-              alert('未知错误')
+              this.$vux.toast.show({
+                type: 'cancel',
+                text: '系统异常'
+              })
             })
         }
       }

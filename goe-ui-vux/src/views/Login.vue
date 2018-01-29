@@ -18,12 +18,11 @@
       <x-button type="primary" action-type="submit" @click.native="login">登陆</x-button>
 
     </div>
-    <loading></loading>
   </div>
 
 </template>
 <script>
-  import { XHeader, XInput, Group, XButton, Loading } from 'vux'
+  import { XHeader, XInput, Group, XButton } from 'vux'
   import GoeConfig from '../../config/goe'
 
   export default {
@@ -33,8 +32,7 @@
       XHeader,
       XInput,
       Group,
-      XButton,
-      Loading
+      XButton
     },
     data () {
       return {
@@ -57,7 +55,6 @@
             {
               _timeout: 3000,
               onTimeout: (request) => {
-                alert('登陆超时')
                 this.password = ''
               }
             })
@@ -66,30 +63,34 @@
                 const userObj = response.body.data
                 window.localStorage.setItem('User', JSON.stringify(userObj))
                 if (userObj.passwordReset) {
+                  this.$vux.toast.show({
+                    text: '登陆成功'
+                  })
                   this.$router.push({name: 'index'})
                 } else {
                   this.$router.push({name: 'initPassword'})
                 }
               } else {
-                alert(response.body.message)
+                this.$vux.toast.show({
+                  type: 'cancel',
+                  text: response.body.message
+                })
                 this.password = ''
               }
             }, responseErr => {
-              alert('未知错误')
+              this.$vux.toast.show({
+                type: 'cancel',
+                text: '系统异常'
+              })
               this.password = ''
             })
         } else {
-          alert('信息不完整')
+          this.$vux.toast.show({
+            type: 'text',
+            width: '10em',
+            text: '请完整输入登陆信息'
+          })
         }
-      }
-    },
-    onCancel () {
-      console.log('on cancel')
-    },
-    onConfirm (msg) {
-      console.log('on confirm')
-      if (msg) {
-        alert(msg)
       }
     }
   }

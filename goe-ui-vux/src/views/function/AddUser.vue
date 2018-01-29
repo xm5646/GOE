@@ -81,9 +81,17 @@
     methods: {
       addUser () {
         if (this.newAccount === '' || this.tempPassword === '') {
-          alert('输入信息不完整')
+          this.$vux.toast.show({
+            type: 'text',
+            width: '10em',
+            text: '输入信息不完整'
+          })
         } else if (this.newAccount.length < 5 || this.tempPassword.length < 6) {
-          alert('用户编号最少5位字符,临时密码最低6位字符')
+          this.$vux.toast.show({
+            type: 'text',
+            width: '20em',
+            text: '用户编号最少5位字符,临时密码最低6位字符'
+          })
         } else {
           this.postAddUser()
         }
@@ -102,19 +110,28 @@
           {
             _timeout: 3000,
             onTimeout: (request) => {
-              alert('请求超时')
             }
           })
           .then(response => {
             console.log(response.body)
             if (response.body.success) {
-              alert('新增用户成功')
-//              this.$router.push({name: 'index', params: {view: 'performance', parentAccount: this.parentAccount}})
+              this.$vux.toast.show({
+                text: '创建成功'
+              })
+              this.$router.push({name: 'index', params: {view: 'performance', parentAccount: this.parentAccount}})
             } else {
-              alert(response.body.message || '未知错误')
+              console.log(response.body.message)
+              this.$vux.toast.show({
+                type: 'cancel',
+                text: (response.body.message || '系统异常')
+              })
             }
           }, responseErr => {
-            alert('未知错误')
+            console.log(responseErr)
+            this.$vux.toast.show({
+              type: 'cancel',
+              text: '系统异常'
+            })
           })
       }
     },

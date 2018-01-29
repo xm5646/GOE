@@ -39,6 +39,10 @@
 
   export default {
     mounted: function () {
+      // 判断是否是从 创建用户页面创建成功之后传过来的
+      if (this.$route.params.view === 'performance') {
+        this.currentView = 'performance'
+      }
     },
     components: {
       XHeader,
@@ -66,7 +70,6 @@
             {
               _timeout: 3000,
               onTimeout: (request) => {
-                alert('请求超时')
               }
             })
             .then(response => {
@@ -74,11 +77,15 @@
                 window.localStorage.setItem('User', JSON.stringify(response.body.data))
                 this.$refs.nowView.update()
               } else {
-                this.errMsg = response.body.message
+                this.$vux.toast.show({
+                  text: response.body.message
+                })
               }
             }, responseErr => {
-              console.log(responseErr)
-              this.errMsg = '未知错误'
+              this.$vux.toast.show({
+                type: 'cancel',
+                text: '系统异常'
+              })
             })
         }
         // 切换视图

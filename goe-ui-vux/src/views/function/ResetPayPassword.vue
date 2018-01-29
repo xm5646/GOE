@@ -24,6 +24,7 @@
 
 <script>
   import {XHeader, XInput, Group, XButton} from 'vux'
+  import GoeConfig from '../../../config/goe'
   export default {
     mounted: function () {
     },
@@ -44,7 +45,68 @@
     },
     methods: {
       submit () {
-        console.log('submit')
+        if (this.oldPassword === '' || this.phoneNumber === '' || this.oldPayPassword === '' || this.newPayPassword === '' || this.confirmPayPassword === '') {
+          this.$vux.toast.show({
+            type: 'text',
+            width: '15em',
+            text: '请完整输入相关信息'
+          })
+        } else if (this.phoneNumber.length !== 11) {
+          this.$vux.toast.show({
+            type: 'text',
+            width: '15em',
+            text: '手机号码格式不正确'
+          })
+        } else if (this.newPayPassword !== this.confirmPayPassword) {
+          this.$vux.toast.show({
+            type: 'text',
+            width: '15em',
+            text: '两次输入的新交易密码不一致'
+          })
+        } else if (this.oldPassword.length !== 6 || this.newPayPassword.length !== 6 || this.confirmPayPassword.length !== 6) {
+          this.$vux.toast.show({
+            type: 'text',
+            width: '15em',
+            text: '交易密码为6位数字'
+          })
+        } else {
+          this.doReset()
+        }
+      },
+      doReset () {
+        const url = GoeConfig.apiServer + '/user/updatePaymentPassword'
+        this.$http.post(url,
+          {
+            account: JSON.parse(window.localStorage.getItem('User')).account,
+            oldPaymentpassword: this.oldPayPassword,
+            newPaymentPassword: this.newPayPassword,
+            newPaymentPassword2: this.newPayPassword
+          },
+          {
+            _timeout: 3000,
+            onTimeout: (request) => {
+            }
+          })
+          .then(response => {
+            if (response.body.success) {
+              this.oldPassword = ''
+              this.newPassword = ''
+              this.confirmPassword = ''
+              this.$vux.toast.show({
+                text: '修改成功'
+              })
+            } else {
+              this.$vux.toast.show({
+                type: 'cancel',
+                text: (response.body.message || '系统异常')
+              })
+            }
+          }, responseErr => {
+            this.$vux.toast.show({
+              type: 'cancel',
+              text: '系统异常'
+            })
+          })
       }
     },
     computed: {

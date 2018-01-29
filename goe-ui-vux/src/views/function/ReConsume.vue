@@ -16,26 +16,51 @@
       </div>
     </card>
     <div v-if="!isEnableAccess">
-      <message title="未达到考核日期" description="请在考核日当天进行重销" :buttons="buttons"></message>
+      <message title="未达到重销条件" description="请确认是否到达考核级别,或是否达到考核日期"></message>
     </div>
     <div v-else-if="isEnableBuy">
-      <message title="报单币余额不足" description="请使用奖金转换报单币,或进行报单币充值" :buttons="buttons"></message>
+      <message title="报单币余额不足" description="请使用奖金转换报单币,或进行报单币充值"></message>
     </div>
-    <div v-else="">
-      <group>
-        <form-preview :body-items="list2" :footer-buttons="buttons2"
+    <div v-else>
+        <form-preview  :body-items="list2" :footer-buttons="buttons2"
                       name="demo"></form-preview>
-      </group>
     </div>
+
+    <pay-password :showPayPasswordInput="showPayPasswordStatus" @paySubmitEvent="submitPay" @cancelPayEvent="cancelPay"></pay-password>
   </div>
 </template>
 
 <script>
   import { XHeader, XInput, Group, XButton, Card, FormPreview } from 'vux'
   import Message from '../../components/msg'
+  import PayPassword from '../../components/PayPassword'
   import GoeConfig from '../../../config/goe'
 
   export default {
+    mounted: function () {
+      const userObj = JSON.parse(window.localStorage.getItem('User'))
+      this.bonusCoin = userObj.bonusCoin
+      this.consumeCoin = userObj.consumeCoin
+      const date = new Date()
+      var seperator1 = '-'
+      var year = date.getFullYear()
+      var month = date.getMonth() + 1
+      var strDate = date.getDate()
+      if (month >= 1 && month <= 9) {
+        month = '0' + month
+      }
+      if (strDate >= 0 && strDate <= 9) {
+        strDate = '0' + strDate
+      }
+      const currentdate = year + seperator1 + month + seperator1 + strDate
+      if (userObj.assessStatus === '已通过考核') {
+        if (currentdate === userObj.assessDate) {
+          this.isEnableAccess = true
+        } else {
+          this.isEnableAccess = false
+        }
+      }
+    },
     components: {
       XHeader,
       XInput,
@@ -43,25 +68,68 @@
       XButton,
       Card,
       FormPreview,
-      Message
+      Message,
+      PayPassword
     },
     data () {
       return {
-        bonusCoin: 2000,
-        consumeCoin: 2000,
+        bonusCoin: 0,
+        consumeCoin: 0,
+        showPayPasswordStatus: false,
         isEnableAccess: true,
         price: GoeConfig.goe.price,
         reConsumePrice: GoeConfig.goe.reConsumePrice,
         buttons2: [{
           style: 'primary',
-          text: '购买',
+          text: '重复消费',
           onButtonClick: (name) => {
-            alert(`clicking ${name}`)
+            this.showPayPasswordStatus = true
           }
         }]
       }
     },
-    methods: {},
+    methods: {
+      submitPay (payPassword) {
+        this.showPayPasswordStatus = false
+        console.log('收到了支付请求,交易密码:' + payPassword)
+        this.doReConsume(payPassword)
+      },
+      cancelPay () {
+        console.log('close')
+        this.showPayPasswordStatus = false
+      },
+      doReConsume (payPassword) {
+        const url = GoeConfig.apiServer + '/reconsumeRecord/purchaseReconsume'
+        this.$http.post(url,
+          {
+            account: JSON.parse(window.localStorage.getItem('User')).account,
+            paymentPassword: payPassword,
+            expressId: 2
+          },
+          {
+            _timeout: 3000,
+            onTimeout: (request) => {
+            }
+          })
+          .then(response => {
+            if (response.body.success) {
+              this.$vux.toast.show({
+                text: '重销成功'
+              })
+            } else {
+              this.$vux.toast.show({
+                type: 'cancel',
+                text: (response.body.message || '系统异常')
+              })
+            }
+          }, responseErr => {
+            this.$vux.toast.show({
+              type: 'cancel',
+              text: '系统异常'
+            })
+          })
+      }
+    },
     computed: {
       list2: function () {
         const list = [{

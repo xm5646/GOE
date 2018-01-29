@@ -11,59 +11,55 @@
       @on-cancel="onCancel"
       @on-submit="onSubmit"
       ref="search"></search>
-    <performance-view :header="currentView"
-                      :list="list"
-                      :type="type"
-                      @createUserEvent="createUser"
-                      @on-click-item="viewUser">
+    <div v-if="!isSearching">
+      <div v-if="inSearchStatus">
+        <br>
+      </div>
+      <performance-view :header="currentView"
+                        :list="list"
+                        :type="type"
+                        @createUserEvent="createUser"
+                        @on-click-item="viewUser">
 
-    </performance-view>
-    <br>
-    <x-button @click.native="viewMyPerformance">返回我的业绩</x-button>
+      </performance-view>
+      <br>
+      <x-button @click.native="viewMyPerformance">返回我的业绩</x-button>
+    </div>
+    <div v-if="isSearching">
+      <br>
+      <br>
+      <message title="" description="正在查找指定用户"></message>
+    </div>
   </div>
 </template>
 <script>
   import { XHeader, Group, Divider, Card, Cell, Search, XButton } from 'vux'
   import PerformanceView from '../../components/ViewPerformance'
   import GoeConfig from '../../../config/goe'
+  import Message from '../../components/msg'
 
   export default {
     mounted: function () {
-      const userObj = JSON.parse(window.localStorage.getItem('User'))
-      this.user = userObj
-      this.currentUser = userObj.account
-      this.getPerformance(userObj.account)
+      if (this.$route.params.parentAccount == null) {
+        const userObj = JSON.parse(window.localStorage.getItem('User'))
+        this.user = userObj
+        this.currentUser = userObj.account
+        this.getPerformance(userObj.account)
+      } else {
+        this.$vux.loading.hide()
+        console.log('改变当前业绩显示用户为:' + this.$route.params.parentAccount)
+        this.changeUser(this.$route.params.parentAccount)
+      }
     },
     data () {
       return {
         user: '',
         findAccount: '',
         currentUser: '',
+        isSearching: false,
+        inSearchStatus: false,
+        isNotFoundUser: false,
         currentView: '当前查看用户:  (A:0 B:0 C:0)',
-        ViewUserModel: {
-          currentViewAccount: '',
-          currentCountA: '',
-          CurrentCountB: '',
-          currentCountC: '',
-          departUserA: {
-            userAAccount: '',
-            userACountA: '',
-            userACountB: '',
-            userACountC: ''
-          },
-          departUserB: {
-            userBAccount: '',
-            userBCountA: '',
-            userBCountB: '',
-            userBCountC: ''
-          },
-          departUserC: {
-            userCAccount: '',
-            userCCountA: '',
-            userCCountB: '',
-            userCCountC: ''
-          }
-        },
         type: '1',
         list: [{
           isHasUser: true,
@@ -97,7 +93,8 @@
       Divider,
       Card,
       Cell,
-      Search
+      Search,
+      Message
     },
     methods: {
       setFocus () {
@@ -111,17 +108,24 @@
         this.results = val ? this.getResult(this.value) : []
       },
       onSubmit () {
-        this.$refs.search.setBlur()
-        this.$vux.toast.show({
-          type: 'text',
-          position: 'top',
-          text: 'on submit'
-        })
+        if (this.findAccount.length > 0) {
+          this.getPerformance(this.findAccount)
+        } else {
+          this.$vux.toast.show({
+            type: 'text',
+            width: '20em',
+            text: '请输入要查找的用户编号'
+          })
+        }
       },
       onFocus () {
+        this.inSearchStatus = true
+        this.isSearching = true
         console.log('on focus')
       },
       onCancel () {
+        this.inSearchStatus = false
+        this.isSearching = false
         console.log('on cancel')
       },
       createUser (item) {
@@ -137,6 +141,9 @@
           }
         })
       },
+      changeUser (account) {
+        this.getPerformance(account)
+      },
       viewUser (item) {
         if (item.isHasUser) {
           console.log('view user event' + item.title)
@@ -147,7 +154,8 @@
         }
       },
       viewMyPerformance () {
-        this.getPerformance(this.user.account)
+        this.findAccount = ''
+        this.getPerformance(JSON.parse(window.localStorage.getItem('User')).account)
       },
       getPerformance (account) {
         const url = GoeConfig.apiServer + '/performance/findUserAndFollowerPerformance?account=' + account
@@ -155,11 +163,11 @@
         this.$http.get(url, {
           _timeout: 3000,
           onTimeout: (request) => {
-            alert('请求超时')
           }
         })
           .then(response => {
             if (response.body.success) {
+              this.isSearching = false
               const flowPerformance = response.body.data
               this.currentView = '当前查看用户: ' + flowPerformance.account + ' (A:' + flowPerformance.performanceA + ' B:' + flowPerformance.performanceB + ' C:' + flowPerformance.performanceC + ')'
               if (flowPerformance.departUserA === null) {
@@ -190,6 +198,10 @@
               }
               console.log(flowPerformance)
             } else {
+              this.$vux.toast.show({
+                type: 'cancel',
+                text: response.body.message
+              })
             }
           }, responseErr => {
             console.log(responseErr.body)

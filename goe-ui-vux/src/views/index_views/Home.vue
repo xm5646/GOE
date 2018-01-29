@@ -40,7 +40,11 @@
     mounted: function () {
       const userOjb = JSON.parse(window.localStorage.getItem('User'))
       this.user = userOjb
-      this.list[0].title = userOjb.nickName + ' [' + userOjb.userLevel + ']'
+      if (userOjb.userStatus === '未激活') {
+        this.list[0].title = userOjb.nickName + ' [' + userOjb.userLevel + '] -未激活'
+      } else {
+        this.list[0].title = userOjb.nickName + ' [' + userOjb.userLevel + ']'
+      }
       if (userOjb.assessStatus === '未通过考核') {
         this.list[0].desc = '<strong>' + userOjb.assessStatus + '</strong><br>' + '下次考核日期:' + userOjb.assessDate
       } else {
@@ -132,7 +136,18 @@
       },
       update () {
         console.log('home update')
-        this.user = JSON.parse(window.localStorage.getItem('User'))
+        const userOjb = JSON.parse(window.localStorage.getItem('User'))
+        this.user = userOjb
+        if (userOjb.userStatus === '未激活') {
+          this.list[0].title = userOjb.nickName + ' [' + userOjb.userLevel + '] -未激活'
+        } else {
+          this.list[0].title = userOjb.nickName + ' [' + userOjb.userLevel + ']'
+        }
+        if (userOjb.assessStatus === '未通过考核') {
+          this.list[0].desc = '<strong>' + userOjb.assessStatus + '</strong><br>' + '下次考核日期:' + userOjb.assessDate
+        } else {
+          this.list[0].desc = '<strong>' + userOjb.assessStatus + '</strong><br>' + '下次考核日期:' + userOjb.assessDate
+        }
         this.getPerformance()
       }
     }
