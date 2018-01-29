@@ -92,10 +92,6 @@ public class ReconsumeRecordController {
 				throw new RuntimeException("用户未达到考核日期！");
 			}
 		}
-		// 验证用户的考核状态
-		// 用户通过考核状态:用户考核状态为通过状态，则不需要重销
-		// if (user.isAssessStatus())
-		// throw new RuntimeException("用户通过考核，不需要重销！");
 
 		// 验证支付密码是否正确
 		if (!(MD5Util.encrypeByMd5(paymentPassword)).equals(user.getPaymentPassword())) {
