@@ -78,9 +78,10 @@
         this.$http.post(url,
           {
             account: JSON.parse(window.localStorage.getItem('User')).account,
+            loginPassword: this.oldPassword,
             oldPaymentpassword: this.oldPayPassword,
             newPaymentPassword: this.newPayPassword,
-            newPaymentPassword2: this.newPayPassword
+            phone: this.phoneNumber
           },
           {
             _timeout: 3000,
