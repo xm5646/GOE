@@ -113,7 +113,7 @@
                   text: '设置成功'
                 })
                 window.localStorage.setItem('User', JSON.stringify(userObj))
-                this.$router.push({name: 'index', params: {LoginUser: response.body.data}})
+                this.$router.push({name: 'index'})
               } else {
                 this.$vux.toast.show({
                   type: 'text',

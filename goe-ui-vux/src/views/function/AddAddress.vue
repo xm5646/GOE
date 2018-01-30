@@ -20,7 +20,7 @@
       </x-input>
     </group>
     <br>
-    <x-button @click.native="viewMyPerformance">添加</x-button>
+    <x-button @click.native="addAddress">添加</x-button>
   </div>
 </template>
 <script>
@@ -59,6 +59,13 @@
       changeAddress (ids, names) {
         this.addressIds = ids
         this.addressNameArray = names
+      },
+      addAddress () {
+        this.$vux.toast.show({
+          type: 'text',
+          width: '15em',
+          text: '地址管理功能暂时不可用'
+        })
       }
     }
   }

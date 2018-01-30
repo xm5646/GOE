@@ -52,7 +52,7 @@
     data () {
       return {
         page: 1,
-        totalPageNum: 14,
+        totalPageNum: 1,
         rows: []
       }
     },
@@ -66,7 +66,7 @@
       },
       getPage (pageNum) {
         console.log(pageNum)
-        const url = GoeConfig.apiServer + '/bonus/findBonusPageByAccount?account=' + JSON.parse(window.localStorage.getItem('User')).account + '&pageNum=' + pageNum
+        const url = GoeConfig.apiServer + '/bonus/findBonusPageByAccount?account=' + JSON.parse(window.localStorage.getItem('User')).account + '&pageNum=' + (pageNum - 1)
         this.$http.get(url,
           {
             _timeout: 3000,

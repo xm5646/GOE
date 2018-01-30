@@ -2,8 +2,7 @@
   <div>
     <x-header :left-options="{showBack: false}" style="background-color: #303135">会员管理系统</x-header>
     <div id="img-div">
-      <img src="../assets/images/logo1.png" width="100%">
-      <br>
+      <img src="../assets/images/touming.png" width="100%">
       <group title="">
         <x-input title="用户名" name="username" placeholder="请输入用户编号" :min="5" :max="20" v-model="account">
           <img slot="label" style="padding-right:10px;display:block;" src="../assets/images/form/i-form-name.png"

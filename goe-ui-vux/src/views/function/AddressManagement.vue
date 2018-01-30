@@ -64,14 +64,15 @@
       return {
         type: '6',
         isHasAddress: true,
-        Addresses: [{
+        Addresses1: [{
           id: '11',
           receivedName: '李晓明',
           tel: '13520580169',
           addressArray: ['430000', '430400', '430407'],
           addressShowName: '',
           detail: '清河小营东路15号院中国电力科学研究院'
-        }]
+        }],
+        Addresses: []
       }
     },
     methods: {

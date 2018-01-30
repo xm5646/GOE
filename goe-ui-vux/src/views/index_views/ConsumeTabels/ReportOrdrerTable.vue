@@ -3,8 +3,8 @@
     <x-table :cell-bordered="false" :content-bordered="true" style="background-color:#fff;">
       <thead>
       <tr style="background-color: darkgray">
-        <th>保单金额</th>
-        <th>保单日期</th>
+        <th>报单消费金额</th>
+        <th>报单日期</th>
         <th>备注</th>
       </tr>
       </thead>

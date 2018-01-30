@@ -44,11 +44,6 @@
   import { XHeader, Group, Panel, Divider, Card, Cell } from 'vux'
   export default {
     mounted: function () {
-      const userObj = JSON.parse(window.localStorage.getItem('User'))
-      this.user = userObj
-      this.bonusCoin = userObj.bonusCoin
-      this.consumeCoin = userObj.consumeCoin
-      this.productCoin = userObj.productCoin
     },
     components: {
       XHeader,
@@ -73,10 +68,11 @@
       },
       update () {
         console.log('wallet update')
-        const CurrentUser = JSON.parse(window.localStorage.getItem('User'))
-        this.bonusCoin = CurrentUser.bonusCoin
-        this.consumeCoin = CurrentUser.consumeCoin
-        this.productCoin = CurrentUser.productCoin
+        const userObj = JSON.parse(window.localStorage.getItem('User'))
+        this.user = userObj
+        this.bonusCoin = userObj.bonusCoin
+        this.consumeCoin = userObj.consumeCoin
+        this.productCoin = userObj.productCoin
       }
     }
   }

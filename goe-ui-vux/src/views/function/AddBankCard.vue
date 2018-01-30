@@ -13,11 +13,12 @@
       </x-input>
     </group>
     <br>
-    <x-button @click.native="viewMyPerformance">添加</x-button>
+    <x-button @click.native="addCard">添加</x-button>
   </div>
 </template>
 <script>
   import { XHeader, XInput, Group, XButton, Selector } from 'vux'
+  import GoeConfig from '../../../config/goe'
   export default {
     mounted: function () {
     },
@@ -39,12 +40,76 @@
       }
     },
     methods: {
-      login () {
-        console.log(this.password)
-        this.$router.push({name: 'index'})
+      addCard () {
+        if (this.bankName === '' || this.cardNumber === '' || this.ownerName === '' || this.tel === '') {
+          this.$vux.toast.show({
+            type: 'text',
+            width: '15em',
+            text: '请完整输入银行卡相关信息'
+          })
+        } else if (this.cardNumber.length < 16) {
+          this.$vux.toast.show({
+            type: 'text',
+            width: '15em',
+            text: '银行卡号码格式不正确'
+          })
+        } else if (this.tel.length !== 11) {
+          this.$vux.toast.show({
+            type: 'text',
+            width: '15em',
+            text: '手机号码格式不正确'
+          })
+        } else if (this.ownerName.length < 2) {
+          this.$vux.toast.show({
+            type: 'text',
+            width: '15em',
+            text: '持卡人姓名格式不正确'
+          })
+        } else {
+          this.$vux.toast.show({
+            type: 'text',
+            width: '15em',
+            text: '银行卡相关功能暂时不可用'
+          })
+//          this.doAddCard()
+        }
       },
       changeBank (bank) {
         this.bankName = bank
+      },
+      doAddCard () {
+        console.log('add card')
+        const url = GoeConfig.apiServer + '/cardInfo/save'
+        this.$http.post(url,
+          {
+            account: JSON.parse(window.localStorage.getItem('User')).account,
+            cardNo: this.cardNumber,
+            bankName: this.bankName,
+            cardOwnerName: this.ownerName,
+            phone: this.tel
+          },
+          {
+            _timeout: 3000,
+            onTimeout: (request) => {
+            }
+          })
+          .then(response => {
+            if (response.body.success) {
+              this.$vux.toast.show({
+                text: '添加成功'
+              })
+            } else {
+              this.$vux.toast.show({
+                type: 'cancel',
+                text: (response.body.message || '系统异常')
+              })
+            }
+          }, responseErr => {
+            this.$vux.toast.show({
+              type: 'cancel',
+              text: '系统异常'
+            })
+          })
       }
     }
   }
