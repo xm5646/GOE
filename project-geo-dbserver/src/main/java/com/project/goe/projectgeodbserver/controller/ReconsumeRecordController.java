@@ -100,20 +100,28 @@ public class ReconsumeRecordController {
 
 		// 验证用户报单币是否够用
 		double consumeCoin = user.getConsumeCoin();
-		double reConsumeCost = (this.bonusPayPercentage.getConsumeCoinUnitPrice())
-				* (this.bonusPayPercentage.getReconsumeDiscount());
+		double reConsumeCost = this.bonusPayPercentage.getConsumeCoinUnitPrice();
+		
 		if ((consumeCoin - reConsumeCost) < 0)
 			throw new RuntimeException("用户报单币余额不足！");
 
-		// 更新用户表
+		// 更新用户表和公司表
 		user.setConsumeCoin(consumeCoin - reConsumeCost);
 		user.setAssessStatus(true);
+		
+		User company = this.userService.findByAccount("administrator");
+		if(null == company)
+			throw new RuntimeException("公司账户不存在!");
+		
+		company.setConsumeCoin(company.getConsumeCoin() + reConsumeCost);
 		this.userService.save(user);
+		this.userService.save(company);
 
 		// 更新用户重销记录表
 		Date now = new Date();
 		ReconsumeRecord reconsumeRecord = new ReconsumeRecord();
 		reconsumeRecord.setCreateTime(now);
+		reconsumeRecord.setUserId(user.getUserId());
 		reconsumeRecord.setReconsumePayment(reConsumeCost);
 		this.reconsumeRecordService.save(reconsumeRecord);
 
@@ -123,7 +131,7 @@ public class ReconsumeRecordController {
 		consumeRecord.setConsumeTime(now);
 		consumeRecord.setConsumeType(ConsumeType.COIN_TRANSFER_RECONSUME);
 		consumeRecord.setUserId(user.getUserId());
-		consumeRecord.setReceiveUserId(this.userService.findByAccount("管理员").getUserId());
+		consumeRecord.setReceiveUserId(this.userService.findByAccount("administrator").getUserId());
 		consumeRecord.setConsumeNumber(reConsumeCost);
 		consumeRecord.setConsumeStatus(false);
 		consumeRecord.setDescription(ConsumeType.COIN_TRANSFER_RECONSUME);
@@ -137,8 +145,12 @@ public class ReconsumeRecordController {
 		orderInfo.setExpressNo(null);
 
 		// 如果expressId没有数据，则使用用户的默认收货地址
-		if (expressId < 0) {
+		if (0 == expressId) {
 			List<ExpressAddress> expressAddresses = this.expressAddressService.findByUserId(user.getUserId());
+			
+			if(null == expressAddresses || 0 == expressAddresses.size())
+				throw new RuntimeException("用户未设置快递地址!");
+			
 			for (ExpressAddress expressAddress : expressAddresses) {
 				if (expressAddress.isDefaultAddress()) {
 					orderInfo.setExpressId(expressAddress.getExpressId());

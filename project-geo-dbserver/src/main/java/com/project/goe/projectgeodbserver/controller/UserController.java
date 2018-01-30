@@ -381,9 +381,12 @@ public class UserController {
 			consumeRecord.setDescription("推荐新用户:" + user.getAccount());
 
 			// 查询公司id
-			User company = this.userService.findByAccount("管理员");
+			User company = this.userService.findByAccount("administrator");
+			if(null == company)
+				throw new RuntimeException("公司账户不存在!");
+			
 			consumeRecord.setReceiveUserId(company.getUserId());
-			consumeRecord.setConsumeNumber(this.bonusPayPercentage.getConsumeCoinUnitPrice());
+			consumeRecord.setConsumeNumber(company.getConsumeCoin() + this.bonusPayPercentage.getConsumeCoinUnitPrice());
 			consumeRecord.setConsumeStatus(true);
 			consumeRecord.setDescription(ConsumeType.COIN_TRANSFER_ADDCONSUMER);
 

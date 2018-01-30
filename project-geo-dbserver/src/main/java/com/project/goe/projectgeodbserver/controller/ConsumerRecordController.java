@@ -6,6 +6,11 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,8 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.goe.projectgeodbserver.entity.ConsumeRecord;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.service.ConsumeRecordService;
-import com.project.goe.projectgeodbserver.service.ExpressAddressService;
-import com.project.goe.projectgeodbserver.service.OrderInfoService;
 import com.project.goe.projectgeodbserver.service.UserService;
 import com.project.goe.projectgeodbserver.statusType.ConsumeType;
 import com.project.goe.projectgeodbserver.util.BonusPayPercentage;
@@ -163,6 +166,40 @@ public class ConsumerRecordController {
 	@GetMapping("/findByConsumeId")
 	public List<ConsumeRecord> findByConsumeId(@RequestParam("consumeId") long consumeId) {
 		return this.consumeRecordService.findByConsumeId(consumeId);
+	}
+	
+	//基于用户id和消费类型，按时间降序排序分页查询
+	@GetMapping("/findByAccountAndConsumeType")
+	public Page<ConsumeRecord> findByAccountAndConsumeType(@RequestParam("account") String account,
+			@RequestParam("consumeType") int consumeType,
+			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
+			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
+			@RequestParam(value = "keyword", required = false, defaultValue = "createTime") String keyword,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
+		if(null == account)
+			throw new RuntimeException("用户名不能为空!");
+		
+		User user = this.userService.findByAccount(account);
+		if(null == user)
+			throw new RuntimeException("用户名不存在!");
+		
+		ConsumeRecord consumeRecord = new ConsumeRecord();
+		consumeRecord.setUserId(user.getUserId());
+		
+		try {
+			Sort sort = null;
+
+			if (order.equals("asc"))
+				sort = new Sort(Direction.ASC, keyword);
+			else
+				sort = new Sort(Direction.DESC, keyword);
+
+			Pageable pageable = new PageRequest(pageNum, size, sort);
+
+			return this.consumeRecordService.findByAccountAndConsumeType(consumeRecord, pageable);
+		} catch (Exception e) {
+			throw new RuntimeException("查询失败!");
+		}
 	}
 
 }
