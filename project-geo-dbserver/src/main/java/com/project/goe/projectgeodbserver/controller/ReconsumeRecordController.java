@@ -141,7 +141,7 @@ public class ReconsumeRecordController {
 		OrderInfo orderInfo = new OrderInfo();
 		orderInfo.setCreateTime(new Date());
 		orderInfo.setDelivery(false);
-		orderInfo.setDescription("推荐用户" + user.getAccount());
+		orderInfo.setDescription("重复消费");
 		orderInfo.setExpressNo(null);
 
 		// 如果expressId没有数据，则使用用户的默认收货地址

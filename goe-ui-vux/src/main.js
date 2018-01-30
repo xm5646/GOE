@@ -21,7 +21,7 @@ Vue.http.options.emulateJSON = true
 Vue.http.options.timeout = 5000
 
 Vue.http.interceptors.push((request, next) => {
-  console.log('进入拦截方法')
+  console.log('进入拦截器拦截方法')
   Vue.$vux.loading.show({
     text: '加载中',
     delay: 500
@@ -31,7 +31,7 @@ Vue.http.interceptors.push((request, next) => {
   var timeout
   if (request._timeout) {
     timeout = setTimeout(() => {
-      console.log('进入超时方法')
+      console.log('进入拦截器超时方法')
       Vue.$vux.toast.show({
         type: 'cancel',
         text: '请求超时'
@@ -42,7 +42,7 @@ Vue.http.interceptors.push((request, next) => {
     }, request._timeout)
   }
   next((response) => {
-    console.log('进入响应方法')
+    console.log('进入拦截器响应方法,输出获取的相应数据')
     Vue.$vux.loading.hide()
     console.log(response.body)
     clearTimeout(timeout)
