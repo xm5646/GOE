@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/goe?characterEncoding=utf8&useSSL=false
     username: root
-    password: 123456
+    password: clmAdm1n
     driver-class-name: com.mysql.jdbc.Driver
     tomcat:
       max-active: 20
@@ -29,8 +29,8 @@ myconfg:
 bonus: 
   percentage: 
      manageCostPercentage: 0.1
-     bonusNumberPercentage: 0.9
-     productCoinNumberPercentage: 0
+     bonusNumberPercentage: 0.7
+     productCoinNumberPercentage: 0.2
      consumeCoinUnitPrice: 680
      reconsumeDiscount: 0.7
      drawCostPercentage: 0.05
