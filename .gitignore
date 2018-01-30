@@ -3,5 +3,6 @@ goe-ui/node_modules/
 goe-ui/.idea/workspace.xml
 project-geo-dbserver/target/
 project-geo-dbserver/src/main/resources/application.yml
+.metadata/
+.recommenders/
 
-/project-geo-dbserver/
