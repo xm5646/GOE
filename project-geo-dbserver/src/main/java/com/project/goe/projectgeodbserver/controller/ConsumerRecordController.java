@@ -95,10 +95,12 @@ public class ConsumerRecordController {
 		}
 
 		/********************* 更新用户表 ******************/
-		// 消费类型：公司转账报单币,不更新支出方
+		// 消费类型：公司转账报单币
 		if (consumeTypeCode == 1) {
+			sendUser.setConsumeCoin(sendUser.getConsumeCoin() - consumeNumber);
 			receiveUser.setConsumeCoin(receiveUser.getConsumeCoin() + consumeNumber);
 			this.userService.save(receiveUser);
+			this.userService.save(sendUser);
 			// 消费类型：奖金转报单币
 		} else if (consumeTypeCode == 2) {
 			double bonousCoin = receiveUser.getBonusCoin();
