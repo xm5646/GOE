@@ -97,12 +97,18 @@ public class ConsumerRecordController {
 		/********************* 更新用户表 ******************/
 		// 消费类型：公司转账报单币
 		if (consumeTypeCode == 1) {
+			if(!(sendUser.getAccount()).equals("administrator"))
+				throw new RuntimeException("支出方必须为公司账户!");
+			
 			sendUser.setConsumeCoin(sendUser.getConsumeCoin() - consumeNumber);
 			receiveUser.setConsumeCoin(receiveUser.getConsumeCoin() + consumeNumber);
 			this.userService.save(receiveUser);
 			this.userService.save(sendUser);
 			// 消费类型：奖金转报单币
 		} else if (consumeTypeCode == 2) {
+			if(!sendUser.getAccount().equals(receiveUser.getAccount()))
+				throw new RuntimeException("支出方和收入方必须为同一账户！");
+			
 			double bonousCoin = receiveUser.getBonusCoin();
 			if (consumeNumber > bonousCoin)
 				throw new RuntimeException("奖金余额不足!");
@@ -122,12 +128,18 @@ public class ConsumerRecordController {
 			this.userService.save(receiveUser);
 			// 消费类型：报单币消费报单
 		} else if (consumeTypeCode == 4) {
-			double consumeCoin = receiveUser.getConsumeCoin();
-			if (consumeCoin < this.bonusPayPercentage.getConsumeCoinUnitPrice())
+			if(!(receiveUser.getAccount()).equals("administrator")) 
+				throw new RuntimeException("收入方必须为公司账户!");
+			
+			double consumeCoin = sendUser.getConsumeCoin();
+			double consumeCoinUnitPrice = this.bonusPayPercentage.getConsumeCoinUnitPrice();
+			if (consumeCoin < consumeCoinUnitPrice)
 				throw new RuntimeException("报单币余额不足!");
-
-			receiveUser.setConsumeCoin(receiveUser.getConsumeCoin() - consumeNumber);
+			
+			sendUser.setConsumeCoin(sendUser.getConsumeCoin() - consumeCoinUnitPrice);
+			receiveUser.setConsumeCoin(receiveUser.getConsumeCoin() + consumeNumber);
 			this.userService.save(receiveUser);
+			this.userService.save(sendUser);
 			// 消费类型：产品积分兑换产品
 		} else {
 			throw new RuntimeException("消费类型有误!");
@@ -144,10 +156,10 @@ public class ConsumerRecordController {
 		consumeRecord.setConsumeType(consumeType);
 		
 		// 如果描述信息为空
-		if (null == description)
-			consumeRecord.setDescription(consumeType);
+		if (consumeTypeCode == 3)
+			consumeRecord.setDescription(receiveUser.getAccount());
 		else
-			consumeRecord.setDescription(description);
+			consumeRecord.setDescription(consumeType);
 
 		retMsg = new RetMsg();
 		retMsg.setCode(200);
