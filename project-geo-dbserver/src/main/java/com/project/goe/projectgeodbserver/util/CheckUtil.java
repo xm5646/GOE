@@ -277,7 +277,7 @@ public class CheckUtil {
 	 */
 	public static void updateUserForFirstEarning(User user) {
 		if (user!=null) {
-			Date assessDate = TimeUtil.addDay(user.getCreateTime(), 30);
+			Date assessDate = TimeUtil.addDay(30);
 			user.setAssessDate(assessDate);
 			user.setAssessStatus(true);
 			user.setUserLevel(UserLevel.COMMON_SALEMAN);

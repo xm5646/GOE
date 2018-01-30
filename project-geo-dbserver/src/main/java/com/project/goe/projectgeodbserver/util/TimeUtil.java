@@ -2,14 +2,13 @@ package com.project.goe.projectgeodbserver.util;
 
 
 
-import static org.assertj.core.api.Assertions.setLenientDateParsing;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TimeUtil {
-	private final static int DAY_SECOND = 86400000;  //1000*60*60*24
+	private final static long DAY_SECOND = 86400000;  //1000*60*60*24
 	private final static int DATE_CYCLE = 30;
 	/**
 	 * 相差时间 已天为单位
@@ -147,6 +146,20 @@ public class TimeUtil {
 	public static void main(String[] args) throws Exception{
 		String date1 = "2017-12-11 23:59:59";
 		String date2 = "2017-12-12 00:00:01";
+
+		//2018-01-30 10:46:46.0
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		Date d1 = addDay(df.parse(date1), 30);
+		
+		String d = "2018-01-30 10:46:46.0";
+		Date date = df.parse(d);
+		System.out.println(date.getTime());
+		System.out.println(date.getTime()+(DAY_SECOND* 30));
+		Date date3x = new Date(date.getTime());
+		String d3x = df.format(date3x);
+		Date date3x1 = df.parse(d3x);
+		Date date30 = new  Date(date.getTime()+(DAY_SECOND* 30));
+		System.out.println();
 		
 //		String date1 = "2017-12-11";
 //		String date2 = "2017-12-12";
@@ -169,11 +182,11 @@ public class TimeUtil {
 //		System.out.println(nowDate1);
 //		
 //		compareDate(date, datea);
-		Date d1 =new Date();
-		Thread.sleep(2000);
-		Date d2 =new Date();
-		System.out.println(getTimeSame(d1, d2));
-		System.out.println(d1.before(d2));
+//		Date d1 =new Date();
+//		Thread.sleep(2000);
+//		Date d2 =new Date();
+//		System.out.println(getTimeSame(d1, d2));
+//		System.out.println(d1.before(d2));
 		
 	}
 
