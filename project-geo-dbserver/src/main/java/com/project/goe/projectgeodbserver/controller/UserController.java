@@ -275,7 +275,7 @@ public class UserController {
 	/**
 	 * @Description：新增用户
 	 */
-	@RequestMapping(value = "/save", method = RequestMethod.POST)
+	@PostMapping("/save")
 	@Transactional
 	public RetMsg saveUser(@Validated UserSaveRequest userSavePostParams, BindingResult bindingResult) {
 		String account = userSavePostParams.getAccount();
