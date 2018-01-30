@@ -58,7 +58,7 @@ public class BonusPayListController {
 	public Page<BonusPayList> findBonusPageByAccount(@RequestParam("account") String account,
 			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
 			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
-			@RequestParam(value = "keyword", required = false, defaultValue = "createTime") String keyword,
+			@RequestParam(value = "keyword", required = false, defaultValue = "payTime") String keyword,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		if(null == account)
 			throw new RuntimeException("用户名不能为空!");

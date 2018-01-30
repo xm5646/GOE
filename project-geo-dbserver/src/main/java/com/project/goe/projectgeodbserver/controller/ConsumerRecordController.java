@@ -173,10 +173,10 @@ public class ConsumerRecordController {
 	//基于用户id和消费类型，按时间降序排序分页查询
 	@GetMapping("/findByAccountAndConsumeType")
 	public Page<ConsumeRecord> findByAccountAndConsumeType(@RequestParam("account") String account,
-			@RequestParam("consumeType") int consumeType,
+			@RequestParam("consumeTypeCode") int consumeTypeCode,
 			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
 			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
-			@RequestParam(value = "keyword", required = false, defaultValue = "createTime") String keyword,
+			@RequestParam(value = "keyword", required = false, defaultValue = "consumeTime") String keyword,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		if(null == account)
 			throw new RuntimeException("用户名不能为空!");
@@ -187,6 +187,33 @@ public class ConsumerRecordController {
 		
 		ConsumeRecord consumeRecord = new ConsumeRecord();
 		consumeRecord.setUserId(user.getUserId());
+		
+		String consumeType = null;
+		
+		switch(consumeTypeCode) {
+			case 1: 
+				consumeType = ConsumeType.COMPANY_TRANSFER_CONIN;
+				break;
+			case 2:
+				consumeType = ConsumeType.BONUS_TRANSFER_CONIN;
+				break;
+			case 3:
+				consumeType = ConsumeType.COIN_TRANSFER_COIN;
+				break;
+			case 4:
+				consumeType = ConsumeType.COIN_TRANSFER_ADDCONSUMER;
+				break;
+			case 5:
+				consumeType = ConsumeType.PRODCUTCOIN_TRANSFER_PRODUCT;
+				break;
+			case 6:
+				consumeType = ConsumeType.COIN_TRANSFER_RECONSUME;
+				break;
+			default:
+				throw new RuntimeException("消费类型码有误1");
+		}
+		
+		consumeRecord.setConsumeType(consumeType);
 		
 		try {
 			Sort sort = null;
