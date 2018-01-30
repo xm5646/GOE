@@ -1,6 +1,5 @@
 package com.project.goe.projectgeodbserver.viewentity;
 
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -10,17 +9,25 @@ public class UpdatePaymentPasswordRequest {
 	@Size(min = 5, max = 20, message = "用户名的长度不合法(5-20)!")
 	private String account;
 
+	@NotBlank(message = "用户登录密码不能为空")
+	private String loginPassword;
+
 	@NotBlank(message = "用户支付密码不能为空")
-	@Pattern(regexp = "[0-9]{6}", message = "支付密码只能是6位数字")
 	private String oldPaymentpassword;
 
 	@NotBlank(message = "用户支付密码不能为空")
-	@Pattern(regexp = "[0-9]{6}", message = "支付密码只能是6位数字")
 	private String newPaymentPassword;
 
 	@NotBlank(message = "用户支付密码不能为空")
-	@Pattern(regexp = "[0-9]{6}", message = "支付密码只能是6位数字")
 	private String newPaymentPassword2;
+
+	public String getLoginPassword() {
+		return loginPassword;
+	}
+
+	public void setLoginPassword(String loginPassword) {
+		this.loginPassword = loginPassword;
+	}
 
 	public String getAccount() {
 		return this.account;

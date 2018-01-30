@@ -401,7 +401,7 @@ public class UserController {
 			return retMsg;
 
 		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
+			throw new RuntimeException("用户添加失败!");
 		}
 	}
 
@@ -464,22 +464,26 @@ public class UserController {
 			return retMsg;
 
 		String account = updatePaymentPasswordRequest.getAccount();
-		String oldPassword = updatePaymentPasswordRequest.getOldPaymentpassword();
-		String newPassword = updatePaymentPasswordRequest.getNewPaymentPassword();
-		String newPassword2 = updatePaymentPasswordRequest.getNewPaymentPassword2();
+		String loginPassword  = updatePaymentPasswordRequest.getLoginPassword();
+		String oldPaymentPassword = updatePaymentPasswordRequest.getOldPaymentpassword();
+		String newPaymentPassword = updatePaymentPasswordRequest.getNewPaymentPassword();
+		String newPaymentPassword2 = updatePaymentPasswordRequest.getNewPaymentPassword2();
 
 		User user = this.userService.findByAccount(account);
 		if (null == user)
 			throw new RuntimeException("用户不存在!");
+		
+		if(!(MD5Util.encrypeByMd5(loginPassword)).equals(user.getPassword()))
+			throw new RuntimeException("登录密码输入有误!");
 
-		if (!(MD5Util.encrypeByMd5(oldPassword)).equals(user.getPaymentPassword()))
+		if (!(MD5Util.encrypeByMd5(oldPaymentPassword)).equals(user.getPaymentPassword()))
 			throw new RuntimeException("原支付密码输入错误!");
 
-		if (!newPassword.equals(newPassword2))
+		if (!newPaymentPassword.equals(newPaymentPassword2))
 			throw new RuntimeException("两次密码输入不一致!");
 
 		try {
-			user.setPaymentPassword(MD5Util.encrypeByMd5(newPassword));
+			user.setPaymentPassword(MD5Util.encrypeByMd5(newPaymentPassword));
 
 			retMsg = new RetMsg();
 			retMsg.setCode(200);
