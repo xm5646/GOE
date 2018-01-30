@@ -467,6 +467,7 @@ public class UserController {
 		String loginPassword  = updatePaymentPasswordRequest.getLoginPassword();
 		String oldPaymentPassword = updatePaymentPasswordRequest.getOldPaymentpassword();
 		String newPaymentPassword = updatePaymentPasswordRequest.getNewPaymentPassword();
+		String phone = updatePaymentPasswordRequest.getPhone();
 
 		User user = this.userService.findByAccount(account);
 		if (null == user)
@@ -477,6 +478,9 @@ public class UserController {
 
 		if (!(MD5Util.encrypeByMd5(oldPaymentPassword)).equals(user.getPaymentPassword()))
 			throw new RuntimeException("原支付密码输入错误!");
+		
+		if(!phone.equals(user.getUserPhone()))
+			throw new RuntimeException("电话号码输入有误!");
 
 		try {
 			user.setPaymentPassword(MD5Util.encrypeByMd5(newPaymentPassword));
