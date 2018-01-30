@@ -17,10 +17,7 @@ public class UpdatePaymentPasswordRequest {
 
 	@NotBlank(message = "用户支付密码不能为空")
 	private String newPaymentPassword;
-
-	@NotBlank(message = "用户支付密码不能为空")
-	private String newPaymentPassword2;
-
+	
 	public String getLoginPassword() {
 		return loginPassword;
 	}
@@ -51,14 +48,6 @@ public class UpdatePaymentPasswordRequest {
 
 	public void setNewPaymentPassword(String newPaymentPassword) {
 		this.newPaymentPassword = newPaymentPassword;
-	}
-
-	public String getNewPaymentPassword2() {
-		return newPaymentPassword2;
-	}
-
-	public void setNewPaymentPassword2(String newPaymentPassword2) {
-		this.newPaymentPassword2 = newPaymentPassword2;
 	}
 
 }
