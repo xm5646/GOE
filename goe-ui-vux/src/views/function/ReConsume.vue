@@ -128,6 +128,32 @@
               text: '系统异常'
             })
           })
+      },
+      updateUserInfo () {
+        const url = GoeConfig.apiServer + '/user/findByAccount?account=' + JSON.parse(window.localStorage.getItem('User')).account
+        this.$http.get(url, {
+          _timeout: 3000,
+          onTimeout: (request) => {
+          }
+        })
+          .then(response => {
+            if (response.body.success) {
+              const result = response.body.data
+              this.bonusCoin = result.bonusCoin
+              this.consumeCoin = result.consumeCoin
+              window.localStorage.setItem('User', JSON.stringify(result))
+            } else {
+              this.$vux.toast.show({
+                type: 'cancel',
+                text: (response.body.message || '系统异常')
+              })
+            }
+          }, responseErr => {
+            this.$vux.toast.show({
+              type: 'cancel',
+              text: '系统异常'
+            })
+          })
       }
     },
     computed: {

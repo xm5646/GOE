@@ -118,7 +118,9 @@
               this.$vux.toast.show({
                 text: '创建成功'
               })
-              this.$router.push({name: 'index', params: {view: 'performance', parentAccount: this.parentAccount}})
+//              this.getUserInfo()
+              window.history.go(-1)
+//              this.$router.push({name: 'index', params: {view: 'performance', parentAccount: this.parentAccount}})
             } else {
               console.log(response.body.message)
               this.$vux.toast.show({
@@ -128,6 +130,30 @@
             }
           }, responseErr => {
             console.log(responseErr)
+            this.$vux.toast.show({
+              type: 'cancel',
+              text: '系统异常'
+            })
+          })
+      },
+      getUserInfo () {
+        const url = GoeConfig.apiServer + '/user/findByAccount?account=' + JSON.parse(window.localStorage.getItem('User')).account
+        this.$http.get(url, {
+          _timeout: 3000,
+          onTimeout: (request) => {
+          }
+        })
+          .then(response => {
+            if (response.body.success) {
+              const result = response.body.data
+              window.localStorage.setItem('User', JSON.stringify(result))
+            } else {
+              this.$vux.toast.show({
+                type: 'cancel',
+                text: (response.body.message || '系统异常')
+              })
+            }
+          }, responseErr => {
             this.$vux.toast.show({
               type: 'cancel',
               text: '系统异常'

@@ -92,7 +92,6 @@
         this.$http.get(url, {
           _timeout: 3000,
           onTimeout: (request) => {
-            alert('请求超时')
           }
         })
           .then(response => {
@@ -107,10 +106,16 @@
               this.performance.newPerformanceC = performanceObj.addDepartCcount
               console.log(this.performance)
             } else {
-              alert(response.body.message)
+              this.$vux.toast.show({
+                type: 'cancel',
+                text: (response.body.message || '系统异常')
+              })
             }
           }, responseErr => {
-            alert('未知错误')
+            this.$vux.toast.show({
+              type: 'cancel',
+              text: '系统异常'
+            })
           })
       },
       getUserInfo () {
@@ -118,7 +123,6 @@
         this.$http.get(url, {
           _timeout: 3000,
           onTimeout: (request) => {
-            alert('请求超时')
           }
         })
           .then(response => {
@@ -126,12 +130,17 @@
               const result = response.body.data
               console.log('getuserinfo' + result)
               window.localStorage.setItem('User', JSON.stringify(result))
-              console.log(this.performance)
             } else {
-              alert(response.body.message)
+              this.$vux.toast.show({
+                type: 'cancel',
+                text: (response.body.message || '系统异常')
+              })
             }
           }, responseErr => {
-            alert('未知错误')
+            this.$vux.toast.show({
+              type: 'cancel',
+              text: '系统异常'
+            })
           })
       },
       update () {

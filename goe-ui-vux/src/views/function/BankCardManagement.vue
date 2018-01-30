@@ -32,7 +32,7 @@
     data () {
       return {
         type: '2',
-        cards: [{
+        cards2: [{
           id: '2',
           ownerName: '李晓明',
           bankName: '招商银行',
@@ -47,7 +47,8 @@
           ownerName: '李晓明',
           bankName: '招商银行',
           cardNumber: '**** **** **** 7228'
-        }]
+        }],
+        cards: []
       }
     },
     methods: {
