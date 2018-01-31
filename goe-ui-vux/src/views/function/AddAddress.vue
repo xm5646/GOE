@@ -25,6 +25,7 @@
 </template>
 <script>
   import { XHeader, XInput, Group, XButton, Selector, XAddress, ChinaAddressV4Data } from 'vux'
+  import GoeConfig from '../../../config/goe'
   export default {
     mounted: function () {
     },
@@ -58,6 +59,7 @@
       },
       changeAddress (ids, names) {
         this.addressIds = ids
+        console.log(ids)
         this.addressNameArray = names
       },
       addAddress () {
@@ -66,6 +68,36 @@
           width: '15em',
           text: '地址管理功能暂时不可用'
         })
+      },
+      doAddAddress () {
+        console.log('add card')
+        const url = GoeConfig.apiServer + '/expressAddress/save'
+        this.$http.post(url,
+          {
+            account: JSON.parse(window.localStorage.getItem('User')).account
+          },
+          {
+            _timeout: 3000,
+            onTimeout: (request) => {
+            }
+          })
+          .then(response => {
+            if (response.body.success) {
+              this.$vux.toast.show({
+                text: '添加成功'
+              })
+            } else {
+              this.$vux.toast.show({
+                type: 'cancel',
+                text: (response.body.message || '系统异常')
+              })
+            }
+          }, responseErr => {
+            this.$vux.toast.show({
+              type: 'cancel',
+              text: '系统异常'
+            })
+          })
       }
     }
   }
