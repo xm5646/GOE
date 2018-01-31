@@ -97,9 +97,9 @@ public class CheckUtil {
 			bpl.setUserId(user.getUserId());
 			bpl.setPayTime(new Date());
 			bpl.setTotalMoney(earn.getDayMoney());
-			bpl.setBonusNumber(earn.getDayMoney() * 0.9);
+			bpl.setBonusNumber(earn.getDayMoney() * 0.7);
 			bpl.setManageCost(earn.getDayMoney() * 0.1);
-			bpl.setProductCoinNumber(earn.getDayMoney() * 0);
+			bpl.setProductCoinNumber(earn.getDayMoney() * 0.2);
 
 			// 将积分和金钱添加到user表
 			user.setBonusCoin(user.getBonusCoin() + bpl.getBonusNumber());
