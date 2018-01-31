@@ -368,28 +368,25 @@ public class UserController {
 			// 更新推荐人的报单币
 			recommendUser
 					.setConsumeCoin(recommendUser.getConsumeCoin() - this.bonusPayPercentage.getConsumeCoinUnitPrice());
-
-			// 更新推荐人信息
 			this.userService.save(recommendUser);
+
+			// 查询公司id,更新公司的报单币
+			User company = this.userService.findByAccount("administrator");
+			if (null == company)
+				throw new RuntimeException("公司账户不存在!");
+			company.setConsumeCoin(company.getConsumeCoin() + this.bonusPayPercentage.getConsumeCoinUnitPrice());
+			this.userService.save(company);
 
 			// 新增推荐人消费记录
 			ConsumeRecord consumeRecord = new ConsumeRecord();
 			consumeRecord.setUserId(recommendUser.getUserId());
 			consumeRecord.setSendUserId(recommendUser.getUserId());
+			consumeRecord.setReceiveUserId(company.getUserId());
 			consumeRecord.setConsumeType(ConsumeType.COIN_TRANSFER_ADDCONSUMER);
 			consumeRecord.setConsumeTime(new Date());
+			consumeRecord.setConsumeNumber(this.bonusPayPercentage.getConsumeCoinUnitPrice());
+			consumeRecord.setConsumeStatus(false);
 			consumeRecord.setDescription("推荐新用户:" + user.getAccount());
-
-			// 查询公司id
-			User company = this.userService.findByAccount("administrator");
-			if(null == company)
-				throw new RuntimeException("公司账户不存在!");
-			
-			consumeRecord.setReceiveUserId(company.getUserId());
-			consumeRecord.setConsumeNumber(company.getConsumeCoin() + this.bonusPayPercentage.getConsumeCoinUnitPrice());
-			consumeRecord.setConsumeStatus(true);
-			consumeRecord.setDescription(ConsumeType.COIN_TRANSFER_ADDCONSUMER);
-
 			consumeRecordService.addOneConsumeRecord(consumeRecord);
 
 			// 返回新增用户信息
@@ -464,7 +461,7 @@ public class UserController {
 			return retMsg;
 
 		String account = updatePaymentPasswordRequest.getAccount();
-		String loginPassword  = updatePaymentPasswordRequest.getLoginPassword();
+		String loginPassword = updatePaymentPasswordRequest.getLoginPassword();
 		String oldPaymentPassword = updatePaymentPasswordRequest.getOldPaymentpassword();
 		String newPaymentPassword = updatePaymentPasswordRequest.getNewPaymentPassword();
 		String phone = updatePaymentPasswordRequest.getPhone();
@@ -472,14 +469,14 @@ public class UserController {
 		User user = this.userService.findByAccount(account);
 		if (null == user)
 			throw new RuntimeException("用户不存在!");
-		
-		if(!(MD5Util.encrypeByMd5(loginPassword)).equals(user.getPassword()))
+
+		if (!(MD5Util.encrypeByMd5(loginPassword)).equals(user.getPassword()))
 			throw new RuntimeException("登录密码输入有误!");
 
 		if (!(MD5Util.encrypeByMd5(oldPaymentPassword)).equals(user.getPaymentPassword()))
 			throw new RuntimeException("原支付密码输入错误!");
-		
-		if(!phone.equals(user.getUserPhone()))
+
+		if (!phone.equals(user.getUserPhone()))
 			throw new RuntimeException("电话号码输入有误!");
 
 		try {
