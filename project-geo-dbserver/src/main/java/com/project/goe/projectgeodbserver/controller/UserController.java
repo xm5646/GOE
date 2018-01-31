@@ -158,6 +158,13 @@ public class UserController {
 		}
 		return "";
 	}
+	
+	// 定时考核启动
+	@RequestMapping("/testmainAssessInspect")
+	public String testmainAssessInspect() {
+		earnServerSchedul.mainAssessInspect();
+		return "定时考核";
+	}
 
 	@RequestMapping("/findAll")
 	public Iterable<User> getAll() {

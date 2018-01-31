@@ -44,16 +44,18 @@ public class TimeUtil {
 	}
 	public static boolean getTimeSameDay(Date d1,Date d2) {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		String str1 = getDateFormat(d1);
-		String str2 = getDateFormat(d2);
-		try {
-			Date beginDate = df.parse(str1);
-			Date endDate = df.parse(str2);
-			if ((beginDate.getTime()-endDate.getTime())==0) {
-				return true;
+		if (d1!=null && d2!=null) {
+			String str1 = getDateFormat(d1);
+			String str2 = getDateFormat(d2);
+			try {
+				Date beginDate = df.parse(str1);
+				Date endDate = df.parse(str2);
+				if ((beginDate.getTime()-endDate.getTime())==0) {
+					return true;
+				}
+			} catch (ParseException e) {
+				return false;
 			}
-		} catch (ParseException e) {
-			return false;
 		}
 		return false;
 	}

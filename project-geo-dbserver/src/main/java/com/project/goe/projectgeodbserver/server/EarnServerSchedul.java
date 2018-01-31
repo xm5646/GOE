@@ -17,11 +17,13 @@ import org.springframework.stereotype.Service;
 import com.project.goe.projectgeodbserver.entity.BonusPayList;
 import com.project.goe.projectgeodbserver.entity.Earning;
 import com.project.goe.projectgeodbserver.entity.Performance;
+import com.project.goe.projectgeodbserver.entity.ReconsumeRecord;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.entity.UserCreatereRecord;
 import com.project.goe.projectgeodbserver.service.BonusPayListService;
 import com.project.goe.projectgeodbserver.service.EarningService;
 import com.project.goe.projectgeodbserver.service.PerformanceService;
+import com.project.goe.projectgeodbserver.service.ReconsumeRecordService;
 import com.project.goe.projectgeodbserver.service.UserCreateRecordService;
 import com.project.goe.projectgeodbserver.service.UserService;
 import com.project.goe.projectgeodbserver.statusType.TouchType;
@@ -50,6 +52,9 @@ public class EarnServerSchedul {
 	
 	@Autowired
 	private BonusPayListService bonusPayListService;
+	
+	@Autowired
+	private ReconsumeRecordService reconsumeRecordService;
 	
 	/**
 	 * 传递
@@ -222,7 +227,20 @@ public class EarnServerSchedul {
 					//需要判断考核
 					if (issame) {
 						user.setAssessDate(TimeUtil.addDay(user.getAssessDate(),30));
-						user.setAssessStatus(false); //or set assessStatus ture;
+						List<ReconsumeRecord> rrlist = reconsumeRecordService.findByUserId(user.getUserId()); 
+						boolean isassess = false;
+						for (ReconsumeRecord r:rrlist) {
+							if (TimeUtil.getTimeSameDay(r.getCreateTime(), TimeUtil.addDay(new Date(),-1))) {
+								isassess = true;
+							}
+						}
+						user.setAssessStatus(isassess); //or set assessStatus ture;
+						Performance p =performanceService.findByUserId(user.getUserId());
+						p.setAddDepartAcount(0);
+						p.setAddDepartBcount(0);
+						p.setAddDepartCcount(0);
+						userService.save(user);
+						performanceService.save(p);
 					}
 				}
 			}
@@ -245,7 +263,7 @@ public class EarnServerSchedul {
 						earnsMap.put(earn.getUserid(), earn);
 					}
 				}else {
-					if (earn.getDayMoney()>0) {
+					if (earn.getSurplusNumber()>0) {
 						earnsMap.put(earn.getUserid(), earn);
 					}
 				}
@@ -268,12 +286,12 @@ public class EarnServerSchedul {
 			return null;
 		}else if (TouchType.ACCUMULATION.equals(earn.getTouchType()) && TouchType.ADDITION.equals(em.getTouchType())) {
 			//累计
-			if (earn.getDayMoney()>0) {
+			if (earn.getSurplusNumber()>0) {
 				return earn;
 			}
 		}else if (TouchType.ACCUMULATION.equals(earn.getTouchType()) && TouchType.ACCUMULATION.equals(em.getTouchType())) {
 			//累计
-			if (earn.getDayMoney()>0) {
+			if (earn.getSurplusNumber()>0) {
 				return BusinessUtil.isBigBus(earn, em);
 			}
 		}
