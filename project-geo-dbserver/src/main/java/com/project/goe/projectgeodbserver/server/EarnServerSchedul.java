@@ -322,7 +322,7 @@ public class EarnServerSchedul {
 		this.userService.save(puser);
 		savePer(newuser.getUserId());
 		//用户创建完成后更新用户收益信息
-		updateUserPerformance(newuser.getUserId());
+//		updateUserPerformance(newuser.getUserId());
 	}
 	
 	/**

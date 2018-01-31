@@ -66,7 +66,7 @@ public class CheckUtil {
 				// 计算新增
 				// 这里如果累计业绩没有超过4：4 不增加新增业绩
 				boolean isHaveTotalEarning = isHaveTotalEarningMap.get(pu.getUserId());
-				if (pm.getDepartAcount() > 4 && pm.getDepartBcount() > 4 && !isHaveTotalEarning) {
+				if (pm.getDepartAcount() >= 4 && pm.getDepartBcount() >= 4 && !isHaveTotalEarning) {
 					if (userid == pu.getDepartmentA()) {
 						pm.setAddDepartAcount(pm.getAddDepartAcount() + 1);
 					} else if (userid == pu.getDepartmentB()) {
