@@ -28,7 +28,7 @@ public class BonusPayPercentage {
 	}
 	
 	@Value("${bonus.percentage.reconsumeCoinUnitPrice}")
-	public static void setReconsumeCoinUnitPrice(double reconsumeCoinUnitPrice) {
+	public void setReconsumeCoinUnitPrice(double reconsumeCoinUnitPrice) {
 		BonusPayPercentage.reconsumeCoinUnitPrice = reconsumeCoinUnitPrice;
 	}
 
@@ -69,7 +69,7 @@ public class BonusPayPercentage {
 	}
 
 	@Value("${bonus.percentage.drawCostPercentage}")
-	public static void setDrawCostPercentage(double drawCostPercentage) {
+	public void setDrawCostPercentage(double drawCostPercentage) {
 		BonusPayPercentage.drawCostPercentage = drawCostPercentage;
 	}
 
