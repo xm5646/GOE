@@ -12,11 +12,6 @@
       </thead>
       <tbody>
       <tr>
-        <td>100</td>
-        <td>70</td>
-        <td>20</td>
-        <td>10</td>
-        <td>2018-01-20</td>
       </tr>
       </tbody>
     </x-table>
@@ -34,7 +29,9 @@
     props: ['list'],
     data () {
       return {
-        currentViewTable: ''
+        currentViewTable: '',
+        totalPageNum: 1,
+        rows: []
       }
     },
     components: {

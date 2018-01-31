@@ -3,7 +3,7 @@
     <x-header :left-options="{showBack: false}" style="background-color: #303135">会员管理系统</x-header>
     <group>
       <div style="width: 100%;overflow:scroll;-webkit-overflow-scrolling:touch;">
-        <tab style="width: 100%;" bar-active-color="#668599" :line-width="1">
+        <tab style="width: 100%; font-size: smaller" bar-active-color="#668599" :line-width="1">
           <tab-item selected @on-item-click="onItemClick">报单记录</tab-item>
           <tab-item @on-item-click="onItemClick">重销记录</tab-item>
           <tab-item @on-item-click="onItemClick">报单币转账</tab-item>

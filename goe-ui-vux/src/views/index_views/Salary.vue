@@ -77,7 +77,8 @@
             if (response.body.totalElements > 0) {
               this.totalPageNum = response.body.totalPages
               console.log(response.body.content)
-              const GetNumber = response.body.size
+              const GetNumber = response.body.content.length
+              this.rows.splice(0, this.rows.length)
               for (var i = 0; i < GetNumber; i++) {
                 const payDate = response.body.content[i].payTime
                 const showDate = new Date(parseInt(payDate)).toLocaleDateString()

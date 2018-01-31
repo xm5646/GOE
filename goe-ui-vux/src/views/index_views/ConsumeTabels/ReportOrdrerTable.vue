@@ -10,13 +10,13 @@
       </thead>
       <tbody>
       <tr v-for="row in rows">
-        <td>100</td>
-        <td>20</td>
-        <td>2018-01-20</td>
+        <td>{{row.consumeNumber}}</td>
+        <td>{{row.consumeTime}}</td>
+        <td>{{row.description}}</td>
       </tr>
       </tbody>
     </x-table>
-    <pager :value="1" title="" fillable :min="1" :max="list.totalPageNum" @on-change="change"></pager>
+    <pager :value="1" title="" fillable :min="1" :max="totalPageNum" @on-change="change"></pager>
   </div>
 </template>
 <script>
@@ -31,7 +31,8 @@
     data () {
       return {
         currentViewTable: '',
-        rows: ''
+        rows: [],
+        totalPageNum: 1
       }
     },
     components: {
@@ -52,11 +53,12 @@
         if (val === '') {
         } else {
           console.log('change', val)
+          this.getPage(val)
         }
       },
       getPage (pageNum) {
         console.log(pageNum)
-        const url = GoeConfig.apiServer + '/bonus/findBonusPageByAccount?account=' + JSON.parse(window.localStorage.getItem('User')).account + '&pageNum=' + pageNum
+        const url = GoeConfig.apiServer + '/consumerRecord/findByAccountAndConsumeType?account=' + JSON.parse(window.localStorage.getItem('User')).account + '&consumeTypeCode=4' + '&pageNum=' + (pageNum - 1)
         this.$http.get(url,
           {
             _timeout: 3000,
@@ -65,17 +67,18 @@
           })
           .then(response => {
             console.log(response.body)
-//            if (response.body.totalElements > 0) {
-//              this.totalPageNum = response.body.totalPages
-//              console.log(response.body.content)
-//              const GetNumber = response.body.size
-//              for (var i = 0; i < GetNumber; i++) {
-//                const payDate = response.body.content[i].payTime
-//                const showDate = new Date(parseInt(payDate)).toLocaleDateString()
-//                response.body.content[i].payTime = this.formatDate(showDate)
-//                this.rows[i] = response.body.content[i]
-//              }
-//            }
+            if (response.body.totalElements > 0) {
+              this.totalPageNum = response.body.totalPages
+              console.log(response.body.content)
+              const GetNumber = response.body.content.length
+              this.rows.splice(0, this.rows.length)
+              for (var i = 0; i < GetNumber; i++) {
+                const payDate = response.body.content[i].consumeTime
+                const showDate = new Date(parseInt(payDate)).toLocaleDateString()
+                response.body.content[i].consumeTime = this.formatDate(showDate)
+                this.rows[i] = response.body.content[i]
+              }
+            }
           }, responseErr => {
             this.$vux.toast.show({
               type: 'cancel',

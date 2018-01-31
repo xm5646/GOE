@@ -143,7 +143,7 @@
             consumeTypeCode: 3,
             consumeNumber: this.transferNumber,
             paymentPassword: this.payPassword,
-            description: '用户:' + this.user.account + '转帐报单币' + this.transferNumber + '元到用户' + this.receiveAccount
+            description: this.receiveAccount
           },
           {
             _timeout: 3000,

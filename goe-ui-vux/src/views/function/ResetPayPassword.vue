@@ -96,6 +96,7 @@
               this.$vux.toast.show({
                 text: '修改成功'
               })
+              window.history.go(-1)
             } else {
               this.$vux.toast.show({
                 type: 'cancel',

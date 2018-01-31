@@ -70,12 +70,10 @@
             })
             .then(response => {
               if (response.body.success) {
-                this.oldPassword = ''
-                this.newPassword = ''
-                this.confirmPassword = ''
                 this.$vux.toast.show({
                   text: '密码修改成功'
                 })
+                window.history.go(-1)
               } else {
                 this.$vux.toast.show({
                   type: 'cancel',
