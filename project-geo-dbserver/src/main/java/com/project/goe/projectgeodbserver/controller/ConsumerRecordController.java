@@ -84,8 +84,8 @@ public class ConsumerRecordController {
 		case 2:
 			consumeType = ConsumeType.BONUS_TRANSFER_CONIN;
 			break;
-		case 4:
-			consumeType = ConsumeType.COIN_TRANSFER_ADDCONSUMER;
+		case 3:
+			consumeType = ConsumeType.COIN_TRANSFER_COIN;
 			break;
 		default:
 			throw new RuntimeException("消费类型码有误！");
@@ -114,20 +114,15 @@ public class ConsumerRecordController {
 			receiveUser.setBonusCoin(receiveUser.getBonusCoin() - consumeNumber);
 			this.userService.save(receiveUser);
 			// 消费类型：报单币转报单币
-		} else if (consumeTypeCode == 4) {
-			if(!(receiveUser.getAccount()).equals("administrator")) 
-				throw new RuntimeException("收入方必须为公司账户!");
-			
+		} else if (consumeTypeCode == 3) {
 			double consumeCoin = sendUser.getConsumeCoin();
-			double consumeCoinUnitPrice = this.bonusPayPercentage.getConsumeCoinUnitPrice();
-			if (consumeCoin < consumeCoinUnitPrice)
+			if (consumeNumber > consumeCoin)
 				throw new RuntimeException("报单币余额不足!");
-			
-			sendUser.setConsumeCoin(sendUser.getConsumeCoin() - consumeCoinUnitPrice);
+
+			sendUser.setConsumeCoin(sendUser.getConsumeCoin() - consumeNumber);
 			receiveUser.setConsumeCoin(receiveUser.getConsumeCoin() + consumeNumber);
-			this.userService.save(receiveUser);
 			this.userService.save(sendUser);
-			// 消费类型：产品积分兑换产品
+			this.userService.save(receiveUser);
 		} else {
 			throw new RuntimeException("消费类型有误!");
 		}
