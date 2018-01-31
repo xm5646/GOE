@@ -2,11 +2,16 @@ package com.project.goe.projectgeodbserver.service;
 
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.project.goe.projectgeodbserver.entity.CardInfo;
@@ -16,7 +21,7 @@ import com.project.goe.projectgeodbserver.repository.CardInfoRepository;
 public class CardInfoService {
 	@Autowired
 	private CardInfoRepository cardInfoRepository;
-	
+
 	public CardInfo findByCardInfoId(long cardInfoId) {
 		return this.cardInfoRepository.findByCardInfoId(cardInfoId);
 	}
@@ -24,7 +29,7 @@ public class CardInfoService {
 	public List<CardInfo> findByUserId(long userId) {
 		return this.cardInfoRepository.findByUserId(userId);
 	}
-	
+
 	public CardInfo findByCardNumber(String cardNumber) {
 		return this.cardInfoRepository.findByCardNumber(cardNumber);
 	}
@@ -45,5 +50,21 @@ public class CardInfoService {
 	public Page<CardInfo> findAllCardInfoBySort(Pageable pageable) {
 		return this.cardInfoRepository.findAll(pageable);
 	}
-	
+
+	// 多条件分页查询:按用户名和消费类型
+	public Page<CardInfo> findCardInfoByAccount(CardInfo cardInfo, Pageable pageable) {
+		Specification<CardInfo> spec = new Specification<CardInfo>() {
+
+			@Override
+			public Predicate toPredicate(Root<CardInfo> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				Predicate p = cb.equal(root.get("userId").as(long.class), cardInfo.getUserId());
+
+				return p;
+			}
+
+		};
+
+		return this.cardInfoRepository.findAll(spec, pageable);
+	}
+
 }

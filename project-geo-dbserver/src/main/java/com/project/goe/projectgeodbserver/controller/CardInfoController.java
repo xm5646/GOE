@@ -61,34 +61,36 @@ public class CardInfoController {
 		cardInfo.setCardNumber(cardNo);
 		cardInfo.setCardOwnerName(ownerName);
 		cardInfo.setPhone(phone);
-		
-		//新增银行卡信息
-		cardInfo = this.cardInfoService.save(cardInfo);
+		cardInfo.setUserId(user.getUserId());
+		cardInfo.setCreateTime(new Date());
 
-		cardInfo.setCardNumber(translateBankNo(cardNo));
+		// 新增银行卡信息
+		this.cardInfoService.save(cardInfo);
+
 		retMsg = new RetMsg();
 		retMsg.setCode(200);
-		retMsg.setData(cardInfo);
+		retMsg.setMessage("银行卡信息添加成功!");
+		retMsg.setData("银行卡信息添加成功!");
 		retMsg.setSuccess(true);
 
 		return retMsg;
 	}
 
-	//显示银行卡最后四位
+	// 显示银行卡最后四位
 	private String translateBankNo(String cardNo) {
-		if(null == cardNo)
+		if (null == cardNo)
 			throw new RuntimeException("银行卡号不能为空!");
-		
+
 		int length = cardNo.length();
 		String str = cardNo.substring(length - 4, length);
 		StringBuffer sbuffer = new StringBuffer();
 		for (int i = 0; i < 12; ++i) {
 			sbuffer.append("*");
-			
-			if((i + 1)%4 == 0)
+
+			if ((i + 1) % 4 == 0)
 				sbuffer.append(" ");
 		}
-		
+
 		return sbuffer.append(str).toString();
 	}
 
@@ -122,14 +124,13 @@ public class CardInfoController {
 		cardInfo.setCardNumber(userCardInfoRequest.getCardNo());
 		cardInfo.setCardOwnerName(userCardInfoRequest.getCardOwnerName());
 		cardInfo.setCreateTime(new Date());
-		
+		cardInfo.setPhone(userCardInfoRequest.getPhone());
+
 		this.cardInfoService.save(cardInfo);
-		
-		cardInfo.setCardNumber(translateBankNo(userCardInfoRequest.getCardNo()));
 
 		retMsg = new RetMsg();
 		retMsg.setCode(200);
-		retMsg.setData(cardInfo);
+		retMsg.setData("用户银行卡信息更新成功!");
 		retMsg.setMessage("用户银行卡信息更新成功!");
 		retMsg.setSuccess(true);
 
@@ -189,6 +190,39 @@ public class CardInfoController {
 			return this.cardInfoService.findAllCardInfoBySort(pageable);
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
+		}
+	}
+
+	// 基于用户id,按时间降序排序分页查询
+	@GetMapping("/findCardInfoByAccount")
+	public Page<CardInfo> findCardInfoByAccount(@RequestParam("account") String account,
+			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
+			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
+			@RequestParam(value = "keyword", required = false, defaultValue = "createTime") String keyword,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
+		if (null == account)
+			throw new RuntimeException("用户名不能为空!");
+
+		User user = this.userService.findByAccount(account);
+		if (null == user)
+			throw new RuntimeException("用户名不存在!");
+
+		CardInfo cardInfo = new CardInfo();
+		cardInfo.setCardInfoId(user.getUserId());
+		
+		try {
+			Sort sort = null;
+
+			if (order.equals("asc"))
+				sort = new Sort(Direction.ASC, keyword);
+			else
+				sort = new Sort(Direction.DESC, keyword);
+
+			Pageable pageable = new PageRequest(pageNum, size, sort);
+
+			return this.cardInfoService.findAllCardInfoBySort(pageable);
+		} catch (Exception e) {
+			throw new RuntimeException("查询失败!");
 		}
 	}
 }

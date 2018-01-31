@@ -88,9 +88,14 @@ public class ReconsumeRecordController {
 		if (user.isAssessStatus()) {
 			Date nowDate = new Date();
 			Date assDate = user.getAssessDate();
+			String nowDateDStr = DateFormatUtil.DateObjectToString(nowDate);
+			String assDateStr = DateFormatUtil.DateObjectToString(assDate);
+			
 			if (!DateFormatUtil.DateObjectToString(nowDate).equals(DateFormatUtil.DateObjectToString(assDate))) {
 				throw new RuntimeException("用户未达到考核日期！");
 			}
+			
+			//if(DateFormatUtil.DateObjectToString(date))
 		}
 
 		// 验证支付密码是否正确
