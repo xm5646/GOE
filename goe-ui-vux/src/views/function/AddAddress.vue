@@ -59,22 +59,39 @@
       },
       changeAddress (ids, names) {
         this.addressIds = ids
-        console.log(ids)
+        console.log(this.addressArray)
         this.addressNameArray = names
       },
       addAddress () {
-        this.$vux.toast.show({
-          type: 'text',
-          width: '15em',
-          text: '地址管理功能暂时不可用'
-        })
+        if (this.receiveName === '' || this.detail === '' || this.tel === '') {
+          this.$vux.toast.show({
+            type: 'text',
+            width: '15em',
+            text: '请输入完整的收货地址信息'
+          })
+        } else if (this.tel.length !== 11) {
+          this.$vux.toast.show({
+            type: 'text',
+            width: '15em',
+            text: '手机号码格式不正确'
+          })
+        } else {
+          this.doAddAddress()
+        }
       },
       doAddAddress () {
-        console.log('add card')
+        console.log('add address')
         const url = GoeConfig.apiServer + '/expressAddress/save'
         this.$http.post(url,
           {
-            account: JSON.parse(window.localStorage.getItem('User')).account
+            account: JSON.parse(window.localStorage.getItem('User')).account,
+            receiverName: this.receiveName,
+            province: this.addressIds[0],
+            city: this.addressIds[1],
+            district: this.addressIds[2],
+            detailAddress: this.detail,
+            phone: this.tel,
+            defaultAddress: 0
           },
           {
             _timeout: 3000,

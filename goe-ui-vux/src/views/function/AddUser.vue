@@ -21,7 +21,7 @@
           </x-input>
           <x-input title="上级员工"  :min="5" :max="20" readonly v-model="parentAccount">
           </x-input>
-          <x-input title="放置部门"  :min="5" :max="20" readonly v-model="place">
+          <x-input title="放置部门"   readonly v-model="place">
           </x-input>
           <x-input title="用户名" name="username" placeholder="请输入新用户编号" :min="5" :max="20" v-model="newAccount">
             <img slot="label" style="padding-right:10px;display:block;" src="../../assets/images/form/i-form-name.png"

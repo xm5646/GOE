@@ -7,6 +7,7 @@
       </cell>
     </group>
     <performance-view
+      @delCardEvent="doDeleteCard"
       :list="cards"
       :type="type">
     </performance-view>
@@ -20,6 +21,7 @@
   import GoeConfig from '../../../config/goe'
   export default {
     mounted: function () {
+      this.getCardsByAccount()
     },
     components: {
       XHeader,
@@ -54,20 +56,57 @@
     },
     methods: {
       addCard () {
-        this.$router.push({name: 'addBankCard'})
+        this.$router.push({name: 'addBankCard', params: {cardNumber: this.cards.length}})
       },
-      getCardsByAccount (account) {
-        const url = GoeConfig.apiServer + '/user/findByAccount?account=' + this.user.account
+      getCardsByAccount () {
+        const url = GoeConfig.apiServer + '/cardInfo/findCardInfoByAccount?account=' + JSON.parse(window.localStorage.getItem('User')).account
         this.$http.get(url, {
           _timeout: 3000,
           onTimeout: (request) => {
           }
         })
           .then(response => {
-            if (response.body.success) {
-              const result = response.body.data
-              console.log('getuserinfo' + result)
-              window.localStorage.setItem('User', JSON.stringify(result))
+            if (response.body.totalElements > 0) {
+              const cardsInfo = response.body.content
+              this.cards.splice(0, this.cards.length)
+              for (let i = 0; i < cardsInfo.length; i++) {
+                var card = {}
+                card.id = cardsInfo[i].cardInfoId
+                card.ownerName = cardsInfo[i].cardOwnerName
+                card.bankName = cardsInfo[i].bankName
+                card.cardNumber = '**** **** **** ' + cardsInfo[i].cardNumber.substr(cardsInfo[i].cardNumber.length - 4, 4)
+                this.cards[i] = card
+              }
+            } else {
+              this.cards.splice(0, this.cards.length)
+              console.log('no cards')
+            }
+          }, responseErr => {
+            this.$vux.toast.show({
+              type: 'cancel',
+              text: '系统异常'
+            })
+          })
+      },
+      doDeleteCard (id) {
+        console.log('delete card id: ' + id)
+        const url = GoeConfig.apiServer + '/cardInfo/delete'
+        this.$http.post(url,
+          {
+            account: JSON.parse(window.localStorage.getItem('User')).account,
+            cardInfoId: id
+          },
+          {
+            _timeout: 3000,
+            onTimeout: (request) => {
+            }
+          })
+          .then(response => {
+            if (response.body.message === '银行卡信息删除成功!') {
+              this.getCardsByAccount()
+              this.$vux.toast.show({
+                text: '删除成功'
+              })
             } else {
               this.$vux.toast.show({
                 type: 'cancel',

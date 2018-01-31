@@ -51,9 +51,8 @@
         <template v-if="type === '2'">
           <div class="weui-media-box weui-media-box_text" v-for="item in list" @click.prevent="onItemClick(item)">
             <h4 class="weui-media-box__title" v-html="item.bankName"></h4>
-            <span class="weui-media-box__desc" v-html="item.ownerName" style="float: left"></span><a type="button"
-                                                                                                     style="float: right"
-                                                                                                     class="weui-btn weui-btn_mini weui-btn_default">删除</a>
+            <span class="weui-media-box__desc" v-html="item.ownerName" style="float: left"></span>
+            <a type="button" style="float: right" class="weui-btn weui-btn_mini weui-btn_default" @click.prevent="delCard(item.id)">删除</a>
             <span class="weui-media-box__desc" v-html="item.cardNumber" style="padding-left: 10px"></span>
           </div>
         </template>
@@ -172,6 +171,9 @@
       },
       submitCreateUserEvent (item) {
         this.$emit('createUserEvent', item)
+      },
+      delCard (id) {
+        this.$emit('delCardEvent', id)
       }
     }
   }

@@ -7,7 +7,7 @@
       </cell>
     </group>
     <div v-if="isHasAddress">
-      <div v-for="(address,index) in showAddresses">
+      <div v-for="(address,index) in addresses">
         <div class="weui-cells">
           <div class="weui-cell">
             <div class="weui-cell__bd">
@@ -29,7 +29,7 @@
       </div>
     </div>
     <div v-else>
-      没有地址
+      <message title="未添加收货地址"></message>
     </div>
   </div>
 </template>
@@ -46,9 +46,12 @@
     ChinaAddressV4Data
   } from 'vux'
   import XButton from '../../../node_modules/vux/src/components/x-button/index.vue'
+  import GoeConfig from '../../../config/goe'
+  import Message from '../../components/msg'
 
   export default {
     mounted: function () {
+      this.getAddressesByAccount()
     },
     components: {
       XButton,
@@ -58,6 +61,7 @@
       Divider,
       Card,
       Cell,
+      Message,
       FormPreview
     },
     data () {
@@ -72,7 +76,7 @@
           addressShowName: '',
           detail: '清河小营东路15号院中国电力科学研究院'
         }],
-        Addresses: []
+        addresses: []
       }
     },
     methods: {
@@ -80,26 +84,48 @@
         this.$router.push({name: 'addAddress'})
       },
       editAddress (index) {
-        this.$router.push({name: 'editAddress', params: {address: this.Addresses[index]}})
+        this.$router.push({name: 'editAddress', params: {address: this.addresses[index]}})
       },
       deleteAddress (index) {
         console.log('delete' + index)
-      }
-    },
-    computed: {
-      showAddresses: function () {
-        if (this.Addresses != null) {
-          var show = this.Addresses
-          for (var i = 0; i < show.length; i++) {
-            const idArray = show[i].addressArray
-            const name = value2name(idArray, ChinaAddressV4Data)
-
-            show[i].addressShowName = name
+      },
+      getAddressesByAccount () {
+        const url = GoeConfig.apiServer + '/expressAddress/findExpressAddressesByAccount?account=' + JSON.parse(window.localStorage.getItem('User')).account
+        this.$http.get(url, {
+          _timeout: 3000,
+          onTimeout: (request) => {
           }
-          return show
-        } else {
-          this.isHasAddress = false
-        }
+        })
+          .then(response => {
+            if (response.body.totalElements > 0) {
+              const addressesInfo = response.body.content
+              console.log(addressesInfo)
+              this.addresses.splice(0, this.addresses.length)
+              for (let i = 0; i < addressesInfo.length; i++) {
+                var address = {}
+                address.id = addressesInfo[i].expressId
+                address.receivedName = addressesInfo[i].receiverName
+                address.tel = addressesInfo[i].phone
+                var addressIdArras = new Array([])
+                addressIdArras[0] = addressesInfo[i].province
+                addressIdArras[1] = addressesInfo[i].city
+                addressIdArras[2] = addressesInfo[i].district
+                address.addressArray = addressIdArras
+                address.addressShowName = value2name(addressIdArras, ChinaAddressV4Data)
+                address.detail = addressesInfo[i].detailAddress
+                this.addresses[i] = address
+              }
+              console.log(this.addresses)
+            } else {
+              this.addresses.splice(0, this.addresses.length)
+              console.log('no cards')
+            }
+          }, responseErr => {
+            this.$vux.toast.show({
+              type: 'cancel',
+              text: '系统异常'
+            })
+          })
       }
     },
     watch: {}
