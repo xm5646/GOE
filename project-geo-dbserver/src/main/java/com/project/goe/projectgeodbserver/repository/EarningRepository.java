@@ -9,4 +9,7 @@ public interface EarningRepository extends JpaRepository<Earning, Long>{
 	//select count(1) from (select * from tb_earning e where e.userid=127 and e.touch_type='累积' limit 0,1) el where el.surplus_number>120
 	@Query(value = "select count(1) from (select * from tb_earning e where e.userid=?1 and e.touch_type=?2 order by e.create_time desc limit 0,1) el where el.surplus_number>?3",nativeQuery=true)
 	int getEarningExist(long userid,int surplusNumber,String touchType);
+	
+//	@Query(value = "select count(1) from (select * from tb_earning e where e.userid=?1 and e.touch_type=?2 order by e.create_time desc limit 0,1) el where el.surplus_number>?3",nativeQuery=true)
+//	Iterable<Earning> getAllEarningForUsable();
 }

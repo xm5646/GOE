@@ -66,5 +66,5 @@ public class CardInfoService {
 
 		return this.cardInfoRepository.findAll(spec, pageable);
 	}
-
+	
 }
