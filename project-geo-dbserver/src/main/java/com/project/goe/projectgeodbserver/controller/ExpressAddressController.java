@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,7 @@ import com.project.goe.projectgeodbserver.viewentity.UserExpressAddressRequest;
 
 @RestController
 @RequestMapping("/expressAddress")
+@CrossOrigin
 public class ExpressAddressController {
 	@Autowired
 	private UserService UserService;
