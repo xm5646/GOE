@@ -100,7 +100,7 @@ public class ReconsumeRecordController {
 
 		// 验证用户报单币是否够用
 		double consumeCoin = user.getConsumeCoin();
-		double reConsumeCost = this.bonusPayPercentage.getConsumeCoinUnitPrice();
+		double reConsumeCost = this.bonusPayPercentage.getReconsumeCoinUnitPrice();
 		
 		if ((consumeCoin - reConsumeCost) < 0)
 			throw new RuntimeException("用户报单币余额不足！");

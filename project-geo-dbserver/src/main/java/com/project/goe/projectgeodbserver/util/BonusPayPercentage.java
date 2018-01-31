@@ -12,13 +12,24 @@ public class BonusPayPercentage {
 	private static double bonusNumberPercentage;
 	// 产品积分比例
 	private static double productCoinNumberPercentage;
-	// 重销产品单价
+	// 报单消费单价
 	private static double consumeCoinUnitPrice;
+	// 重销产品单价
+	private static double reconsumeCoinUnitPrice;
 	// 提现手续费
 	private static double drawCostPercentage;
 
 	public static double getManageCostPercentage() {
 		return manageCostPercentage;
+	}
+
+	public static double getReconsumeCoinUnitPrice() {
+		return reconsumeCoinUnitPrice;
+	}
+	
+	@Value("${bonus.percentage.reconsumeCoinUnitPrice}")
+	public static void setReconsumeCoinUnitPrice(double reconsumeCoinUnitPrice) {
+		BonusPayPercentage.reconsumeCoinUnitPrice = reconsumeCoinUnitPrice;
 	}
 
 	@Value("${bonus.percentage.manageCostPercentage}")
@@ -56,7 +67,7 @@ public class BonusPayPercentage {
 	public static double getDrawCostPercentage() {
 		return drawCostPercentage;
 	}
-	
+
 	@Value("${bonus.percentage.drawCostPercentage}")
 	public static void setDrawCostPercentage(double drawCostPercentage) {
 		BonusPayPercentage.drawCostPercentage = drawCostPercentage;
