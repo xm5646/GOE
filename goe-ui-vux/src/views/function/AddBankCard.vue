@@ -66,12 +66,12 @@
             text: '持卡人姓名格式不正确'
           })
         } else {
-          this.$vux.toast.show({
-            type: 'text',
-            width: '15em',
-            text: '银行卡相关功能暂时不可用'
-          })
-//          this.doAddCard()
+//          this.$vux.toast.show({
+//            type: 'text',
+//            width: '15em',
+//            text: '银行卡相关功能暂时不可用'
+//          })
+          this.doAddCard()
         }
       },
       changeBank (bank) {

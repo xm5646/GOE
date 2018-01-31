@@ -17,6 +17,7 @@
 <script>
   import { XHeader, Group, Panel, Divider, Card, Cell } from 'vux'
   import PerformanceView from '../../components/ViewPerformance.vue'
+  import GoeConfig from '../../../config/goe'
   export default {
     mounted: function () {
     },
@@ -54,6 +55,31 @@
     methods: {
       addCard () {
         this.$router.push({name: 'addBankCard'})
+      },
+      getCardsByAccount (account) {
+        const url = GoeConfig.apiServer + '/user/findByAccount?account=' + this.user.account
+        this.$http.get(url, {
+          _timeout: 3000,
+          onTimeout: (request) => {
+          }
+        })
+          .then(response => {
+            if (response.body.success) {
+              const result = response.body.data
+              console.log('getuserinfo' + result)
+              window.localStorage.setItem('User', JSON.stringify(result))
+            } else {
+              this.$vux.toast.show({
+                type: 'cancel',
+                text: (response.body.message || '系统异常')
+              })
+            }
+          }, responseErr => {
+            this.$vux.toast.show({
+              type: 'cancel',
+              text: '系统异常'
+            })
+          })
       }
     },
     computed: {},

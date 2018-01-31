@@ -85,15 +85,22 @@ public class ReconsumeRecordController {
 		if (DateFormatUtil.compareDateObject(user.getCreateTime(), user.getAssessDate()) == 0)
 			throw new RuntimeException("用户没有达到考核级别！");
 
+		//用户为考核通过状态
 		if (user.isAssessStatus()) {
 			Date nowDate = new Date();
 			Date assDate = user.getAssessDate();
 			String nowDateDStr = DateFormatUtil.DateObjectToString(nowDate);
 			String assDateStr = DateFormatUtil.DateObjectToString(assDate);
 			
-			if (!DateFormatUtil.DateObjectToString(nowDate).equals(DateFormatUtil.DateObjectToString(assDate))) {
+			//当天不是考核日，不允许用户重销
+			if(!nowDateDStr.equals(assDateStr)) {
 				throw new RuntimeException("用户未达到考核日期！");
 			}
+			
+			//当天为考核日，重销记录表有重销记录，则不允许再次重销
+			
+			
+			
 			
 			//if(DateFormatUtil.DateObjectToString(date))
 		}

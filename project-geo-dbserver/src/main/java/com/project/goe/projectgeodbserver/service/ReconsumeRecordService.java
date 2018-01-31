@@ -1,5 +1,6 @@
 package com.project.goe.projectgeodbserver.service;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -32,9 +33,11 @@ public class ReconsumeRecordService {
 		return this.reconsumeRecordRepository.findByUserId(userId);
 	}
 
-	// 分页查询银行卡信息
+	// 分页查询所有重销记录
 	public Page<ReconsumeRecord> findAllReconsumeRecordBySort(Pageable pageable) {
 		return this.reconsumeRecordRepository.findAll(pageable);
 	}
+	
+	// 多条件分页查询：用户id和createTime，降序排序
 
 }

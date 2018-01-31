@@ -14,7 +14,7 @@ public class UserCardInfoRequest {
 
 	@NotBlank(message = "银行卡户主名不能为空!")
 	private String cardOwnerName;
-	
+
 	@NotBlank(message = "用户手机号码不能为空")
 	private String phone;
 
