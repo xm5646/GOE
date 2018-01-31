@@ -156,8 +156,9 @@ public class CardInfoController {
 
 		RetMsg retMsg = new RetMsg();
 		retMsg.setCode(200);
-		retMsg.setData(null);
+		retMsg.setData("银行卡信息删除成功!");
 		retMsg.setMessage("银行卡信息删除成功!");
+		retMsg.setSuccess(true);
 
 		return retMsg;
 	}
