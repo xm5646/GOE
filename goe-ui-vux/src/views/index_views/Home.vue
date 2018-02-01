@@ -19,6 +19,9 @@
       <cell title='重复消费' is-link @click.native="goTo('reConsume')">
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/form.png">
       </cell>
+      <cell title='订单查询' is-link @click.native="goTo('orderView')">
+        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/form.png">
+      </cell>
       <cell title='修改登录密码' is-link @click.native="goTo('resetPassword')">
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/form.png">
       </cell>

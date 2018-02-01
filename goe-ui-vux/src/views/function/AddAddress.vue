@@ -103,6 +103,7 @@
               this.$vux.toast.show({
                 text: '添加成功'
               })
+              window.history.go(-1)
             } else {
               this.$vux.toast.show({
                 type: 'cancel',

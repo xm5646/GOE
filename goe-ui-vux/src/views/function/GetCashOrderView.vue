@@ -6,18 +6,18 @@
         <x-table :cell-bordered="false" :content-bordered="true" style="background-color:#fff; font-size: small">
           <thead>
           <tr style="background-color: darkgray">
-            <th>订单类型</th>
-            <th>订单总额</th>
-            <th>购买数量</th>
-            <th>发货状态</th>
+            <th>提现金额</th>
+            <th>到账金额</th>
+            <th>申请时间</th>
+            <th>打款状态</th>
           </tr>
           </thead>
           <tbody>
           <tr v-for="row in rows">
-            <td>{{row.orderType}}</td>
-            <td>{{row.totalPrice}}</td>
-            <td>{{row.productCount}}</td>
-            <td>{{row.delivery? '已发货': '未发货'}}</td>
+            <td>{{row.drawnumber}}</td>
+            <td>{{row.finalNumber}}</td>
+            <td>{{row.drawCommitTime}}</td>
+            <td>{{row.drawStatus}}</td>
           </tr>
           </tbody>
         </x-table>
@@ -64,7 +64,7 @@
       },
       getPage (pageNum) {
         console.log(pageNum)
-        const url = GoeConfig.apiServer + '/order/findOrderInfoByAccount?account=' + JSON.parse(window.localStorage.getItem('User')).account + '&pageNum=' + (pageNum - 1)
+        const url = GoeConfig.apiServer + '/drawCashRecord/findDrawCashRecordByUserId?account=' + JSON.parse(window.localStorage.getItem('User')).account + '&pageNum=' + (pageNum - 1)
         this.$http.get(url,
           {
             _timeout: 3000,
@@ -78,6 +78,9 @@
               const GetNumber = response.body.content.length
               this.rows.splice(0, this.rows.length)
               for (var i = 0; i < GetNumber; i++) {
+                const payDate = response.body.content[i].drawCommitTime
+                const showDate = new Date(parseInt(payDate)).toLocaleDateString()
+                response.body.content[i].drawCommitTime = this.formatDate(showDate)
                 this.rows[i] = response.body.content[i]
               }
             }

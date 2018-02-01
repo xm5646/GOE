@@ -143,11 +143,10 @@
           })
           .then(response => {
             if (response.body.success) {
-              this.convertNumber = ''
-              this.updateUser()
               this.$vux.toast.show({
                 text: '申请成功'
               })
+              window.history.go(-1)
             } else {
               this.$vux.toast.show({
                 type: 'cancel',

@@ -16,6 +16,8 @@ import AddAddress from '../views/function/AddAddress'
 import EditAddress from '../views/function/EditAddress'
 import GetCash from '../views/function/GetCash'
 import AddUser from '../views/function/AddUser'
+import GetCashOrderView from '../views/function/GetCashOrderView'
+import OrderView from '../views/function/OrderView'
 
 Vue.use(Router)
 
@@ -101,6 +103,21 @@ export default new Router({
       path: '/addUser',
       name: 'addUser',
       component: AddUser
+    },
+    {
+      path: '/getCashOrderView',
+      name: 'getCashOrderView',
+      component: GetCashOrderView
+    },
+    {
+      path: '/getCashOrderView',
+      name: 'getCashOrderView',
+      component: GetCashOrderView
+    },
+    {
+      path: '/orderView',
+      name: 'orderView',
+      component: OrderView
     }
   ]
 })
