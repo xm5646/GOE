@@ -9,7 +9,7 @@ import App from './App'
 import router from './router/index'
 import { sync } from 'vuex-router-sync'
 // import { DatetimePlugin, BusPlugin, DevicePlugin, ToastPlugin, AlertPlugin, ConfirmPlugin, LoadingPlugin, WechatPlugin } from 'vux'
-import { ToastPlugin, LoadingPlugin } from 'vux'
+import { ToastPlugin, LoadingPlugin, ConfirmPlugin } from 'vux'
 // import API from './js/api'
 
 Vue.use(VueRouter)
@@ -53,7 +53,7 @@ Vue.http.interceptors.push((request, next) => {
 // Vue.use(DevicePlugin)
 Vue.use(ToastPlugin)
 // Vue.use(AlertPlugin)
-// Vue.use(ConfirmPlugin)
+Vue.use(ConfirmPlugin)
 Vue.use(LoadingPlugin)
 // Vue.use(WechatPlugin)
 // Vue.use(BusPlugin)

@@ -22,7 +22,7 @@
             </div>
             <div class="weui-cell__ft">
               <x-button mini @click.native="editAddress(index)">编辑</x-button>
-              <x-button mini @click.native="deleteAddress(index)">删除</x-button>
+              <x-button mini @click.native="deleteAddress(address.id)">删除</x-button>
             </div>
           </div>
         </div>
@@ -86,8 +86,19 @@
       editAddress (index) {
         this.$router.push({name: 'editAddress', params: {address: this.addresses[index]}})
       },
-      deleteAddress (index) {
-        console.log('delete' + index)
+      deleteAddress (id) {
+        const _this = this // 需要注意 onCancel 和 onConfirm 的 this 指向
+        this.$vux.confirm.show({
+          // 组件除show外的属性
+          title: '确定要删除吗?',
+          onCancel () {
+            console.log(this) // 非当前 vm
+            console.log(_this) // 当前 vm
+          },
+          onConfirm () {
+            _this.doDeleteAddress(id)
+          }
+        })
       },
       getAddressesByAccount () {
         const url = GoeConfig.apiServer + '/expressAddress/findExpressAddressesByAccount?account=' + JSON.parse(window.localStorage.getItem('User')).account
@@ -99,7 +110,6 @@
           .then(response => {
             if (response.body.totalElements > 0) {
               const addressesInfo = response.body.content
-              console.log(addressesInfo)
               this.addresses.splice(0, this.addresses.length)
               for (let i = 0; i < addressesInfo.length; i++) {
                 var address = {}
@@ -115,10 +125,41 @@
                 address.detail = addressesInfo[i].detailAddress
                 this.addresses[i] = address
               }
-              console.log(this.addresses)
             } else {
               this.addresses.splice(0, this.addresses.length)
               console.log('no cards')
+            }
+          }, responseErr => {
+            this.$vux.toast.show({
+              type: 'cancel',
+              text: '系统异常'
+            })
+          })
+      },
+      doDeleteAddress (id) {
+        console.log('delete address id: ' + id)
+        const url = GoeConfig.apiServer + '/expressAddress/delete'
+        this.$http.post(url,
+          {
+            account: JSON.parse(window.localStorage.getItem('User')).account,
+            expressId: id
+          },
+          {
+            _timeout: 3000,
+            onTimeout: (request) => {
+            }
+          })
+          .then(response => {
+            if (response.body.message === '快递地址删除成功!') {
+              this.getAddressesByAccount()
+              this.$vux.toast.show({
+                text: '删除成功'
+              })
+            } else {
+              this.$vux.toast.show({
+                type: 'cancel',
+                text: (response.body.message || '系统异常')
+              })
             }
           }, responseErr => {
             this.$vux.toast.show({

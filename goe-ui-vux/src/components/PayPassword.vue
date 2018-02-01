@@ -32,7 +32,11 @@
         if (this.password.length === 6) {
           this.$emit('paySubmitEvent', this.password)
         } else {
-          alert('密码长度不正确')
+          this.$vux.toast.show({
+            type: 'text',
+            width: '8em',
+            text: '密码长度不正确'
+          })
         }
       },
       cancelPay () {

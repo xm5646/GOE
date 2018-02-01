@@ -20,11 +20,12 @@
       </x-input>
     </group>
     <br>
-    <x-button @click.native="viewMyPerformance">修改</x-button>
+    <x-button @click.native="confirmEdit(address)">修改</x-button>
   </div>
 </template>
 <script>
   import { XHeader, XInput, Group, XButton, Selector, XAddress, ChinaAddressV4Data } from 'vux'
+  import GoeConfig from '../../../config/goe'
   export default {
     props: ['Address'],
     mounted: function () {
@@ -51,12 +52,59 @@
       }
     },
     methods: {
-      login () {
-        console.log(this.password)
-        this.$router.push({name: 'index'})
+      confirmEdit (address) {
+        const _this = this // 需要注意 onCancel 和 onConfirm 的 this 指向
+        this.$vux.confirm.show({
+          // 组件除show外的属性
+          title: '确定修改吗?',
+          onCancel () {
+            console.log(this) // 非当前 vm
+            console.log(_this) // 当前 vm
+          },
+          onConfirm () {
+            _this.submitEdit(address)
+          }
+        })
       },
-      changeBank (bank) {
-        this.bankName = bank
+      submitEdit (address) {
+        console.log('edit address')
+        console.log(address)
+        const url = GoeConfig.apiServer + '/expressAddress/update'
+        this.$http.post(url,
+          {
+            account: JSON.parse(window.localStorage.getItem('User')).account,
+            receiverName: address.receivedName,
+            province: address.addressArray[0],
+            city: address.addressArray[1],
+            district: address.addressArray[2],
+            detailAddress: address.detail,
+            phone: address.tel,
+            defaultAddress: 0,
+            expressId: address.id
+          },
+          {
+            _timeout: 3000,
+            onTimeout: (request) => {
+            }
+          })
+          .then(response => {
+            if (response.body.success) {
+              this.$vux.toast.show({
+                text: '修改成功'
+              })
+              window.history.go(-1)
+            } else {
+              this.$vux.toast.show({
+                type: 'cancel',
+                text: (response.body.message || '系统异常')
+              })
+            }
+          }, responseErr => {
+            this.$vux.toast.show({
+              type: 'cancel',
+              text: '系统异常'
+            })
+          })
       }
     }
   }

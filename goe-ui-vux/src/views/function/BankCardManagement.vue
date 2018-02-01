@@ -7,7 +7,7 @@
       </cell>
     </group>
     <performance-view
-      @delCardEvent="doDeleteCard"
+      @delCardEvent="confirmDelete"
       :list="cards"
       :type="type">
     </performance-view>
@@ -87,6 +87,20 @@
               text: '系统异常'
             })
           })
+      },
+      confirmDelete (id) {
+        const _this = this
+        this.$vux.confirm.show({
+          // 组件除show外的属性
+          title: '确定要删除吗?',
+          onCancel () {
+            console.log(this) // 非当前 vm
+            console.log(_this) // 当前 vm
+          },
+          onConfirm () {
+            this.doDeleteCard(id)
+          }
+        })
       },
       doDeleteCard (id) {
         console.log('delete card id: ' + id)

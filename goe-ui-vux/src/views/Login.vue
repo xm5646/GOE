@@ -1,6 +1,6 @@
 <template>
   <div>
-    <x-header :left-options="{showBack: false}" style="background-color: #303135">会员管理系统</x-header>
+    <x-header :left-options="{showBack: false}" style="background-color: #0bb20c">会员管理系统</x-header>
     <div id="img-div">
       <img src="../assets/images/touming.png" width="100%">
       <group title="">
