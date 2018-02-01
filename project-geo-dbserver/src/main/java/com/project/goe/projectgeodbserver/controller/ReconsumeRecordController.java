@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -85,26 +86,31 @@ public class ReconsumeRecordController {
 		if (DateFormatUtil.compareDateObject(user.getCreateTime(), user.getAssessDate()) == 0)
 			throw new RuntimeException("用户没有达到考核级别！");
 
-		//用户为考核通过状态
+		// 用户为考核通过状态
 		if (user.isAssessStatus()) {
 			Date nowDate = new Date();
 			Date assDate = user.getAssessDate();
 			String nowDateDStr = DateFormatUtil.DateObjectToString(nowDate);
 			String assDateStr = DateFormatUtil.DateObjectToString(assDate);
-			
-			//当天不是考核日，不允许用户重销
-			if(!nowDateDStr.equals(assDateStr)) {
-				throw new RuntimeException("用户未达到考核日期！");
+
+			// 当天不是考核日，不允许用户重销
+			if (!nowDateDStr.equals(assDateStr)) {
+				throw new RuntimeException("未到考核日期！");
 			}
-			
-			//当天为考核日，重销记录表有重销记录，则不允许再次重销
-			
-			
-			
-			
-			//if(DateFormatUtil.DateObjectToString(date))
+
+			// 当天为考核日，重销记录表有重销记录，则不允许再次重销
+			ReconsumeRecord reconsumeRecord = this.reconsumeRecordService.findByCreateTime(nowDate);
+			if (null != reconsumeRecord)
+				throw new RuntimeException("用户已重销!");
+
+			return reconsumeOperate(account, paymentPassword, expressId, user, retMsg);
 		}
 
+		return reconsumeOperate(account, paymentPassword, expressId, user, retMsg);
+
+	}
+
+	private RetMsg reconsumeOperate(String account, String paymentPassword, long expressId, User user, RetMsg retMsg) {
 		// 验证支付密码是否正确
 		if (!(MD5Util.encrypeByMd5(paymentPassword)).equals(user.getPaymentPassword())) {
 			throw new RuntimeException("用户支付密码错误!");
@@ -113,18 +119,18 @@ public class ReconsumeRecordController {
 		// 验证用户报单币是否够用
 		double consumeCoin = user.getConsumeCoin();
 		double reConsumeCost = this.bonusPayPercentage.getReconsumeCoinUnitPrice();
-		
+
 		if ((consumeCoin - reConsumeCost) < 0)
 			throw new RuntimeException("用户报单币余额不足！");
 
 		// 更新用户表和公司表
 		user.setConsumeCoin(consumeCoin - reConsumeCost);
-		user.setAssessStatus(true);
-		
+		user.setAssessStatus(true);// 更新用户重销状态
+
 		User company = this.userService.findByAccount("administrator");
-		if(null == company)
+		if (null == company)
 			throw new RuntimeException("公司账户不存在!");
-		
+
 		company.setConsumeCoin(company.getConsumeCoin() + reConsumeCost);
 		this.userService.save(user);
 		this.userService.save(company);
@@ -159,10 +165,10 @@ public class ReconsumeRecordController {
 		// 如果expressId没有数据，则使用用户的默认收货地址
 		if (0 == expressId) {
 			List<ExpressAddress> expressAddresses = this.expressAddressService.findByUserId(user.getUserId());
-			
-			if(null == expressAddresses || 0 == expressAddresses.size())
+
+			if (null == expressAddresses || 0 == expressAddresses.size())
 				throw new RuntimeException("用户未设置快递地址!");
-			
+
 			for (ExpressAddress expressAddress : expressAddresses) {
 				if (expressAddress.isDefaultAddress()) {
 					orderInfo.setExpressId(expressAddress.getExpressId());
@@ -184,12 +190,16 @@ public class ReconsumeRecordController {
 		// 新增订单
 		this.orderInfoService.save(orderInfo);
 
-		retMsg = new RetMsg();
-		retMsg.setCode(200);
-		retMsg.setMessage("用户重销成功!");
-		retMsg.setSuccess(true);
-		retMsg.setData(reconsumeRecord);
-		return retMsg;
+		try {
+			retMsg = new RetMsg();
+			retMsg.setCode(200);
+			retMsg.setMessage("用户重销成功!");
+			retMsg.setSuccess(true);
+			retMsg.setData("用户重销成功!");
+			return retMsg;
+		} catch (Exception e) {
+			throw new RuntimeException("用户重销失败!");
+		}
 	}
 
 	// 分页查询指定用户所有的重销记录

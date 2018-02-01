@@ -38,6 +38,9 @@ public class ReconsumeRecordService {
 		return this.reconsumeRecordRepository.findAll(pageable);
 	}
 	
-	// 多条件分页查询：用户id和createTime，降序排序
+	// 基于时间查询时间
+	public ReconsumeRecord findByCreateTime(Date createTime) {
+		return this.reconsumeRecordRepository.findByCreateTime(createTime);
+	}
 
 }
