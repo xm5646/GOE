@@ -56,23 +56,27 @@ public class DrawCashRecordController {
 			return retMsg;
 
 		String account = userDrawCashRequest.getAccount();
+		long cardInfoId = userDrawCashRequest.getCardInfoId();
 		double drawNumber = userDrawCashRequest.getDrawNumber();
-		String cardNumber = userDrawCashRequest.getCardNumber();
 		String paymentPassword = userDrawCashRequest.getPaymentPassword();
 		String phone = userDrawCashRequest.getPhone();
-
+		
 		// 验证用户是否存在
 		User user = this.userService.findByAccount(account);
 		if (null == user)
 			throw new RuntimeException("用户不存在!");
-
+		
+		//验证提取额度是否合法
+		if(0<drawNumber || drawNumber<100 ||drawNumber>Double.MAX_VALUE)
+			throw new RuntimeException("提取额度输入不合法!");
+		
 		// 验证用户提取限额是否足够
 		if (drawNumber > user.getBonusCoin())
 			throw new RuntimeException("现金提取额度不够!");
 
 		// 验证用户银行卡是否与用户真名是否一致
 		String nickName = user.getNickName();
-		String cardOwnerName = this.cardInfoService.findByCardNumber(cardNumber).getCardOwnerName();
+		String cardOwnerName = this.cardInfoService.findByCardInfoId(cardInfoId).getCardOwnerName();
 
 		if (!nickName.equals(cardOwnerName))
 			throw new RuntimeException("银行卡用户名与用户真名不一致!");
@@ -84,22 +88,26 @@ public class DrawCashRecordController {
 			// 新增一条提现记录
 			DrawCashRecord drawCashRecord = new DrawCashRecord();
 			drawCashRecord.setUserId(user.getUserId());
-			drawCashRecord.setCardNumber(cardNumber);
+			drawCashRecord.setCardInfoId(cardInfoId);
 			drawCashRecord.setDrawnumber(drawNumber);
 
-			double finalNumber = this.bonusPayPercentage.getDrawCostPercentage() * drawNumber;
-			drawCashRecord.setFinalNumber(finalNumber);
+			double drawCost = this.bonusPayPercentage.getDrawCostPercentage();
+			drawCashRecord.setFinalNumber(drawNumber - drawCost);
 			drawCashRecord.setDrawStatus(DrawStatus.AUDIT_WAIT);
 			drawCashRecord.setDrawCommitTime(new Date());
 			drawCashRecord.setPayTime(null);
 			drawCashRecord.setPhone(phone);
 
 			this.drawCashService.save(drawCashRecord);
+			
+			//更新用户现金
+			user.setBonusCoin(user.getBonusCoin() - drawNumber);
+			this.userService.save(user);
 
 			retMsg = new RetMsg();
 			retMsg.setCode(200);
 			retMsg.setMessage("用户提现申请成功!");
-			retMsg.setData(drawCashRecord);
+			retMsg.setData("用户提现申请成功!");
 			retMsg.setSuccess(true);
 			
 			return retMsg;

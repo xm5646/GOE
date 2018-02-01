@@ -25,7 +25,7 @@ public class DrawCashRecord {
 
 	// 提现银行卡号
 	@Column(nullable = false)
-	private String cardNumber;
+	private long cardInfoId;
 
 	// 申请提现金额
 	@Column(nullable = false)
@@ -46,8 +46,8 @@ public class DrawCashRecord {
 	// 公司打款时间
 	@Column
 	private Date payTime;
-	
-	//电话号码
+
+	// 电话号码
 	@Column
 	private String phone;
 
@@ -83,12 +83,12 @@ public class DrawCashRecord {
 		this.userId = userId;
 	}
 
-	public String getCardNumber() {
-		return cardNumber;
+	public long getCardInfoId() {
+		return cardInfoId;
 	}
 
-	public void setCardNumber(String cardNumber) {
-		this.cardNumber = cardNumber;
+	public void setCardInfoId(long cardInfoId) {
+		this.cardInfoId = cardInfoId;
 	}
 
 	public double getDrawnumber() {
