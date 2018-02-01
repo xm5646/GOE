@@ -1,6 +1,7 @@
 package com.project.goe.projectgeodbserver.controller;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -50,47 +51,56 @@ public class ProductCoinController {
 		if (null != retMsg)
 			return retMsg;
 
-		String sendAccount = productCoinTransferRequest.getSendAccount();
-		String receiveAccount = productCoinTransferRequest.getReceiveAccout();
+		String account = productCoinTransferRequest.getAccount();
 		double productCoin = productCoinTransferRequest.getProductCoin();
 		String paymentPassword = productCoinTransferRequest.getPaymentPassword();
 		long expressId = productCoinTransferRequest.getExpressId();
 
 		// 验证用户是否存在
-		User sendUser = this.userService.findByAccount(sendAccount);
-		User receiveUser = this.userService.findByAccount(receiveAccount);
+		User user = this.userService.findByAccount(account);
 
-		if (null == sendUser || null == receiveUser)
+		if (null == user)
 			throw new RuntimeException("用户不存在!");
+
+		// 验证产品积分输入是否合法
+		if (productCoin < 0 || productCoin > Double.MAX_VALUE)
+			throw new RuntimeException("产品积分输入不合法!");
 
 		// 验证用户的产品积分是否足够兑换产品
 		double productCoinUnitPrice = this.bonusPayPercentage.getConsumeCoinUnitPrice();
-		double pCoin = sendUser.getProductCoin();
+		double pCoin = user.getProductCoin();
 		// 产品积分小于产品所需最低积分
-		if (productCoin < 0 || (productCoin < productCoinUnitPrice))
+		if (productCoin < productCoinUnitPrice)
 			throw new RuntimeException("产品积分余额不足!");
-		// consumeNumber大于用户产品积分
+
+		// productCoin输入兑换积分大于用户产品积分
 		if (productCoin > pCoin)
 			throw new RuntimeException("产品积分输入不合法!");
 
 		// 验证用户的支付密码
-		if (!(MD5Util.encrypeByMd5(paymentPassword)).equals(sendUser.getPaymentPassword()))
+		if (!(MD5Util.encrypeByMd5(paymentPassword)).equals(user.getPaymentPassword()))
 			throw new RuntimeException("支付密码输入有误!");
 
 		// 更新指出方用户信息和收入方用户信息
 		// 兑换产品的数量
 		int num = (int) Math.floor(productCoin / productCoinUnitPrice);
-		sendUser.setProductCoin(pCoin - productCoinUnitPrice * num);
-		receiveUser.setProductCoin(productCoinUnitPrice * num);
-		this.userService.save(sendUser);
-		this.userService.save(receiveUser);
+		user.setProductCoin(pCoin - productCoinUnitPrice * num);
+
+		User company = this.userService.findByAccount("administrator");
+		if (null == company)
+			throw new RuntimeException("公司账户不存在!");
+
+		company.setProductCoin(company.getProductCoin() + productCoinUnitPrice * num);
+
+		this.userService.save(user);
+		this.userService.save(company);
 
 		// 更新消费记录表
 		ConsumeRecord consumeRecord = new ConsumeRecord();
 		consumeRecord.setConsumeTime(new Date());
-		consumeRecord.setUserId(sendUser.getUserId());
-		consumeRecord.setSendUserId(sendUser.getUserId());
-		consumeRecord.setReceiveUserId(receiveUser.getUserId());
+		consumeRecord.setUserId(user.getUserId());
+		consumeRecord.setSendUserId(user.getUserId());
+		consumeRecord.setReceiveUserId(company.getUserId());
 		consumeRecord.setConsumeNumber(productCoinUnitPrice * num);
 		consumeRecord.setConsumeStatus(false);
 		consumeRecord.setConsumeType(ConsumeType.PRODCUTCOIN_TRANSFER_PRODUCT);
@@ -100,32 +110,60 @@ public class ProductCoinController {
 		// 更新订单列表
 		// 生成用户订单列表
 		OrderInfo orderInfo = new OrderInfo();
-		
-		if(expressId < 0 || expressId > Long.MAX_VALUE)
+
+		if (expressId > Long.MAX_VALUE)
 			throw new RuntimeException("快递地址id不合法!");
-		
+
+		// -1:使用用户默认地址
+		if (-1 == expressId) {
+			List<ExpressAddress> expressAddresses = this.expressAddressService.findByUserId(user.getUserId());
+
+			if (null == expressAddresses || 0 == expressAddresses.size())
+				throw new RuntimeException("用户未设置快递地址!");
+
+			for (ExpressAddress expressAddress : expressAddresses) {
+				if (expressAddress.isDefaultAddress()) {
+					orderInfo.setExpressId(expressAddress.getExpressId());
+					break;
+				}
+			}
+		} else {
+			// 验证expressId是否存在
+			ExpressAddress expressAddress = this.expressAddressService.findByExpressId(expressId);
+			if (null == expressAddress) {
+				throw new RuntimeException("未找到快递地址!");
+			}
+			orderInfo.setExpressId(expressId);
+		}
+
 		// 验证expressId是否存在
 		ExpressAddress expressAddress = this.expressAddressService.findByExpressId(expressId);
 		if (null == expressAddress) {
 			throw new RuntimeException("未找到快递地址!");
 		}
-		
+
 		orderInfo.setExpressId(expressId);
-		orderInfo.setUserId(sendUser.getUserId());
+		orderInfo.setUserId(user.getUserId());
 		orderInfo.setCreateTime(new Date());
 		orderInfo.setDelivery(false);
 		orderInfo.setDescription(ConsumeType.PRODCUTCOIN_TRANSFER_PRODUCT);
 		orderInfo.setExpressNo(null);
 		orderInfo.setProductCount(num);
+		orderInfo.setTotalPrice(productCoinUnitPrice * num);
 
-		this.orderInfoService.save(orderInfo);
-		
-		retMsg = new RetMsg();
-		retMsg.setCode(200);
-		retMsg.setData(consumeRecord);
-		retMsg.setSuccess(true);
-		
-		return retMsg;
+		try {
+			this.orderInfoService.save(orderInfo);
+
+			retMsg = new RetMsg();
+			retMsg.setCode(200);
+			retMsg.setData("积分兑换成功!");
+			retMsg.setMessage("积分兑换成功!");
+			retMsg.setSuccess(true);
+
+			return retMsg;
+		} catch (Exception e) {
+			throw new RuntimeException("积分兑换失败!");
+		}
 	}
 
 }

@@ -70,7 +70,7 @@ public class DrawCashRecordController {
 			throw new RuntimeException("用户不存在!");
 		
 		//验证提取额度是否合法
-		if(0<drawNumber || drawNumber<100 ||drawNumber>Double.MAX_VALUE)
+		if(0>drawNumber || drawNumber<100 ||drawNumber>Double.MAX_VALUE)
 			throw new RuntimeException("提取额度输入不合法!");
 		
 		// 验证用户提取限额是否足够
@@ -124,11 +124,45 @@ public class DrawCashRecordController {
 		}
 	}
 	
+	//分页查询：基于用户名，按时间降序排序
+	@GetMapping("/findDrawCashRecordByUserId")
+	public Page<DrawCashRecord> findDrawCashRecordByUserId(
+			@RequestParam("account") String account,
+			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
+			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
+			@RequestParam(value = "keyword", required = false, defaultValue = "drawCommitTime") String keyword,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
+		try {
+			Sort sort = null;
+			
+			if(null == account)
+				throw new RuntimeException("用户名不能为空!");
+			
+			User user = this.userService.findByAccount(account);
+			if(null == user)
+				throw new RuntimeException("用户不存在!");
+			
+			DrawCashRecord drawCashRecord = new DrawCashRecord();
+			drawCashRecord.setUserId(user.getUserId());
+
+			if (order.equals("asc"))
+				sort = new Sort(Direction.ASC, keyword);
+			else
+				sort = new Sort(Direction.DESC, keyword);
+
+			Pageable pageable = new PageRequest(pageNum, size, sort);
+
+			return this.drawCashService.findAll(drawCashRecord, pageable);
+		} catch (Exception e) {
+			throw new RuntimeException("查询失败!");
+		}
+	}
+	
 	//分页查询所有用户的提现信息(基于提现申请时间)
 	@GetMapping("/findAllDrawCashRecordBySort")
 	public Page<DrawCashRecord> findAllDrawCashRecord(
 			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
-			@RequestParam(value = "size", defaultValue = "5", required = false) int size,
+			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
 			@RequestParam(value = "keyword", required = false, defaultValue = "drawCommitTime") String keyword,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		try {

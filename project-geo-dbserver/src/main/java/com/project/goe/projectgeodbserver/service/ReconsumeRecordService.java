@@ -39,8 +39,8 @@ public class ReconsumeRecordService {
 	}
 	
 	// 基于时间查询时间
-	public ReconsumeRecord findByCreateTime(Date createTime) {
-		return this.reconsumeRecordRepository.findByCreateTime(createTime);
+	public ReconsumeRecord findByCreateTime(Date createTime,long userId) {
+		return this.reconsumeRecordRepository.findReconsumeByCreateTime(createTime,userId);
 	}
 
 }

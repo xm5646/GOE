@@ -9,7 +9,7 @@ public class UserReConsumeRequest {
 	@NotBlank(message = "用户支付密码不能为空")
 	private String paymentPassword;
 
-	private long expressId;
+	private long expressId = -1;
 
 	public long getExpressId() {
 		return expressId;

@@ -15,6 +15,6 @@ public interface ReconsumeRecordRepository extends JpaSpecificationExecutor<Reco
 	public ReconsumeRecord findByReconsumeRecordId(long reconsumeRecordId);
 	public List<ReconsumeRecord> findByUserId(long userId);
 	
-	@Query("select r from ReconsumeRecord r where date_format(createTime,'%Y-%m-%d')=date_format(?1,'%Y-%m-%d')")
-	public ReconsumeRecord findByCreateTime(Date createTime);
+	@Query("select r from ReconsumeRecord r where date_format(createTime,'%Y-%m-%d')=date_format(?1,'%Y-%m-%d') and userId=?2")
+	public ReconsumeRecord findReconsumeByCreateTime(Date createTime,long userId);
 }

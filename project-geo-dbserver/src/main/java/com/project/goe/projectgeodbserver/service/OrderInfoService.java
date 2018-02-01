@@ -2,11 +2,16 @@ package com.project.goe.projectgeodbserver.service;
 
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.project.goe.projectgeodbserver.entity.OrderInfo;
@@ -43,6 +48,20 @@ public class OrderInfoService {
 	@Transactional
 	public void delete(OrderInfo orderInfo) {
 		this.orderInfoRepository.delete(orderInfo);
+	}
+	
+	// 分页查询：基于用户名
+	public Page<OrderInfo> findOrderInfoByAccount(OrderInfo orderInfo, Pageable pageable) {
+		Specification<OrderInfo> spec = new Specification<OrderInfo>() {
+
+			@Override
+			public Predicate toPredicate(Root<OrderInfo> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				Predicate p = cb.equal(root.get("userId").as(long.class),orderInfo.getUserId());
+				return p;
+			}
+		};
+		
+		return this.orderInfoRepository.findAll(spec, pageable);
 	}
 
 }

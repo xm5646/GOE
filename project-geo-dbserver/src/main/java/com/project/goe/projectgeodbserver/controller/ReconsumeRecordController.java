@@ -14,7 +14,6 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -99,7 +98,7 @@ public class ReconsumeRecordController {
 			}
 
 			// 当天为考核日，重销记录表有重销记录，则不允许再次重销
-			ReconsumeRecord reconsumeRecord = this.reconsumeRecordService.findByCreateTime(nowDate);
+			ReconsumeRecord reconsumeRecord = this.reconsumeRecordService.findByCreateTime(nowDate,user.getUserId());
 			if (null != reconsumeRecord)
 				throw new RuntimeException("用户已重销!");
 
@@ -162,8 +161,8 @@ public class ReconsumeRecordController {
 		orderInfo.setDescription("重复消费");
 		orderInfo.setExpressNo(null);
 
-		// 如果expressId没有数据，则使用用户的默认收货地址
-		if (0 == expressId) {
+		// expressId=-1，使用用户的默认收货地址
+		if (-1 == expressId) {
 			List<ExpressAddress> expressAddresses = this.expressAddressService.findByUserId(user.getUserId());
 
 			if (null == expressAddresses || 0 == expressAddresses.size())
@@ -186,6 +185,7 @@ public class ReconsumeRecordController {
 		orderInfo.setOrderType(ConsumeType.COIN_TRANSFER_RECONSUME);
 		orderInfo.setUserId(user.getUserId());
 		orderInfo.setProductCount(1);
+		orderInfo.setTotalPrice(this.bonusPayPercentage.getReconsumeCoinUnitPrice());
 
 		// 新增订单
 		this.orderInfoService.save(orderInfo);
