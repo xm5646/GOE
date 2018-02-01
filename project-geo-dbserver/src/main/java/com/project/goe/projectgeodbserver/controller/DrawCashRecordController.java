@@ -12,12 +12,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.goe.projectgeodbserver.entity.CardInfo;
 import com.project.goe.projectgeodbserver.entity.DrawCashRecord;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.service.CardInfoService;
@@ -32,6 +34,7 @@ import com.project.goe.projectgeodbserver.viewentity.UserDrawCashRequest;
 
 @RestController
 @RequestMapping("/drawCashRecord")
+@CrossOrigin
 public class DrawCashRecordController {
 
 	@Autowired
@@ -76,7 +79,12 @@ public class DrawCashRecordController {
 
 		// 验证用户银行卡是否与用户真名是否一致
 		String nickName = user.getNickName();
-		String cardOwnerName = this.cardInfoService.findByCardInfoId(cardInfoId).getCardOwnerName();
+		
+		CardInfo cardInfo = this.cardInfoService.findByCardInfoId(cardInfoId);
+		if(null == cardInfo)
+			throw new RuntimeException("银行卡信息不存在!");
+		
+		String cardOwnerName = cardInfo.getCardOwnerName();
 
 		if (!nickName.equals(cardOwnerName))
 			throw new RuntimeException("银行卡用户名与用户真名不一致!");

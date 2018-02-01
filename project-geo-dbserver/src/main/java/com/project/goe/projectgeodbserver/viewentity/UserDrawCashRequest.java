@@ -9,7 +9,7 @@ public class UserDrawCashRequest {
 	@NotBlank(message = "用户名不能为空")
 	private String account;
 	// 银行卡号id
-	@NotBlank(message = "银行卡号不能为空!")
+	@NotNull(message = "银行卡号不能为空!")
 	private long cardInfoId;
 	// 申请提现金额
 	@NotNull(message = "提现金额不能为空!")
