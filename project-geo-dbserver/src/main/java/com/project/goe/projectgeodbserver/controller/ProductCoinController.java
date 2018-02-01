@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +29,7 @@ import com.project.goe.projectgeodbserver.viewentity.RetMsg;
 
 @RestController
 @RequestMapping("/productCoin")
+@CrossOrigin
 public class ProductCoinController {
 	@Autowired
 	private UserService userService;
@@ -68,13 +71,13 @@ public class ProductCoinController {
 
 		// 验证用户的产品积分是否足够兑换产品
 		double productCoinUnitPrice = this.bonusPayPercentage.getConsumeCoinUnitPrice();
-		double pCoin = user.getProductCoin();
+		double userProductCoin = user.getProductCoin();
 		// 产品积分小于产品所需最低积分
-		if (productCoin < productCoinUnitPrice)
+		if (userProductCoin < productCoinUnitPrice)
 			throw new RuntimeException("产品积分余额不足!");
 
 		// productCoin输入兑换积分大于用户产品积分
-		if (productCoin > pCoin)
+		if (productCoin > userProductCoin)
 			throw new RuntimeException("产品积分输入不合法!");
 
 		// 验证用户的支付密码
@@ -84,7 +87,7 @@ public class ProductCoinController {
 		// 更新指出方用户信息和收入方用户信息
 		// 兑换产品的数量
 		int num = (int) Math.floor(productCoin / productCoinUnitPrice);
-		user.setProductCoin(pCoin - productCoinUnitPrice * num);
+		user.setProductCoin(userProductCoin - productCoinUnitPrice * num);
 
 		User company = this.userService.findByAccount("administrator");
 		if (null == company)
@@ -136,13 +139,6 @@ public class ProductCoinController {
 			orderInfo.setExpressId(expressId);
 		}
 
-		// 验证expressId是否存在
-		ExpressAddress expressAddress = this.expressAddressService.findByExpressId(expressId);
-		if (null == expressAddress) {
-			throw new RuntimeException("未找到快递地址!");
-		}
-
-		orderInfo.setExpressId(expressId);
 		orderInfo.setUserId(user.getUserId());
 		orderInfo.setCreateTime(new Date());
 		orderInfo.setDelivery(false);
@@ -150,6 +146,7 @@ public class ProductCoinController {
 		orderInfo.setExpressNo(null);
 		orderInfo.setProductCount(num);
 		orderInfo.setTotalPrice(productCoinUnitPrice * num);
+		orderInfo.setOrderType(ConsumeType.PRODCUTCOIN_TRANSFER_PRODUCT);
 
 		try {
 			this.orderInfoService.save(orderInfo);

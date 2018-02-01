@@ -1,16 +1,17 @@
 package com.project.goe.projectgeodbserver.viewentity;
 
 import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 public class ProductCoinTransferRequest {
-	@NotBlank(message = "支付方用户名不能为空!")
+	@NotBlank(message = "用户名不能为空!")
 	private String account;
-
-	@NotNull(message = "兑换产品积分数不能为空!")
+	
+	@NotNull(message = "产品积分不能为空!")
 	private Double productCoin;
 
-	@NotBlank(message = "用户支付密码不能为空")
+	@NotBlank(message = "支付密码不能为空")
 	private String paymentPassword;
 
 	private long expressId = -1;

@@ -39,6 +39,7 @@ public class TestUser {
 			user.setAssessStatus(false);
 			user.setBonusCoin(10000f);
 			user.setConsumeCoin(10000f);
+			user.setProductCoin(10000f);
 			user.setCreateTime(cTime);
 			user.setDepartmentA(0);
 			user.setDepartmentB(0);
