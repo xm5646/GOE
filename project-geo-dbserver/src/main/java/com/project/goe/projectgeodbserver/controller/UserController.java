@@ -330,6 +330,7 @@ public class UserController {
 
 			user.setParentId(parentUser.getUserId());
 			user.setRecomondId(recommendUser.getUserId());
+			user.setUserStatus(true);
 
 			// 设置用户的层级数：父节点层级数+1
 			user.setWeightCode(parentUser.getWeightCode() + 1);
