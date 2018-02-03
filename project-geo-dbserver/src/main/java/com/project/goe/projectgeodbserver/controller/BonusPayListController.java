@@ -61,11 +61,11 @@ public class BonusPayListController {
 			@RequestParam(value = "keyword", required = false, defaultValue = "payTime") String keyword,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		if(null == account)
-			throw new RuntimeException("用户名不能为空!");
+			throw new RuntimeException("用户名不能为空");
 		
 		User user = this.userService.findByAccount(account);
 		if(null == user)
-			throw new RuntimeException("用户名不存在!");
+			throw new RuntimeException("用户名不存在");
 		
 		BonusPayList bonusPayList = new BonusPayList();
 		bonusPayList.setUserId(user.getUserId());
@@ -82,7 +82,7 @@ public class BonusPayListController {
 
 			return this.bonusPayListService.findBonusPageByAccount(bonusPayList, pageable);
 		} catch (Exception e) {
-			throw new RuntimeException("查询失败!");
+			throw new RuntimeException("查询失败");
 		}
 	}
 

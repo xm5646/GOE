@@ -37,11 +37,11 @@ public class OrderInfoController {
 			@RequestParam(value = "keyword", required = false, defaultValue = "createTime") String keyword,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		if(null == account) 
-			throw new RuntimeException("用户不能为空!");
+			throw new RuntimeException("用户不能为空");
 		
 		User user = this.userService.findByAccount(account);
 		if(null == user)
-			throw new RuntimeException("用户不存在!");
+			throw new RuntimeException("用户不存在");
 		
 		try {
 			Sort sort = null;
@@ -58,7 +58,7 @@ public class OrderInfoController {
 			
 			return this.orderInfoService.findOrderInfoByAccount(orderInfo, pageable);
 		}catch(Exception e) {
-			throw new RuntimeException("订单查询失败!");
+			throw new RuntimeException("订单查询失败");
 		}
 	}
 
@@ -81,7 +81,7 @@ public class OrderInfoController {
 
 			return this.orderInfoService.findAllOrdersRecord(pageable);
 		} catch (Exception e) {
-			throw new RuntimeException("查询失败!");
+			throw new RuntimeException("查询失败");
 		}
 	}
 

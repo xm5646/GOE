@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.project.goe.projectgeodbserver.statusType.DeliveryStatus;
+
 /**
  * @descripton:订单信息
  */
@@ -46,7 +48,7 @@ public class OrderInfo {
 
 	// 订单状态:未发货or已发货？
 	@Column(nullable = false)
-	private boolean isDelivery = false;
+	private String isDelivery = DeliveryStatus.ORDER_DELIVERY_NO;
 
 	// 订单描述
 	@Column
@@ -120,11 +122,11 @@ public class OrderInfo {
 		this.totalPrice = totalPrice;
 	}
 
-	public boolean isDelivery() {
+	public String getIsDelivery() {
 		return isDelivery;
 	}
 
-	public void setDelivery(boolean isDelivery) {
+	public void setIsDelivery(String isDelivery) {
 		this.isDelivery = isDelivery;
 	}
 

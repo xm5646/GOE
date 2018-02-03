@@ -30,6 +30,7 @@ import com.project.goe.projectgeodbserver.service.OrderInfoService;
 import com.project.goe.projectgeodbserver.service.ReconsumeRecordService;
 import com.project.goe.projectgeodbserver.service.UserService;
 import com.project.goe.projectgeodbserver.statusType.ConsumeType;
+import com.project.goe.projectgeodbserver.statusType.DeliveryStatus;
 import com.project.goe.projectgeodbserver.util.BonusPayPercentage;
 import com.project.goe.projectgeodbserver.util.DateFormatUtil;
 import com.project.goe.projectgeodbserver.util.MD5Util;
@@ -157,7 +158,7 @@ public class ReconsumeRecordController {
 		// 生成用户订单列表
 		OrderInfo orderInfo = new OrderInfo();
 		orderInfo.setCreateTime(new Date());
-		orderInfo.setDelivery(false);
+		orderInfo.setIsDelivery(DeliveryStatus.ORDER_DELIVERY_NO);
 		orderInfo.setDescription("重复消费");
 		orderInfo.setExpressNo(null);
 

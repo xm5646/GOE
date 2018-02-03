@@ -54,7 +54,7 @@ public class CardInfoController {
 		// 验证用户是否存在
 		User user = this.userService.findByAccount(account);
 		if (null == user)
-			throw new RuntimeException("用户不存在！");
+			throw new RuntimeException("用户不存在");
 
 		CardInfo cardInfo = new CardInfo();
 		cardInfo.setBankName(bankName);
@@ -69,8 +69,8 @@ public class CardInfoController {
 
 		retMsg = new RetMsg();
 		retMsg.setCode(200);
-		retMsg.setMessage("银行卡信息添加成功!");
-		retMsg.setData("银行卡信息添加成功!");
+		retMsg.setMessage("银行卡信息添加成功");
+		retMsg.setData("银行卡信息添加成功");
 		retMsg.setSuccess(true);
 
 		return retMsg;
@@ -79,7 +79,7 @@ public class CardInfoController {
 	// 显示银行卡最后四位
 	private String translateBankNo(String cardNo) {
 		if (null == cardNo)
-			throw new RuntimeException("银行卡号不能为空!");
+			throw new RuntimeException("银行卡号不能为空");
 
 		int length = cardNo.length();
 		String str = cardNo.substring(length - 4, length);
@@ -108,16 +108,16 @@ public class CardInfoController {
 		String account = userCardInfoRequest.getAccount();
 		User user = this.userService.findByAccount(account);
 		if (null == user)
-			throw new RuntimeException("用户不存在!");
+			throw new RuntimeException("用户不存在");
 
 		// 判断expressId是否合法
 		if ((cardInfoId < 0) || (cardInfoId > Long.MAX_VALUE))
-			throw new RuntimeException("银行卡id值不合法!");
+			throw new RuntimeException("银行卡号值不合法");
 
 		// 查看当前银行卡信息是否存在
 		CardInfo cardInfo = this.cardInfoService.findByCardInfoId(cardInfoId);
 		if (null == cardInfo)
-			throw new RuntimeException("用户的银行卡信息不存在!");
+			throw new RuntimeException("用户的银行卡信息不存在");
 
 		// 更新银行卡信息
 		cardInfo.setBankName(userCardInfoRequest.getBankName());
@@ -130,8 +130,8 @@ public class CardInfoController {
 
 		retMsg = new RetMsg();
 		retMsg.setCode(200);
-		retMsg.setData("用户银行卡信息更新成功!");
-		retMsg.setMessage("用户银行卡信息更新成功!");
+		retMsg.setData("用户银行卡信息更新成功");
+		retMsg.setMessage("用户银行卡信息更新成功");
 		retMsg.setSuccess(true);
 
 		return retMsg;
@@ -142,22 +142,22 @@ public class CardInfoController {
 	@Transactional
 	public RetMsg delete(@RequestParam("account") String account, @RequestParam("cardInfoId") long cardInfoId) {
 		if (account == null || cardInfoId < 0 || cardInfoId > Long.MAX_VALUE)
-			throw new RuntimeException("银行卡传递参数不合法!");
+			throw new RuntimeException("银行卡传递参数不合法");
 
 		User user = this.userService.findByAccount(account);
 		if (null == user)
-			throw new RuntimeException("用户不存在!");
+			throw new RuntimeException("用户不存在");
 
 		CardInfo cardInfo = this.cardInfoService.findByCardInfoId(cardInfoId);
 		if (null == cardInfo)
-			throw new RuntimeException("用户的银行卡信息不存在!");
+			throw new RuntimeException("用户的银行卡信息不存在");
 
 		this.cardInfoService.delete(cardInfo);
 
 		RetMsg retMsg = new RetMsg();
 		retMsg.setCode(200);
-		retMsg.setData("银行卡信息删除成功!");
-		retMsg.setMessage("银行卡信息删除成功!");
+		retMsg.setData("银行卡信息删除成功");
+		retMsg.setMessage("银行卡信息删除成功");
 		retMsg.setSuccess(true);
 
 		return retMsg;
@@ -172,11 +172,11 @@ public class CardInfoController {
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 
 		if (account == null)
-			throw new RuntimeException("用户名不能为空!");
+			throw new RuntimeException("用户名不能为空");
 
 		User user = this.userService.findByAccount(account);
 		if (null == user)
-			throw new RuntimeException("用户不存在!");
+			throw new RuntimeException("用户不存在");
 
 		try {
 			Sort sort = null;
@@ -202,11 +202,11 @@ public class CardInfoController {
 			@RequestParam(value = "keyword", required = false, defaultValue = "createTime") String keyword,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		if (null == account)
-			throw new RuntimeException("用户名不能为空!");
+			throw new RuntimeException("用户名不能为空");
 
 		User user = this.userService.findByAccount(account);
 		if (null == user)
-			throw new RuntimeException("用户名不存在!");
+			throw new RuntimeException("用户名不存在");
 
 		CardInfo cardInfo = new CardInfo();
 		cardInfo.setCardInfoId(user.getUserId());
@@ -223,7 +223,7 @@ public class CardInfoController {
 
 			return this.cardInfoService.findAllCardInfoBySort(pageable);
 		} catch (Exception e) {
-			throw new RuntimeException("查询失败!");
+			throw new RuntimeException("查询失败");
 		}
 	}
 }

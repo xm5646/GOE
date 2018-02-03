@@ -84,11 +84,11 @@ public class UserController {
 		// 验证用户是否存在
 		User user = this.userService.findByAccount(account);
 		if (null == user)
-			throw new RuntimeException("用户不存在!");
+			throw new RuntimeException("用户不存在");
 
 		// 判断原密码是否正确
 		if (!MD5Util.encrypeByMd5(oldPassword).equals(user.getPassword())) {
-			throw new RuntimeException("原密码不正确!");
+			throw new RuntimeException("原密码不正确");
 		}
 
 		user.setPassword(MD5Util.encrypeByMd5(newPassword));
@@ -97,7 +97,7 @@ public class UserController {
 		retMsg = new RetMsg();
 		retMsg.setCode(200);
 		retMsg.setData(user.getAccount());
-		retMsg.setMessage("用户登录密码更新成功!");
+		retMsg.setMessage("用户登录密码更新成功");
 		retMsg.setSuccess(true);
 
 		return retMsg;
@@ -188,12 +188,12 @@ public class UserController {
 		// 验证账户是否存在
 		User user = this.userService.findByAccount(account);
 		if (null == user) {
-			throw new RuntimeException("当前用户不存在!");
+			throw new RuntimeException("当前用户不存在");
 		}
 
 		// 验证用户的密码是否正确
 		if (!(MD5Util.encrypeByMd5(password).equals(user.getPassword()))) {
-			throw new RuntimeException("用户密码输入有误！");
+			throw new RuntimeException("用户密码输入有误");
 		}
 
 		retMsg = new RetMsg();
@@ -227,7 +227,7 @@ public class UserController {
 		// 验证用户是否存在
 		User user = this.userService.findByAccount(account);
 		if (null == user)
-			throw new RuntimeException("用户账号不存在!");
+			throw new RuntimeException("用户账号不存在");
 
 		// 设置用户登录新密码、支付密码和手机号码
 		user.setPassword(MD5Util.encrypeByMd5(newPassword));
@@ -243,7 +243,7 @@ public class UserController {
 		retMsg.setCode(200);
 		retMsg.setData(UserUtil.UserToUserVO(user));
 		retMsg.setSuccess(true);
-		retMsg.setMessage("用户设置成功！");
+		retMsg.setMessage("用户设置成功");
 
 		return retMsg;
 	}
@@ -252,12 +252,12 @@ public class UserController {
 	@GetMapping("/performance")
 	public RetMsg RetMsg(@RequestParam("account") String account) {
 		if (null == account)
-			throw new RuntimeException("用户名不能为空!");
+			throw new RuntimeException("用户名不能为空");
 
 		User user = this.userService.findByAccount(account);
 
 		if (null == user)
-			throw new RuntimeException("当前用户不存在!");
+			throw new RuntimeException("当前用户不存在");
 
 		long userId = user.getUserId();
 
@@ -270,12 +270,12 @@ public class UserController {
 			RetMsg retMsg = new RetMsg();
 			retMsg.setCode(200);
 			retMsg.setData(pLevel);
-			retMsg.setMessage("查询用户业绩成功!");
+			retMsg.setMessage("查询用户业绩成功");
 			retMsg.setSuccess(true);
 
 			return retMsg;
 		} catch (Exception e) {
-			throw new RuntimeException("查询用户业绩失败!");
+			throw new RuntimeException("查询用户业绩失败");
 		}
 	}
 
@@ -298,7 +298,7 @@ public class UserController {
 
 		// account不允许重复
 		if (null != this.userService.findByAccount(account))
-			throw new RuntimeException("用户名重复！");
+			throw new RuntimeException("用户名重复");
 
 		User parentUser = null;
 		User recommendUser = null;
@@ -314,12 +314,12 @@ public class UserController {
 
 		// 判断父节点或推荐人节点是否为null
 		if (null == parentUser || null == recommendUser) {
-			throw new RuntimeException("父节点或推荐人节点不存在!");
+			throw new RuntimeException("父节点或推荐人节点不存在");
 		}
 
 		// 判断推荐人的报单币余额
 		if (recommendUser.getConsumeCoin() < this.bonusPayPercentage.getConsumeCoinUnitPrice())
-			throw new RuntimeException("报单币余额不足，请充值!");
+			throw new RuntimeException("报单币余额不足，请充值");
 
 		try {
 			/******* 新增用户 *******/
@@ -358,7 +358,7 @@ public class UserController {
 				parentUser.setDepartmentC(user.getUserId());
 				break;
 			default:
-				throw new RuntimeException("传入的位置参数有误!");
+				throw new RuntimeException("传入的位置参数有误");
 			}
 
 			// 更新父节点
@@ -381,7 +381,7 @@ public class UserController {
 			// 查询公司id,更新公司的报单币
 			User company = this.userService.findByAccount("administrator");
 			if (null == company)
-				throw new RuntimeException("公司账户不存在!");
+				throw new RuntimeException("公司账户不存在");
 			company.setConsumeCoin(company.getConsumeCoin() + this.bonusPayPercentage.getConsumeCoinUnitPrice());
 			this.userService.save(company);
 
@@ -401,12 +401,12 @@ public class UserController {
 			retMsg = new RetMsg();
 			retMsg.setCode(200);
 			retMsg.setData(UserUtil.UserToUserVO(user));
-			retMsg.setMessage("用户添加成功!");
+			retMsg.setMessage("用户添加成功");
 			retMsg.setSuccess(true);
 			return retMsg;
 
 		} catch (Exception e) {
-			throw new RuntimeException("用户添加失败!");
+			throw new RuntimeException("用户添加失败");
 		}
 	}
 
@@ -417,7 +417,7 @@ public class UserController {
 		String account = user.getAccount();
 		// account值为空或者account用户不存在，抛出异常
 		if ((account == null) || (this.userService.findByAccount(account) == null)) {
-			throw new RuntimeException("当前用户不存在!");
+			throw new RuntimeException("当前用户不存在");
 		}
 
 		try {
@@ -425,11 +425,11 @@ public class UserController {
 			RetMsg retMsg = new RetMsg();
 			retMsg.setCode(200);
 			retMsg.setData(account);
-			retMsg.setMessage("用户删除成功!");
+			retMsg.setMessage("用户删除成功");
 			retMsg.setSuccess(true);
 			return retMsg;
 		} catch (Exception e) {
-			throw new RuntimeException("用户删除失败!");
+			throw new RuntimeException("用户删除失败");
 		}
 	}
 
@@ -446,7 +446,7 @@ public class UserController {
 			RetMsg retMsg = new RetMsg();
 			retMsg.setCode(200);
 			retMsg.setData(UserUtil.UserToUserVO(u));
-			retMsg.setMessage("用户查询成功!");
+			retMsg.setMessage("用户查询成功");
 			retMsg.setSuccess(true);
 			return retMsg;
 		} catch (Exception e) {
@@ -476,16 +476,16 @@ public class UserController {
 
 		User user = this.userService.findByAccount(account);
 		if (null == user)
-			throw new RuntimeException("用户不存在!");
+			throw new RuntimeException("用户不存在");
 
 		if (!(MD5Util.encrypeByMd5(loginPassword)).equals(user.getPassword()))
-			throw new RuntimeException("登录密码输入有误!");
+			throw new RuntimeException("登录密码输入有误");
 
 		if (!(MD5Util.encrypeByMd5(oldPaymentPassword)).equals(user.getPaymentPassword()))
-			throw new RuntimeException("原支付密码输入错误!");
+			throw new RuntimeException("原支付密码输入错误");
 
 		if (!phone.equals(user.getUserPhone()))
-			throw new RuntimeException("电话号码输入有误!");
+			throw new RuntimeException("电话号码输入有误");
 
 		try {
 			user.setPaymentPassword(MD5Util.encrypeByMd5(newPaymentPassword));
@@ -493,12 +493,12 @@ public class UserController {
 			retMsg = new RetMsg();
 			retMsg.setCode(200);
 			retMsg.setData(UserUtil.UserToUserVO(user));
-			retMsg.setMessage("支付密码修改成功!");
+			retMsg.setMessage("支付密码修改成功");
 			retMsg.setSuccess(true);
 
 			return retMsg;
 		} catch (Exception e) {
-			throw new RuntimeException("支付密码修改失败!");
+			throw new RuntimeException("支付密码修改失败");
 		}
 	}
 

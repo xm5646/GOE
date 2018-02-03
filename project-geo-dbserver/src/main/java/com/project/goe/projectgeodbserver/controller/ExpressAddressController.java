@@ -60,7 +60,7 @@ public class ExpressAddressController {
 		// 验证用户是否存在
 		User user = this.UserService.findByAccount(account);
 		if (null == user)
-			throw new RuntimeException("用户不存在！");
+			throw new RuntimeException("用户不存在");
 
 		ExpressAddress expressAddress = new ExpressAddress();
 		expressAddress.setCity(city);
@@ -83,7 +83,7 @@ public class ExpressAddressController {
 			}
 			expressAddress.setDefaultAddress(true);
 		} else {
-			throw new RuntimeException("默认地址参数值不正确！");
+			throw new RuntimeException("默认地址参数值不正确");
 		}
 
 		expressAddress.setDescription(description);
@@ -118,16 +118,16 @@ public class ExpressAddressController {
 		String account = userExpressAddressRequest.getAccount();
 		User user = this.UserService.findByAccount(account);
 		if (null == user)
-			throw new RuntimeException("用户不存在!");
+			throw new RuntimeException("用户不存在");
 
 		// 判断expressId是否合法
 		if ((expressId < 0) || (expressId > Long.MAX_VALUE))
-			throw new RuntimeException("地址id值不合法!");
+			throw new RuntimeException("地址id值不合法");
 
 		// 查看当前快递地址是否存在
 		ExpressAddress expressAddress = this.expressAddressService.findByExpressId(expressId);
 		if (null == expressAddress)
-			throw new RuntimeException("用户的快递地址信息不存在!");
+			throw new RuntimeException("用户的快递地址信息不存在");
 
 		// 更新快递地址信息
 		expressAddress.setCity(userExpressAddressRequest.getCity());
@@ -138,7 +138,7 @@ public class ExpressAddressController {
 		} else if (1 == userExpressAddressRequest.getDefaultAddress()) {
 			expressAddress.setDefaultAddress(true);
 		} else {
-			throw new RuntimeException("默认地址参数值不正确！");
+			throw new RuntimeException("默认地址参数值不正确");
 		}
 
 		expressAddress.setDescription(userExpressAddressRequest.getDescription());
@@ -152,7 +152,7 @@ public class ExpressAddressController {
 		retMsg = new RetMsg();
 		retMsg.setCode(200);
 		retMsg.setData(expressAddress);
-		retMsg.setMessage("用户地址信息更新成功!");
+		retMsg.setMessage("用户地址信息更新成功");
 		retMsg.setSuccess(true);
 
 		return retMsg;
@@ -163,22 +163,22 @@ public class ExpressAddressController {
 	@Transactional
 	public RetMsg delete(@RequestParam("account") String account, @RequestParam("expressId") long expressId) {
 		if (account == null || expressId < 0 || expressId > Long.MAX_VALUE)
-			throw new RuntimeException("删除传递参数不合法!");
+			throw new RuntimeException("删除传递参数不合法");
 
 		User user = this.UserService.findByAccount(account);
 		if (null == user)
-			throw new RuntimeException("用户不存在!");
+			throw new RuntimeException("用户不存在");
 
 		ExpressAddress expressAddress = this.expressAddressService.findByExpressId(expressId);
 		if (null == expressAddress)
-			throw new RuntimeException("用户的快递地址信息不存在!");
+			throw new RuntimeException("用户的快递地址信息不存在");
 
 		this.expressAddressService.delete(expressAddress);
 
 		RetMsg retMsg = new RetMsg();
 		retMsg.setCode(200);
 		retMsg.setData(null);
-		retMsg.setMessage("快递地址删除成功!");
+		retMsg.setMessage("快递地址删除成功");
 
 		return retMsg;
 	}
@@ -192,11 +192,11 @@ public class ExpressAddressController {
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		
 		if (account == null)
-			throw new RuntimeException("用户名不能为空!");
+			throw new RuntimeException("用户名不能为空");
 
 		User user = this.UserService.findByAccount(account);
 		if (null == user)
-			throw new RuntimeException("用户不存在!");
+			throw new RuntimeException("用户不存在");
 		
 		try {
 			Sort sort = null;

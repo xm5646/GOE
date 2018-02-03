@@ -36,10 +36,11 @@ public class TestUser {
 			user.setActivateTime(null);
 			Date cTime = new Date();
 			user.setAssessDate(cTime);
+			user.setUserStatus(true);
 			user.setAssessStatus(false);
-			user.setBonusCoin(10000f);
-			user.setConsumeCoin(10000f);
-			user.setProductCoin(10000f);
+			user.setBonusCoin(100000f);
+			user.setConsumeCoin(100000f);
+			user.setProductCoin(100000f);
 			user.setCreateTime(cTime);
 			user.setDepartmentA(0);
 			user.setDepartmentB(0);
@@ -60,6 +61,7 @@ public class TestUser {
 			u.setProductCoin(100000000f);
 			u.setPassword(MD5Util.encrypeByMd5("administrator"));
 			u.setPaymentPassword(MD5Util.encrypeByMd5("952712"));
+			u.setUserStatus(true);
 			
 			this.userService.save(user);
 			this.userService.save(u);

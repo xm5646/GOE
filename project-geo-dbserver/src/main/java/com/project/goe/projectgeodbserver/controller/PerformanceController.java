@@ -53,12 +53,12 @@ public class PerformanceController {
 	@GetMapping("/findUserAndFollowerPerformance")
 	public RetMsg findUserAndFollowerPerformance(@RequestParam("account") String account) {
 		if(null == account) 
-			throw new RuntimeException("用户名不能为空!");
+			throw new RuntimeException("用户名不能为空");
 		
 		// 查询当前用户
 		User user = this.userService.findByAccount(account);
 		if (null == user)
-			throw new RuntimeException("用户不存在!");
+			throw new RuntimeException("用户不存在");
 		
 		try {
 			long departmentA = user.getDepartmentA();
@@ -89,11 +89,11 @@ public class PerformanceController {
 			RetMsg retMsg = new RetMsg();
 			retMsg.setCode(200);
 			retMsg.setData(userAndFollowerPerformance);
-			retMsg.setMessage("用户及用户关联业绩查询成功!");
+			retMsg.setMessage("用户及用户关联业绩查询成功");
 			retMsg.setSuccess(true);
 			return retMsg;
 		} catch (Exception e) {
-			throw new RuntimeException("用户及用户关联业绩查询失败!");
+			throw new RuntimeException("用户及用户关联业绩查询失败");
 		}
 	}
 

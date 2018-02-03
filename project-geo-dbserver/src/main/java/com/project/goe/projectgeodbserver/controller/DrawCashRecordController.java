@@ -67,30 +67,30 @@ public class DrawCashRecordController {
 		// 验证用户是否存在
 		User user = this.userService.findByAccount(account);
 		if (null == user)
-			throw new RuntimeException("用户不存在!");
+			throw new RuntimeException("用户不存在");
 		
 		//验证提取额度是否合法
 		if(0>drawNumber || drawNumber<100 ||drawNumber>Double.MAX_VALUE)
-			throw new RuntimeException("提取额度输入不合法!");
+			throw new RuntimeException("提取额度输入不合法");
 		
 		// 验证用户提取限额是否足够
 		if (drawNumber > user.getBonusCoin())
-			throw new RuntimeException("现金提取额度不够!");
+			throw new RuntimeException("现金提取额度不够");
 
 		// 验证用户银行卡是否与用户真名是否一致
 		String nickName = user.getNickName();
 		
 		CardInfo cardInfo = this.cardInfoService.findByCardInfoId(cardInfoId);
 		if(null == cardInfo)
-			throw new RuntimeException("银行卡信息不存在!");
+			throw new RuntimeException("银行卡信息不存在");
 		
 		String cardOwnerName = cardInfo.getCardOwnerName();
 
 		if (!nickName.equals(cardOwnerName))
-			throw new RuntimeException("银行卡用户名与用户真名不一致!");
+			throw new RuntimeException("银行卡用户名与用户真名不一致");
 		
 		if(!(MD5Util.encrypeByMd5(paymentPassword).equals(user.getPaymentPassword())))
-			throw new RuntimeException("支付密码输入有误!");
+			throw new RuntimeException("支付密码输入有误");
 
 		try {
 			// 新增一条提现记录
@@ -114,13 +114,13 @@ public class DrawCashRecordController {
 
 			retMsg = new RetMsg();
 			retMsg.setCode(200);
-			retMsg.setMessage("用户提现申请成功!");
-			retMsg.setData("用户提现申请成功!");
+			retMsg.setMessage("用户提现申请成功");
+			retMsg.setData("用户提现申请成功");
 			retMsg.setSuccess(true);
 			
 			return retMsg;
 		} catch (Exception e) {
-			throw new RuntimeException("用户提现申请失败!");
+			throw new RuntimeException("用户提现申请失败");
 		}
 	}
 	
@@ -136,11 +136,11 @@ public class DrawCashRecordController {
 			Sort sort = null;
 			
 			if(null == account)
-				throw new RuntimeException("用户名不能为空!");
+				throw new RuntimeException("用户名不能为空");
 			
 			User user = this.userService.findByAccount(account);
 			if(null == user)
-				throw new RuntimeException("用户不存在!");
+				throw new RuntimeException("用户不存在");
 			
 			DrawCashRecord drawCashRecord = new DrawCashRecord();
 			drawCashRecord.setUserId(user.getUserId());
@@ -154,7 +154,7 @@ public class DrawCashRecordController {
 
 			return this.drawCashService.findAll(drawCashRecord, pageable);
 		} catch (Exception e) {
-			throw new RuntimeException("查询失败!");
+			throw new RuntimeException("查询失败");
 		}
 	}
 	
@@ -177,7 +177,7 @@ public class DrawCashRecordController {
 
 			return this.drawCashService.findAllDrawCardRecordBySort(pageable);
 		} catch (Exception e) {
-			throw new RuntimeException("查询失败!");
+			throw new RuntimeException("查询失败");
 		}
 	}
 	

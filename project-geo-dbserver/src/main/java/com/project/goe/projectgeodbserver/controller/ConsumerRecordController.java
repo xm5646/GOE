@@ -68,11 +68,11 @@ public class ConsumerRecordController {
 
 		// 验证用户账号
 		if (null == sendUser || null == receiveUser)
-			throw new RuntimeException("收入方或支出方的账户不存在!");
+			throw new RuntimeException("收入方或支出方的账户不存在");
 
 		// 验证用户的支付密码
 		if (!(MD5Util.encrypeByMd5(paymentPassword)).equals(sendUser.getPaymentPassword())) {
-			throw new RuntimeException("用户支付密码输入有误!");
+			throw new RuntimeException("用户支付密码输入有误");
 		}
 
 		String consumeType = null;
@@ -88,14 +88,14 @@ public class ConsumerRecordController {
 			consumeType = ConsumeType.COIN_TRANSFER_COIN;
 			break;
 		default:
-			throw new RuntimeException("消费类型码有误！");
+			throw new RuntimeException("消费类型码有误");
 		}
 
 		/********************* 更新用户表 ******************/
 		// 消费类型：公司转账报单币
 		if (consumeTypeCode == 1) {
 			if(!(sendUser.getAccount()).equals("administrator"))
-				throw new RuntimeException("支出方必须为公司账户!");
+				throw new RuntimeException("支出方必须为公司账户");
 			
 			sendUser.setConsumeCoin(sendUser.getConsumeCoin() - consumeNumber);
 			receiveUser.setConsumeCoin(receiveUser.getConsumeCoin() + consumeNumber);
@@ -104,11 +104,11 @@ public class ConsumerRecordController {
 			// 消费类型：奖金转报单币
 		} else if (consumeTypeCode == 2) {
 			if(!sendUser.getAccount().equals(receiveUser.getAccount()))
-				throw new RuntimeException("支出方和收入方必须为同一账户！");
+				throw new RuntimeException("支出方和收入方必须为同一账户");
 			
 			double bonousCoin = receiveUser.getBonusCoin();
 			if (consumeNumber > bonousCoin)
-				throw new RuntimeException("奖金余额不足!");
+				throw new RuntimeException("奖金余额不足");
 
 			receiveUser.setConsumeCoin(receiveUser.getConsumeCoin() + consumeNumber);
 			receiveUser.setBonusCoin(receiveUser.getBonusCoin() - consumeNumber);
@@ -117,14 +117,14 @@ public class ConsumerRecordController {
 		} else if (consumeTypeCode == 3) {
 			double consumeCoin = sendUser.getConsumeCoin();
 			if (consumeNumber > consumeCoin)
-				throw new RuntimeException("报单币余额不足!");
+				throw new RuntimeException("报单币余额不足");
 
 			sendUser.setConsumeCoin(sendUser.getConsumeCoin() - consumeNumber);
 			receiveUser.setConsumeCoin(receiveUser.getConsumeCoin() + consumeNumber);
 			this.userService.save(sendUser);
 			this.userService.save(receiveUser);
 		} else {
-			throw new RuntimeException("消费类型有误!");
+			throw new RuntimeException("消费类型有误");
 		}
 
 		// 新增一条消费记录
@@ -146,7 +146,7 @@ public class ConsumerRecordController {
 		retMsg = new RetMsg();
 		retMsg.setCode(200);
 		retMsg.setData(this.consumeRecordService.addOneConsumeRecord(consumeRecord));
-		retMsg.setMessage("消费记录添加成功！");
+		retMsg.setMessage("消费记录添加成功");
 		retMsg.setSuccess(true);
 
 		return retMsg;
@@ -173,11 +173,11 @@ public class ConsumerRecordController {
 			@RequestParam(value = "keyword", required = false, defaultValue = "consumeTime") String keyword,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		if(null == account)
-			throw new RuntimeException("用户名不能为空!");
+			throw new RuntimeException("用户名不能为空");
 		
 		User user = this.userService.findByAccount(account);
 		if(null == user)
-			throw new RuntimeException("用户名不存在!");
+			throw new RuntimeException("用户名不存在");
 		
 		ConsumeRecord consumeRecord = new ConsumeRecord();
 		consumeRecord.setUserId(user.getUserId());
@@ -204,7 +204,7 @@ public class ConsumerRecordController {
 				consumeType = ConsumeType.COIN_TRANSFER_RECONSUME;
 				break;
 			default:
-				throw new RuntimeException("消费类型码有误1");
+				throw new RuntimeException("消费类型码有误");
 		}
 		
 		consumeRecord.setConsumeType(consumeType);
@@ -221,7 +221,7 @@ public class ConsumerRecordController {
 
 			return this.consumeRecordService.findByAccountAndConsumeType(consumeRecord, pageable);
 		} catch (Exception e) {
-			throw new RuntimeException("查询失败!");
+			throw new RuntimeException("查询失败");
 		}
 	}
 
