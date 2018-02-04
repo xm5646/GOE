@@ -22,14 +22,7 @@ public class UserLoginSettingRequest {
 	@Pattern(regexp = "[0-9]{6}", message = "交易密码只能是6位数字")
 	private String paymentPassword;
 
-	/**
-	 * 验证手机号码
-	 * 移动号码段:139、138、137、136、135、134、150、151、152、157、158、159、182、183、187、188、147
-	 * 联通号码段:130、131、132、136、185、186、145 电信号码段:133、153、180、189
-	 */
-//	@Pattern(regexp = "((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}$", message = "手机号码格式不正确")
 	@NotBlank(message = "用户手机号码不能为空")
-	@Size(min = 11, max = 11, message = "用户手机号码长度为11位")
 	private String userPhone;
 
 	public String getNickName() {

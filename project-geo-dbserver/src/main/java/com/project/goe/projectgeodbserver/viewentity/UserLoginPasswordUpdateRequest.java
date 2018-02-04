@@ -1,6 +1,5 @@
 package com.project.goe.projectgeodbserver.viewentity;
 
-import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
 
 public class UserLoginPasswordUpdateRequest {
@@ -9,7 +8,6 @@ public class UserLoginPasswordUpdateRequest {
 	@NotBlank(message = "用户原密码不能为空")
 	private String oldPassword;
 	@NotBlank(message = "用户新密码不能为空")
-	@Size(min = 6,max = 12,message = "用户登录新密码长度只能6-12之间")
 	private String newPassword;
 
 	public String getAccount() {

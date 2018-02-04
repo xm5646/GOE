@@ -11,19 +11,15 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 public class UserSaveRequest {
 	@NotBlank(message = "新增用户名不能为空!")
-	@Pattern(regexp = "^[a-zA-Z0-9_]{5,20}$",message = "用户名(5-20位)数字、字母、下划线!")
 	private String account;
 	
 	@NotBlank(message = "新增用户密码不能为空!")
-	@Size(min = 6, max = 12, message = "用户密码长度不合法(6-12位)!")
 	private String password;
 	
 	@NotBlank(message = "上级用户名不能为空")
-	@Pattern(regexp = "^[a-zA-Z0-9_]{5,20}$",message = "用户名(5-20位)数字、字母、下划线")
 	private String parentAccount;
 	
 	@NotBlank(message = "推荐人用户名不能为空")
-	@Pattern(regexp = "^[a-zA-Z0-9_]{5,20}$",message = "用户名(5-20位)数字、字母、下划线")
 	private String recommendAccount;
 	
 	@NotBlank(message = "用户所属部门不能为空")
