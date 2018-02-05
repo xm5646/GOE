@@ -2,7 +2,7 @@
   <div class="divFont">
     <x-table :cell-bordered="false" :content-bordered="true" style="background-color:#fff;">
       <thead>
-      <tr style="background-color: darkgray">
+      <tr style="background-color: #d43e2e;color: white">
         <th>报单消费金额</th>
         <th>报单日期</th>
         <th>备注</th>
@@ -10,8 +10,8 @@
       </thead>
       <tbody>
       <tr v-for="row in rows">
-        <td>{{row.consumeNumber}}</td>
-        <td>{{row.consumeTime}}</td>
+        <td>{{row.consumeNumber.toFixed(0)}}</td>
+        <td>{{row.showPayTime}}</td>
         <td>{{row.description}}</td>
       </tr>
       </tbody>
@@ -27,6 +27,9 @@
   import Group from '../../../../node_modules/vux/src/components/group/index.vue'
   import GoeConfig from '../../../../config/goe'
   export default {
+    mounted: function () {
+//      this.getPage(1)
+    },
     props: ['list'],
     data () {
       return {
@@ -56,6 +59,9 @@
           this.getPage(val)
         }
       },
+      update () {
+        this.getPage(1)
+      },
       getPage (pageNum) {
         console.log(pageNum)
         const url = GoeConfig.apiServer + '/consumerRecord/findByAccountAndConsumeType?account=' + JSON.parse(window.localStorage.getItem('User')).account + '&consumeTypeCode=4' + '&pageNum=' + (pageNum - 1)
@@ -73,9 +79,7 @@
               const GetNumber = response.body.content.length
               this.rows.splice(0, this.rows.length)
               for (var i = 0; i < GetNumber; i++) {
-                const payDate = response.body.content[i].consumeTime
-                const showDate = new Date(parseInt(payDate)).toLocaleDateString()
-                response.body.content[i].consumeTime = this.formatDate(showDate)
+                response.body.content[i].showPayTime = this.getDateStr(response.body.content[i].consumeTime)
                 this.rows[i] = response.body.content[i]
               }
             }
@@ -86,20 +90,24 @@
             })
           })
       },
-      formatDate (date) {
-        const dates = date.split('/')
-        if (dates.length === 3) {
-          if (dates[1].length === 1) {
-            dates[1] = '0' + dates[1]
-          }
-          if (dates[2].length === 1) {
-            dates[2] = '0' + dates[2]
-          }
-          date = dates.join('-')
-          return date
+      getDateStr (timestamp) {
+        var date = new Date(timestamp)
+        var year = date.getFullYear()
+        var month = date.getMonth()
+        var day = date.getDate()
+        var showMonth = ''
+        var showDay = ''
+        if (Number(month) < 9) {
+          showMonth = '0' + Number(month + 1)
         } else {
-          return null
+          showMonth = Number(month + 1)
         }
+        if (Number(day) < 10) {
+          showDay = '0' + day
+        } else {
+          showDay = day
+        }
+        return year + '-' + showMonth + '-' + showDay
       }
     }
   }

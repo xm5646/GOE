@@ -5,23 +5,28 @@
     </keep-alive>
     <tabbar style="position: fixed;">
       <tabbar-item selected @click.native="changeView('home')">
-        <img slot="icon" src="../assets/images/home/home.png">
+        <img slot="icon" src="../assets/images/icon/home.png">
+        <img slot="icon-active" src="../assets/images/icon/home_active.png">
         <span slot="label">首页</span>
       </tabbar-item>
       <tabbar-item @click.native="changeView('performance')">
-        <img slot="icon" src="../assets/images/home/person.png">
+        <img slot="icon" src="../assets/images/icon/performance.png">
+        <img slot="icon-active" src="../assets/images/icon/performance_active.png">
         <span slot="label">我的业绩</span>
       </tabbar-item>
       <tabbar-item @click.native="changeView('wallet')">
-        <img slot="icon" src="../assets/images/home/wallet.png">
+        <img slot="icon" src="../assets/images/icon/wallet.png">
+        <img slot="icon-active" src="../assets/images/icon/wallet_active.png">
         <span slot="label">我的钱包</span>
       </tabbar-item>
       <tabbar-item @click.native="changeView('salary')">
-        <img slot="icon" src="../assets/images/home/side.png">
+        <img slot="icon" src="../assets/images/icon/salary.png">
+        <img slot="icon-active" src="../assets/images/icon/salary_active.png">
         <span slot="label">工资记录</span>
       </tabbar-item>
       <tabbar-item @click.native="changeView('consume')">
-        <img slot="icon" src="../assets/images/home/form.png">
+        <img slot="icon" src="../assets/images/icon/consume.png">
+        <img slot="icon-active" src="../assets/images/icon/consume_active.png">
         <span slot="label">消费记录</span>
       </tabbar-item>
     </tabbar>
@@ -42,7 +47,7 @@
       // 判断是否是从 创建用户页面创建成功之后传过来的
       if (this.$route.params.view === 'performance') {
         this.currentView = 'performance'
-        this.$route.params.view = ''
+        delete this.$route.params.view
       }
     },
     components: {
@@ -89,6 +94,9 @@
               })
             })
         }
+//        if (view === 'salary') {
+//          this.$refs.nowView.update()
+//        }
         // 切换视图
         this.currentView = view
       }

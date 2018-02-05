@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <x-header :left-options="{showBack: true}" style="background-color: #303135">会员管理系统</x-header>
+    <x-header :left-options="{showBack: true}">会员管理系统</x-header>
     <card :header="{title: '报单币转账'}">
       <div slot="content" class="card-demo-flex card-demo-content01">
         <div class="vux-1px-r">
@@ -13,7 +13,7 @@
     <divider title="收款用户查询">收款用户查询</divider>
     <group title="" class="weui-cells_form">
       <x-input class="weui-vcode" placeholder="请输入收款用的编号" v-model="receiveAccount">
-        <x-button slot="right" type="primary" mini @click.native="findUser">查找</x-button>
+        <x-button slot="right" type="warn" mini @click.native="findUser">查找</x-button>
       </x-input>
     </group>
     <div v-if="isFinded">

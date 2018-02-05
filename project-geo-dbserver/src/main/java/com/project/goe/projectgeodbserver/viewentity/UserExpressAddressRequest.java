@@ -1,5 +1,7 @@
 package com.project.goe.projectgeodbserver.viewentity;
 
+import javax.validation.constraints.Size;
+
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;

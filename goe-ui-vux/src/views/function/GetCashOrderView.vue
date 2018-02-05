@@ -1,11 +1,11 @@
 <template>
   <div class="page">
-    <x-header :left-options="{showBack: true}" style="background-color: #303135">会员管理系统</x-header>
+    <x-header :left-options="{showBack: true}">会员管理系统</x-header>
     <group>
       <div>
         <x-table :cell-bordered="false" :content-bordered="true" style="background-color:#fff; font-size: small">
           <thead>
-          <tr style="background-color: darkgray">
+          <tr style="background-color: #d43e2e;color: white">
             <th>提现金额</th>
             <th>到账金额</th>
             <th>申请时间</th>
@@ -14,9 +14,9 @@
           </thead>
           <tbody>
           <tr v-for="row in rows">
-            <td>{{row.drawnumber}}</td>
-            <td>{{row.finalNumber}}</td>
-            <td>{{row.drawCommitTime}}</td>
+            <td>{{row.drawnumber.toFixed(0)}}</td>
+            <td>{{row.finalNumber.toFixed(0)}}</td>
+            <td>{{row.showPayTime}}</td>
             <td>{{row.drawStatus}}</td>
           </tr>
           </tbody>
@@ -36,6 +36,9 @@
   import GoeConfig from '../../../config/goe'
 
   export default {
+    mounted: function () {
+//      this.getPage(1)
+    },
     components: {
       Group,
       GridItem,
@@ -78,9 +81,7 @@
               const GetNumber = response.body.content.length
               this.rows.splice(0, this.rows.length)
               for (var i = 0; i < GetNumber; i++) {
-                const payDate = response.body.content[i].drawCommitTime
-                const showDate = new Date(parseInt(payDate)).toLocaleDateString()
-                response.body.content[i].drawCommitTime = this.formatDate(showDate)
+                response.body.content[i].showPayTime = this.getDateStr(response.body.content[i].drawCommitTime)
                 this.rows[i] = response.body.content[i]
               }
             }
@@ -91,20 +92,24 @@
             })
           })
       },
-      formatDate (date) {
-        const dates = date.split('/')
-        if (dates.length === 3) {
-          if (dates[1].length === 1) {
-            dates[1] = '0' + dates[1]
-          }
-          if (dates[2].length === 1) {
-            dates[2] = '0' + dates[2]
-          }
-          date = dates.join('-')
-          return date
+      getDateStr (timestamp) {
+        var date = new Date(timestamp)
+        var year = date.getFullYear()
+        var month = date.getMonth()
+        var day = date.getDate()
+        var showMonth = ''
+        var showDay = ''
+        if (Number(month) < 9) {
+          showMonth = '0' + Number(month + 1)
         } else {
-          return null
+          showMonth = Number(month + 1)
         }
+        if (Number(day) < 10) {
+          showDay = '0' + day
+        } else {
+          showDay = day
+        }
+        return year + '-' + showMonth + '-' + showDay
       }
     }
   }

@@ -1,7 +1,7 @@
 <template>
   <div class="my-page">
 
-    <x-header :left-options="{showBack: false}" style="background-color: #303135">会员管理系统</x-header>
+    <x-header :left-options="{showBack: false}">会员管理系统</x-header>
     <div style="text-align:left; margin-left: 10px;">
      <h3>设置安全信息</h3>
       <p style="font-size: 8px; color: grey;margin-top: 2px;padding-bottom: 4px;">为了您的账户安全，请重新设置您的登录密码。<br>设置交易密码,账户资金发生变动时，使用交易密码进行身份确认</p>

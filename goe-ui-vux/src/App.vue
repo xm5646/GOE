@@ -1,5 +1,5 @@
 <template>
-  <div style="height:100%;">
+  <div style="height:100%;" class="body">
       <router-view class="router-view" style="height:100%;"></router-view>
   </div>
 </template>
@@ -23,7 +23,6 @@
 
 <style lang="less">
   @import '~vux/src/styles/reset.less';
-
   body {
     background-color: #fbf9fe;
   }

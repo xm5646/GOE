@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <x-header :left-options="{showBack: true}" style="background-color: #303135">会员管理系统</x-header>
+    <x-header :left-options="{showBack: true}">会员管理系统</x-header>
     <card :header="{title: '推荐新用户'}">
       <div slot="content" class="card-demo-flex card-demo-content01">
         <div class="vux-1px-r">
@@ -51,7 +51,7 @@
       this.consumeCoin = userObj.consumeCoin
       const recommendInfo = this.$route.params
       if (recommendInfo.recommendAccount == null) {
-        this.$router.push({name: 'index'})
+//        this.$router.push({name: 'index'})
       } else {
         this.recommendAccount = recommendInfo.recommendAccount
         this.parentAccount = recommendInfo.parentAccount
@@ -108,7 +108,7 @@
             recommendAccount: this.recommendAccount
           },
           {
-            _timeout: 3000,
+            _timeout: 10000,
             onTimeout: (request) => {
             }
           })
@@ -119,8 +119,8 @@
                 text: '创建成功'
               })
 //              this.getUserInfo()
-              window.history.go(-1)
-//              this.$router.push({name: 'index', params: {view: 'performance', parentAccount: this.parentAccount}})
+//              window.history.go(-1)
+              this.$router.push({name: 'index', params: {view: 'performance', parentAccount: this.parentAccount}})
             } else {
               console.log(response.body.message)
               this.$vux.toast.show({

@@ -5,5 +5,6 @@ module.exports = {
     reConsumePrice: 480,
     reConsumeDiscount: 0.7
   },
-  apiServer: 'http://192.168.123.175:8088'
+  // apiServer: 'http://60.205.183.3:8088'
+  apiServer: 'http://localhost:8088'
 }

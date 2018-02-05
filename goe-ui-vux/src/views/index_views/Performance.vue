@@ -1,6 +1,6 @@
 <template>
   <div class="my-page">
-    <x-header :left-options="{showBack: false}" style="background-color: #303135">会员管理系统</x-header>
+    <x-header :left-options="{showBack: false}">会员管理系统</x-header>
     <search
       @result-click="resultClick"
       @on-change="getResult"
@@ -23,7 +23,7 @@
 
       </performance-view>
       <br>
-      <x-button @click.native="viewMyPerformance">返回我的业绩</x-button>
+      <x-button @click.native="viewMyPerformance" type="warn">返回我的业绩</x-button>
     </div>
     <div v-if="isSearching">
       <br>
@@ -49,6 +49,7 @@
         this.$vux.loading.hide()
         console.log('改变当前业绩显示用户为:' + this.$route.params.parentAccount)
         this.changeUser(this.$route.params.parentAccount)
+        this.currentUser = this.$route.params.parentAccount
       }
     },
     data () {
@@ -63,21 +64,21 @@
         type: '1',
         list: [{
           isHasUser: true,
-          src: require('../../assets/images/partABC/A.png'),
+          src: require('../../assets/images/icon/A.png'),
           title: '用户A',
           desc: 'A:12  B:12  C:0',
           disableCreate: false,
           place: 'A'
         }, {
           isHasUser: true,
-          src: require('../../assets/images/partABC/B.png'),
+          src: require('../../assets/images/icon/B.png'),
           title: '用户B',
           desc: 'A:12  B:12  C:0',
           disableCreate: false,
           place: 'B'
         }, {
           isHasUser: false,
-          src: require('../../assets/images/partABC/C.png'),
+          src: require('../../assets/images/icon/C.png'),
           title: '用户C',
           desc: 'A:12  B:12  C:0',
           disableCreate: false,
@@ -130,7 +131,7 @@
       },
       createUser (item) {
         const parentAccount = this.currentUser
-        const recommendAccount = this.user.account
+        const recommendAccount = JSON.parse(window.localStorage.getItem('User')).account
         const place = item.place
         this.$router.push({
           name: 'addUser',

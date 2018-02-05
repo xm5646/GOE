@@ -1,6 +1,6 @@
 <template>
   <div >
-    <x-header :left-options="{showBack: true}" style="background-color: #303135">会员管理系统</x-header>
+    <x-header :left-options="{showBack: true}">会员管理系统</x-header>
     <group title="添加银行卡">
       <div v-if="isMaxCard">
         <message title="无法添加银行卡" description="每个用户最多允许绑定5张银行卡"></message>

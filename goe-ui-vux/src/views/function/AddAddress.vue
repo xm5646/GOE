@@ -1,6 +1,6 @@
 <template>
   <div >
-    <x-header :left-options="{showBack: true}" style="background-color: #303135">会员管理系统</x-header>
+    <x-header :left-options="{showBack: true}">会员管理系统</x-header>
     <group title="添加收货地址">
       <x-input title="收货人" placeholder="" is-type="china-name" v-model="receiveName">
       </x-input>

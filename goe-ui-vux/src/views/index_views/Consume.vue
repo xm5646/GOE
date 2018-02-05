@@ -1,6 +1,6 @@
 <template>
   <div class="my-page">
-    <x-header :left-options="{showBack: false}" style="background-color: #303135">会员管理系统</x-header>
+    <x-header :left-options="{showBack: false}">会员管理系统</x-header>
     <group>
       <div style="width: 100%;overflow:scroll;-webkit-overflow-scrolling:touch;">
         <tab style="width: 100%; font-size: smaller" bar-active-color="#668599" :line-width="1">
@@ -64,6 +64,7 @@
         this.changeTable(index)
       },
       changeTable (index) {
+//        this.$refs.nowViewTable.update()
         switch (index) {
           case 0:
             this.currentViewTable = 'reportOrder'

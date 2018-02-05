@@ -1,11 +1,11 @@
 <template>
   <div class="page">
-    <x-header :left-options="{showBack: false}" style="background-color: #303135">会员管理系统</x-header>
+    <x-header :left-options="{showBack: false}">会员管理系统</x-header>
     <group>
       <div>
         <x-table :cell-bordered="false" :content-bordered="true" style="background-color:#fff; font-size: small">
           <thead>
-          <tr style="background-color: darkgray">
+          <tr style="background-color: #d43e2e; color: white">
             <th>发放总额</th>
             <th>奖金</th>
             <th>产品积分</th>
@@ -15,11 +15,11 @@
           </thead>
           <tbody>
           <tr v-for="row in rows">
-            <td>{{row.totalMoney}}</td>
-            <td>{{row.bonusNumber}}</td>
-            <td>{{row.productCoinNumber}}</td>
-            <td>{{row.manageCost}}</td>
-            <td>{{row.payTime}}</td>
+            <td>{{row.totalMoney.toFixed(0)}}</td>
+            <td>{{row.bonusNumber.toFixed(0)}}</td>
+            <td>{{row.productCoinNumber.toFixed(0)}}</td>
+            <td>{{row.manageCost.toFixed(0)}}</td>
+            <td v-html="row.showPayTime"></td>
           </tr>
           </tbody>
         </x-table>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-  import {XHeader, Grid, Panel, Divider, XTable} from 'vux'
+  import { XHeader, Grid, Panel, Divider, XTable } from 'vux'
   import pager from '../../components/Pager'
   import XButton from '../../../node_modules/vux/src/components/x-button/index.vue'
   import GridItem from '../../../node_modules/vux/src/components/grid/grid-item.vue'
@@ -38,6 +38,8 @@
   import GoeConfig from '../../../config/goe'
 
   export default {
+    mounted: function () {
+    },
     components: {
       Group,
       GridItem,
@@ -59,10 +61,14 @@
     methods: {
       change (val) {
         if (val === '') {
+          this.getPage(1)
         } else {
           console.log('change', val)
           this.getPage(val)
         }
+      },
+      update () {
+        this.getPage(1)
       },
       getPage (pageNum) {
         console.log(pageNum)
@@ -80,9 +86,7 @@
               const GetNumber = response.body.content.length
               this.rows.splice(0, this.rows.length)
               for (var i = 0; i < GetNumber; i++) {
-                const payDate = response.body.content[i].payTime
-                const showDate = new Date(parseInt(payDate)).toLocaleDateString()
-                response.body.content[i].payTime = this.formatDate(showDate)
+                response.body.content[i].showPayTime = this.getDateStr(response.body.content[i].payTime)
                 this.rows[i] = response.body.content[i]
               }
             }
@@ -93,20 +97,24 @@
             })
           })
       },
-      formatDate (date) {
-        const dates = date.split('/')
-        if (dates.length === 3) {
-          if (dates[1].length === 1) {
-            dates[1] = '0' + dates[1]
-          }
-          if (dates[2].length === 1) {
-            dates[2] = '0' + dates[2]
-          }
-          date = dates.join('-')
-          return date
+      getDateStr (timestamp) {
+        var date = new Date(timestamp)
+        var year = date.getFullYear()
+        var month = date.getMonth()
+        var day = date.getDate()
+        var showMonth = ''
+        var showDay = ''
+        if (Number(month) < 9) {
+          showMonth = '0' + Number(month + 1)
         } else {
-          return null
+          showMonth = Number(month + 1)
         }
+        if (Number(day) < 10) {
+          showDay = '0' + day
+        } else {
+          showDay = day
+        }
+        return year + '-' + showMonth + '-' + showDay
       }
     }
   }

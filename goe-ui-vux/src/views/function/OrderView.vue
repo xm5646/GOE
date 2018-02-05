@@ -1,11 +1,11 @@
 <template>
   <div class="page">
-    <x-header :left-options="{showBack: true}" style="background-color: #303135">会员管理系统</x-header>
+    <x-header :left-options="{showBack: true}">会员管理系统</x-header>
     <group>
       <div>
         <x-table :cell-bordered="false" :content-bordered="true" style="background-color:#fff; font-size: small">
           <thead>
-          <tr style="background-color: darkgray">
+          <tr style="background-color: #d43e2e;color: white">
             <th>订单类型</th>
             <th>订单总额</th>
             <th>购买数量</th>
@@ -36,6 +36,9 @@
   import GoeConfig from '../../../config/goe'
 
   export default {
+    mounted: function () {
+//      this.getPage(1)
+    },
     components: {
       Group,
       GridItem,

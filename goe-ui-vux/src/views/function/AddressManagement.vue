@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <x-header :left-options="{showBack: true}" style="background-color: #303135">会员管理系统</x-header>
+    <x-header :left-options="{showBack: true}">会员管理系统</x-header>
     <group title="收货地址管理">
       <cell title='添加收货地址' is-link @click.native="addAddress">
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/plus.png">

@@ -1,6 +1,6 @@
 <template>
   <div class="my-page">
-    <x-header :left-options="{showBack: false}" style="background-color: #303135;">会员管理系统</x-header>
+    <x-header :left-options="{showBack: false}">会员管理系统</x-header>
     <div class="clearboth"></div>
     <panel :list="list" :type="type"></panel>
 
@@ -11,25 +11,25 @@
 
     <group title='常用功能'>
       <cell title='奖金转换报单币' is-link @click.native="goTo('convertConsumeCoin')">
-        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/form.png">
+        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/icon/convert.png">
       </cell>
       <cell title='报单币转账' is-link @click.native="goTo('transferConsumeCoin')">
-        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/form.png">
+        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/icon/transfer.png">
       </cell>
       <cell title='重复消费' is-link @click.native="goTo('reConsume')">
-        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/form.png">
+        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/icon/reconsume.png">
       </cell>
       <cell title='订单查询' is-link @click.native="goTo('orderView')">
-        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/form.png">
+        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/icon/order.png">
       </cell>
       <cell title='修改登录密码' is-link @click.native="goTo('resetPassword')">
-        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/form.png">
+        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/icon/password.png">
       </cell>
       <cell title='修改交易密码' is-link @click.native="goTo('resetPayPassword')">
-        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/form.png">
+        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/icon/payPassword.png">
       </cell>
-      <cell title='退出登录' is-link @click.native="logout">
-        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/form.png">
+      <cell title='退出登录' is-link @click.native="confirmLogout">
+        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/icon/log-out.png">
       </cell>
     </group>
     <br>
@@ -68,7 +68,7 @@
         user: '',
         type: '1',
         list: [{
-          src: require('../../assets/images/person.png'),
+          src: require('../../assets/images/icon/user.png'),
           title: '张三 [组长]',
           desc: '<strong>已通过考核</strong><br>下次考核日期:2018-01-20'
         }],
@@ -83,6 +83,20 @@
       }
     },
     methods: {
+      confirmLogout () {
+        const _this = this // 需要注意 onCancel 和 onConfirm 的 this 指向
+        this.$vux.confirm.show({
+          // 组件除show外的属性
+          title: '确定要退出吗?',
+          onCancel () {
+            console.log(this) // 非当前 vm
+            console.log(_this) // 当前 vm
+          },
+          onConfirm () {
+            _this.logout()
+          }
+        })
+      },
       logout () {
         window.localStorage.clear()
         this.$router.push({name: 'login'})

@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <x-header :left-options="{showBack: true}" style="background-color: #303135">会员管理系统</x-header>
+    <x-header :left-options="{showBack: true}">会员管理系统</x-header>
     <group title="修改支付密码">
       <x-input required placeholder="请输入登录密码" type="password" :min="6" :max="12" v-model="oldPassword">
         <img slot="label" style="padding-right:10px;display:block;" src="../../assets/images/form/i-form-password.png" width="24" height="24">
@@ -17,7 +17,7 @@
       <x-input required placeholder="请再次输入新交易密码" type="password" :min="6" :max="6" v-model="confirmPayPassword">
         <img slot="label" style="padding-right:10px;display:block;" src="../../assets/images/form/i-form-password.png" width="24" height="24">
       </x-input>
-      <x-button type="primary" action-type="button" @click.native="submit"> 提交</x-button>
+      <x-button type="warn" action-type="button" @click.native="submit"> 提交</x-button>
     </group>
   </div>
 </template>

@@ -13,12 +13,12 @@
                 <div class="weui-media-box__hd" v-if="item.src">
                   <img class="weui-media-box__thumb" :src="item.src" alt="">
                 </div>
-                <div class="weui-media-box__bd">
+                <div class="weui-media-box__bd" style="border-bottom: #b2b2b2 solid 1px">
                   <div v-if="item.isHasUser">
                     <h4 class="weui-media-box__title" v-html="item.title"></h4>
                     <p class="weui-media-box__desc" v-html="item.desc"></p>
                   </div>
-                  <div v-else>
+                  <div v-else >
 
                   </div>
                 </div>
@@ -29,17 +29,17 @@
                 <div class="weui-media-box__hd" v-if="item.src">
                   <img class="weui-media-box__thumb" :src="item.src" alt="">
                 </div>
-                <div class="weui-media-box__bd">
+                <div class="weui-media-box__bd" style="border-bottom: #b2b2b2 solid 1px">
                   <div v-if="item.isHasUser">
                     <h4 class="weui-media-box__title" v-html="item.title"></h4>
                     <p class="weui-media-box__desc" v-html="item.desc"></p>
                   </div>
                   <div v-else>
                     <div v-if="item.disableCreate">
-                      <x-button mini  disabled>新增用户</x-button>
+                      <x-button mini  disabled type="warn">新增用户</x-button>
                     </div>
                     <div v-else>
-                      <x-button mini v-on:click.native="submitCreateUserEvent(item)">新增用户</x-button>
+                      <x-button type="warn" mini v-on:click.native="submitCreateUserEvent(item)">新增用户</x-button>
                     </div>
                   </div>
                 </div>
@@ -188,4 +188,5 @@
   a.disable-click {
     pointer-events: none;
   }
+
 </style>
