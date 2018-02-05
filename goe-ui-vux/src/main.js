@@ -42,7 +42,9 @@ Vue.http.interceptors.push((request, next) => {
     }, request._timeout)
   }
   next((response) => {
-    console.log('进入拦截器响应方法,输出获取的相应数据')
+    console.log('进入拦截器响应方法,输出获取的相应数据,读取cookie和header')
+    console.log('是否登陆:')
+    console.log(response)
     Vue.$vux.loading.hide()
     console.log(response.body)
     clearTimeout(timeout)
