@@ -35,3 +35,6 @@ bonus:
      reconsumeCoinUnitPrice: 480
      drawCostPercentage: 10
 
+login: 
+  expireTime: 20
+

@@ -1,8 +1,6 @@
 package com.project.goe.projectgeodbserver.util;
 
- import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 import org.springframework.util.Base64Utils;
 

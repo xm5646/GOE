@@ -4,6 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,6 +38,7 @@ import com.project.goe.projectgeodbserver.util.ValidateErrorUtil;
 import com.project.goe.projectgeodbserver.util.BonusPayPercentage;
 import com.project.goe.projectgeodbserver.util.BusinessUtil;
 import com.project.goe.projectgeodbserver.util.MD5Util;
+import com.project.goe.projectgeodbserver.util.UserLoginSetting;
 import com.project.goe.projectgeodbserver.viewentity.PerformanceLevel;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
 import com.project.goe.projectgeodbserver.viewentity.UpdatePaymentPasswordRequest;
@@ -47,7 +51,10 @@ import com.project.goe.projectgeodbserver.viewentity.UserSaveRequest;
 @RequestMapping("/user")
 @CrossOrigin
 public class UserController {
-
+	
+	@Autowired
+	private UserLoginSetting userLoginSetting;
+	
 	@Autowired
 	private UserService userService;
 
@@ -176,7 +183,7 @@ public class UserController {
 	 * @return：retMsg
 	 */
 	@PostMapping("/login")
-	public RetMsg login(@Validated UserLoginRequest userLoginRequest, BindingResult bindingResult) {
+	public RetMsg login(@Validated UserLoginRequest userLoginRequest, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		String account = userLoginRequest.getAccount();
 		String password = userLoginRequest.getPassword();
 
@@ -195,6 +202,10 @@ public class UserController {
 		if (!(MD5Util.encrypeByMd5(password).equals(user.getPassword()))) {
 			throw new RuntimeException("用户密码输入有误");
 		}
+		
+		//设置cookie
+		setUserLoginCookie(user,request,response);
+		response.setHeader("loginStatus", "true");
 
 		retMsg = new RetMsg();
 
@@ -203,6 +214,22 @@ public class UserController {
 		retMsg.setData(UserUtil.UserToUserVO(user));
 
 		return retMsg;
+	}
+	
+	private void setUserLoginCookie(User user,HttpServletRequest request,HttpServletResponse response) {
+		long time = System.currentTimeMillis() + this.userLoginSetting.getExpireTime() * 60 * 10000;
+		String account = user.getAccount();
+		String password = user.getPassword();
+		String data = MD5Util.encrypeByMd5(account + ":" + time + ":" + password);
+		String cookieStr = account + ":" + time + ":" + data;
+		
+		Cookie cookie = new Cookie("autoLogin",cookieStr);
+		cookie.setComment("自动登录cookie!");
+		cookie.setPath("/");
+		cookie.setMaxAge((int)(this.userLoginSetting.getExpireTime() * 60));
+		response.addCookie(cookie);
+		response.setHeader( "Access-Control-Allow-Origin","*");
+		response.setHeader( "Access-Control-Allow-Methods","POST,GET" );
 	}
 
 	/**
