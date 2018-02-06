@@ -42,12 +42,22 @@ Vue.http.interceptors.push((request, next) => {
     }, request._timeout)
   }
   next((response) => {
-    console.log('进入拦截器响应方法,输出获取的相应数据,读取cookie和header')
-    console.log('是否登陆:')
-    console.log(response)
     Vue.$vux.loading.hide()
-    console.log(response.body)
+    console.log('进入拦截器响应方法,输出获取的相应数据,读取cookie和header')
     clearTimeout(timeout)
+    console.log('获取登陆状态:' + response.headers.get('loginstatus'))
+    if (!(response.headers.get('loginstatus') === 'true')) {
+      // Vue.$router.push({name: 'login'})
+      window.localStorage.clear()
+      window.location.href = 'http://60.205.183.3/nologin'
+      // Vue.$vux.toast.show({
+      //   type: 'cancel',
+      //   text: '登陆超时'
+      // })
+      response.abort()
+    } else {
+      console.log(response.body)
+    }
   })
 })
 
@@ -77,13 +87,18 @@ store.registerModule('vux', {
       state.isLoading = payload.isLoading
     }
   },
-  actions: {
-  }
+  actions: {}
 })
 
 sync(store, router)
 
 router.beforeEach(function (to, from, next) {
+  // var arr, reg = new RegExp('(^| )' + 'autoLogin' + '=([^;]*)(;|$)')
+  //
+  // if (arr = document.cookie.match(reg))
+  //   return unescape(arr[2])
+  // else
+  //   return null
   if (to.name !== 'login') {
     if (window.localStorage.getItem('User') == null) {
       router.push({name: 'login'})
@@ -93,7 +108,7 @@ router.beforeEach(function (to, from, next) {
 })
 
 router.afterEach(function (to) {
-  store.commit('updateLoadingStatus', {isLoading: false})
+  // store.commit('updateLoadingStatus', {isLoading: false})
 })
 
 Vue.config.productionTip = false

@@ -17,7 +17,8 @@
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/icon/transfer.png">
       </cell>
       <cell title='重复消费' is-link @click.native="goTo('reConsume')">
-        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/icon/reconsume.png">
+        <img slot="icon" width="20" style="display:block;margin-right:5px;"
+             src="../../assets/images/icon/reconsume.png">
       </cell>
       <cell title='订单查询' is-link @click.native="goTo('orderView')">
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/icon/order.png">
@@ -26,7 +27,8 @@
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/icon/password.png">
       </cell>
       <cell title='修改交易密码' is-link @click.native="goTo('resetPayPassword')">
-        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/icon/payPassword.png">
+        <img slot="icon" width="20" style="display:block;margin-right:5px;"
+             src="../../assets/images/icon/payPassword.png">
       </cell>
       <cell title='退出登录' is-link @click.native="confirmLogout">
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/icon/log-out.png">
@@ -39,6 +41,7 @@
 <script>
   import { XHeader, Group, Panel, Divider, Card, Cell } from 'vux'
   import GoeConfig from '../../../config/goe'
+
   export default {
     mounted: function () {
       const userOjb = JSON.parse(window.localStorage.getItem('User'))
@@ -100,6 +103,9 @@
       logout () {
         window.localStorage.clear()
         this.$router.push({name: 'login'})
+        var exp = new Date()
+        exp.setTime(exp.getTime() - 1)
+        document.cookie = 'autoLogin' + '=' + ';expires=' + exp.toGMTString()
       },
       goTo (url) {
         this.$router.push({name: url})

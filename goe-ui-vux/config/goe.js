@@ -6,4 +6,5 @@ module.exports = {
     reConsumeDiscount: 0.7
   },
   apiServer: 'http://60.205.183.3/api'
+  // apiServer: 'http://60.205.183.3/api'
 }
