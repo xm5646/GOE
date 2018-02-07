@@ -24,7 +24,7 @@
           </tbody>
         </x-table>
       </div>
-      <pager :value="1" title="" fillable :min="1" :max="totalPageNum" @on-change="change"></pager>
+      <pager :value="page" title="" fillable :min="1" :max="totalPageNum" @on-change="change"></pager>
     </group>
   </div>
 </template>
@@ -61,7 +61,12 @@
     methods: {
       change (val) {
         if (val === '') {
-          this.getPage(1)
+//          this.getPage(1)
+        } else if (val > this.totalPageNum) {
+          this.$vux.toast.show({
+            type: 'text',
+            text: '输入的页面不存在'
+          })
         } else {
           console.log('change', val)
           this.getPage(val)

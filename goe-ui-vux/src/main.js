@@ -49,11 +49,11 @@ Vue.http.interceptors.push((request, next) => {
     if (!(response.headers.get('loginstatus') === 'true')) {
       // Vue.$router.push({name: 'login'})
       window.localStorage.clear()
-      window.location.href = 'http://60.205.183.3/nologin'
-      // Vue.$vux.toast.show({
-      //   type: 'cancel',
-      //   text: '登陆超时'
-      // })
+      window.location.href = 'http://60.205.183.3/login'
+      Vue.$vux.toast.show({
+        type: 'text',
+        text: '登陆超时,请重新登陆'
+      })
       response.abort()
     } else {
       console.log(response.body)
