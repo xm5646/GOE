@@ -8,6 +8,7 @@ import VueResource from 'vue-resource'
 import App from './App'
 import router from './router/index'
 import { sync } from 'vuex-router-sync'
+import GoeConfig from '../config/goe'
 // import { DatetimePlugin, BusPlugin, DevicePlugin, ToastPlugin, AlertPlugin, ConfirmPlugin, LoadingPlugin, WechatPlugin } from 'vux'
 import { ToastPlugin, LoadingPlugin, ConfirmPlugin } from 'vux'
 // import API from './js/api'
@@ -43,16 +44,20 @@ Vue.http.interceptors.push((request, next) => {
   next((response) => {
     Vue.$vux.loading.hide()
     clearTimeout(timeout)
-    console.log('进入拦截器响应方法,输出获取的相应数据,读取cookie和header')
-    console.log('获取登陆状态:' + response.headers.get('loginstatus'))
-    if (!(response.headers.get('loginstatus') === 'true')) {
-      // Vue.$router.push({name: 'login'})
-      window.localStorage.clear()
-      window.location.href = 'http://60.205.183.3/login'
-      response.abort()
+    if (GoeConfig.useAuth) {
+      console.log('进入拦截器响应方法,输出获取的相应数据,读取cookie和header')
+      console.log('获取登陆状态:' + response.headers.get('loginstatus'))
+      if (!(response.headers.get('loginstatus') === 'true')) {
+        // Vue.$router.push({name: 'login'})
+        window.localStorage.clear()
+        window.location.href = 'http://60.205.183.3/login'
+        response.abort()
+      } else {
+        console.log('已登录状态')
+        Vue.$vux.loading.hide()
+        console.log(response.body)
+      }
     } else {
-      console.log('已登录状态')
-      Vue.$vux.loading.hide()
       console.log(response.body)
     }
   })

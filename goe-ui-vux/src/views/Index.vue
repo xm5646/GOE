@@ -51,12 +51,12 @@
         this.changeView('performance')
         delete this.$route.params.view
       }
-      if (this.$route.params.view === 'wallet') {
-        console.log('恢复钱包视图')
-        this.currentView = 'wallet'
-        this.changeView('wallet')
-        delete this.$route.params.view
-      }
+//      if (this.$route.params.view === 'wallet') {
+//        console.log('恢复钱包视图')
+//        this.currentView = 'wallet'
+//        this.changeView('wallet')
+//        delete this.$route.params.view
+//      }
     },
     components: {
       XHeader,
@@ -83,7 +83,7 @@
           const url = GoeConfig.apiServer + '/user/findByAccount?account=' + JSON.parse(window.localStorage.getItem('User')).account
           this.$http.get(url,
             {
-              _timeout: 3000,
+              _timeout: 5000,
               onTimeout: (request) => {
               }
             })
