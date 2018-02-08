@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.project.goe.projectgeodbserver.entity.BonusPayList;
+import com.project.goe.projectgeodbserver.entity.BonusPayRatio;
 import com.project.goe.projectgeodbserver.entity.BusinessEntity;
 import com.project.goe.projectgeodbserver.entity.Earning;
 import com.project.goe.projectgeodbserver.entity.Performance;
@@ -97,9 +98,10 @@ public class CheckUtil {
 			bpl.setUserId(user.getUserId());
 			bpl.setPayTime(new Date());
 			bpl.setTotalMoney(earn.getDayMoney());
-			bpl.setBonusNumber(earn.getDayMoney() * 0.7);
-			bpl.setManageCost(earn.getDayMoney() * 0.1);
-			bpl.setProductCoinNumber(earn.getDayMoney() * 0.2);
+			BonusPayRatio bpr = getBonusPayRatio(earn);
+			bpl.setBonusNumber(earn.getDayMoney() * bpr.getBonusNumber());
+			bpl.setManageCost(earn.getDayMoney() * bpr.getManageCost());
+			bpl.setProductCoinNumber(earn.getDayMoney() * bpr.getProductCoinNumber());
 
 			// 将积分和金钱添加到user表
 			user.setBonusCoin(user.getBonusCoin() + bpl.getBonusNumber());
@@ -107,6 +109,15 @@ public class CheckUtil {
 			return bpl;
 		}
 		return null;
+	}
+	
+	private static BonusPayRatio getBonusPayRatio(Earning earn) {
+		BonusPayRatio bpr = new BonusPayRatio(0.7,0.1,0.2);
+		boolean bbpr = BusinessUtil.isBigBusSame(earn.getUserLevel());
+		if (earn!=null &&bbpr) {
+			 bpr = new BonusPayRatio(0.65,0.1,0.25);
+		}
+		return bpr;
 	}
 
 	/**
