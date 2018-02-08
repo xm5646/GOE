@@ -60,14 +60,11 @@
     },
     methods: {
       change (val) {
+        console.log('修改值: ' + val)
         if (val === '') {
 //          this.getPage(1)
-        } else if (val > this.totalPageNum) {
-          this.$vux.toast.show({
-            type: 'text',
-            text: '输入的页面不存在'
-          })
         } else {
+          this.page = val
           console.log('change', val)
           this.getPage(val)
         }
@@ -76,7 +73,6 @@
         this.getPage(1)
       },
       getPage (pageNum) {
-        console.log(pageNum)
         const url = GoeConfig.apiServer + '/bonus/findBonusPageByAccount?account=' + JSON.parse(window.localStorage.getItem('User')).account + '&pageNum=' + (pageNum - 1)
         this.$http.get(url,
           {
@@ -86,6 +82,7 @@
           })
           .then(response => {
             if (response.body.totalElements > 0) {
+              this.$vux.loading.hide()
               this.totalPageNum = response.body.totalPages
               console.log(response.body.content)
               const GetNumber = response.body.content.length
