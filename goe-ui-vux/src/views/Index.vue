@@ -45,8 +45,16 @@
   export default {
     mounted: function () {
       // 判断是否是从 创建用户页面创建成功之后传过来的
+      console.log('检查是否存在指定View: ' + this.$route.params.view)
       if (this.$route.params.view === 'performance') {
         this.currentView = 'performance'
+        this.changeView('performance')
+        delete this.$route.params.view
+      }
+      if (this.$route.params.view === 'wallet') {
+        console.log('恢复钱包视图')
+        this.currentView = 'wallet'
+        this.changeView('wallet')
         delete this.$route.params.view
       }
     },
@@ -71,6 +79,7 @@
     methods: {
       changeView (view) {
         if (view === 'wallet' || view === 'home') {
+          console.log('触发视图更新,更新数据')
           const url = GoeConfig.apiServer + '/user/findByAccount?account=' + JSON.parse(window.localStorage.getItem('User')).account
           this.$http.get(url,
             {

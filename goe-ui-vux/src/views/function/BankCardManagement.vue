@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <x-header :left-options="{showBack: true}">会员管理系统</x-header>
+    <x-header :left-options="{showBack: true, preventGoBack: true}" @on-click-back="backToWallet">会员管理系统</x-header>
     <group title="银行卡信息管理">
       <cell title='添加银行卡' is-link @click.native="addCard">
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/home/plus.png">
@@ -55,6 +55,9 @@
       }
     },
     methods: {
+      backToWallet () {
+        this.$router.push({name: 'index', params: {view: 'wallet'}})
+      },
       addCard () {
         this.$router.push({name: 'addBankCard', params: {cardNumber: this.cards.length}})
       },

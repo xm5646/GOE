@@ -16,7 +16,7 @@
       </tr>
       </tbody>
     </x-table>
-    <pager :value="1" title="" fillable :min="1" :max="totalPageNum" @on-change="change"></pager>
+    <pager :value="page" title="" fillable :min="1" :max="totalPageNum" @on-change="change"></pager>
   </div>
 </template>
 <script>
@@ -33,6 +33,7 @@
     props: ['list'],
     data () {
       return {
+        page: 1,
         currentViewTable: '',
         rows: [],
         totalPageNum: 1
@@ -55,6 +56,7 @@
       change (val) {
         if (val === '') {
         } else {
+          this.page = val
           console.log('change', val)
           this.getPage(val)
         }

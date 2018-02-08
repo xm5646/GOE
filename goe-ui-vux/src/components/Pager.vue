@@ -96,13 +96,18 @@
         if (newValue !== '') {
           if (typeof this.min !== 'undefined' && this.currentValue < this.min) {
             this.currentValue = this.min
-          }
-          if (this.max && this.currentValue > this.max) {
+//            this.$emit('input', this.currentValue)
+//            this.$emit('on-change', this.currentValue)
+          } else if (this.max && this.currentValue > this.max) {
             this.currentValue = this.max
+//            this.$emit('input', this.currentValue)
+//            this.$emit('on-change', this.currentValue)
+          } else {
+            this.currentValue = newValue
+            this.$emit('input', this.currentValue)
+            this.$emit('on-change', this.currentValue)
           }
         }
-        this.$emit('input', this.currentValue)
-        this.$emit('on-change', this.currentValue)
       },
       value (newValue) {
         this.currentValue = newValue

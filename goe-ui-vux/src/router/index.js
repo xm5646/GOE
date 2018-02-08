@@ -92,12 +92,18 @@ export default new Router({
     {
       path: '/editAddress',
       name: 'editAddress',
-      component: EditAddress
+      component: EditAddress,
+      props: {
+        backView: 'wallet'
+      }
     },
     {
       path: '/getCash',
       name: 'getCash',
-      component: GetCash
+      component: GetCash,
+      props: {
+        backView: 'wallet'
+      }
     },
     {
       path: '/addUser',
