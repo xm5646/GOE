@@ -11,27 +11,27 @@
 
     <group title='常用功能'>
       <cell title='奖金转换报单币' is-link @click.native="goTo('convertConsumeCoin')">
-        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/icon/convert.png">
+        <img slot="icon" width="20" style="display:block;margin-right:10px;" src="../../assets/images/icon/convert.png">
       </cell>
       <cell title='报单币转账' is-link @click.native="goTo('transferConsumeCoin')">
-        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/icon/transfer.png">
+        <img slot="icon" width="20" style="display:block;margin-right:10px;" src="../../assets/images/icon/transfer.png">
       </cell>
       <cell title='重复消费' is-link @click.native="goTo('reConsume')">
-        <img slot="icon" width="20" style="display:block;margin-right:5px;"
+        <img slot="icon" width="20" style="display:block;margin-right:10px;"
              src="../../assets/images/icon/reconsume.png">
       </cell>
       <cell title='订单查询' is-link @click.native="goTo('orderView')">
-        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/icon/order.png">
+        <img slot="icon" width="20" style="display:block;margin-right:10px;" src="../../assets/images/icon/order.png">
       </cell>
       <cell title='修改登录密码' is-link @click.native="goTo('resetPassword')">
-        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/icon/password.png">
+        <img slot="icon" width="20" style="display:block;margin-right:10px;" src="../../assets/images/icon/password.png">
       </cell>
       <cell title='修改交易密码' is-link @click.native="goTo('resetPayPassword')">
-        <img slot="icon" width="20" style="display:block;margin-right:5px;"
+        <img slot="icon" width="20" style="display:block;margin-right:10px;"
              src="../../assets/images/icon/payPassword.png">
       </cell>
       <cell title='退出登录' is-link @click.native="confirmLogout">
-        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../../assets/images/icon/log-out.png">
+        <img slot="icon" width="20" style="display:block;margin-right:10px;" src="../../assets/images/icon/log-out.png">
       </cell>
     </group>
     <br>

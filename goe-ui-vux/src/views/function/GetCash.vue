@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <x-header :left-options="{showBack: true}">会员管理系统</x-header>
+    <x-header :left-options="{showBack: true, preventGoBack: true}" @on-click-back='goWallet'>会员管理系统</x-header>
     <card :header="{title: '奖金提现'}">
       <div slot="content" class="card-demo-flex card-demo-content01">
         <div class="vux-1px-r">
@@ -88,6 +88,9 @@
       }
     },
     methods: {
+      goWallet () {
+        this.$router.push({name: 'index', params: {view: 'wallet'}})
+      },
       submitPay (payPassword) {
         this.showPayPasswordStatus = false
         this.doGetCash(payPassword)

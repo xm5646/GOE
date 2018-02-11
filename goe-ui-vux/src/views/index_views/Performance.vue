@@ -23,6 +23,7 @@
 
       </performance-view>
       <br>
+      <!--<x-button @click.native="viewUpLevel" type="warn">返回上一层</x-button>-->
       <x-button @click.native="viewMyPerformance" type="warn">返回我的业绩</x-button>
     </div>
     <div v-if="isSearching">
@@ -57,6 +58,7 @@
         user: '',
         findAccount: '',
         currentUser: '',
+        upLevelAccount: '',
         isSearching: false,
         inSearchStatus: false,
         isNotFoundUser: false,
@@ -153,6 +155,8 @@
         } else {
           console.log('do nothing')
         }
+      },
+      viewUpLevel () {
       },
       viewMyPerformance () {
         this.findAccount = ''

@@ -9,12 +9,12 @@
         <img slot="icon-active" src="../assets/images/icon/home_active.png">
         <span slot="label">首页</span>
       </tabbar-item>
-      <tabbar-item @click.native="changeView('performance')">
+      <tabbar-item :selected="performanceSelected" @click.native="changeView('performance')">
         <img slot="icon" src="../assets/images/icon/performance.png">
         <img slot="icon-active" src="../assets/images/icon/performance_active.png">
         <span slot="label">我的业绩</span>
       </tabbar-item>
-      <tabbar-item @click.native="changeView('wallet')">
+      <tabbar-item :selected="walletSelect" @click.native="changeView('wallet')">
         <img slot="icon" src="../assets/images/icon/wallet.png">
         <img slot="icon-active" src="../assets/images/icon/wallet_active.png">
         <span slot="label">我的钱包</span>
@@ -48,15 +48,17 @@
       console.log('检查是否存在指定View: ' + this.$route.params.view)
       if (this.$route.params.view === 'performance') {
         this.currentView = 'performance'
+        this.performanceSelected = true
         this.changeView('performance')
+//        delete this.$route.params.view
+      }
+      if (this.$route.params.view === 'wallet') {
+        console.log('恢复钱包视图')
+        this.currentView = 'wallet'
+        this.walletSelect = true
+        this.changeView('wallet')
         delete this.$route.params.view
       }
-//      if (this.$route.params.view === 'wallet') {
-//        console.log('恢复钱包视图')
-//        this.currentView = 'wallet'
-//        this.changeView('wallet')
-//        delete this.$route.params.view
-//      }
     },
     components: {
       XHeader,
@@ -73,7 +75,9 @@
     },
     data () {
       return {
-        currentView: 'home'
+        currentView: 'home',
+        walletSelect: false,
+        performanceSelected: false
       }
     },
     methods: {

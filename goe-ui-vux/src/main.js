@@ -23,6 +23,7 @@ Vue.http.options.timeout = 5000
 
 Vue.http.interceptors.push((request, next) => {
   console.log('进入拦截器拦截方法')
+  Vue.$vux.loading.hide()
   Vue.$vux.loading.show({
     text: '加载中',
     delay: 500

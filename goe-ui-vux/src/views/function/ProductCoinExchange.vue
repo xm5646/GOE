@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <x-header :left-options="{showBack: true}">会员管理系统</x-header>
+    <x-header :left-options="{showBack: true, preventGoBack: true}" @on-click-back="backToWallet">会员管理系统</x-header>
     <card :header="{title: '产品积分兑换'}">
       <div slot="content" class="card-demo-flex card-demo-content01">
         <div class="vux-1px-r">
@@ -87,6 +87,9 @@
       }
     },
     methods: {
+      backToWallet () {
+        this.$router.push({name: 'index', params: {view: 'wallet'}})
+      },
       changeNumber (val) {
         this.orderInfo[1].value = '￥' + val * GoeConfig.goe.price
       },

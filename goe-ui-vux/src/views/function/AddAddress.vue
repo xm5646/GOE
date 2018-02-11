@@ -50,6 +50,9 @@
       }
     },
     methods: {
+      backToWallet () {
+        this.$router.push({name: 'index', params: {view: 'wallet'}})
+      },
       login () {
         console.log(this.password)
         this.$router.push({name: 'index'})

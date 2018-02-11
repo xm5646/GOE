@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <x-header :left-options="{showBack: true}" @on-click-back='goWallet'>会员管理系统</x-header>
+    <x-header :left-options="{showBack: true, preventGoBack: true}" @on-click-back='goWallet'>会员管理系统</x-header>
     <group>
       <div>
         <x-table :cell-bordered="false" :content-bordered="true" style="background-color:#fff; font-size: small">
