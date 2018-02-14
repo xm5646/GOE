@@ -32,7 +32,7 @@
                  width="24" height="24">
           </x-input>
           <br>
-          <x-button type="primary" action-type="submit" @click.native="addUser">创建</x-button>
+          <x-button type="warn" action-type="submit" @click.native="addUser">创建</x-button>
         </group>
     </div>
     <div v-else>

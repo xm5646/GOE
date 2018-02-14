@@ -51,7 +51,7 @@ Vue.http.interceptors.push((request, next) => {
       if (!(response.headers.get('loginstatus') === 'true')) {
         // Vue.$router.push({name: 'login'})
         window.localStorage.clear()
-        window.location.href = 'http://60.205.183.3/login'
+        window.location.href = 'http://kehu8.xianzt562.cn/login'
         response.abort()
       } else {
         console.log('已登录状态')

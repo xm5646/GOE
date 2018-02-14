@@ -36,7 +36,7 @@
       </x-input>
     </group>
     <br>
-    <x-button type="primary" action-type="button" @click.native="submit"> 提交</x-button>
+    <x-button type="warn" action-type="button" @click.native="submit"> 提交</x-button>
   </div>
 </template>
 <script>

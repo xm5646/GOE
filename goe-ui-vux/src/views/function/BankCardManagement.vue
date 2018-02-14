@@ -101,7 +101,7 @@
             console.log(_this) // 当前 vm
           },
           onConfirm () {
-            this.doDeleteCard(id)
+            _this.doDeleteCard(id)
           }
         })
       },
@@ -119,7 +119,7 @@
             }
           })
           .then(response => {
-            if (response.body.message === '银行卡信息删除成功!') {
+            if (response.body.message === '银行卡信息删除成功') {
               this.getCardsByAccount()
               this.$vux.toast.show({
                 text: '删除成功'

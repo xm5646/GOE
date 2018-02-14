@@ -153,7 +153,7 @@
             }
           })
           .then(response => {
-            if (response.body.message === '快递地址删除成功!') {
+            if (response.body.message === '快递地址删除成功') {
               this.getAddressesByAccount()
               this.$vux.toast.show({
                 text: '删除成功'
