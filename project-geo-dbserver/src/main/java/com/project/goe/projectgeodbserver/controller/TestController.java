@@ -86,6 +86,7 @@ public class TestController {
 		}
 	}
 	
+	//基于用户名和用户状态查询
 	@GetMapping("/queryUserByAccountAndUserStatus")
 	public List<User> queryUserByAccountAndUserStatus(User user) {
 		return this.testService.queryUserByAccountAndUserStatus(user);
