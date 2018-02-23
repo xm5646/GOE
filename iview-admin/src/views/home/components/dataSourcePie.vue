@@ -23,7 +23,7 @@ export default {
                 legend: {
                     orient: 'vertical',
                     left: 'right',
-                    data: ['发放奖金', '剩余资金']
+                    data: ['发放奖金', '管理费', '产品积分', '剩余资金']
                 },
                 series: [
                     {
@@ -33,10 +33,9 @@ export default {
                         center: ['50%', '60%'],
                         data: [
                             {value: 303456, name: '发放奖金', itemStyle: {normal: {color: '#9bd598'}}},
-                            {value: 105923, name: '剩余资金', itemStyle: {normal: {color: '#ffd58f'}}}
-//                            {value: 5643250, name: '其他', itemStyle: {normal: {color: 'red'}}}
-//                            {value: 798403, name: 'web', itemStyle: {normal: {color: '#ab8df2'}}},
-//                            {value: 302340, name: 'others', itemStyle: {normal: {color: '#e14f60'}}}
+                            {value: 105923, name: '剩余资金', itemStyle: {normal: {color: '#ffd58f'}}},
+                            {value: 10250, name: '管理费', itemStyle: {normal: {color: '#e14f60'}}},
+                            {value: 28403, name: '产品积分', itemStyle: {normal: {color: '#ab8df2'}}}
                         ],
                         itemStyle: {
                             emphasis: {

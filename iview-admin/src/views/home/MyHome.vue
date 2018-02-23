@@ -51,8 +51,8 @@
             </Row>
             </Col>
             <Col :md="24" :lg="16">
-            <Row :gutter="5">
-                <Col :xs="24" :sm="12" :md="8" :style="{marginBottom: '10px'}">
+            <Row :gutter="4">
+                <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
                 <infor-card
                         id-name="user_created_count"
                         :end-val="count.createUser"
@@ -61,7 +61,16 @@
                         intro-text="今日新增用户"
                 ></infor-card>
                 </Col>
-                <Col :xs="24" :sm="12" :md="8" :style="{marginBottom: '10px'}">
+                <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
+                <infor-card
+                        id-name="user_created_count_month"
+                        :end-val="count.monthCreateUser"
+                        iconType="android-person-add"
+                        color="#2d8cf0"
+                        intro-text="本月新增用户"
+                ></infor-card>
+                </Col>
+                <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
                 <infor-card
                         id-name="visit_count"
                         :end-val="count.visit"
@@ -71,7 +80,7 @@
                         intro-text="本月累计支出"
                 ></infor-card>
                 </Col>
-                <Col :xs="24" :sm="12" :md="8" :style="{marginBottom: '10px'}">
+                <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
                 <infor-card
                         id-name="collection_count"
                         :end-val="count.collection"
@@ -139,25 +148,9 @@
         },
         data() {
             return {
-                toDoList: [
-                    {
-                        title: '去iView官网学习完整的iView组件'
-                    },
-                    {
-                        title: '去iView官网学习完整的iView组件'
-                    },
-                    {
-                        title: '去iView官网学习完整的iView组件'
-                    },
-                    {
-                        title: '去iView官网学习完整的iView组件'
-                    },
-                    {
-                        title: '去iView官网学习完整的iView组件'
-                    }
-                ],
                 count: {
-                    createUser: 496,
+                    createUser: 96,
+                    monthCreateUser: 501,
                     visit: 3122264,
                     collection: 4389305,
                     transfer: 39503498

@@ -56,7 +56,7 @@ export const otherRouter = {
     redirect: '/home',
     component: Main,
     children: [
-        {path: 'home', title: {i18n: 'home'}, name: 'home_index', component: () => import('@/views/home/home.vue')},
+        {path: 'home', title: {i18n: 'home'}, name: 'home_index', component: () => import('@/views/home/MyHome.vue')},
         {
             path: 'ownspace',
             title: '个人中心',
@@ -89,22 +89,85 @@ export const appRouter = [
         component: Main,
         children: [
             {
-                path: 'myHome',
-                title: '新首页',
-                name: 'new_home',
-                component: () => import('@/views/home/MyHome.vue')
-            },
-            {
                 path: 'userInfo',
                 title: '会员列表',
                 name: 'userInfo_userManagement',
                 component: () => import('@/views/user-management/UserInfo.vue')
             },
             {
+                path: 'organizationView',
+                title: '组织结构图',
+                name: 'organizationView_userManagement',
+                component: () => import('@/views/user-management/OrganizationView.vue')
+            },
+            {
                 path: 'userEarning',
                 title: '用户收入管理',
                 name: 'userEarning_userManagement',
                 component: () => import('@/views/user-management/UserEarning.vue')
+            }
+        ]
+    },
+    {
+        path: '/bonusManagement',
+        icon: 'key',
+        name: 'bonusManagement',
+        title: '奖金管理',
+        component: Main,
+        children: [
+            {
+                path: 'bonusPayList',
+                title: '奖金发放记录',
+                name: 'bonusPayList_bonusManagement',
+                component: () => import('@/views/bonus-management/BonusPayList.vue')
+            },
+            {
+                path: 'payBonusByAdmin',
+                title: '手工分红',
+                name: 'payBonusByAdmin_bonusManagement',
+                component: () => import('@/views/bonus-management/PayBonusByAdmin.vue')
+            }
+        ]
+    },
+    {
+        path: '/cashManagement',
+        icon: 'key',
+        name: 'cashManagement',
+        title: '提现管理',
+        component: Main,
+        children: [
+            {
+                path: 'getCashList',
+                title: '提现记录',
+                name: 'getCashList_cashManagement',
+                component: () => import('@/views/cash-management/GetCashList.vue')
+            },
+            {
+                path: 'getCashManagement',
+                title: '待提现处理',
+                name: 'getCashManagement_cashManagement',
+                component: () => import('@/views/cash-management/GetCashManagement.vue')
+            }
+        ]
+    },
+    {
+        path: '/orderManagement',
+        icon: 'key',
+        name: 'orderManagement',
+        title: '订单管理',
+        component: Main,
+        children: [
+            {
+                path: 'orderList',
+                title: '订单记录',
+                name: 'orderList_orderManagement',
+                component: () => import('@/views/order-management/GetOrderList.vue')
+            },
+            {
+                path: 'waitSendList',
+                title: '待处理订单',
+                name: 'waitSendList_orderManagement',
+                component: () => import('@/views/order-management/WaitSendList.vue')
             }
         ]
     },
