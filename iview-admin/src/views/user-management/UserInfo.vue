@@ -1,6 +1,4 @@
 <style lang="less">
-    @import '../../styles/common.less';
-    @import '../tables/components/table.less';
 </style>
 
 <template>
@@ -26,50 +24,72 @@
                 </Row>
                 <Row class="margin-top-10 searchable-table-con1">
                     <!--<Table :columns="columns1" :data="userList"></Table>-->
-                    <can-edit-table refs="table2" v-model="userList" :columns-list="columns1" @on-change="userUpdate"></can-edit-table>
-                </Row>
-                <Row>
-                    <div style="text-align: center;margin-top: 8px;">
-                        <Button type="default">首页</Button>
-                        <Button type="default">上一页</Button>
-                        <Button type="default">下一页</Button>
-                        <Button type="default" disabled="true">末页</Button>
-                        <span style="margin-right: 5px;margin-left: 5px;"> 第 1 页 /共 1 页</span>
-                        <span style="margin-right: 5px;margin-left: 5px;"> 跳转到 <input type="number" v-model="toNum" style="width: 50px;"/> 页</span>
-                        <Button type="default">跳转</Button>
-                    </div>
+                    <div style="height: 20px"></div>
+                    <vue-table :tdata="userList"
+                               :tcolumns="columns1"
+                               showHandle="true"
+                               :tdHeight="40"
+                               handleFixed="true"
+                               :page="pageObj"
+                               @changePage="changePage"
+                               >
+                        <template slot="operations" scope="scope">
+                            <Button size="large" type="primary" @click="edit(scope.item)">&nbsp;修改信息&nbsp;</Button>
+                        </template>
+                    </vue-table>
                 </Row>
             </Card>
             </Col>
         </Row>
+        <edit-user-modal :showStatus="showCurrentTableData" :userInfo="showUser"></edit-user-modal>
     </div>
 </template>
 
 <script>
     import * as table from '../tables/data/search';
-    import canEditTable from '../tables/components/canEditTable.vue';
+    import EditUserModal from './components/EditUserModal';
+    import vueTable from 'vue-table2';
     export default {
         name: 'searchable-table',
         components: {
-            canEditTable
+            vueTable,
+            EditUserModal
         },
         data () {
             return {
-                searchConName1: '',
-                searchConName2: '',
                 searchAccount: '',
                 searchNickName: '',
+                showUser: '',
+                showCurrentTableData: false,
                 toNum: '',
+                pageObj: {
+                    totalPage: 50,
+                    maxSize: 5
+                },
                 searchConTel2: '',
                 searchConName3: '',
                 data1: [
                     {
-                        user_id: 1,
                         user_nickName: '李晓明',
                         user_account: 'lixiaoming',
                         user_level: '组长',
                         user_createTime: '2017-12-21',
-                        user_status: '已激活'
+                        user_status: '已激活',
+                        user_accessStatus: '已通过',
+                        user_bonusCoin: '1000',
+                        user_consumeCoin: '1000',
+                        user_productCoin: '1000'
+                    },
+                    {
+                        user_nickName: '李晓明',
+                        user_account: 'lixiaoming',
+                        user_level: '组长',
+                        user_createTime: '2017-12-21',
+                        user_status: '已激活',
+                        user_accessStatus: '已通过',
+                        user_bonusCoin: '1000',
+                        user_consumeCoin: '1000',
+                        user_productCoin: '1000'
                     }
                 ],
                 initTable1: [],
@@ -81,52 +101,71 @@
                     {
                         key: 'user_nickName',
                         title: '用户姓名',
-                        editable: true
+                        width: 120
                     },
                     {
                         key: 'user_account',
                         title: '用户编号',
+                        width: 150
+                    },
+                    {
+                        key: 'user_phone',
+                        title: '手机号码',
+                        width: 150
                     },
                     {
                         key: 'user_level',
-                        title: '级别'
+                        title: '级别',
+                        width: 120
                     },
                     {
                         key: 'user_createTime',
-                        title: '加入时间'
+                        title: '加入时间',
+                        width: 150
                     },
                     {
                         key: 'user_status',
-                        title: '激活状态'
+                        title: '激活状态',
+                        width: 120
                     },
                     {
                         key: 'user_accessStatus',
-                        title: '当前考核状态'
+                        title: '当前考核状态',
+                        width: 120
                     },
                     {
                         key: 'user_bonusCoin',
-                        title: '奖金'
+                        title: '奖金',
+                        width: 120
                     },
                     {
                         key: 'user_consumeCoin',
-                        title: '报单币'
+                        title: '报单币',
+                        width: 120
                     },
                     {
                         key: 'user_productCoin',
-                        title: '产品积分'
-                    },
-                    {
-                        title: '操作',
-                        align: 'center',
-                        width: 190,
-                        key: 'handle',
-                        handle: ['edit']
+                        title: '产品积分',
+                        width: 120
                     }
                 ],
                 userList: [
                     {
-                        user_nickName: '李晓明',
+                        user_nickName: '李晓明1',
                         user_account: 'lixiaoming',
+                        user_phone: '13520580169',
+                        user_level: '组长',
+                        user_createTime: '2017-12-21',
+                        user_status: '已激活',
+                        user_accessStatus: '已通过',
+                        user_bonusCoin: '1000',
+                        user_consumeCoin: '1000',
+                        user_productCoin: '1000'
+                    },
+                    {
+                        user_nickName: '李晓明2',
+                        user_account: 'lixiaoming',
+                        user_phone: '13520580169',
                         user_level: '组长',
                         user_createTime: '2017-12-21',
                         user_status: '已激活',
@@ -140,7 +179,6 @@
         },
         methods: {
             init () {
-//                this.data1 = this.initTable1 = table.searchTable1;
                 this.data2 = this.initTable2 = table.searchTable2;
                 this.data3 = this.initTable3 = table.searchTable3;
             },
@@ -157,8 +195,22 @@
                 }
                 return res;
             },
-            userUpdate () {
-              alert('user info updated!');
+            edit (item) {
+                this.showUser = item
+                this.showCurrentTableData = true
+            },
+            lockConfirm (item) {
+                this.$Modal.confirm({
+                    title: '确认冻结?',
+                    content: '确定是否要冻结' + item.user_nickName + '?',
+                    onOk: function () {
+                        alert('冻结成功');
+                    }
+                });
+
+            },
+            changePage (pageNum) {
+                console.log('now at page: ' + pageNum);
             },
             handleSearch1 () {
                 this.data1 = this.initTable1;

@@ -30,23 +30,15 @@
                     </div>
                 </div>
                 <div class="header-avator-con">
-                    <full-screen v-model="isFullScreen" @on-change="fullscreenChange"></full-screen>
-                    <lock-screen></lock-screen>
-                    <message-tip v-model="mesCount"></message-tip>
-                    <theme-switch></theme-switch>
-                    
+                    <div style="margin-left: 60px">
+                        <full-screen v-model="isFullScreen" @on-change="fullscreenChange"></full-screen>
+                        <lock-screen></lock-screen>
+                        <logout></logout>
+                    </div>
+
                     <div class="user-dropdown-menu-con">
                         <Row type="flex" justify="end" align="middle" class="user-dropdown-innercon">
-                            <Dropdown transfer trigger="click" @on-click="handleClickUserDropdown">
-                                <a href="javascript:void(0)">
-                                    <span class="main-user-name">{{ userName }}</span>
-                                    <Icon type="arrow-down-b"></Icon>
-                                </a>
-                                <DropdownMenu slot="list">
-                                    <DropdownItem name="ownSpace">个人中心</DropdownItem>
-                                    <DropdownItem name="loginout" divided>退出登录</DropdownItem>
-                                </DropdownMenu>
-                            </Dropdown>
+                            <span>管理员</span>
                             <Avatar :src="avatorPath" style="background: #619fe7;margin-left: 10px;"></Avatar>
                         </Row>
                     </div>
@@ -73,6 +65,7 @@
     import lockScreen from './main-components/lockscreen/lockscreen.vue';
     import messageTip from './main-components/message-tip.vue';
     import themeSwitch from './main-components/theme-switch/theme-switch.vue';
+    import logout from './home/components/Logout.vue'
     import Cookies from 'js-cookie';
     import util from '@/libs/util.js';
     
@@ -84,7 +77,8 @@
             fullScreen,
             lockScreen,
             messageTip,
-            themeSwitch
+            themeSwitch,
+            logout
         },
         data () {
             return {
