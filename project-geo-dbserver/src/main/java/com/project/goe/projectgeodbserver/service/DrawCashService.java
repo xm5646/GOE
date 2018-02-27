@@ -61,4 +61,24 @@ public class DrawCashService {
 	public Page<DrawCashRecord> findAllDrawCardRecordBySort(Pageable pageable) {
 		return this.drawCashRepository.findAll(pageable);
 	}
+	
+	//分页查询：基于提现状态，按时间降序查询提现记录
+	public Page<DrawCashRecord> findByDrawStatus(String drawStatus, Pageable pageable) {
+		Specification<DrawCashRecord> spec = new Specification<DrawCashRecord>() {
+
+			@Override
+			public Predicate toPredicate(Root<DrawCashRecord> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				Predicate p = cb.equal(root.get("drawStatus").as(String.class),drawStatus);
+				
+				return p;
+			}
+		};
+		
+		return this.drawCashRepository.findAll(spec, pageable);
+	}
+	
+	//基于提现状态，查询用户提现记录
+	public List<DrawCashRecord>  findByDrawStatus(String drawStatus) {
+		return this.drawCashRepository.findByDrawStatus(drawStatus);
+	}
 }

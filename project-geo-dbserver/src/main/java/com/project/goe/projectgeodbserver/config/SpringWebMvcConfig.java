@@ -34,7 +34,6 @@ public class SpringWebMvcConfig extends WebMvcConfigurerAdapter {
 			registry.addInterceptor(loginFilterHandler()).addPathPatterns("/**").excludePathPatterns("/user/login");
 		}
 		
-		registry.addInterceptor(loginFilterHandler()).addPathPatterns("/**").excludePathPatterns("/user/login");
 		super.addInterceptors(registry);
 	}
 

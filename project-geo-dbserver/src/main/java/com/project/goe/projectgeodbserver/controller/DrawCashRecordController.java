@@ -181,5 +181,27 @@ public class DrawCashRecordController {
 		}
 	}
 	
+	//查询"待审核"状态的提现记录
+	@GetMapping("/findByDrawStatusOfAuditWait")
+	public Page<DrawCashRecord> findByDrawStatusOfAuditWait(
+			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
+			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
+			@RequestParam(value = "keyword", required = false, defaultValue = "drawCommitTime") String keyword,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
+		try {
+			Sort sort = null;
+
+			if (order.equals("asc"))
+				sort = new Sort(Direction.ASC, keyword);
+			else
+				sort = new Sort(Direction.DESC, keyword);
+
+			Pageable pageable = new PageRequest(pageNum, size, sort);
+
+			return this.drawCashService.findByDrawStatus(DrawStatus.AUDIT_WAIT, pageable);
+		} catch (Exception e) {
+			throw new RuntimeException("查询失败");
+		}
+	}
 
 }

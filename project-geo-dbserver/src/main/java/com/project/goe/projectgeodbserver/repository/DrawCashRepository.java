@@ -17,7 +17,9 @@ public interface DrawCashRepository
 	public DrawCashRecord findByDrawId(long drawId);
 
 	public List<DrawCashRecord> findByUserId(long userId);
+	
+	public List<DrawCashRecord> findByDrawStatus(String drawStatus);
 
-	// 分页查询：基于用户名，按时间降序排序
+	// 分页查询：多个条件，按时间降序排序
 	public Page<DrawCashRecord> findAll(Specification<DrawCashRecord> spec, Pageable pageable);
 }

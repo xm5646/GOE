@@ -1,5 +1,8 @@
 package com.project.goe.projectgeodbserver.repository;
 
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,5 +19,8 @@ public interface BonusPayListRepository extends JpaSpecificationExecutor<BonusPa
 	
 	//所有记录分页查询
 	public Page<BonusPayList> findAll(Pageable pageable);
+	
+	// 基于支付payTime，查询奖金记录
+	public List<BonusPayList> findByPayTimeBetween(Date startDate, Date endDate);
 	
 }

@@ -1,11 +1,11 @@
 package com.project.goe.projectgeodbserver.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
@@ -15,11 +15,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.project.goe.projectgeodbserver.entity.ConsumeRecord;
 import com.project.goe.projectgeodbserver.repository.ConsumeRecordRepository;
+import com.project.goe.projectgeodbserver.statusType.ConsumeType;
+import com.project.goe.projectgeodbserver.util.DateFormatUtil;
 
 @Service
 public class ConsumeRecordService {
@@ -71,5 +71,31 @@ public class ConsumeRecordService {
 
 		return this.consumeRecordRepository.findAll(spec, pageable);
 	}
-
+	
+	//查询本月消费类型为重销和报单的消费记录
+	public List<ConsumeRecord> findByConsumeTimeOfNowMonth() {
+		List<ConsumeRecord> list = new ArrayList<ConsumeRecord>();
+		
+		//本月起始和结束时间
+		List<Date> dateList = DateFormatUtil.getStartDateAndEndDateOfNowMonth();
+		
+		//本月起始和结束时间内的所有消费记录
+		List<ConsumeRecord> consumeRecordList = this.consumeRecordRepository.findByConsumeTimeBetween(dateList.get(0), dateList.get(1));
+		
+		//将重销和报单的消费记录添加至list集合中
+		for(ConsumeRecord consumeRecord : consumeRecordList) {
+			String consumeType = consumeRecord.getConsumeType();
+			
+			if(consumeType.equals(ConsumeType.COIN_TRANSFER_ADDCONSUMER) || consumeType.equals(ConsumeType.COIN_TRANSFER_RECONSUME)) {
+				list.add(consumeRecord);
+			}
+		}
+		
+		return list;
+	}
+	
+	// 基于消费类型,查询消费记录
+	public List<ConsumeRecord> findByConsumeType(String consumeType) {
+		return this.consumeRecordRepository.findByConsumeType(consumeType);
+	}
 }
