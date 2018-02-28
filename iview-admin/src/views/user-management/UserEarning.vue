@@ -51,19 +51,16 @@
             </Card>
             </Col>
         </Row>
-        <edit-user-modal :showStatus="showCurrentTableData" :userInfo="showUser"></edit-user-modal>
     </div>
 </template>
 
 <script>
     import * as table from '../tables/data/search';
-    import EditUserModal from './components/EditUserModal';
     import vueTable from 'vue-table2';
     export default {
         name: 'searchable-table',
         components: {
-            vueTable,
-            EditUserModal
+            vueTable
         },
         data () {
             return {
@@ -172,6 +169,9 @@
             },
             changePage (pageNum) {
                 console.log('now at page: ' + pageNum);
+            },
+            submitEdit () {
+                console.log('new value' + this.userInfo.user_nickName);
             },
             handleSearch1 () {
                 this.data1 = this.initTable1;

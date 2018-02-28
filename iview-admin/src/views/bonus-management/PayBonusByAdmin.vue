@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>手工分红</h1>
+        <h1>暂未开放</h1>
     </div>
 </template>
 

@@ -83,7 +83,7 @@ export const otherRouter = {
 export const appRouter = [
     {
         path: '/userManagement',
-        icon: 'key',
+        icon: 'ios-people',
         name: 'userManagement',
         title: '会员管理',
         component: Main,
@@ -110,7 +110,7 @@ export const appRouter = [
     },
     {
         path: '/bonusManagement',
-        icon: 'key',
+        icon: 'ios-paper',
         name: 'bonusManagement',
         title: '奖金管理',
         component: Main,
@@ -131,43 +131,55 @@ export const appRouter = [
     },
     {
         path: '/cashManagement',
-        icon: 'key',
+        icon: 'cash',
         name: 'cashManagement',
         title: '提现管理',
         component: Main,
         children: [
             {
+                path: 'getCashManagement',
+                title: '待处理提现',
+                name: 'getCashManagement_cashManagement',
+                component: () => import('@/views/cash-management/GetCashManagement.vue')
+            },
+            {
+                path: 'batchCashManagement',
+                title: '批量处理提现',
+                name: 'batchCashManagement_cashManagement',
+                component: () => import('@/views/cash-management/BatchHandle.vue')
+            },
+            {
                 path: 'getCashList',
                 title: '提现记录',
                 name: 'getCashList_cashManagement',
                 component: () => import('@/views/cash-management/GetCashList.vue')
-            },
-            {
-                path: 'getCashManagement',
-                title: '待提现处理',
-                name: 'getCashManagement_cashManagement',
-                component: () => import('@/views/cash-management/GetCashManagement.vue')
             }
         ]
     },
     {
         path: '/orderManagement',
-        icon: 'key',
+        icon: 'ios-briefcase',
         name: 'orderManagement',
         title: '订单管理',
         component: Main,
         children: [
             {
+                path: 'reConsumeWaitSendList',
+                title: '待处理重销订单',
+                name: 'reConsumeWaitSendList_orderManagement',
+                component: () => import('@/views/order-management/ReConsumeWaitSendList.vue')
+            },
+            {
+                path: 'exchangeProductWaitSendList',
+                title: '待处理积分兑换订单',
+                name: 'exchangeProductWaitSendList_orderManagement',
+                component: () => import('@/views/order-management/ExchangeProductWaitSendList.vue')
+            },
+            {
                 path: 'orderList',
                 title: '订单记录',
                 name: 'orderList_orderManagement',
                 component: () => import('@/views/order-management/GetOrderList.vue')
-            },
-            {
-                path: 'waitSendList',
-                title: '待处理订单',
-                name: 'waitSendList_orderManagement',
-                component: () => import('@/views/order-management/WaitSendList.vue')
             }
         ]
     },

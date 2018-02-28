@@ -1,6 +1,5 @@
 <template>
     <div>
-        <Modal :width="900" v-model="showStatus" @on-ok="submitEdit" title="修改会员信息">
                 <Form :model="userInfo" :label-width="80">
                     <FormItem label="姓名">
                         <Input style="width: 200px" v-model="userInfo.user_nickName" placeholder="Enter something..."></Input>
@@ -39,7 +38,6 @@
                         <Button type="ghost" style="margin-left: 8px">取消</Button>
                     </FormItem>
                 </Form>
-        </Modal>
     </div>
 </template>
 
@@ -47,7 +45,6 @@
 export default {
     name: 'page',
     props: {
-        showStatus: Boolean,
         userInfo: Object
     },
     data () {
@@ -67,9 +64,6 @@ export default {
         };
     },
     methods: {
-        submitEdit () {
-            alert('new value' + this.userInfo.user_nickName);
-        }
     }
 };
 </script>

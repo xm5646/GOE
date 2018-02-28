@@ -73,6 +73,7 @@
                 data: {
                     id: 0,
                     label: '神话',
+                    performance: '111:111',
                     children: [{
                         id: 2,
                         label: '用户1',
@@ -178,7 +179,7 @@
                 }
             },
             onNodeClick (e, data) {
-                alert(data.label)
+                console.log(data)
             },
             collapse (list) {
                 list.forEach(child => {

@@ -7,8 +7,8 @@
             <Col span="24">
             <Card>
                 <p slot="title">
-                    <Icon type="person"></Icon>
-                    会员列表
+                    <Icon type="ios-list-outline"></Icon>
+                    待处理积分兑换订单列表
                 </p>
                 <Row>
                     <div style="margin-right: 5%; float: left">
@@ -17,12 +17,16 @@
                                                                                      icon="search">搜索</Button></span>
                         <Button @click="handleCancel3" type="ghost">取消</Button>
                     </div>
-                    <div>
+                    <div style="margin-right: 5%; float: left">
                         <Input v-model="searchAccount" placeholder="请输入用户编号搜搜..." style="width: 200px"/>
                         <span @click="handleSearch3" style="margin: 0 10px;"><Button type="primary"
                                                                                      icon="search">搜索</Button></span>
                         <Button @click="handleCancel3" type="ghost">取消</Button>
                     </div>
+                    <!--<div>-->
+                        <!--<span @click="handleSearch3" style="margin: 0 10px;"><Button type="primary"-->
+                                                                                     <!--icon="archive">导出到表格</Button></span>-->
+                    <!--</div>-->
                 </Row>
                 <Row class="margin-top-10 searchable-table-con1">
                     <!--<Table :columns="columns1" :data="userList"></Table>-->
@@ -36,35 +40,25 @@
                                @changePage="changePage"
                     >
                         <template slot="operations" scope="scope">
-                            <Button size="large" type="primary" @click="edit(scope.item)">&nbsp;修改&nbsp;</Button>
-                            <Button size="large" type="primary" @click="recharge(scope.item)">&nbsp;冲币&nbsp;</Button>
+                            <!--<Button size="large" type="error" @click="edit(scope.item)">&nbsp;不通过&nbsp;</Button>-->
+                            <Button size="large" type="success" @click="recharge(scope.item)">&nbsp;完成发货&nbsp;</Button>
                         </template>
                     </vue-table>
                 </Row>
             </Card>
             </Col>
         </Row>
-        <Modal :width="700" v-model="showEditModal" @on-ok="submitEdit" title="修改会员信息">
-            <edit-user-window :userInfo="userInfo"></edit-user-window>
-        </Modal>
-        <Modal :width="700" v-model="showRechargeModal" title="电子币充值">
-            <user-recharge-window :userInfo="userInfo"></user-recharge-window>
-        </Modal>
     </div>
 </template>
 
 <script>
     import * as table from '../tables/data/search';
-    import EditUserWindow from './components/EditUserWindow.vue';
-    import UserRechargeWindow from './components/UserRechargeWindow.vue';
     import vueTable from 'vue-table2';
 
     export default {
         name: 'searchable-table',
         components: {
-            vueTable,
-            EditUserWindow,
-            UserRechargeWindow
+            vueTable
         },
         data() {
             return {
@@ -122,80 +116,56 @@
                 initTable3: [],
                 columns1: [
                     {
-                        key: 'user_nickName',
-                        title: '用户姓名',
-                        width: 120
+                        key: 'getcash_id',
+                        title: '提现编号',
+                        width: 100
                     },
                     {
                         key: 'user_account',
                         title: '用户编号',
-                        width: 150
+                        width: 100
+                    },
+                    {
+                        key: 'getNumber',
+                        title: '打款金额',
+                        width: 100
+                    },
+                    {
+                        key: 'cardOwner',
+                        title: '持卡人',
+                        width: 100
                     },
                     {
                         key: 'user_phone',
                         title: '手机号码',
-                        width: 150
-                    },
-                    {
-                        key: 'user_level',
-                        title: '级别',
                         width: 120
                     },
                     {
-                        key: 'user_createTime',
-                        title: '加入时间',
-                        width: 150
+                        key: 'bankName',
+                        title: '开户行',
+                        width: 140
                     },
                     {
-                        key: 'user_status',
-                        title: '激活状态',
-                        width: 120
+                        key: 'cardNumber',
+                        title: '银行卡号',
+                        width: 160
                     },
                     {
-                        key: 'user_accessStatus',
-                        title: '当前考核状态',
-                        width: 120
-                    },
-                    {
-                        key: 'user_bonusCoin',
-                        title: '奖金',
-                        width: 120
-                    },
-                    {
-                        key: 'user_consumeCoin',
-                        title: '报单币',
-                        width: 120
-                    },
-                    {
-                        key: 'user_productCoin',
-                        title: '产品积分',
+                        key: 'status',
+                        title: '状态',
                         width: 120
                     }
                 ],
                 userList: [
                     {
-                        user_nickName: '李晓明1',
+                        getcash_id: '1',
                         user_account: 'lixiaoming',
                         user_phone: '13520580169',
-                        user_level: '组长',
-                        user_createTime: '2017-12-21',
-                        user_status: '已激活',
-                        user_accessStatus: '已通过',
-                        user_bonusCoin: '1000',
-                        user_consumeCoin: '1000',
-                        user_productCoin: '1000'
-                    },
-                    {
-                        user_nickName: '李晓明2',
-                        user_account: 'lixiaoming',
-                        user_phone: '13520580169',
-                        user_level: '组长',
-                        user_createTime: '2017-12-21',
-                        user_status: '已激活',
-                        user_accessStatus: '已通过',
-                        user_bonusCoin: '1000',
-                        user_consumeCoin: '1000',
-                        user_productCoin: '1000'
+                        bankName: '中国邮政储蓄银行',
+                        getNumber: '690',
+                        status: '待审核',
+                        cardOwner: '李晓明',
+                        cardNumber: '2031334581843456909',
                     }
                 ]
             };

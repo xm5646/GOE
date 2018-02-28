@@ -12,8 +12,8 @@
                 :open-names="openedSubmenuArr"
                 :menu-list="menuList">
                 <div slot="top" class="logo-con">
-                    <img v-show="!shrink"  src="../images/logo.jpg" key="max-logo" />
-                    <img v-show="shrink" src="../images/logo-min.jpg" key="min-logo" />
+                    <img v-show="!shrink"  src="../images/logo.png" key="max-logo" />
+                    <img v-show="shrink" src="../images/minilogo.png" key="min-logo" />
                 </div>
             </shrinkable-menu>
         </div>
@@ -30,9 +30,10 @@
                     </div>
                 </div>
                 <div class="header-avator-con">
-                    <div style="margin-left: 60px">
+                    <div style="margin-left: 30px">
                         <full-screen v-model="isFullScreen" @on-change="fullscreenChange"></full-screen>
                         <lock-screen></lock-screen>
+                        <reset-password></reset-password>
                         <logout></logout>
                     </div>
 
@@ -65,7 +66,8 @@
     import lockScreen from './main-components/lockscreen/lockscreen.vue';
     import messageTip from './main-components/message-tip.vue';
     import themeSwitch from './main-components/theme-switch/theme-switch.vue';
-    import logout from './home/components/Logout.vue'
+    import logout from './home/components/Logout.vue';
+    import ResetPassword from './home/components/ResetPassword.vue';
     import Cookies from 'js-cookie';
     import util from '@/libs/util.js';
     
@@ -78,7 +80,8 @@
             lockScreen,
             messageTip,
             themeSwitch,
-            logout
+            logout,
+            ResetPassword
         },
         data () {
             return {

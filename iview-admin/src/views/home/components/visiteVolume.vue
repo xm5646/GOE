@@ -50,7 +50,7 @@ export default {
                 },
                 series: [
                     {
-                        name: '访问量',
+                        name: '新增会员',
                         type: 'bar',
                         data: [
                             {value: 15, name: 'Mon', itemStyle: {normal: {color: '#2d8cf0'}}},

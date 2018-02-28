@@ -18,8 +18,8 @@
                         <Col span="16" style="padding-left:6px;">
                         <Row class-name="made-child-con-middle" type="flex" align="middle">
                             <div>
-                                <b class="card-user-infor-name">Admin</b>
-                                <p>super admin</p>
+                                <b class="card-user-infor-name">administrator</b>
+                                <p>管理员</p>
                             </div>
                         </Row>
                         </Col>
@@ -72,21 +72,21 @@
                 </Col>
                 <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
                 <infor-card
-                        id-name="visit_count"
-                        :end-val="count.visit"
-                        iconType="ios-eye"
-                        color="#64d572"
-                        :iconSize="50"
-                        intro-text="本月累计支出"
+                        id-name="collection_count"
+                        :end-val="count.dayInMoney"
+                        iconType="upload"
+                        color="#ffd572"
+                        intro-text="本日累计收入"
                 ></infor-card>
                 </Col>
                 <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
                 <infor-card
-                        id-name="collection_count"
-                        :end-val="count.collection"
-                        iconType="upload"
-                        color="#ffd572"
-                        intro-text="本月累计收入"
+                        id-name="visit_count"
+                        :end-val="count.dayOutMoney"
+                        iconType="ios-eye"
+                        color="#64d572"
+                        :iconSize="50"
+                        intro-text="本日累计支出"
                 ></infor-card>
                 </Col>
             </Row>
@@ -152,8 +152,8 @@
                     createUser: 96,
                     monthCreateUser: 501,
                     visit: 3122264,
-                    collection: 4389305,
-                    transfer: 39503498
+                    dayInMoney: 20400,
+                    dayOutMoney: 50000
                 },
                 cityData: cityData,
                 showAddNewTodo: false,
