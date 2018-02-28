@@ -18,4 +18,6 @@ public interface OrderInfoRepository extends JpaSpecificationExecutor<OrderInfo>
 	public List<OrderInfo> findByExpressId(long expressId);
 	// 分页查询：基于用户名，按时间降序排序
 	public Page<OrderInfo> findAll(Specification<OrderInfo> spec, Pageable pageable);
+	
+	public List<OrderInfo> findByIsDelivery(String deliveryStatus);
 }

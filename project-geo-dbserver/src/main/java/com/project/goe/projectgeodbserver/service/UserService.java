@@ -1,5 +1,6 @@
 package com.project.goe.projectgeodbserver.service;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.repository.UserRepositoy;
+import com.project.goe.projectgeodbserver.util.DateFormatUtil;
 
 @Service
 public class UserService {
@@ -71,5 +73,17 @@ public class UserService {
 	//分页查询
 	public Page<User> findAllUserBySort(Pageable pageable) {
 		return this.userRepositoy.findAll(pageable);
+	}
+	
+	//查询当月新增用户
+	public List<User> findByCreateTimeBetweenDate() {
+		List<Date> dateList = DateFormatUtil.getStartDateAndEndDateOfNowMonth();
+		return this.userRepositoy.findByCreateTimeBetween(dateList.get(0), dateList.get(1));
+	}
+	
+	//查询上一周新增用户
+	public List<User> findByCreateTimeBetweenWeek() {
+		List<Date> dateList = DateFormatUtil.getStartDayAndEndDayOfLastWeek();
+		return this.userRepositoy.findByCreateTimeBetween(dateList.get(0), dateList.get(1));
 	}
 }
