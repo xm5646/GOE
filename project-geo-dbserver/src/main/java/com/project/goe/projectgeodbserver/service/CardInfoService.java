@@ -1,6 +1,8 @@
 package com.project.goe.projectgeodbserver.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -28,6 +30,17 @@ public class CardInfoService {
 
 	public List<CardInfo> findByUserId(long userId) {
 		return this.cardInfoRepository.findByUserId(userId);
+	}
+	
+	public Map<Long,CardInfo> findAllMap(){
+		List<CardInfo> cardInfoList = this.cardInfoRepository.findAll();
+		Map<Long,CardInfo> cardMap = new HashMap<Long,CardInfo>();
+		if (cardInfoList!=null && cardInfoList.size()>0) {
+			for (CardInfo cardInfo : cardInfoList) {
+				cardMap.put(cardInfo.getCardInfoId(), cardInfo);
+			}
+		}
+		return cardMap;
 	}
 
 	public CardInfo findByCardNumber(String cardNumber) {

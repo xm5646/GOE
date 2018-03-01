@@ -42,6 +42,10 @@ public class DrawCashService {
 		this.drawCashRepository.delete(drawCashRecord);
 	}
 	
+	public List<DrawCashRecord> findAll(){
+		return this.drawCashRepository.findAll();
+	}
+	
 	//分页查询：基于用户名，按时间降序排序
 	public Page<DrawCashRecord> findAll(DrawCashRecord drawCashRecord, Pageable pageable) {
 		Specification<DrawCashRecord> spec = new Specification<DrawCashRecord>() {

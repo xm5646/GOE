@@ -98,6 +98,12 @@ public class TimeUtil {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return df.format(date);
 	}
+	
+	public static String getDateFormatDay() {
+		Date date = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		return df.format(date);
+	}
 	/**
 	 * 相差时间 已天为单位 重载方法
 	 * @param dateStart
