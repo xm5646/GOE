@@ -221,7 +221,7 @@ public class CardInfoController {
 
 			Pageable pageable = new PageRequest(pageNum, size, sort);
 
-			return this.cardInfoService.findAllCardInfoBySort(pageable);
+			return this.cardInfoService.findCardInfoByAccount(cardInfo,pageable);
 		} catch (Exception e) {
 			throw new RuntimeException("查询失败");
 		}
