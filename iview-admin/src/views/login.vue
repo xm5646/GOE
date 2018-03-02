@@ -43,15 +43,17 @@ export default {
     data () {
         return {
             form: {
-                userName: 'iview_admin',
+                userName: '',
                 password: ''
             },
             rules: {
                 userName: [
-                    { required: true, message: '账号不能为空', trigger: 'blur' }
+                    { required: true, message: '账号不能为空', trigger: 'blur' },
+                    {min: 6, max: 20, message: '用户编号长度为6-20位字符', trigger: 'blur'}
                 ],
                 password: [
-                    { required: true, message: '密码不能为空', trigger: 'blur' }
+                    { required: true, message: '密码不能为空', trigger: 'blur' },
+                    {min: 6, max: 20, message: '密码长度为6-20位字符', trigger: 'blur'}
                 ]
             }
         };
@@ -60,17 +62,34 @@ export default {
         handleSubmit () {
             this.$refs.loginForm.validate((valid) => {
                 if (valid) {
-                    Cookies.set('user', this.form.userName);
-                    Cookies.set('password', this.form.password);
-                    this.$store.commit('setAvator', 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3448484253,3685836170&fm=27&gp=0.jpg');
-                    if (this.form.userName === 'iview_admin') {
-                        Cookies.set('access', 0);
-                    } else {
-                        Cookies.set('access', 1);
+                    console.log('do login');
+                    var requestOption = {
+                        url: 'http://localhost:8088/user/login',
+                        params: {
+                            account: this.form.userName,
+                            password: this.form.password
+                        }
                     }
-                    this.$router.push({
-                        name: 'home_index'
+                    this.doPost(requestOption).then(result => {
+                        if (result.success) {
+                            if (result.data.userType === '公司') {
+                                Cookies.set('user', this.form.userName);
+                                Cookies.set('password', this.form.password);
+                                this.$store.commit('setAvator', 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3448484253,3685836170&fm=27&gp=0.jpg');
+                                this.$router.push({
+                                    name: 'home_index'
+                                });
+                                this.$Message.success('登陆成功!');
+                            } else {
+                                this.form.password = '';
+                                this.$Message.error('您没有权限登陆管理后台!');
+                            }
+                        } else {
+                            this.form.password = '';
+                            this.$Message.error(result.message);
+                        }
                     });
+
                 }
             });
         }

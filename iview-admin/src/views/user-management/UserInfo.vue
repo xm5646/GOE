@@ -23,6 +23,7 @@
                                                                                      icon="search">搜索</Button></span>
                         <Button @click="handleCancel3" type="ghost">取消</Button>
                     </div>
+                    <Button type="primary" @click="testAPI1('111')">测试</Button>
                 </Row>
                 <Row class="margin-top-10 searchable-table-con1">
                     <!--<Table :columns="columns1" :data="userList"></Table>-->
@@ -257,6 +258,16 @@
             },
             handleCancel3() {
                 this.userList = this.data1;
+            },
+            testAPI1 (param) {
+                var requestOption = {
+                    url: 'http://localhost:8088/user/login',
+                    params: {
+                        account: 'administrator',
+                        password: '123456'
+                    }
+                }
+                var result = this.doPost(requestOption);
             }
         },
         mounted() {

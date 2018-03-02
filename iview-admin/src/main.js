@@ -18,6 +18,7 @@ Vue.use(API);
 var useAuth = false;
 Vue.http.options.emulateJSON = true
 Vue.http.options.timeout = 5000
+Vue.prototype.APIServer = 'http://localhost:8088'
 
 Vue.http.interceptors.push((request, next) => {
     // console.log('进入拦截器拦截方法')
@@ -27,22 +28,19 @@ Vue.http.interceptors.push((request, next) => {
     //     delay: 500
     // })
     console.log(request)
-    var timeout
-    if (request._timeout) {
-        timeout = setTimeout(() => {
-            console.log('进入拦截器超时方法')
-            // Vue.$vux.toast.show({
-            //     type: 'cancel',
-            //     text: '请求超时'
-            // })
-            // Vue.$vux.loading.hide()
-            if (request.onTimeout) request.onTimeout(request)
-            request.abort();
-        }, request._timeout);
+    var timeout1;
+    // 這裡改用 _timeout
+    if (request.timeout) {
+        timeout1 = setTimeout(() => {
+            next(request.respondWith(request.body, {
+                status: 408,
+                statusText: '请求超时'
+            }));
+        }, 5000);
     }
     next((response) => {
         // Vue.$vux.loading.hide()
-        clearTimeout(timeout)
+        clearTimeout(timeout1)
         if (useAuth) {
             console.log('进入拦截器响应方法,输出获取的相应数据,读取cookie和header')
             console.log('获取登陆状态:' + response.headers.get('loginstatus'))
