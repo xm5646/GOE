@@ -209,7 +209,7 @@ public class CardInfoController {
 			throw new RuntimeException("用户名不存在");
 
 		CardInfo cardInfo = new CardInfo();
-		cardInfo.setCardInfoId(user.getUserId());
+		cardInfo.setUserId(user.getUserId());
 		
 		try {
 			Sort sort = null;

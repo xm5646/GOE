@@ -64,7 +64,7 @@ public class CardInfoService {
 		return this.cardInfoRepository.findAll(pageable);
 	}
 
-	// 多条件分页查询:按用户名和消费类型
+	// 根据用户id查询分页查询银行卡信息
 	public Page<CardInfo> findCardInfoByAccount(CardInfo cardInfo, Pageable pageable) {
 		Specification<CardInfo> spec = new Specification<CardInfo>() {
 

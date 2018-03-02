@@ -183,7 +183,7 @@ public class ExpressAddressController {
 		return retMsg;
 	}
 
-	// 分页查询指定用户的所有地址信息
+	// 基于userid，分页查询指定用户的所有地址信息
 	@GetMapping("/findExpressAddressesByAccount")
 	public Page<ExpressAddress> findExpressAddressesByAccount(@RequestParam("account") String account,
 			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
@@ -198,6 +198,9 @@ public class ExpressAddressController {
 		if (null == user)
 			throw new RuntimeException("用户不存在");
 		
+		ExpressAddress expressAddress = new ExpressAddress();
+		expressAddress.setUserId(user.getUserId());
+		
 		try {
 			Sort sort = null;
 
@@ -208,7 +211,7 @@ public class ExpressAddressController {
 
 			Pageable pageable = new PageRequest(pageNum, size, sort);
 
-			return this.expressAddressService.findAllExpressAddressBySort(pageable);
+			return this.expressAddressService.findExpressAddressInfoByAccount(expressAddress, pageable);
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
