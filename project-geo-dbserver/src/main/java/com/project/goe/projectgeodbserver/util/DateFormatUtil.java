@@ -156,6 +156,29 @@ public class DateFormatUtil {
 		
 		return dateList;
 	}
+	
+	// 获取当天开始和结束日期
+	public static List<Date> getStartDateAndEndDateOfNowDay() {
+		Date startDate = null;
+		Date endDate = null;
+		List<Date> dateList = new ArrayList<Date>();
+		Calendar calendar = Calendar.getInstance();
+		
+		int year = calendar.get(Calendar.YEAR);
+		int month = calendar.get(Calendar.MONTH);
+		int days = calendar.get(Calendar.DAY_OF_MONTH);
+
+		calendar.set(year, month, days, 0, 0, 0);
+		startDate = calendar.getTime();
+
+		calendar.set(year, month, days, 23, 59, 59);
+		endDate = calendar.getTime();
+		
+		dateList.add(startDate);
+		dateList.add(endDate);
+		
+		return dateList;
+	}
 
 	public static String secondTimeToString(long secondTime) {
 		Calendar calendar = Calendar.getInstance();
@@ -167,6 +190,7 @@ public class DateFormatUtil {
 
 	public static void main(String[] args) {
 		// getStartDateAndEndDateOfNowMonth();
-		getStartDayAndEndDayOfLastWeek();
+		//getStartDayAndEndDayOfLastWeek();
+		System.out.println(getStartDateAndEndDateOfNowDay());
 	}
 }

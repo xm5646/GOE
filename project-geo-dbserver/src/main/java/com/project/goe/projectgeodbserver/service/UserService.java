@@ -105,6 +105,12 @@ public class UserService {
 		
 		return countArr;
 	}
+	
+	public int findByCreateTimeBetweenNowDay() {
+		List<Date> dateList = DateFormatUtil.getStartDateAndEndDateOfNowDay();
+		List<User> userList = this.userRepositoy.findByCreateTimeBetween(dateList.get(0), dateList.get(1));
+		return userList.size();
+	}
 
 	// 多条件分页查询:按用户名
 	public Page<User> findUsersByNickNameOrUserId(String name, Pageable pageable) {

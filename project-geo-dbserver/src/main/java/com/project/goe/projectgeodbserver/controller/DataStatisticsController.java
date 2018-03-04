@@ -34,13 +34,13 @@ public class DataStatisticsController {
 
 	@Autowired
 	private BonusPayListService bonusPayListService;
-	
+
 	@Autowired
 	private DrawCashService drawCashService;
-	
+
 	@Autowired
 	private OrderInfoService orderInfoService;
-	
+
 	// 本月新增用户数量
 	@GetMapping("/newUsersOfNowMonth")
 	public RetMsg newUsersOfNowMonth() {
@@ -52,7 +52,7 @@ public class DataStatisticsController {
 			retMsg.setMessage("查询成功");
 			retMsg.setSuccess(true);
 			return retMsg;
-		}catch(Exception e) {
+		} catch (Exception e) {
 			throw new RuntimeException("查询失败");
 		}
 	}
@@ -62,10 +62,29 @@ public class DataStatisticsController {
 	public RetMsg newUsersOfLastWeek() {
 		try {
 			RetMsg retMsg = new RetMsg();
-			
+
 			int[] countArr = this.userService.findByCreateTimeBetweenWeek();
 			retMsg.setCode(200);
 			retMsg.setData(countArr);
+			retMsg.setMessage("查询成功");
+			retMsg.setSuccess(true);
+
+			return retMsg;
+		} catch (Exception e) {
+			throw new RuntimeException("查询失败");
+		}
+	}
+	
+	@GetMapping("/newUsersOfNowDay")
+	public RetMsg newUsersOfNowDay() {
+		RetMsg retMsg = null;
+		
+		try {
+			int count = this.userService.findByCreateTimeBetweenNowDay();
+			
+			retMsg = new RetMsg();
+			retMsg.setCode(200);
+			retMsg.setData(count);
 			retMsg.setMessage("查询成功");
 			retMsg.setSuccess(true);
 			
@@ -95,58 +114,69 @@ public class DataStatisticsController {
 			accumulateCostOfMonth += bonusPayList.getBonusNumber() + bonusPayList.getProductCoinNumber();
 		}
 
-		finance.setAccumulateCostOfMonth(accumulateCostOfMonth);;
+		finance.setAccumulateCostOfMonth(accumulateCostOfMonth);
 		finance.setAccumulateEarningOfMonth(accumulateEarningOfMonth);
 
 		return finance;
 	}
-	
-	//查询待审核的提现记录数量
+
+	// 查询待审核的提现记录数量
 	@GetMapping("/countOfAuditWait")
 	public long countOfAuditWait() {
-		return  this.drawCashService.findByDrawStatus(DrawStatus.AUDIT_WAIT).size();
+		return this.drawCashService.findByDrawStatus(DrawStatus.AUDIT_WAIT).size();
 	}
-	
-	//查询未发货的订单记录数量
+
+	// 查询未发货的订单记录数量
 	@GetMapping("/countOfOrderNODelivery")
 	public long countOfOrderNODelivery() {
 		return this.orderInfoService.findByIsDelivery(DeliveryStatus.ORDER_DELIVERY_NO).size();
 	}
-	
-	//查询公司累计总收入和公司累计发放总金额
+
+	// 查询公司累计总收入和公司累计发放总金额
 	@GetMapping("/financeOfAll")
-	public FinanceOfAll financeOfAll() {
+	public RetMsg financeOfAll() {
 		FinanceOfAll financeOfAll = new FinanceOfAll();
+		RetMsg retMsg = null;
 		double accumulateEarning = 0;
 		double productCoinCost = 0;
 		double managementCost = 0;
 		double bonusPaymentCost = 0;
-		
-		// 报单
-		List<ConsumeRecord> consumeRecordListOfAddUser = this.consumeRecordService.findByConsumeType(ConsumeType.COIN_TRANSFER_ADDCONSUMER);
-		for(ConsumeRecord consumeRecord : consumeRecordListOfAddUser) {
-			accumulateEarning += consumeRecord.getConsumeNumber();
+
+		try {
+			// 报单
+			List<ConsumeRecord> consumeRecordListOfAddUser = this.consumeRecordService
+					.findByConsumeType(ConsumeType.COIN_TRANSFER_ADDCONSUMER);
+			for (ConsumeRecord consumeRecord : consumeRecordListOfAddUser) {
+				accumulateEarning += consumeRecord.getConsumeNumber();
+			}
+			// 重销
+			List<ConsumeRecord> consumeRecordListOfReconsume = this.consumeRecordService
+					.findByConsumeType(ConsumeType.COIN_TRANSFER_RECONSUME);
+			for (ConsumeRecord consumeRecord : consumeRecordListOfReconsume) {
+				accumulateEarning += consumeRecord.getConsumeNumber();
+			}
+
+			financeOfAll.setAccumulateEarning(accumulateEarning);
+
+			List<BonusPayList> bonusPayLists = this.bonusPayListService.findAll();
+			for (BonusPayList bonusPayList : bonusPayLists) {
+				productCoinCost += bonusPayList.getProductCoinNumber();
+				managementCost += bonusPayList.getManageCost();
+				bonusPaymentCost += bonusPayList.getBonusNumber();
+			}
+			financeOfAll.setBonusPaymentCost(bonusPaymentCost);
+			financeOfAll.setManagementCost(managementCost);
+			financeOfAll.setProductCoinCost(productCoinCost);
+			
+			retMsg = new RetMsg();
+			retMsg.setCode(200);
+			retMsg.setData(financeOfAll);
+			retMsg.setSuccess(true);
+			
+			return retMsg;
+		} catch (Exception e) {
+			throw new RuntimeException("查询失败");
 		}
-		// 重销
-		List<ConsumeRecord> consumeRecordListOfReconsume = this.consumeRecordService.findByConsumeType(ConsumeType.COIN_TRANSFER_RECONSUME);
-		for(ConsumeRecord consumeRecord : consumeRecordListOfReconsume) {
-			accumulateEarning += consumeRecord.getConsumeNumber();
-		}
-		
-		financeOfAll.setAccumulateEarning(accumulateEarning);
-		
-		List<BonusPayList> bonusPayLists = this.bonusPayListService.findAll();
-		for(BonusPayList bonusPayList : bonusPayLists) {
-			productCoinCost += bonusPayList.getProductCoinNumber();
-			managementCost += bonusPayList.getManageCost();
-			bonusPaymentCost += bonusPayList.getBonusNumber();
-		}
-		financeOfAll.setBonusPaymentCost(bonusPaymentCost);
-		financeOfAll.setManagementCost(managementCost);
-		financeOfAll.setProductCoinCost(productCoinCost);
-		
-		return financeOfAll;
 	}
-	
-	
+
 }
