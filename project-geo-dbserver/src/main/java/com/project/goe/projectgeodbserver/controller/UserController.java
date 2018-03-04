@@ -559,7 +559,7 @@ public class UserController {
 		}
 	}
 
-	// 基于用户账户名称或昵称，分页查询
+	// 基于用户账户名称或昵称，分页模糊查询
 	@GetMapping("/findUsersByNickNameOrAccount")
 	public Page<User> findUsersByNickNameOrUserId(@RequestParam("name") String name,
 			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
