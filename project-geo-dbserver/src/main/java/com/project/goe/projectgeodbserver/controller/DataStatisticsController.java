@@ -20,6 +20,7 @@ import com.project.goe.projectgeodbserver.statusType.DeliveryStatus;
 import com.project.goe.projectgeodbserver.statusType.DrawStatus;
 import com.project.goe.projectgeodbserver.viewentity.FinanceOfAll;
 import com.project.goe.projectgeodbserver.viewentity.FinanceOfMonth;
+import com.project.goe.projectgeodbserver.viewentity.RetMsg;
 
 @RestController
 @CrossOrigin
@@ -39,17 +40,39 @@ public class DataStatisticsController {
 	
 	@Autowired
 	private OrderInfoService orderInfoService;
-
+	
 	// 本月新增用户数量
 	@GetMapping("/newUsersOfNowMonth")
-	public long newUsersOfNowMonth() {
-		return this.userService.findByCreateTimeBetweenDate().size();
+	public RetMsg newUsersOfNowMonth() {
+		try {
+			RetMsg retMsg = new RetMsg();
+			long count = this.userService.findByCreateTimeBetweenDate().size();
+			retMsg.setCode(200);
+			retMsg.setData(count);
+			retMsg.setMessage("查询成功");
+			retMsg.setSuccess(true);
+			return retMsg;
+		}catch(Exception e) {
+			throw new RuntimeException("查询失败");
+		}
 	}
 
-	// 上一周新增用户数量
+	// 上一周新增用户数量:数组第一个元素为上周日的新增用户数，依次类推
 	@GetMapping("/newUsersOfLastWeek")
-	public long newUsersOfLastWeek() {
-		return this.userService.findByCreateTimeBetweenWeek().size();
+	public RetMsg newUsersOfLastWeek() {
+		try {
+			RetMsg retMsg = new RetMsg();
+			
+			int[] countArr = this.userService.findByCreateTimeBetweenWeek();
+			retMsg.setCode(200);
+			retMsg.setData(countArr);
+			retMsg.setMessage("查询成功");
+			retMsg.setSuccess(true);
+			
+			return retMsg;
+		}catch(Exception e) {
+			throw new RuntimeException("查询失败");
+		}
 	}
 
 	// 公司当月截止目前累积收入和累计支出

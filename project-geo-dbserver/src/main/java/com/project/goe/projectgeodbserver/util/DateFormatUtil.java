@@ -1,5 +1,7 @@
 package com.project.goe.projectgeodbserver.util;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,6 +19,15 @@ public class DateFormatUtil {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		String dateString = formatter.format(date);
 		return dateString;
+	}
+	
+	public static Date stringToDate(String dateStr) {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			return dateFormat.parse(dateStr);
+		} catch (ParseException e) {
+			throw new RuntimeException("时间格式转换失败");
+		}
 	}
 
 	public static int compareDateObject(Date srcDate, Date destDate) {
@@ -54,56 +65,108 @@ public class DateFormatUtil {
 		List<Date> dateList = new ArrayList<Date>();
 		dateList.add(startDate);
 		dateList.add(endDate);
-		
+
 		System.out.println(startDate);
 		System.out.println(endDate);
-		
+
 		return dateList;
 	}
 
-	// 获取上一周的开始和结束时间
-	public static List<Date> getStartDayAndEndDayOfLastWeek() {
-		Date startDateOfLastWeek = null;
-		Date endDateOfLastWeek = null;
-		List<Date> dateList = new ArrayList<Date>();
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
+	// 获取上一周每天的开始和结束时间
+	public static List<List<Date>> getStartDayAndEndDayOfLastWeek() {
+		List<List<Date>> dateList = new ArrayList<List<Date>>();
+
 		Calendar calendar = Calendar.getInstance();
-		//获取本周第几天
-		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-		System.out.println(dayOfWeek);
-		//获取当天时分秒
+		// 获取当前时间
+		Date now = calendar.getTime();
+		long nowTimes = now.getTime();
+
+		// 获取本周第几天:国外周日为第一天
+		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+		//国内星期
+		int dayOfWeekInChina;
+		if(dayOfWeek == 1) {
+			dayOfWeekInChina = 7;
+		}else {
+			dayOfWeekInChina = dayOfWeek - 1;
+		}
+
+		/****** 获取上一周周日开始时间和结束时间 ********/
+		// 获取当天时分秒
 		int h = calendar.get(Calendar.HOUR_OF_DAY);
 		int m = calendar.get(Calendar.MINUTE);
 		int s = calendar.get(Calendar.SECOND);
-		//当前时间
-		long nowTime = System.currentTimeMillis();
-		calendar.setTimeInMillis(nowTime);
-		System.out.println(simpleDateFormat.format(calendar.getTime()));
-		
-		//上周截止时间
-		long endTimeOfLastWeek = 0;
-		//上周开始时间
-		long startTimeOfLastWeek = 0;
-		endTimeOfLastWeek = nowTime - (dayOfWeek - 1)*24*3600*1000 - h*3600*1000 - m*60*1000 - s*1000 - 1000;
-		
-		calendar.setTimeInMillis(endTimeOfLastWeek);
-		System.out.println(simpleDateFormat.format(calendar.getTime()));
-		
-		startTimeOfLastWeek =  nowTime - (dayOfWeek - 1 + 7)*24*3600*1000 - h*3600*1000 - m*60*1000 - s*1000;
-		calendar.setTimeInMillis(startTimeOfLastWeek);
-		System.out.println(simpleDateFormat.format(calendar.getTime()));
-		
-		startDateOfLastWeek = new Date(startTimeOfLastWeek);
-		endDateOfLastWeek = new Date(endTimeOfLastWeek);
-		dateList.add(startDateOfLastWeek);
-		dateList.add(endDateOfLastWeek);
+		// 上周周日时间毫秒数
+		long sundayOfLastWeek_end = nowTimes - (dayOfWeekInChina - 1) * 24 * 3600 * 1000 - h * 3600 * 1000 - m * 60 * 1000
+				- s * 1000 - 1000;
+		long sundayOflastWeek_start = sundayOfLastWeek_end - 24 * 3600 * 1000 + 1000;
+		List<Date> sundayList = new ArrayList<Date>();
+		sundayList.add(new Date(sundayOflastWeek_start));
+		sundayList.add(new Date(sundayOfLastWeek_end));
+
+		// 上周周六时间毫秒数
+		long saturdayOfLastWeek_end = sundayOflastWeek_start - 1000;
+		long saturdayOfLastWeek_start = saturdayOfLastWeek_end - 24 * 3600 * 1000 + 1000;
+		List<Date> saturdayList = new ArrayList<Date>();
+		saturdayList.add(new Date(saturdayOfLastWeek_start));
+		saturdayList.add(new Date(saturdayOfLastWeek_end));
+
+		// 上周周五时间毫秒数
+		long fridayOfLastWeek_end = saturdayOfLastWeek_start - 1000;
+		long fridayOfLastWeek_start = fridayOfLastWeek_end - 24 * 3600 * 1000 + 1000;
+		List<Date> fridayList = new ArrayList<Date>();
+		fridayList.add(new Date(fridayOfLastWeek_start));
+		fridayList.add(new Date(fridayOfLastWeek_end));
+
+		// 上周周四时间毫秒数
+		long thursdayOfLastWeek_end = fridayOfLastWeek_start - 1000;
+		long thursdayOfLastWeek_start = thursdayOfLastWeek_end - 24 * 3600 * 1000 + 1000;
+		List<Date> thursdayList = new ArrayList<Date>();
+		thursdayList.add(new Date(thursdayOfLastWeek_start));
+		thursdayList.add(new Date(thursdayOfLastWeek_end));
+
+		// 上周周三时间毫秒数
+		long wednesdayOfLastWeek_end = thursdayOfLastWeek_start - 1000;
+		long wednesdayOfLastWeek_start = wednesdayOfLastWeek_end - 24 * 3600 * 1000 + 1000;
+		List<Date> wednesdayList = new ArrayList<Date>();
+		wednesdayList.add(new Date(wednesdayOfLastWeek_start));
+		wednesdayList.add(new Date(wednesdayOfLastWeek_end));
+
+		// 上周周二时间毫秒数
+		long tuesdayOfLastWeek_end = wednesdayOfLastWeek_start - 1000;
+		long tuesdayOfLastWeek_start = tuesdayOfLastWeek_end - 24 * 3600 * 1000 + 1000;
+		List<Date> tuesdayList = new ArrayList<Date>();
+		tuesdayList.add(new Date(tuesdayOfLastWeek_start));
+		tuesdayList.add(new Date(tuesdayOfLastWeek_end));
+
+		// 上周周一时间毫秒数
+		long mondayOfLastWeek_end = tuesdayOfLastWeek_start - 1000;
+		long mondayOfLastWeek_start = mondayOfLastWeek_end - 24 * 3600 * 1000 + 1000;
+		List<Date> mondayList = new ArrayList<Date>();
+		mondayList.add(new Date(mondayOfLastWeek_start));
+		mondayList.add(new Date(mondayOfLastWeek_end));
+
+		dateList.add(sundayList);
+		dateList.add(saturdayList);
+		dateList.add(fridayList);
+		dateList.add(thursdayList);
+		dateList.add(wednesdayList);
+		dateList.add(tuesdayList);
+		dateList.add(mondayList);
 		
 		return dateList;
 	}
 
+	public static String secondTimeToString(long secondTime) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(secondTime);
+
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return simpleDateFormat.format(calendar.getTime());
+	}
+
 	public static void main(String[] args) {
-		getStartDateAndEndDateOfNowMonth();
+		// getStartDateAndEndDateOfNowMonth();
 		getStartDayAndEndDayOfLastWeek();
 	}
 }

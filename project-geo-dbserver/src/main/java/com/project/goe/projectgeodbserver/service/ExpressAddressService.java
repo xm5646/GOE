@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.project.goe.projectgeodbserver.entity.CardInfo;
 import com.project.goe.projectgeodbserver.entity.ExpressAddress;
 import com.project.goe.projectgeodbserver.repository.ExpressAddressRepository;
 
