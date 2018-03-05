@@ -123,7 +123,7 @@
                         上周每日新增会员数量
                     </p>
                     <div class="data-source-row">
-                        <visite-volume></visite-volume>
+                        <visite-volume :counts="weekNewUsers"></visite-volume>
                     </div>
                 </Card>
                 </Col>
@@ -165,6 +165,7 @@
                 userAccount: '',
                 getCashCount: 2,
                 reConsumeOrder: 1,
+                weekNewUsers: [0, 0, 0, 0, 0, 0, 0],
                 productCoinOrder: 4,
                 count: {
                     todayNewUser: 96,
@@ -192,13 +193,29 @@
                 this.getHomePageData();
             },
             getHomePageData () {
-                let requestOption = {
-                    url: this.APIServer + '/dataStatistics/newUsersOfLastWeek'
-                }
-                this.doGet(requestOption).then(result => {
-                    console.log('本月新增:' + result)
-                })
+                this.doGet({url: this.APIServer + '/dataStatistics/newUsersOfNowMonth'}).then(result => {
+                    if (result.success) {
+                        this.count.monthCreateUser = result.data;
+                    } else {
+                        this.$Message.error('加载月新增用户数据失败!');
+                    }
+                });
+                this.doGet({url: this.APIServer + '/dataStatistics/newUsersOfLastWeek'}).then(result => {
+                    if (result.success) {
+                        this.weekNewUsers = result.data;
+                    } else {
+                        this.$Message.error('加载周新增用户数据失败!');
+                    }
+                });
+                this.doGet({url: this.APIServer + '/dataStatistics/financeOfMonth'}).then(result => {
+                    if (result.success) {
+                        console.log('11111:' + result);
+                    } else {
+                        this.$Message.error('加载周新增用户数据失败!');
+                    }
+                });
             },
+
             addNewToDoItem() {
                 this.showAddNewTodo = true;
             },

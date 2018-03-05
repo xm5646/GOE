@@ -104,7 +104,7 @@ export default {
             let res = transformValue(val);
             let endVal = res.val;
             this.unit = res.unit;
-            this.demo.update(endVal);
+//            this.demo.update(endVal);
         }
     }
 };
