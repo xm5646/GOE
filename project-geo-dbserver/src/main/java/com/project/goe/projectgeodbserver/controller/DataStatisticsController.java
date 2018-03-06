@@ -19,6 +19,7 @@ import com.project.goe.projectgeodbserver.statusType.ConsumeType;
 import com.project.goe.projectgeodbserver.statusType.DeliveryStatus;
 import com.project.goe.projectgeodbserver.statusType.DrawStatus;
 import com.project.goe.projectgeodbserver.viewentity.FinanceOfAll;
+import com.project.goe.projectgeodbserver.viewentity.FinanceOfDay;
 import com.project.goe.projectgeodbserver.viewentity.FinanceOfMonth;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
 
@@ -74,7 +75,8 @@ public class DataStatisticsController {
 			throw new RuntimeException("查询失败");
 		}
 	}
-
+	
+	//本日新增会员
 	@GetMapping("/newUsersOfNowDay")
 	public RetMsg newUsersOfNowDay() {
 		RetMsg retMsg = null;
@@ -93,7 +95,46 @@ public class DataStatisticsController {
 			throw new RuntimeException("查询失败");
 		}
 	}
+	
+	// 公司当日截止目前累计收入和累计支出
+	@GetMapping("/financeOfDay")
+	public RetMsg financeOfDay() {
+		FinanceOfDay finance = new FinanceOfDay();
+		// 本月累计收入
+		double accumulateEarningOfDay = 0;
+		// 本月累计支出
+		double accumulateCostOfDay = 0;
+		RetMsg retMsg = null;
 
+		try {
+
+			List<BonusPayList> bonusPayLists = this.bonusPayListService.findByPayTimeOfNowDay();
+			List<ConsumeRecord> consumeRecordList = this.consumeRecordService.findByConsumeTimeOfNowDay();
+
+			for (ConsumeRecord consumeRecord : consumeRecordList) {
+				accumulateEarningOfDay += consumeRecord.getConsumeNumber();
+			}
+
+			for (BonusPayList bonusPayList : bonusPayLists) {
+				accumulateCostOfDay += bonusPayList.getBonusNumber() + bonusPayList.getProductCoinNumber();
+			}
+
+			finance.setAccumulateCostOfDay(accumulateCostOfDay);
+			finance.setAccumulateEarningOfDay(accumulateEarningOfDay);
+
+			retMsg = new RetMsg();
+			retMsg.setCode(200);
+			retMsg.setData(finance);
+			retMsg.setMessage("查询成功");
+			retMsg.setSuccess(true);
+
+			return retMsg;
+		} catch (Exception e) {
+			throw new RuntimeException("查询失败");
+		}
+	}
+	
+	
 	// 公司当月截止目前累积收入和累计支出
 	@GetMapping("/financeOfMonth")
 	public RetMsg financeOfMonth() {

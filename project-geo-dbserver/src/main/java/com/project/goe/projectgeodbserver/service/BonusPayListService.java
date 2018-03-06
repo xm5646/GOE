@@ -79,6 +79,18 @@ public class BonusPayListService {
 		return bonusPayList;
 	}
 	
+	// 查找本日所有奖金记录
+	public List<BonusPayList> findByPayTimeOfNowDay() {
+		// 本月起始和结束时间
+		List<Date> dateList = DateFormatUtil.getStartDateAndEndDateOfNowDay();
+		// 本月起始和结束时间内的所有消费记录
+		List<BonusPayList> bonusPayList = this.bonusPayListRepository.findByPayTimeBetween(dateList.get(0),dateList.get(1));
+		
+		return bonusPayList;
+	}
+
+	
+	
 	// 查询所有奖金记录
 	public List<BonusPayList> findAll() {
 		return this.bonusPayListRepository.findAll();
