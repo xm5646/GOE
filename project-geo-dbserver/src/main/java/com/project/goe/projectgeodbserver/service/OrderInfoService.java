@@ -64,9 +64,9 @@ public class OrderInfoService {
 		return this.orderInfoRepository.findAll(spec, pageable);
 	}
 	
-	//基于发货状态查询订单列表
-	public List<OrderInfo> findByIsDelivery(String deliveryStatus) {
-		return this.orderInfoRepository.findByIsDelivery(deliveryStatus);
+	//基于发货状态和消费类型查询订单列表
+	public List<OrderInfo> findByIsDeliveryAndOrderType(String deliveryStatus,String orderType) {
+		return this.orderInfoRepository.findByIsDeliveryAndOrderType(deliveryStatus, orderType);
 	}
 
 }

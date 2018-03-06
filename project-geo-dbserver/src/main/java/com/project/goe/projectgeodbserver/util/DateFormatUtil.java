@@ -21,6 +21,15 @@ public class DateFormatUtil {
 		return dateString;
 	}
 	
+	public static String DateObjectToTimeString(Date date) {
+		if (null == date)
+			return null;
+
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String dateString = formatter.format(date);
+		return dateString;
+	}
+	
 	public static Date stringToDate(String dateStr) {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {

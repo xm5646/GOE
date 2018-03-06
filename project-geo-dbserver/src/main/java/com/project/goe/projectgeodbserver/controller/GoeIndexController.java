@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.goe.projectgeodbserver.entity.BonusPayList;
 import com.project.goe.projectgeodbserver.entity.ConsumeRecord;
+import com.project.goe.projectgeodbserver.entity.OrderInfo;
 import com.project.goe.projectgeodbserver.service.BonusPayListService;
 import com.project.goe.projectgeodbserver.service.ConsumeRecordService;
 import com.project.goe.projectgeodbserver.service.DrawCashService;
@@ -21,6 +22,7 @@ import com.project.goe.projectgeodbserver.statusType.DrawStatus;
 import com.project.goe.projectgeodbserver.viewentity.FinanceOfAll;
 import com.project.goe.projectgeodbserver.viewentity.FinanceOfDay;
 import com.project.goe.projectgeodbserver.viewentity.FinanceOfMonth;
+import com.project.goe.projectgeodbserver.viewentity.OrderStatusCodeRequest;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
 
 @RestController
@@ -190,19 +192,51 @@ public class GoeIndexController {
 		}
 	}
 
-	// 查询未发货的订单记录数量
-	@GetMapping("/countOfOrderNODelivery")
-	public RetMsg countOfOrderNODelivery() {
+	// 查询未发货的订单记录数量:重销未发货、积分兑换未发货
+	// consumeTypeCode: 5 积分兑换 6 重销
+	// deliveryStatusCode： 1 未发货 2 已发货
+	@GetMapping("/countOfOrderStatus")
+	public RetMsg countOfOrderNODelivery(OrderStatusCodeRequest orderStatusCodeRequest) {
+		int consumeTypeCode = orderStatusCodeRequest.getConsumeTypeCode();
+		int deliveryStatusCode = orderStatusCodeRequest.getDeliveryStatusCode();
 		RetMsg retMsg = null;
+		//订单类型
+		String orderType = null;
+		String deliveryStatus = null;
+
+		switch (consumeTypeCode) {
+		case 5:
+			orderType = ConsumeType.PRODCUTCOIN_TRANSFER_PRODUCT;
+			break;
+		case 6:
+			orderType = ConsumeType.COIN_TRANSFER_RECONSUME;
+			break;
+		default:
+			throw new RuntimeException("订单类型状态码有误");
+		}
+
+		switch (deliveryStatusCode) {
+		case 1:
+			deliveryStatus = DeliveryStatus.ORDER_DELIVERY_NO;
+			break;
+		case 2:
+			deliveryStatus = DeliveryStatus.ORDER__DELIVERY_OK;
+			break;
+		default:
+			throw new RuntimeException("发货状态码有误");
+		}
+
 		try {
 			retMsg = new RetMsg();
 			retMsg.setCode(200);
-			retMsg.setData(this.orderInfoService.findByIsDelivery(DeliveryStatus.ORDER_DELIVERY_NO).size());
+			List<OrderInfo> orderInfoList = this.orderInfoService.findByIsDeliveryAndOrderType(deliveryStatus,orderType);
+			retMsg.setData(orderInfoList.size());
 			retMsg.setMessage("查询成功");
 			retMsg.setSuccess(true);
 
 			return retMsg;
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new RuntimeException("查询失败");
 		}
 	}

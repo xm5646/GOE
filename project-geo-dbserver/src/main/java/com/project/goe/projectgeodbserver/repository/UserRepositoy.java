@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.project.goe.projectgeodbserver.entity.User;
@@ -19,6 +20,7 @@ public interface UserRepositoy extends JpaSpecificationExecutor<User>,JpaReposit
 	public List<User> findByNickName(String nickName);
 	
 	//基于createTime，查询用户数
+	@Query("select r from User r where createTime between date_format(?1,'%Y-%m-%d %H:%i:%S') and date_format(?2,'%Y-%m-%d %H:%i:%S')")
 	public List<User> findByCreateTimeBetween(Date startDate,Date endDate);
 	
 	//多条件分页查询

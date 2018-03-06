@@ -100,8 +100,6 @@ public class UserService {
 		List<List<Date>> dateList = DateFormatUtil.getStartDayAndEndDayOfLastWeek();
 		int i = 0;
 		for(List<Date> list : dateList) {
-			System.out.println(list.get(0));
-			System.out.println(list.get(1));
 			List<User> userList = this.userRepositoy.findByCreateTimeBetween(list.get(0), list.get(1));
 			int count = userList.size();
 			countArr[i++] = count;
@@ -115,9 +113,9 @@ public class UserService {
 		List<User> userList = this.userRepositoy.findByCreateTimeBetween(dateList.get(0), dateList.get(1));
 		return userList.size();
 	}
-
-	// 多条件分页查询:按用户名
-	public Page<User> findUsersByNickNameOrUserId(String name, Pageable pageable) {
+	/*
+	// 单条件分页模糊查询
+	public Page<User> findUsersByNickNameOrUserId(User, Pageable pageable) {
 		Specification<User> spec = new Specification<User>() {
 
 			@Override
@@ -133,4 +131,5 @@ public class UserService {
 
 		return this.userRepositoy.findAll(spec, pageable);
 	}
+	*/
 }
