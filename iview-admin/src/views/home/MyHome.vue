@@ -112,7 +112,7 @@
                         公司累计收入拨出比例
                     </p>
                     <div class="data-source-row">
-                        <data-source-pie></data-source-pie>
+                        <data-source-pie :numbers="bochubi"></data-source-pie>
                     </div>
                 </Card>
                 </Col>
@@ -165,14 +165,20 @@
                 userAccount: '',
                 getCashCount: 2,
                 reConsumeOrder: 1,
-                weekNewUsers: [0, 0, 0, 0, 0, 0, 0],
                 productCoinOrder: 4,
+                weekNewUsers: [0, 0, 0, 0, 0, 0, 0],
                 count: {
                     todayNewUser: 96,
                     monthCreateUser: 501,
                     visit: 3122264,
                     dayInMoney: 20400,
                     dayOutMoney: 50000
+                },
+                bochubi: {
+                    accumulateEarning: 0,
+                    bonusPaymentCost: 0,
+                    managementCost: 0,
+                    productCoinCost: 0
                 },
                 cityData: cityData,
                 showAddNewTodo: false,
@@ -200,6 +206,13 @@
                         this.$Message.error('加载月新增用户数据失败!');
                     }
                 });
+                this.doGet({url: this.APIServer + '/dataStatistics/newUsersOfNowDay'}).then(result => {
+                    if (result.success) {
+                        this.count.todayNewUser = result.data;
+                    } else {
+                        this.$Message.error('加载月新增用户数据失败!');
+                    }
+                });
                 this.doGet({url: this.APIServer + '/dataStatistics/newUsersOfLastWeek'}).then(result => {
                     if (result.success) {
                         this.weekNewUsers = result.data;
@@ -209,7 +222,18 @@
                 });
                 this.doGet({url: this.APIServer + '/dataStatistics/financeOfMonth'}).then(result => {
                     if (result.success) {
-                        console.log('11111:' + result);
+
+                    } else {
+                        this.$Message.error('加载周新增用户数据失败!');
+                    }
+                });
+                this.doGet({url: this.APIServer + '/dataStatistics/financeOfAll'}).then(result => {
+                    if (result.success) {
+                        this.bochubi.accumulateEarning = result.data.accumulateEarning
+                        this.bochubi.bonusPaymentCost = result.data.bonusPaymentCost
+                        this.bochubi.managementCost = result.data.managementCost
+                        this.bochubi.productCoinCost = result.data.productCoinCost;
+                        this.bochubi = result.data;
                     } else {
                         this.$Message.error('加载周新增用户数据失败!');
                     }

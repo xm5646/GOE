@@ -246,6 +246,7 @@ public class DataStatisticsController {
 
 			retMsg = new RetMsg();
 			retMsg.setCode(200);
+			retMsg.setMessage("查询成功");
 			retMsg.setData(financeOfAll);
 			retMsg.setSuccess(true);
 
