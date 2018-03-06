@@ -58,6 +58,10 @@ public class UserService {
 	public User findByAccount(String account) {
 		return this.userRepositoy.findByAccount(account);
 	}
+	
+	public List<User> findByNickName(String nickName) {
+		return this.userRepositoy.findByNickName(nickName);
+	}
 
 	@Transactional
 	public void delete(Long id) {

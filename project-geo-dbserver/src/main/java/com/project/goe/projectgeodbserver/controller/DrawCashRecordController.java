@@ -1,6 +1,8 @@
 package com.project.goe.projectgeodbserver.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.goe.projectgeodbserver.entity.BonusPayList;
 import com.project.goe.projectgeodbserver.entity.CardInfo;
 import com.project.goe.projectgeodbserver.entity.DrawCashRecord;
 import com.project.goe.projectgeodbserver.entity.User;
@@ -31,6 +34,7 @@ import com.project.goe.projectgeodbserver.util.MD5Util;
 import com.project.goe.projectgeodbserver.util.ValidateErrorUtil;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
 import com.project.goe.projectgeodbserver.viewentity.UserDrawCashRequest;
+import com.project.goe.projectgeodbserver.viewentity.UserTypeQueryRequest;
 
 @RestController
 @RequestMapping("/drawCashRecord")
@@ -63,33 +67,33 @@ public class DrawCashRecordController {
 		double drawNumber = userDrawCashRequest.getDrawNumber();
 		String paymentPassword = userDrawCashRequest.getPaymentPassword();
 		String phone = userDrawCashRequest.getPhone();
-		
+
 		// 验证用户是否存在
 		User user = this.userService.findByAccount(account);
 		if (null == user)
 			throw new RuntimeException("用户不存在");
-		
-		//验证提取额度是否合法
-		if(0>drawNumber || drawNumber<100 ||drawNumber>Double.MAX_VALUE)
+
+		// 验证提取额度是否合法
+		if (0 > drawNumber || drawNumber < 100 || drawNumber > Double.MAX_VALUE)
 			throw new RuntimeException("提取额度输入不合法");
-		
+
 		// 验证用户提取限额是否足够
 		if (drawNumber > user.getBonusCoin())
 			throw new RuntimeException("现金提取额度不够");
 
 		// 验证用户银行卡是否与用户真名是否一致
 		String nickName = user.getNickName();
-		
+
 		CardInfo cardInfo = this.cardInfoService.findByCardInfoId(cardInfoId);
-		if(null == cardInfo)
+		if (null == cardInfo)
 			throw new RuntimeException("银行卡信息不存在");
-		
+
 		String cardOwnerName = cardInfo.getCardOwnerName();
 
 		if (!nickName.equals(cardOwnerName))
 			throw new RuntimeException("银行卡用户名与用户真名不一致");
-		
-		if(!(MD5Util.encrypeByMd5(paymentPassword).equals(user.getPaymentPassword())))
+
+		if (!(MD5Util.encrypeByMd5(paymentPassword).equals(user.getPaymentPassword())))
 			throw new RuntimeException("支付密码输入有误");
 
 		try {
@@ -107,8 +111,8 @@ public class DrawCashRecordController {
 			drawCashRecord.setPhone(phone);
 
 			this.drawCashService.save(drawCashRecord);
-			
-			//更新用户现金
+
+			// 更新用户现金
 			user.setBonusCoin(user.getBonusCoin() - drawNumber);
 			this.userService.save(user);
 
@@ -117,31 +121,30 @@ public class DrawCashRecordController {
 			retMsg.setMessage("用户提现申请成功");
 			retMsg.setData("用户提现申请成功");
 			retMsg.setSuccess(true);
-			
+
 			return retMsg;
 		} catch (Exception e) {
 			throw new RuntimeException("用户提现申请失败");
 		}
 	}
-	
-	//分页查询：基于用户名，按时间降序排序
+
+	// 分页查询：基于用户名，按时间降序排序
 	@GetMapping("/findDrawCashRecordByUserId")
-	public Page<DrawCashRecord> findDrawCashRecordByUserId(
-			@RequestParam("account") String account,
+	public Page<DrawCashRecord> findDrawCashRecordByUserId(@RequestParam("account") String account,
 			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
 			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
 			@RequestParam(value = "keyword", required = false, defaultValue = "drawCommitTime") String keyword,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		try {
 			Sort sort = null;
-			
-			if(null == account)
+
+			if (null == account)
 				throw new RuntimeException("用户名不能为空");
-			
+
 			User user = this.userService.findByAccount(account);
-			if(null == user)
+			if (null == user)
 				throw new RuntimeException("用户不存在");
-			
+
 			DrawCashRecord drawCashRecord = new DrawCashRecord();
 			drawCashRecord.setUserId(user.getUserId());
 
@@ -157,16 +160,17 @@ public class DrawCashRecordController {
 			throw new RuntimeException("查询失败");
 		}
 	}
-	
-	//分页查询所有用户的提现信息(基于提现申请时间)
+
+	// 分页查询所有用户的提现信息(基于提现申请时间)
 	@GetMapping("/findAllDrawCashRecordBySort")
-	public Page<DrawCashRecord> findAllDrawCashRecord(
+	public RetMsg findAllDrawCashRecord(
 			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
 			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
 			@RequestParam(value = "keyword", required = false, defaultValue = "drawCommitTime") String keyword,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		try {
 			Sort sort = null;
+			RetMsg retMsg = new RetMsg();
 
 			if (order.equals("asc"))
 				sort = new Sort(Direction.ASC, keyword);
@@ -174,34 +178,105 @@ public class DrawCashRecordController {
 				sort = new Sort(Direction.DESC, keyword);
 
 			Pageable pageable = new PageRequest(pageNum, size, sort);
+			
+			retMsg.setCode(200);
+			retMsg.setData(this.drawCashService.findAllDrawCardRecordBySort(pageable));
+			retMsg.setMessage("查询成功");
+			retMsg.setSuccess(true);
 
-			return this.drawCashService.findAllDrawCardRecordBySort(pageable);
+			return retMsg;
+		} catch (Exception e) {
+			throw new RuntimeException("查询失败");
+		}
+	}
+
+	// 查询"待审核"状态的所有提现记录
+	@GetMapping("/findByDrawStatusOfAuditWait")
+	public RetMsg findByDrawStatusOfAuditWait(
+			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
+			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
+			@RequestParam(value = "keyword", required = false, defaultValue = "drawCommitTime") String keyword,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
+		try {
+			Sort sort = null;
+			RetMsg retMsg = new RetMsg();
+
+			if (order.equals("asc"))
+				sort = new Sort(Direction.ASC, keyword);
+			else
+				sort = new Sort(Direction.DESC, keyword);
+
+			Pageable pageable = new PageRequest(pageNum, size, sort);
+			
+			retMsg.setCode(200);
+			retMsg.setData(this.drawCashService.findByDrawStatus(DrawStatus.AUDIT_WAIT, pageable));
+			retMsg.setMessage("查询成功");
+			retMsg.setSuccess(true);
+
+			return retMsg;
+		} catch (Exception e) {
+			throw new RuntimeException("查询失败");
+		}
+	}
+
+	// 查询指定用户或昵称，"待审核"提取状态提现记录
+	@GetMapping("/findByDrawStatusOfAuditWaitAndAccountOrNickName")
+	public RetMsg findByDrawStatusOfAuditWaitAndAccountOrNickName(UserTypeQueryRequest userTypeQueryRequest,
+			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
+			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
+			@RequestParam(value = "keyword", required = false, defaultValue = "drawCommitTime") String keyword,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
+		String type = userTypeQueryRequest.getType();
+		String value = userTypeQueryRequest.getValue();
+		User user = null;
+		List<User> userList = null;
+		RetMsg retMsg = null;
+
+		if (type.equals("account"))
+			user = this.userService.findByAccount(value);
+		else if (type.equals("nickName"))
+			userList = this.userService.findByNickName(value);
+		else
+			throw new RuntimeException("类型参数有误");
+
+		if (null == user && null == userList)
+			throw new RuntimeException("用户不存在");
+		
+		try {
+			List<Page<DrawCashRecord>> pageList = new ArrayList<Page<DrawCashRecord>>();
+			if(null != user) {
+				pageList.add(drawCashRecordPageByUserId(DrawStatus.AUDIT_WAIT,user.getUserId(),pageNum,size,order,keyword));
+			}else {
+				for(User u : userList) {
+					pageList.add(drawCashRecordPageByUserId(DrawStatus.AUDIT_WAIT,u.getUserId(),pageNum,size,order,keyword));
+				}
+			}
+			
+			retMsg = new RetMsg();
+			retMsg.setCode(200);
+			retMsg.setData(pageList);
+			retMsg.setMessage("查询成功");
+			retMsg.setSuccess(true);
+
+			return retMsg;
 		} catch (Exception e) {
 			throw new RuntimeException("查询失败");
 		}
 	}
 	
-	//查询"待审核"状态的提现记录
-	@GetMapping("/findByDrawStatusOfAuditWait")
-	public Page<DrawCashRecord> findByDrawStatusOfAuditWait(
-			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
-			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
-			@RequestParam(value = "keyword", required = false, defaultValue = "drawCommitTime") String keyword,
-			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
-		try {
-			Sort sort = null;
+	private Page<DrawCashRecord> drawCashRecordPageByUserId(String drawStatus,long userId,int pageNum, int size, String order,
+			String keyword) {
 
-			if (order.equals("asc"))
-				sort = new Sort(Direction.ASC, keyword);
-			else
-				sort = new Sort(Direction.DESC, keyword);
+		Sort sort = null;
 
-			Pageable pageable = new PageRequest(pageNum, size, sort);
+		if (order.equals("asc"))
+			sort = new Sort(Direction.ASC, keyword);
+		else
+			sort = new Sort(Direction.DESC, keyword);
 
-			return this.drawCashService.findByDrawStatus(DrawStatus.AUDIT_WAIT, pageable);
-		} catch (Exception e) {
-			throw new RuntimeException("查询失败");
-		}
+		Pageable pageable = new PageRequest(pageNum, size, sort);
+
+		return this.drawCashService.findByDrawStatusAndUserId(drawStatus, userId, pageable);
 	}
 
 }

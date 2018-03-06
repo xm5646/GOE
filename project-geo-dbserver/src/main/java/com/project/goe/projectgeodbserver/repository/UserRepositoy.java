@@ -16,6 +16,7 @@ import com.project.goe.projectgeodbserver.entity.User;
 public interface UserRepositoy extends JpaSpecificationExecutor<User>,JpaRepository<User, Long> {
 	public User findByAccount(String account);
 	public User findByUserId(long userId);
+	public List<User> findByNickName(String nickName);
 	
 	//基于createTime，查询用户数
 	public List<User> findByCreateTimeBetween(Date startDate,Date endDate);
