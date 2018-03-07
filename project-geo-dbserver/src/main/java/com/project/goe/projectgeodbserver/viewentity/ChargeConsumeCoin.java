@@ -1,8 +1,11 @@
 package com.project.goe.projectgeodbserver.viewentity;
 
 public class ChargeConsumeCoin {
+	//充值账户
 	private String account;
+	//管理员支付密码
 	private String paymentPassword;
+	//充值报单币额度
 	private double consumeCoin;
 
 	public String getAccount() {

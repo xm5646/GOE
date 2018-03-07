@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Service;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.repository.UserRepositoy;
 import com.project.goe.projectgeodbserver.util.DateFormatUtil;
+import com.project.goe.projectgeodbserver.viewentity.UserTypeQueryRequest;
 
 @Service
 public class UserService {
@@ -113,17 +113,27 @@ public class UserService {
 		List<User> userList = this.userRepositoy.findByCreateTimeBetween(dateList.get(0), dateList.get(1));
 		return userList.size();
 	}
-	/*
-	// 单条件分页模糊查询
-	public Page<User> findUsersByNickNameOrUserId(User, Pageable pageable) {
+	
+	// 基于用户名或昵称，分页模糊查询
+	public Page<User> findUsersByNickNameOrAccountLike(UserTypeQueryRequest userTypeQueryRequest, Pageable pageable) {
+		String type = userTypeQueryRequest.getType();
+		String value = userTypeQueryRequest.getValue();
+		
 		Specification<User> spec = new Specification<User>() {
 
 			@Override
 			public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-				Path<String> account = root.get("account");
-				Path<String> nickName = root.get("nickName");
-
-				Predicate p = cb.or(cb.like(account.as(String.class), "%" + name + "%"),cb.like(nickName.as(String.class),"%" + name + "%"));
+				
+				Predicate p = null;
+				
+				if(type.equals("account")) {
+					p = cb.like(root.get("account").as(String.class), "%" + value + "%");
+				}else if(type.equals("nickName")) {
+					p = cb.like(root.get("nickName").as(String.class), "%" + value + "%");
+				}else {
+					throw new RuntimeException("参数类型不正确");
+				}
+				
 				return p;
 			}
 
@@ -131,5 +141,5 @@ public class UserService {
 
 		return this.userRepositoy.findAll(spec, pageable);
 	}
-	*/
+	
 }

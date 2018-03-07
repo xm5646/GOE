@@ -47,7 +47,7 @@ public class BonusPayListService {
 		return this.bonusPayListRepository.findAll(pageable);
 	}
 
-	// 多条件分页查询:按用户名
+	// 基于userId分页查询
 	public Page<BonusPayList> findBonusPageByAccount(BonusPayList bonusPayList, Pageable pageable) {
 		Specification<BonusPayList> spec = new Specification<BonusPayList>() {
 
@@ -56,6 +56,21 @@ public class BonusPayListService {
 				Path<Long> userId = root.get("userId");
 
 				Predicate p = cb.equal(userId, bonusPayList.getUserId());
+				return p;
+			}
+
+		};
+
+		return bonusPayListRepository.findAll(spec, pageable);
+	}
+	
+	// 基于userId，查询用户奖金信息
+	public Page<BonusPayList> findBonusPageByUserId(long userId, Pageable pageable) {
+		Specification<BonusPayList> spec = new Specification<BonusPayList>() {
+
+			@Override
+			public Predicate toPredicate(Root<BonusPayList> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				Predicate p = cb.equal(root.get("userId").as(long.class),userId);
 				return p;
 			}
 
