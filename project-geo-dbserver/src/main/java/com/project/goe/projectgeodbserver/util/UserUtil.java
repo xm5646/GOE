@@ -1,18 +1,30 @@
 package com.project.goe.projectgeodbserver.util;
 
 import com.project.goe.projectgeodbserver.entity.User;
+import com.project.goe.projectgeodbserver.service.UserService;
 import com.project.goe.projectgeodbserver.statusType.UserLevel;
 import com.project.goe.projectgeodbserver.statusType.UserType;
 import com.project.goe.projectgeodbserver.viewentity.UserVO;
 
 import java.util.Date;
-import java.util.Random;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserUtil {
 	
+	@Autowired
+	private UserService userService;
+	
 	private UserUtil() {}
 	
+	private String getAccount(long userId) {
+		User u = this.userService.findByUserId(userId);
+		return u.getAccount();
+	}
+	
 	public static UserVO UserToUserVO(User user) {
+		UserUtil obj = new UserUtil();
+		
 		UserVO userVO = new UserVO();
 		userVO.setAccount(user.getAccount());
 		userVO.setActivateTime(DateFormatUtil.DateObjectToString(user.getActivateTime()));
@@ -35,9 +47,29 @@ public class UserUtil {
 		userVO.setConsumeCoin(user.getConsumeCoin());
 		
 		userVO.setCreateTime(DateFormatUtil.DateObjectToString(user.getCreateTime()));
-		userVO.setDepartmentA(user.getDepartmentA());
-		userVO.setDepartmentB(user.getDepartmentB());
-		userVO.setDepartmentC(user.getDepartmentC());
+		
+		long departmentA = user.getDepartmentA();
+		long departmentB = user.getDepartmentB();
+		long departmentC = user.getDepartmentC();
+		
+		if(0 == departmentA) {
+			userVO.setAccountA("无");
+		}else {
+			userVO.setAccountA(obj.getAccount(departmentA));
+		}
+		
+		if(0 == departmentB) {
+			userVO.setAccountB("无");
+		}else {
+			userVO.setAccountB(obj.getAccount(departmentB));
+		}
+		
+		if(0 == departmentC) {
+			userVO.setAccountC("无");
+		}else {
+			userVO.setAccountC(obj.getAccount(departmentC));
+		}
+		
 		userVO.setProductCoin(user.getProductCoin());
 		userVO.setUserType(user.getUserType());
 		
@@ -54,7 +86,13 @@ public class UserUtil {
 		userVO.setIdentityNo(user.getIdentityNo());
 		userVO.setProvince(user.getProvince());
 		userVO.setCity(user.getCity());
-		userVO.setPasswordReset(user.isPasswordReset());
+		
+		if(user.isPasswordReset()) {
+			userVO.setPasswordReset("是");
+		}else {
+			userVO.setPasswordReset("否");
+		}
+		
 		
 		return userVO;
 	}

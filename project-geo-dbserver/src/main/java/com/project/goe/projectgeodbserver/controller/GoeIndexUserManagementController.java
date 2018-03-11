@@ -43,7 +43,7 @@ public class GoeIndexUserManagementController {
 	public RetMsg findAllUsers(@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
 			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
 			@RequestParam(value = "keyword", required = false, defaultValue = "createTime") String keyword,
-			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
+			@RequestParam(value = "order", required = false, defaultValue = "asc") String order) {
 		try {
 			Sort sort = null;
 			RetMsg retMsg = new RetMsg();

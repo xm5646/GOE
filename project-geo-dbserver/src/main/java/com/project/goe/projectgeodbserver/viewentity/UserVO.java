@@ -7,9 +7,9 @@ public class UserVO {
 	private String userType;
 	private String userStatus;
 	private String userPhone;
-	private long departmentA;
-	private long departmentB;
-	private long departmentC;
+	private String accountA;
+	private String accountB;
+	private String accountC;
 	private String createTime;
 	private String assessDate;
 	private String assessStatus;
@@ -18,7 +18,7 @@ public class UserVO {
 	private double productCoin;
 	private String activateTime;
 	private String identityNo;
-	private boolean passwordReset;
+	private String passwordReset;
 	private String province;
 	private String city;
 
@@ -30,11 +30,35 @@ public class UserVO {
 		this.identityNo = identityNo;
 	}
 
-	public boolean isPasswordReset() {
+	public String getAccountA() {
+		return accountA;
+	}
+
+	public void setAccountA(String accountA) {
+		this.accountA = accountA;
+	}
+
+	public String getAccountB() {
+		return accountB;
+	}
+
+	public void setAccountB(String accountB) {
+		this.accountB = accountB;
+	}
+
+	public String getAccountC() {
+		return accountC;
+	}
+
+	public void setAccountC(String accountC) {
+		this.accountC = accountC;
+	}
+
+	public String getPasswordReset() {
 		return passwordReset;
 	}
 
-	public void setPasswordReset(boolean passwordReset) {
+	public void setPasswordReset(String passwordReset) {
 		this.passwordReset = passwordReset;
 	}
 
@@ -92,30 +116,6 @@ public class UserVO {
 
 	public void setUserPhone(String userPhone) {
 		this.userPhone = userPhone;
-	}
-
-	public long getDepartmentA() {
-		return departmentA;
-	}
-
-	public void setDepartmentA(long departmentA) {
-		this.departmentA = departmentA;
-	}
-
-	public long getDepartmentB() {
-		return departmentB;
-	}
-
-	public void setDepartmentB(long departmentB) {
-		this.departmentB = departmentB;
-	}
-
-	public long getDepartmentC() {
-		return departmentC;
-	}
-
-	public void setDepartmentC(long departmentC) {
-		this.departmentC = departmentC;
 	}
 
 	public double getBonusCoin() {
