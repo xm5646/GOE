@@ -60,6 +60,28 @@ public class GoeIndexUserManagementController {
 
 				@Override
 				public UserVO convert(User user) {
+					long departmentA = user.getDepartmentA();
+					long departmentB = user.getDepartmentB();
+					long departmentC = user.getDepartmentC();
+					
+					if(0 == departmentA) {
+						user.setAccountA("无");
+					}else {
+						user.setAccountA(userService.findByUserId(departmentA).getAccount());
+					}
+					
+					if(0 == departmentB) {
+						user.setAccountB("无");
+					}else {
+						user.setAccountB(userService.findByUserId(departmentB).getAccount());
+					}
+					
+					if(0 == departmentC) {
+						user.setAccountC("无");
+					}else {
+						user.setAccountC(userService.findByUserId(departmentC).getAccount());
+					}
+					
 					return UserUtil.UserToUserVO(user);
 				}
 			});
@@ -71,6 +93,7 @@ public class GoeIndexUserManagementController {
 			
 			return retMsg;
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new RuntimeException("信息查询失败");
 		}
 	}

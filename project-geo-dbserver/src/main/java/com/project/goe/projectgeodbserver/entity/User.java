@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import com.project.goe.projectgeodbserver.statusType.UserLevel;
 import com.project.goe.projectgeodbserver.statusType.UserType;
@@ -22,7 +23,7 @@ import com.project.goe.projectgeodbserver.statusType.UserType;
 @Table(name = "tb_user")
 public class User implements Serializable {
 	@Column
-	private String salt;//加密密码的盐
+	private String salt;// 加密密码的盐
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -76,6 +77,13 @@ public class User implements Serializable {
 	// 推荐人ID
 	@Column
 	private long recomondId;
+
+	@Transient
+	private String accountA;
+	@Transient
+	private String accountB;
+	@Transient
+	private String accountC;
 
 	// 创建时间
 	@Column
@@ -337,9 +345,7 @@ public class User implements Serializable {
 	public void setUserType(String userType) {
 		this.userType = userType;
 	}
-	
-	
-	
+
 	public String getSalt() {
 		return salt;
 	}
@@ -348,12 +354,37 @@ public class User implements Serializable {
 		this.salt = salt;
 	}
 
+	public String getAccountA() {
+		return accountA;
+	}
+
+	public void setAccountA(String accountA) {
+		this.accountA = accountA;
+	}
+
+	public String getAccountB() {
+		return accountB;
+	}
+
+	public void setAccountB(String accountB) {
+		this.accountB = accountB;
+	}
+
+	public String getAccountC() {
+		return accountC;
+	}
+
+	public void setAccountC(String accountC) {
+		this.accountC = accountC;
+	}
+
 	/**
-     * 密码盐.
-     * @return
-     */
-    public String getCredentialsSalt(){
-        return this.account+this.salt;
-    }
-    //重新对盐重新进行了定义，用户名+salt，这样就更加不容易被破解
+	 * 密码盐.
+	 * 
+	 * @return
+	 */
+	public String getCredentialsSalt() {
+		return this.account + this.salt;
+	}
+	// 重新对盐重新进行了定义，用户名+salt，这样就更加不容易被破解
 }

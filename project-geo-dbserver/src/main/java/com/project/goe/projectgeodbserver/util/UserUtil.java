@@ -1,116 +1,85 @@
 package com.project.goe.projectgeodbserver.util;
 
 import com.project.goe.projectgeodbserver.entity.User;
-import com.project.goe.projectgeodbserver.service.UserService;
 import com.project.goe.projectgeodbserver.statusType.UserLevel;
 import com.project.goe.projectgeodbserver.statusType.UserType;
 import com.project.goe.projectgeodbserver.viewentity.UserVO;
 
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 public class UserUtil {
-	
-	@Autowired
-	private UserService userService;
-	
-	private UserUtil() {}
-	
-	private String getAccount(long userId) {
-		User u = this.userService.findByUserId(userId);
-		return u.getAccount();
+	private UserUtil() {
 	}
-	
+
 	public static UserVO UserToUserVO(User user) {
-		UserUtil obj = new UserUtil();
-		
 		UserVO userVO = new UserVO();
 		userVO.setAccount(user.getAccount());
 		userVO.setActivateTime(DateFormatUtil.DateObjectToString(user.getActivateTime()));
-		
-//		if(DateFormatUtil.compareDateObject(user.getAssessDate(),user.getCreateTime()) == 0) {
-//			userVO.setAssessDate("未达到考核级别");
-//		}else {
-//			userVO.setAssessDate(DateFormatUtil.DateObjectToString(user.getAssessDate()));
-//		}
-		
-		if(user.isAssessStatus()) {
+
+		// if(DateFormatUtil.compareDateObject(user.getAssessDate(),user.getCreateTime())
+		// == 0) {
+		// userVO.setAssessDate("未达到考核级别");
+		// }else {
+		// userVO.setAssessDate(DateFormatUtil.DateObjectToString(user.getAssessDate()));
+		// }
+
+		if (user.isAssessStatus()) {
 			userVO.setAssessStatus("已通过考核");
 			userVO.setAssessDate(DateFormatUtil.DateObjectToString(user.getAssessDate()));
-		}else {
+		} else {
 			userVO.setAssessStatus("未通过考核");
 			userVO.setAssessDate("未达到考核级别");
 		}
 
 		userVO.setBonusCoin(user.getBonusCoin());
 		userVO.setConsumeCoin(user.getConsumeCoin());
-		
+
 		userVO.setCreateTime(DateFormatUtil.DateObjectToString(user.getCreateTime()));
-		
-		long departmentA = user.getDepartmentA();
-		long departmentB = user.getDepartmentB();
-		long departmentC = user.getDepartmentC();
-		
-		if(0 == departmentA) {
-			userVO.setAccountA("无");
-		}else {
-			userVO.setAccountA(obj.getAccount(departmentA));
-		}
-		
-		if(0 == departmentB) {
-			userVO.setAccountB("无");
-		}else {
-			userVO.setAccountB(obj.getAccount(departmentB));
-		}
-		
-		if(0 == departmentC) {
-			userVO.setAccountC("无");
-		}else {
-			userVO.setAccountC(obj.getAccount(departmentC));
-		}
-		
+
+		userVO.setAccountA(user.getAccountA());
+		userVO.setAccountB(user.getAccountB());
+		userVO.setAccountC(user.getAccountC());
+
 		userVO.setProductCoin(user.getProductCoin());
 		userVO.setUserType(user.getUserType());
-		
-		if(user.isUserStatus())
+
+		if (user.isUserStatus())
 			userVO.setUserStatus("已激活");
-		else 
+		else
 			userVO.setUserStatus("未激活");
-		
+
 		userVO.setUserPhone(user.getUserPhone());
-		String  userLevelCH = BusinessUtil.getBusinessEntity(user.getUserLevel()).getUserLevel_CH();
+		String userLevelCH = BusinessUtil.getBusinessEntity(user.getUserLevel()).getUserLevel_CH();
 		userVO.setUserLevel(userLevelCH);
 		userVO.setNickName(user.getNickName());
 		userVO.setUserPhone(user.getUserPhone());
 		userVO.setIdentityNo(user.getIdentityNo());
 		userVO.setProvince(user.getProvince());
 		userVO.setCity(user.getCity());
-		
-		if(user.isPasswordReset()) {
+
+		if (user.isPasswordReset()) {
 			userVO.setPasswordReset("是");
-		}else {
+		} else {
 			userVO.setPasswordReset("否");
 		}
-		
-		
+
 		return userVO;
 	}
-	
-	public static User addUser(User user,User parentUser,String departmentType) {
+
+	public static User addUser(User user, User parentUser, String departmentType) {
 		if ("A".equals(departmentType)) {
 			parentUser.setDepartmentA(user.getUserId());
-		}else if ("B".equals(departmentType)) {
+		} else if ("B".equals(departmentType)) {
 			parentUser.setDepartmentB(user.getUserId());
-		}else if ("C".equals(departmentType)) {
+		} else if ("C".equals(departmentType)) {
 			parentUser.setDepartmentC(user.getUserId());
-		}else {
+		} else {
 			return null;
 		}
 		user.setParentId(user.getUserId());
 		return user;
 	}
-	
+
 	public static User getTestUser() {
 		try {
 			Thread.sleep(10);
@@ -120,7 +89,7 @@ public class UserUtil {
 		}
 		Date createDate = new Date();
 		User u = new User();
-		String name = "zs"+createDate.getTime();
+		String name = "zs" + createDate.getTime();
 		u.setNickName(name);
 		u.setAccount(name);
 		u.setPassword(MD5Util.encrypeByMd5("123456"));
