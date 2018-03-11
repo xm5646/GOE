@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import com.project.goe.projectgeodbserver.statusType.UserLevel;
 
@@ -31,13 +32,13 @@ public class Earning {
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createTime;
-	
+
 	// 收益创建日期：产生收益的时间
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date endTime;
-	
-	//用户的级别{组长,主任,董事 。。。}
+
+	// 用户的级别{组长,主任,董事 。。。}
 	private String userLevel = UserLevel.COMMON_SALEMAN;
 	// 触发类型
 	@Column
@@ -50,6 +51,17 @@ public class Earning {
 	// 金额发放剩余天数
 	@Column
 	private int surplusNumber;
+
+	@Transient
+	private String account;
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
 
 	public long getUserid() {
 		return userid;
@@ -121,7 +133,5 @@ public class Earning {
 				+ endTime + ", userLevel=" + userLevel + ", touchType=" + touchType + ", dayMoney=" + dayMoney
 				+ ", surplusNumber=" + surplusNumber + "]";
 	}
-	
-	
 
 }

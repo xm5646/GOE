@@ -16,6 +16,7 @@ import com.project.goe.projectgeodbserver.service.ConsumeRecordService;
 import com.project.goe.projectgeodbserver.service.UserService;
 import com.project.goe.projectgeodbserver.statusType.ConsumeType;
 import com.project.goe.projectgeodbserver.util.MD5Util;
+import com.project.goe.projectgeodbserver.util.MathUtil;
 import com.project.goe.projectgeodbserver.viewentity.ChargeBonusAndProductCoin;
 import com.project.goe.projectgeodbserver.viewentity.ChargeConsumeCoin;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
@@ -60,7 +61,7 @@ public class GoeIndexChargeController {
 		if (!paymentPassword2.equals(MD5Util.encrypeByMd5(paymentPassword)))
 			throw new RuntimeException("支付密码输入有误");
 
-		if (consumeCoin < 0 || consumeCoin > Double.MAX_VALUE)
+		if (consumeCoin > Double.MAX_VALUE)
 			throw new RuntimeException("充值金额不合法");
 
 		// 更新管理员用户和充值用户信息
@@ -85,7 +86,7 @@ public class GoeIndexChargeController {
 
 			retMsg = new RetMsg();
 			retMsg.setCode(200);
-			retMsg.setData(consumeCoin);
+			retMsg.setData(Math.floor(chargeUser.getConsumeCoin()));
 			retMsg.setMessage("充值成功");
 			retMsg.setSuccess(true);
 
@@ -125,7 +126,7 @@ public class GoeIndexChargeController {
 		if (!paymentPassword2.equals(MD5Util.encrypeByMd5(paymentPassword)))
 			throw new RuntimeException("支付密码输入有误");
 
-		if (bonus < 0 || bonus > Double.MAX_VALUE || productCoin < 0 || productCoin > Double.MAX_VALUE)
+		if (bonus > Double.MAX_VALUE || productCoin > Double.MAX_VALUE)
 			throw new RuntimeException("充值金额不合法");
 
 		try {
@@ -153,7 +154,7 @@ public class GoeIndexChargeController {
 
 			retMsg = new RetMsg();
 			retMsg.setCode(200);
-			retMsg.setData(new Double[] { bonus, productCoin });
+			retMsg.setData(new int[] { MathUtil.floor(chargeUser.getBonusCoin()), MathUtil.floor(chargeUser.getProductCoin()) });
 			retMsg.setMessage("充值成功");
 			retMsg.setSuccess(true);
 

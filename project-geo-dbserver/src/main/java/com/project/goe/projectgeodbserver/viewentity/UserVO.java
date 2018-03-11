@@ -13,14 +13,38 @@ public class UserVO {
 	private String createTime;
 	private String assessDate;
 	private String assessStatus;
-	private double bonusCoin;
-	private double consumeCoin;
-	private double productCoin;
+	private int bonusCoin;
+	private int consumeCoin;
+	private int productCoin;
 	private String activateTime;
 	private String identityNo;
 	private String passwordReset;
 	private String province;
 	private String city;
+
+	public int getBonusCoin() {
+		return bonusCoin;
+	}
+
+	public void setBonusCoin(int bonusCoin) {
+		this.bonusCoin = bonusCoin;
+	}
+
+	public int getConsumeCoin() {
+		return consumeCoin;
+	}
+
+	public void setConsumeCoin(int consumeCoin) {
+		this.consumeCoin = consumeCoin;
+	}
+
+	public int getProductCoin() {
+		return productCoin;
+	}
+
+	public void setProductCoin(int productCoin) {
+		this.productCoin = productCoin;
+	}
 
 	public String getIdentityNo() {
 		return identityNo;
@@ -116,30 +140,6 @@ public class UserVO {
 
 	public void setUserPhone(String userPhone) {
 		this.userPhone = userPhone;
-	}
-
-	public double getBonusCoin() {
-		return bonusCoin;
-	}
-
-	public void setBonusCoin(double bonusCoin) {
-		this.bonusCoin = bonusCoin;
-	}
-
-	public double getConsumeCoin() {
-		return consumeCoin;
-	}
-
-	public void setConsumeCoin(double consumeCoin) {
-		this.consumeCoin = consumeCoin;
-	}
-
-	public double getProductCoin() {
-		return productCoin;
-	}
-
-	public void setProductCoin(double productCoin) {
-		this.productCoin = productCoin;
 	}
 
 	public String getCreateTime() {

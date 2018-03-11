@@ -4,6 +4,8 @@ package com.project.goe.projectgeodbserver.service;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.project.goe.projectgeodbserver.entity.Earning;
 import com.project.goe.projectgeodbserver.repository.EarningRepository;
@@ -35,5 +37,9 @@ public class EarningService {
 			return true;
 		}
 		return false;
+	}
+	
+	public Page<Earning> findAllEarnings(Pageable pageable) {
+		return this.earningRepository.findAll(pageable);
 	}
 }

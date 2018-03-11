@@ -31,8 +31,8 @@ public class UserUtil {
 			userVO.setAssessDate("未达到考核级别");
 		}
 
-		userVO.setBonusCoin(user.getBonusCoin());
-		userVO.setConsumeCoin(user.getConsumeCoin());
+		userVO.setBonusCoin(MathUtil.floor(user.getBonusCoin()));
+		userVO.setConsumeCoin(MathUtil.floor(user.getConsumeCoin()));
 
 		userVO.setCreateTime(DateFormatUtil.DateObjectToString(user.getCreateTime()));
 
@@ -40,7 +40,7 @@ public class UserUtil {
 		userVO.setAccountB(user.getAccountB());
 		userVO.setAccountC(user.getAccountC());
 
-		userVO.setProductCoin(user.getProductCoin());
+		userVO.setProductCoin(MathUtil.floor(user.getProductCoin()));
 		userVO.setUserType(user.getUserType());
 
 		if (user.isUserStatus())

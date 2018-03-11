@@ -14,12 +14,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.goe.projectgeodbserver.entity.Earning;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.service.BonusPayListService;
 import com.project.goe.projectgeodbserver.service.ConsumeRecordService;
+import com.project.goe.projectgeodbserver.service.EarningService;
 import com.project.goe.projectgeodbserver.service.UserService;
+import com.project.goe.projectgeodbserver.util.EarningUtil;
 import com.project.goe.projectgeodbserver.util.MD5Util;
 import com.project.goe.projectgeodbserver.util.UserUtil;
+import com.project.goe.projectgeodbserver.viewentity.EarningVO;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
 import com.project.goe.projectgeodbserver.viewentity.UserTypeQueryRequest;
 import com.project.goe.projectgeodbserver.viewentity.UserVO;
@@ -32,11 +36,14 @@ public class GoeIndexUserManagementController {
 	private UserService userService;
 	
 	@Autowired
+	private EarningService earningService;
+
+	@Autowired
 	private ConsumeRecordService consumeRecordService;
-	
+
 	@Autowired
 	private BonusPayListService bonusPayListService;
-	
+
 	/**************** 用户信息管理 *****************/
 	// 按createTime，分页查询所有用户信息
 	@GetMapping("/findAllUsers")
@@ -54,43 +61,43 @@ public class GoeIndexUserManagementController {
 				sort = new Sort(Direction.DESC, keyword);
 
 			Pageable pageable = new PageRequest(pageNum, size, sort);
-			
+
 			Page<User> pageUser = this.userService.findAllUserBySort(pageable);
-			Page<UserVO> pageUserVO = pageUser.map(new Converter<User,UserVO>() {
+			Page<UserVO> pageUserVO = pageUser.map(new Converter<User, UserVO>() {
 
 				@Override
 				public UserVO convert(User user) {
 					long departmentA = user.getDepartmentA();
 					long departmentB = user.getDepartmentB();
 					long departmentC = user.getDepartmentC();
-					
-					if(0 == departmentA) {
+
+					if (0 == departmentA) {
 						user.setAccountA("无");
-					}else {
+					} else {
 						user.setAccountA(userService.findByUserId(departmentA).getAccount());
 					}
-					
-					if(0 == departmentB) {
+
+					if (0 == departmentB) {
 						user.setAccountB("无");
-					}else {
+					} else {
 						user.setAccountB(userService.findByUserId(departmentB).getAccount());
 					}
-					
-					if(0 == departmentC) {
+
+					if (0 == departmentC) {
 						user.setAccountC("无");
-					}else {
+					} else {
 						user.setAccountC(userService.findByUserId(departmentC).getAccount());
 					}
-					
+
 					return UserUtil.UserToUserVO(user);
 				}
 			});
-			
+
 			retMsg.setCode(200);
 			retMsg.setData(pageUserVO);
 			retMsg.setMessage("查询成功");
 			retMsg.setSuccess(true);
-			
+
 			return retMsg;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -105,22 +112,22 @@ public class GoeIndexUserManagementController {
 			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
 			@RequestParam(value = "keyword", required = false, defaultValue = "createTime") String keyword,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
-		
+
 		RetMsg retMsg = null;
 		Sort sort = null;
-		
-		if(null == userTypeQueryRequest)
+
+		if (null == userTypeQueryRequest)
 			throw new RuntimeException("未传递参数");
-		
+
 		String type = userTypeQueryRequest.getType();
 		String value = userTypeQueryRequest.getValue();
-		
-		if(null == type)
+
+		if (null == type)
 			throw new RuntimeException("参数类型能为空");
-		
-		if(null == value)
+
+		if (null == value)
 			throw new RuntimeException("参数类型值不能为空");
-		
+
 		try {
 			if (order.equals("asc"))
 				sort = new Sort(Direction.ASC, keyword);
@@ -130,20 +137,20 @@ public class GoeIndexUserManagementController {
 			Pageable pageable = new PageRequest(pageNum, size, sort);
 
 			Page<User> pageUser = this.userService.findUsersByNickNameOrAccountLike(userTypeQueryRequest, pageable);
-			Page<UserVO> pageUserVO = pageUser.map(new Converter<User,UserVO>() {
+			Page<UserVO> pageUserVO = pageUser.map(new Converter<User, UserVO>() {
 
 				@Override
 				public UserVO convert(User user) {
 					return UserUtil.UserToUserVO(user);
 				}
 			});
-			
+
 			retMsg = new RetMsg();
 			retMsg.setCode(200);
 			retMsg.setData(pageUserVO);
 			retMsg.setMessage("查询成功");
 			retMsg.setSuccess(true);
-			
+
 			return retMsg;
 		} catch (Exception e) {
 			throw new RuntimeException("信息查询失败");
@@ -151,7 +158,7 @@ public class GoeIndexUserManagementController {
 	}
 
 	// 更新用户信息:可更新昵称、电话号码、激活状态、考核状态、密码、支付密码
-	//必须传递的参数：需要更新的account
+	// 必须传递的参数：需要更新的account
 	@PostMapping("/updateUserInfo")
 	public RetMsg updateUserInfo(@RequestParam("account") String account,
 			@RequestParam(value = "nickName", required = false) String nickName,
@@ -210,6 +217,48 @@ public class GoeIndexUserManagementController {
 			return retMsg;
 		} catch (Exception e) {
 			throw new RuntimeException("用户信息更新失败");
+		}
+
+	}
+
+	@GetMapping("/findAllEarnings")
+	public RetMsg findAllEarnings(@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
+			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
+			@RequestParam(value = "keyword", required = false, defaultValue = "createTime") String keyword,
+			@RequestParam(value = "order", required = false, defaultValue = "asc") String order) {
+		try {
+			Sort sort = null;
+			RetMsg retMsg = new RetMsg();
+
+			if (order.equals("asc"))
+				sort = new Sort(Direction.ASC, keyword);
+			else
+				sort = new Sort(Direction.DESC, keyword);
+
+			Pageable pageable = new PageRequest(pageNum, size, sort);
+
+			Page<Earning> pageEarning = this.earningService.findAllEarnings(pageable);
+			Page<EarningVO> pageEarningVO = pageEarning.map(new Converter<Earning,EarningVO>() {
+
+				@Override
+				public EarningVO convert(Earning earning) {
+					long userId = earning.getUserid();
+					User user = userService.findByUserId(userId);
+					earning.setAccount(user.getAccount());
+
+					return EarningUtil.earningToEarningVO(earning);
+				}
+			});
+			
+			retMsg.setCode(200);
+			retMsg.setData(pageEarningVO);
+			retMsg.setMessage("查询成功");
+			retMsg.setSuccess(true);
+
+			return retMsg;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("信息查询失败");
 		}
 
 	}
