@@ -11,22 +11,17 @@
                     会员收入查询
                 </p>
                 <Row>
-                    <div style="margin-right: 5%; float: left">
-                        <Input v-model="searchNickName" placeholder="请输入姓名搜搜..." style="width: 200px" />
-                        <span @click="handleSearch3" style="margin: 0 10px;"><Button type="primary" icon="search">搜索</Button></span>
-                        <Button @click="handleCancel3" type="ghost" >取消</Button>
-                    </div>
                     <div>
                         <Input v-model="searchAccount" placeholder="请输入用户编号搜搜..." style="width: 200px" />
-                        <span @click="handleSearch3" style="margin: 0 10px;"><Button type="primary" icon="search">搜索</Button></span>
-                        <Button @click="handleCancel3" type="ghost" >取消</Button>
+                        <span @click="handleSearch2" style="margin: 0 10px;"><Button type="primary" icon="search">搜索</Button></span>
+                        <Button @click="handleCancel2" type="ghost" >取消</Button>
                     </div>
                 </Row>
                 <Row class="margin-top-10 searchable-table-con1">
                     <!--<Table :columns="columns1" :data="userList"></Table>-->
                     <div style="height: 20px"></div>
-                    <div v-if="userList.length>0">
-                        <vue-table :tdata="userList"
+                    <div v-if="allList.length>0">
+                        <vue-table :tdata="allList"
                                    :tcolumns="columns1"
                                    :tdHeight="40"
                                    :page="pageObj"
@@ -42,7 +37,7 @@
                         </div>
                         <div v-else>
                             <Alert show-icon>
-                                请输入用户姓名或者用户编号进行查询
+                                请输入准确的用户编号进行查询
                             </Alert>
                         </div>
 
@@ -65,94 +60,65 @@
         data () {
             return {
                 searchAccount: '',
-                searchNickName: '',
-                showUser: '',
-                showCurrentTableData: false,
-                toNum: '',
                 isNotFindData: false,
                 pageObj: {
                     totalPage: 1,
                     maxSize: 5
                 },
-                searchConTel2: '',
-                searchConName3: '',
-                data1: [
-                    {
-                        user_nickName: '李晓明',
-                        user_account: 'lixiaoming',
-                        user_level: '组长',
-                        user_createTime: '2017-12-21',
-                        user_status: '已激活',
-                        user_accessStatus: '已通过',
-                        user_bonusCoin: '1000',
-                        user_consumeCoin: '1000',
-                        user_productCoin: '1000'
-                    },
-                    {
-                        user_nickName: '李晓明',
-                        user_account: 'lixiaoming',
-                        user_level: '组长',
-                        user_createTime: '2017-12-21',
-                        user_status: '已激活',
-                        user_accessStatus: '已通过',
-                        user_bonusCoin: '1000',
-                        user_consumeCoin: '1000',
-                        user_productCoin: '1000'
-                    }
-                ],
-                initTable1: [],
-                data2: [],
-                initTable2: [],
-                data3: [],
-                initTable3: [],
                 columns1: [
                     {
-                        key: 'user_account',
+                        key: 'account',
                         title: '用户编号',
                         width: 120
                     },
                     {
-                        key: 'user_nickName',
-                        title: '用户编号',
+                        key: 'userLevel',
+                        title: '用户级别',
                         width: 120
                     },
                     {
-                        key: 'earn_type',
+                        key: 'touchType',
                         title: '收益类型',
                         width: 120
                     },
                     {
-                        key: 'earn_createTime',
-                        title: '触发时间',
-                        width: 120
-                    },
-                    {
-                        key: 'earn_dayMoney',
+                        key: 'dayMoney',
                         title: '每日发放金额',
                         width: 120
                     },
                     {
-                        key: 'earn_surplusDays',
+                        key: 'createTime',
+                        title: '触发时间',
+                        width: 120
+                    },
+                    {
+                        key: 'endTime',
+                        title: '发放结束时间',
+                        width: 120
+                    },
+                    {
+                        key: 'surplusNumber',
                         title: '剩余发放天数',
                         width: 120
                     }
                 ],
-                userList: [
-                    {
-                        user_account: 'lixiaoming',
-                        user_nickName: '李晓明',
-                        earn_type: '累积',
-                        earn_createTime: '2017-12-21',
-                        earn_dayMoney: '140',
-                        earn_surplusDays: '20'
-                    }
-                ]
+                allList: []
             };
         },
         methods: {
             init () {
-                this.data2 = this.initTable2 = table.searchTable2;
-                this.data3 = this.initTable3 = table.searchTable3;
+                this.getAllListByPage(0);
+            },
+            getAllListByPage (page) {
+                this.doGet({url: this.APIServer + '/goeIndexUserManagement/findAllEarnings?pageNum=' + page}).then(result => {
+                    if (result.success) {
+                        this.pageObj.totalPage = result.data.totalPages;
+                        this.pageObj.totalCount = result.data.totalElements;
+                        this.allList = result.data.content;
+                    } else {
+                        this.$Message.error(result.message);
+                    }
+                });
             },
             search (data, argumentObj) {
                 let res = data;
@@ -168,25 +134,26 @@
                 return res;
             },
             changePage (pageNum) {
-                console.log('now at page: ' + pageNum);
-            },
-            submitEdit () {
-                console.log('new value' + this.userInfo.user_nickName);
-            },
-            handleSearch1 () {
-                this.data1 = this.initTable1;
-                this.data1 = this.search(this.data1, {name: this.searchConName1});
+                this.getAllListByPage(pageNum - 1);
             },
             handleSearch2 () {
-                this.data2 = this.initTable2;
-                this.data2 = this.search(this.data2, {name: this.searchConName2, tel: this.searchConTel2});
+                this.userList = [];
+                this.doGet({
+                    url: this.APIServer + '/goeIndexUserManagement/findEarningsByAccountLike?account=' + this.searchAccount
+                }).then(result => {
+                    if (result.success) {
+                        this.pageObj.totalPage = result.data.totalPages;
+                        this.pageObj.totalCount = result.data.totalElements;
+                        this.allList = result.data.content;
+                    } else {
+                        this.$Message.error(result.message);
+                    }
+                });
+
             },
-            handleSearch3 () {
-                this.userList = this.initTable3;
-                this.userList = this.search(this.userList, {user_nickName: this.searchNickName});
-            },
-            handleCancel3 () {
-                this.userList = this.data1;
+            handleCancel2 () {
+                this.searchAccount = '';
+                this.getAllListByPage(0);
             }
         },
         mounted () {

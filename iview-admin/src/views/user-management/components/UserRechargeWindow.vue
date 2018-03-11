@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Form ref="rechargeForm"  :rules="rules" :model="form" :label-width="80">
+        <Form ref="rechargeForm" :rules="rules" :model="form" :label-width="80">
             <FormItem label="用户编号">
                 <!--<Input style="width: 200px" disabled v-model="userInfo.user_account" placeholder="Enter something..."></Input>-->
                 <span>{{userInfo.account}}</span>
@@ -17,7 +17,7 @@
                 </RadioGroup>
             </FormItem>
             <FormItem prop="rechargeNumber" label="金额">
-                <Input style="width: 200px" v-model="form.rechargeNumber" placeholder="请输入充值金额"></Input>
+                <Input style="width: 200px" v-model="form.rechargeNumber" type="text" placeholder="请输入充值金额"></Input>
                 <!--<span>{{userInfo.user_account}}</span>-->
             </FormItem>
             <FormItem label="补发/扣除">
@@ -44,21 +44,29 @@
             userInfo: Object
         },
         data() {
+            const validateMobile = (rule, value, callback) => {
+
+                if (!Number.isInteger(+value)) {
+                    callback(new Error('请输入数字值!'));
+                } else {
+                    callback();
+                }
+            }
             return {
                 form: {
                     rechargeNumber: '',
                     payPassword: ''
                 },
                 nickName: '',
-                coinType: 'consumeCoin',
+                coinType: 'bonusCoin',
                 rechargeType: 'plus',
                 rules: {
                     rechargeNumber: [
-                        { required: true, message: '请输入充值金额!', trigger: 'blur' },
-                        {type: 'number', message: '充值金额必须为数字', trigger: 'blur'}
+                        {required: true, message: '请输入充值金额!', trigger: 'blur'},
+                        {validator: validateMobile, trigger: 'blur'}
                     ],
                     payPassword: [
-                        { required: true, message: '请输入交易密码!', trigger: 'blur' },
+                        {required: true, message: '请输入交易密码!', trigger: 'blur'},
                         {len: 6, message: '交易密码为6位数字!', trigger: 'blur'}
                     ]
                 }
@@ -66,15 +74,58 @@
         },
         methods: {
             rechargeConfirm: function () {
+                let that = this;
                 this.$refs.rechargeForm.validate(valid => {
                     if (valid) {
                         this.$Modal.confirm({
                             title: '确定充值?',
-                            content: '为用户' + this.userInfo.user_account + '充值' + this.coinTypeCN + ' ' + this.form.rechargeNumber + ' ?',
+                            content: '为用户' + this.userInfo.account + '充值' + this.coinTypeCN + ' ' + this.form.rechargeNumber + ' ?',
                             onOk: function () {
-                                console.log('recharge success');
+                                if (that.coinType === 'consumeCoin') {
+                                    that.rechargeConsumeCoin();
+                                } else {
+                                    that.rechargeBonusProductCoin();
+                                }
                             }
                         });
+                    }
+                });
+            },
+            rechargeConsumeCoin() {
+                let rechargeNumber = (this.rechargeType === 'plus' ? Number(this.form.rechargeNumber) : Number(0 - this.form.rechargeNumber))
+                this.doPost({
+                    url: this.APIServer + '/goeIndexCharge/chargeReconsumeCoin',
+                    params: {
+                        account: this.userInfo.account,
+                        paymentPassword: this.form.payPassword,
+                        consumeCoin: rechargeNumber
+                    }
+                }).then(result => {
+                    if (result.success) {
+                        this.$Message.success(result.message);
+                        this.userInfo.consumeCoin = result.data;
+                    } else {
+                        this.$Message.error(result.message);
+                    }
+                });
+            },
+            rechargeBonusProductCoin () {
+                let rechargeNumber = (this.rechargeType === 'plus' ? Number(this.form.rechargeNumber) : Number(0 - this.form.rechargeNumber))
+                this.doPost({
+                    url: this.APIServer + '/goeIndexCharge/chargeBonusAndProductCoin',
+                    params: {
+                        account: this.userInfo.account,
+                        paymentPassword: this.form.payPassword,
+                        bonus: this.coinType === 'bonusCoin' ? rechargeNumber : 0,
+                        productCoin: this.coinType === 'productCoin' ? rechargeNumber : 0
+                    }
+                }).then(result => {
+                    if (result.success) {
+                        this.$Message.success(result.message);
+                        this.userInfo.productCoin = result.data[1];
+                        this.userInfo.bonusCoin = result.data[0];
+                    } else {
+                        this.$Message.error(result.message);
                     }
                 });
             }

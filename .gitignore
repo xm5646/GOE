@@ -6,4 +6,5 @@ project-geo-dbserver/src/main/resources/application.yml
 .metadata/
 .recommenders/
 goe-ui-vux/node_modules/
+iview-admin/.idea/workspace.xml
 

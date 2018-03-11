@@ -19,8 +19,9 @@
                     </div>
                     <div>
                         <Input v-model="searchAccount" placeholder="请输入用户编号搜搜..." style="width: 200px"/>
-                        <span @click="handleSearch3" style="margin: 0 10px;"><Button type="primary"
+                        <span @click="handleSearch2" style="margin: 0 10px;"><Button type="primary"
                                                                                      icon="search">搜索</Button></span>
+                        <Button @click="handleCancel2" type="ghost">取消</Button>
                     </div>
                 </Row>
                 <Row class="margin-top-10 searchable-table-con1">
@@ -139,17 +140,17 @@
                         width: 120
                     },
                     {
-                        key: 'departmentA',
+                        key: 'accountA',
                         title: 'A市场用户',
                         width: 120
                     },
                     {
-                        key: 'departmentB',
+                        key: 'accountB',
                         title: 'B市场用户',
                         width: 120
                     },
                     {
-                        key: 'departmentC',
+                        key: 'accountC',
                         title: 'C市场用户',
                         width: 120
                     },
@@ -173,7 +174,7 @@
                         this.pageObj.totalCount = result.data.totalElements;
                         this.userList = result.data.content;
                     } else {
-                        this.$Message.error('加载待提现数量数据失败!');
+                        this.$Message.error(result.message);
                     }
                 });
             },
@@ -206,16 +207,61 @@
             },
             submitEdit () {
                 console.log('do update user info' + this.userInfo);
+                this.doPost({
+                    url: this.APIServer + '/goeIndexUserManagement/updateUserInfo',
+                    params: {
+                        account: this.userInfo.account,
+                        nickName: this.userInfo.nickName,
+                        phone: this.userInfo.userPhone
+                    }
+                }).then(result => {
+                    if (result.success) {
+                        this.$Message.success(result.message);
+                    } else {
+                        this.$Message.error(result.message);
+                    }
+                });
             },
-            handleSearch3() {
-                this.userList = this.initTable3;
-                this.userList = this.search(this.userList, {user_nickName: this.searchNickName});
+            handleSearch3 () {
+                this.userList = [];
+                this.doGet({
+                    url: this.APIServer + '/goeIndexUserManagement/findUsersByNickNameOrAccountLike?type=nickName&value=' + this.searchNickName
+                }).then(result => {
+                    if (result.success) {
+                        this.pageObj.totalPage = result.data.totalPages;
+                        this.pageObj.totalCount = result.data.totalElements;
+                        this.userList = result.data.content;
+                    } else {
+                        this.$Message.error(result.message);
+                    }
+                });
+
             },
-            handleCancel3() {
-                this.userList = this.data1;
+            handleCancel3 () {
+                this.searchNickName = '';
+                this.getAllUserListByPage(0);
+            },
+            handleSearch2 () {
+                this.userList = [];
+                this.doGet({
+                    url: this.APIServer + '/goeIndexUserManagement/findUsersByNickNameOrAccountLike?type=account&value=' + this.searchAccount
+                }).then(result => {
+                    if (result.success) {
+                        this.pageObj.totalPage = result.data.totalPages;
+                        this.pageObj.totalCount = result.data.totalElements;
+                        this.userList = result.data.content;
+                    } else {
+                        this.$Message.error(result.message);
+                    }
+                });
+
+            },
+            handleCancel2 () {
+                this.searchAccount = '';
+                this.getAllUserListByPage(0);
             }
         },
-        mounted() {
+        mounted () {
             this.init();
         }
     };
