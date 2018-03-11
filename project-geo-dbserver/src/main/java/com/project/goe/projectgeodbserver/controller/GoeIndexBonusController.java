@@ -29,20 +29,23 @@ public class GoeIndexBonusController {
 
 	@Autowired
 	private BonusPayListService bonusPayListService;
-	
+
 	@Autowired
 	private UserService userService;
 
 	// 分页查询所有用户奖金
 	@GetMapping("/findAllBonusByPage")
-	public Page<BonusPayList> findAllBonusPayRecordBySort(
+	public RetMsg findAllBonusPayRecordBySort(
 			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
 			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
 			@RequestParam(value = "keyword", required = false, defaultValue = "createTime") String keyword,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
-
+		
+		Sort sort = null;
+		RetMsg retMsg = null;
 		try {
-			Sort sort = null;
+			
+			retMsg = new RetMsg();
 
 			if (order.equals("asc"))
 				sort = new Sort(Direction.ASC, keyword);
@@ -50,8 +53,11 @@ public class GoeIndexBonusController {
 				sort = new Sort(Direction.DESC, keyword);
 
 			Pageable pageable = new PageRequest(pageNum, size, sort);
+			
+			retMsg.setCode(200);
+			//retMsg.setData(data);
 
-			return this.bonusPayListService.findAllBonusBySort(pageable);
+			return null;
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
@@ -69,16 +75,16 @@ public class GoeIndexBonusController {
 		RetMsg retMsg = null;
 		List<Page<BonusPayList>> pageList = null;
 
-		if(null == userTypeQueryRequest)
+		if (null == userTypeQueryRequest)
 			throw new RuntimeException("未传递参数");
-		
+
 		String type = userTypeQueryRequest.getType();
 		String value = userTypeQueryRequest.getValue();
-		
-		if(null == type)
+
+		if (null == type)
 			throw new RuntimeException("参数类型能为空");
-		
-		if(null == value)
+
+		if (null == value)
 			throw new RuntimeException("参数类型值不能为空");
 
 		try {
@@ -89,30 +95,31 @@ public class GoeIndexBonusController {
 
 			retMsg = new RetMsg();
 			Pageable pageable = new PageRequest(pageNum, size, sort);
-			
-			pageList= new ArrayList<Page<BonusPayList>>();
-			
-			if(type.equals("account")) {
+
+			pageList = new ArrayList<Page<BonusPayList>>();
+
+			if (type.equals("account")) {
 				User u = this.userService.findByAccount(value);
-				
-				if(null == u)
+
+				if (null == u)
 					throw new RuntimeException("用户不存在");
-				
-				Page<BonusPayList> bonusPayListPage = this.bonusPayListService.findBonusPageByUserId(u.getUserId(), pageable);
+
+				Page<BonusPayList> bonusPayListPage = this.bonusPayListService.findBonusPageByUserId(u.getUserId(),
+						pageable);
 				pageList.add(bonusPayListPage);
-			}else if(type.equals("nickName")) {
+			} else if (type.equals("nickName")) {
 				List<User> userList = this.userService.findByNickName(value);
-				
-				if(null == userList)
+
+				if (null == userList)
 					throw new RuntimeException("用户不存在");
-				
-				for(User u : userList) {
-					Page<BonusPayList> bonusPayListPage = this.bonusPayListService.findBonusPageByUserId(u.getUserId(), pageable);
+
+				for (User u : userList) {
+					Page<BonusPayList> bonusPayListPage = this.bonusPayListService.findBonusPageByUserId(u.getUserId(),
+							pageable);
 					pageList.add(bonusPayListPage);
 				}
-			}else 
+			} else
 				throw new RuntimeException("类型错误");
-			
 
 			retMsg.setCode(200);
 			retMsg.setData(pageList);

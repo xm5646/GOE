@@ -105,7 +105,7 @@ public class GoeIndexUserManagementController {
 		}
 	}
 
-	// 基于用户账户名称或昵称，分页模糊查询
+	// 基于用户账户名称或昵称，分页模糊查询用户
 	@GetMapping("/findUsersByNickNameOrAccountLike")
 	public RetMsg findUsersByNickNameOrUserId(UserTypeQueryRequest userTypeQueryRequest,
 			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
@@ -220,12 +220,13 @@ public class GoeIndexUserManagementController {
 		}
 
 	}
-
+	
+	//查询所有累计收益
 	@GetMapping("/findAllEarnings")
 	public RetMsg findAllEarnings(@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
 			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
 			@RequestParam(value = "keyword", required = false, defaultValue = "createTime") String keyword,
-			@RequestParam(value = "order", required = false, defaultValue = "asc") String order) {
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		try {
 			Sort sort = null;
 			RetMsg retMsg = new RetMsg();
@@ -262,5 +263,54 @@ public class GoeIndexUserManagementController {
 		}
 
 	}
+	
+	// 基于用户账户名，分页模糊查询收益记录
+		@GetMapping("/findEarningsByAccountLike")
+		public RetMsg findEarningsByAccountLike(@RequestParam("account") String account,
+				@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
+				@RequestParam(value = "size", defaultValue = "10", required = false) int size,
+				@RequestParam(value = "keyword", required = false, defaultValue = "createTime") String keyword,
+				@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
+
+			RetMsg retMsg = null;
+			Sort sort = null;
+			
+			if(null == account)
+				throw new RuntimeException("用户名不能为空");
+			
+			User user = this.userService.findByAccount(account);
+			if(null == user)
+				throw new RuntimeException("用户不存在");
+			
+			try {
+				if (order.equals("asc"))
+					sort = new Sort(Direction.ASC, keyword);
+				else
+					sort = new Sort(Direction.DESC, keyword);
+
+				Pageable pageable = new PageRequest(pageNum, size, sort);
+
+				Page<Earning> pageEarning = this.earningService.findEarningsByUserId(user.getUserId(), pageable);
+				Page<EarningVO> pageEarningVO = pageEarning.map(new Converter<Earning, EarningVO>() {
+
+					@Override
+					public EarningVO convert(Earning earning) {
+						earning.setAccount(user.getAccount());
+						return EarningUtil.earningToEarningVO(earning);
+					}
+				});
+
+				retMsg = new RetMsg();
+				retMsg.setCode(200);
+				retMsg.setData(pageEarningVO);
+				retMsg.setMessage("查询成功");
+				retMsg.setSuccess(true);
+
+				return retMsg;
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new RuntimeException("信息查询失败");
+			}
+		}
 
 }

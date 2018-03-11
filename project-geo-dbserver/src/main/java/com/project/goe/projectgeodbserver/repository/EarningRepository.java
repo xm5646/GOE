@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import com.project.goe.projectgeodbserver.entity.Earning;
-import com.project.goe.projectgeodbserver.entity.User;
 
 public interface EarningRepository extends JpaSpecificationExecutor<Earning>, JpaRepository<Earning, Long> {
 	// select count(1) from (select * from tb_earning e where e.userid=127 and
@@ -20,7 +19,4 @@ public interface EarningRepository extends JpaSpecificationExecutor<Earning>, Jp
 	// e.userid=?1 and e.touch_type=?2 order by e.create_time desc limit 0,1) el
 	// where el.surplus_number>?3",nativeQuery=true)
 	// Iterable<Earning> getAllEarningForUsable();
-
-	// 多条件分页查询
-	public Page<Earning> findAll(Specification<Earning> spec, Pageable pageable);
 }

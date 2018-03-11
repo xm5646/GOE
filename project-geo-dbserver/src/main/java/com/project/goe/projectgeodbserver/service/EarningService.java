@@ -1,11 +1,16 @@
 package com.project.goe.projectgeodbserver.service;
 
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import com.project.goe.projectgeodbserver.entity.Earning;
 import com.project.goe.projectgeodbserver.repository.EarningRepository;
@@ -41,5 +46,21 @@ public class EarningService {
 	
 	public Page<Earning> findAllEarnings(Pageable pageable) {
 		return this.earningRepository.findAll(pageable);
+	}
+	
+	public Page<Earning> findEarningsByUserId(long userId,Pageable pageable) {
+		
+		Specification<Earning> spec = new Specification<Earning>() {
+
+			@Override
+			public Predicate toPredicate(Root<Earning> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				Predicate p = cb.equal(root.get("userid").as(long.class), userId);
+				
+				return p;
+			}
+
+		};
+
+		return this.earningRepository.findAll(spec, pageable);
 	}
 }
