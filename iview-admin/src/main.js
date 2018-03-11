@@ -18,7 +18,7 @@ Vue.use(API);
 var useAuth = false;
 Vue.http.options.emulateJSON = true
 Vue.http.options.timeout = 5000
-Vue.prototype.APIServer = 'http://localhost:8088'
+Vue.prototype.APIServer = 'http://192.168.1.1:8088'
 
 Vue.http.interceptors.push((request, next) => {
     // console.log('进入拦截器拦截方法')

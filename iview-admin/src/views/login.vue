@@ -64,7 +64,7 @@ export default {
                 if (valid) {
                     console.log('do login');
                     var requestOption = {
-                        url: 'http://localhost:8088/user/login',
+                        url: this.APIServer + '/user/login',
                         params: {
                             account: this.form.userName,
                             password: this.form.password

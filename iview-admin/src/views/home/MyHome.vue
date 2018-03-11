@@ -66,7 +66,7 @@
             </Col>
             <Col :md="24" :lg="16">
             <Row :gutter="4">
-                <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
+                <Col :xs="24" :sm="12" :md="8" :style="{marginBottom: '10px'}">
                 <infor-card
                         id-name="user_created_count"
                         :end-val="count.todayNewUser"
@@ -75,16 +75,8 @@
                         intro-text="今日新增用户"
                 ></infor-card>
                 </Col>
-                <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
-                <infor-card
-                        id-name="user_created_count_month"
-                        :end-val="count.monthCreateUser"
-                        iconType="android-person-add"
-                        color="#2d8cf0"
-                        intro-text="本月新增用户"
-                ></infor-card>
-                </Col>
-                <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
+
+                <Col :xs="24" :sm="12" :md="8" :style="{marginBottom: '10px'}">
                 <infor-card
                         id-name="collection_count"
                         :end-val="count.dayInMoney"
@@ -93,7 +85,7 @@
                         intro-text="本日累计收入"
                 ></infor-card>
                 </Col>
-                <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
+                <Col :xs="24" :sm="12" :md="8" :style="{marginBottom: '10px'}">
                 <infor-card
                         id-name="visit_count"
                         :end-val="count.dayOutMoney"
@@ -101,6 +93,37 @@
                         color="#64d572"
                         :iconSize="50"
                         intro-text="本日累计支出"
+                ></infor-card>
+                </Col>
+            </Row>
+            <Row :gutter="4">
+                <Col :xs="24" :sm="12" :md="8" :style="{marginBottom: '10px'}">
+                <infor-card
+                        id-name="user_created_count_month"
+                        :end-val="count.monthCreateUser"
+                        iconType="android-person-add"
+                        color="#2d8cf0"
+                        intro-text="本月新增用户"
+                ></infor-card>
+                </Col>
+                <Col :xs="24" :sm="12" :md="8" :style="{marginBottom: '10px'}">
+                <infor-card
+                        id-name="month_in_money"
+                        :end-val="count.monthInMoney"
+                        iconType="upload"
+                        color="#ffd572"
+                        :iconSize="50"
+                        intro-text="本月累计收入"
+                ></infor-card>
+                </Col>
+                <Col :xs="24" :sm="12" :md="8" :style="{marginBottom: '10px'}">
+                <infor-card
+                        id-name="month_out_money"
+                        :end-val="count.monthOutMoney"
+                        iconType="ios-eye"
+                        color="#64d572"
+                        :iconSize="50"
+                        intro-text="本月累计支出"
                 ></infor-card>
                 </Col>
             </Row>
@@ -163,22 +186,23 @@
         data() {
             return {
                 userAccount: '',
-                getCashCount: 2,
-                reConsumeOrder: 1,
-                productCoinOrder: 4,
+                getCashCount: 0,
+                reConsumeOrder: 0,
+                productCoinOrder: 0,
                 weekNewUsers: [0, 0, 0, 0, 0, 0, 0],
                 count: {
                     todayNewUser: 96,
                     monthCreateUser: 501,
-                    visit: 3122264,
-                    dayInMoney: 20400,
-                    dayOutMoney: 50000
+                    dayInMoney: 0,
+                    dayOutMoney: 0,
+                    monthInMoney: 0,
+                    monthOutMoney: 0
                 },
                 bochubi: {
                     accumulateEarning: 0,
                     bonusPaymentCost: 0,
-                    managementCost: 0,
-                    productCoinCost: 0
+                    managementCost: 20,
+                    productCoinCost: 10
                 },
                 cityData: cityData,
                 showAddNewTodo: false,
@@ -199,43 +223,77 @@
                 this.getHomePageData();
             },
             getHomePageData () {
-                this.doGet({url: this.APIServer + '/dataStatistics/newUsersOfNowMonth'}).then(result => {
+                this.doGet({url: this.APIServer + '/goeIndex/newUsersOfNowMonth'}).then(result => {
                     if (result.success) {
                         this.count.monthCreateUser = result.data;
                     } else {
                         this.$Message.error('加载月新增用户数据失败!');
                     }
                 });
-                this.doGet({url: this.APIServer + '/dataStatistics/newUsersOfNowDay'}).then(result => {
+                this.doGet({url: this.APIServer + '/goeIndex/newUsersOfNowDay'}).then(result => {
                     if (result.success) {
                         this.count.todayNewUser = result.data;
                     } else {
-                        this.$Message.error('加载月新增用户数据失败!');
+                        this.$Message.error('加载日新增用户数据失败!');
                     }
                 });
-                this.doGet({url: this.APIServer + '/dataStatistics/newUsersOfLastWeek'}).then(result => {
+                this.doGet({url: this.APIServer + '/goeIndex/financeOfDay'}).then(result => {
+                    if (result.success) {
+                        this.count.dayInMoney = result.data.accumulateEarningOfDay;
+                        this.count.dayOutMoney = result.data.accumulateCostOfDay;
+                    } else {
+                        this.$Message.error('加载本日收入和支出数据失败!');
+                    }
+                });
+                this.doGet({url: this.APIServer + '/goeIndex/financeOfMonth'}).then(result => {
+                    if (result.success) {
+                        console.log('result: ' + result)
+                        this.count.monthInMoney = result.data.accumulateEarningOfMonth;
+                        this.count.monthOutMoney = result.data.accumulateCostOfMonth;
+                    } else {
+                        this.$Message.error('加载本日收入和支出数据失败!');
+                    }
+                });
+                this.doGet({url: this.APIServer + '/goeIndex/newUsersOfLastWeek'}).then(result => {
                     if (result.success) {
                         this.weekNewUsers = result.data;
                     } else {
                         this.$Message.error('加载周新增用户数据失败!');
                     }
                 });
-                this.doGet({url: this.APIServer + '/dataStatistics/financeOfMonth'}).then(result => {
+                this.doGet({url: this.APIServer + '/goeIndex/financeOfMonth'}).then(result => {
                     if (result.success) {
 
                     } else {
                         this.$Message.error('加载周新增用户数据失败!');
                     }
                 });
-                this.doGet({url: this.APIServer + '/dataStatistics/financeOfAll'}).then(result => {
+                this.doGet({url: this.APIServer + '/goeIndex/financeOfAll'}).then(result => {
                     if (result.success) {
-                        this.bochubi.accumulateEarning = result.data.accumulateEarning
-                        this.bochubi.bonusPaymentCost = result.data.bonusPaymentCost
-                        this.bochubi.managementCost = result.data.managementCost
-                        this.bochubi.productCoinCost = result.data.productCoinCost;
                         this.bochubi = result.data;
                     } else {
                         this.$Message.error('加载周新增用户数据失败!');
+                    }
+                });
+                this.doGet({url: this.APIServer + '/goeIndex/countOfAuditWait'}).then(result => {
+                    if (result.success) {
+                        this.getCashCount = result.data;
+                    } else {
+                        this.$Message.error('加载待提现数量数据失败!');
+                    }
+                });
+                this.doGet({url: this.APIServer + '/goeIndex/countOfOrderStatus?consumeTypeCode=6&deliveryStatusCode=1'}).then(result => {
+                    if (result.success) {
+                        this.reConsumeOrder = result.data;
+                    } else {
+                        this.$Message.error('加载待提现数量数据失败!');
+                    }
+                });
+                this.doGet({url: this.APIServer + '/goeIndex/countOfOrderStatus?consumeTypeCode=5&deliveryStatusCode=1'}).then(result => {
+                    if (result.success) {
+                        this.productCoinOrder = result.data;
+                    } else {
+                        this.$Message.error('加载待提现数量数据失败!');
                     }
                 });
             },

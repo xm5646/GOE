@@ -3,11 +3,11 @@
         <Form ref="rechargeForm"  :rules="rules" :model="form" :label-width="80">
             <FormItem label="用户编号">
                 <!--<Input style="width: 200px" disabled v-model="userInfo.user_account" placeholder="Enter something..."></Input>-->
-                <span>{{userInfo.user_account}}</span>
+                <span>{{userInfo.account}}</span>
             </FormItem>
             <FormItem label="用户昵称">
                 <!--<Input style="width: 200px" disabled v-model="userInfo.user_account" placeholder="Enter something..."></Input>-->
-                <span>{{userInfo.user_nickName}}</span>
+                <span>{{userInfo.nickName}}</span>
             </FormItem>
             <FormItem label="充值类型">
                 <RadioGroup v-model="coinType" type="button" ref="coinType1">

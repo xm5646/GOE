@@ -21,9 +21,7 @@
                         <Input v-model="searchAccount" placeholder="请输入用户编号搜搜..." style="width: 200px"/>
                         <span @click="handleSearch3" style="margin: 0 10px;"><Button type="primary"
                                                                                      icon="search">搜索</Button></span>
-                        <Button @click="handleCancel3" type="ghost">取消</Button>
                     </div>
-                    <Button type="primary" @click="testAPI1('111')">测试</Button>
                 </Row>
                 <Row class="margin-top-10 searchable-table-con1">
                     <!--<Table :columns="columns1" :data="userList"></Table>-->
@@ -38,7 +36,7 @@
                     >
                         <template slot="operations" scope="scope">
                             <Button size="large" type="primary" @click="edit(scope.item)">&nbsp;修改&nbsp;</Button>
-                            <Button size="large" type="primary" @click="recharge(scope.item)">&nbsp;冲币&nbsp;</Button>
+                            <Button size="large" type="primary" @click="recharge(scope.item)">&nbsp;充币&nbsp;</Button>
                         </template>
                     </vue-table>
                 </Row>
@@ -69,142 +67,115 @@
         },
         data() {
             return {
-                formItem: {
-                    input: '',
-                    select: '',
-                    radio: 'male',
-                    checkbox: [],
-                    switch: true,
-                    date: '',
-                    time: '',
-                    slider: [20, 50],
-                    textarea: ''
-                },
                 searchAccount: '',
                 searchNickName: '',
                 userInfo: {},
                 showEditModal: false,
                 showRechargeModal: false,
-                toNum: '',
                 pageObj: {
-                    totalPage: 50,
+                    totalPage: 0,
+                    totalCount: 7,
                     maxSize: 5
                 },
-                searchConTel2: '',
-                searchConName3: '',
-                data1: [
-                    {
-                        user_nickName: '李晓明',
-                        user_account: 'lixiaoming',
-                        user_level: '组长',
-                        user_createTime: '2017-12-21',
-                        user_status: '已激活',
-                        user_accessStatus: '已通过',
-                        user_bonusCoin: '1000',
-                        user_consumeCoin: '1000',
-                        user_productCoin: '1000'
-                    },
-                    {
-                        user_nickName: '李晓明',
-                        user_account: 'lixiaoming',
-                        user_level: '组长',
-                        user_createTime: '2017-12-21',
-                        user_status: '已激活',
-                        user_accessStatus: '已通过',
-                        user_bonusCoin: '1000',
-                        user_consumeCoin: '1000',
-                        user_productCoin: '1000'
-                    }
-                ],
-                initTable1: [],
-                data2: [],
-                initTable2: [],
-                data3: [],
-                initTable3: [],
                 columns1: [
                     {
-                        key: 'user_nickName',
-                        title: '用户姓名',
-                        width: 120
-                    },
-                    {
-                        key: 'user_account',
+                        key: 'account',
                         title: '用户编号',
                         width: 150
                     },
                     {
-                        key: 'user_phone',
-                        title: '手机号码',
-                        width: 150
+                        key: 'nickName',
+                        title: '用户姓名',
+                        width: 100
                     },
                     {
-                        key: 'user_level',
-                        title: '级别',
+                        key: 'userType',
+                        title: '用户类型',
+                        width: 100
+                    },
+                    {
+                        key: 'userPhone',
+                        title: '手机号码',
                         width: 120
                     },
                     {
-                        key: 'user_createTime',
+                        key: 'userLevel',
+                        title: '级别',
+                        width: 100
+                    },
+                    {
+                        key: 'createTime',
                         title: '加入时间',
                         width: 150
                     },
                     {
-                        key: 'user_status',
+                        key: 'userStatus',
                         title: '激活状态',
                         width: 120
                     },
                     {
-                        key: 'user_accessStatus',
+                        key: 'assessStatus',
                         title: '当前考核状态',
                         width: 120
                     },
                     {
-                        key: 'user_bonusCoin',
+                        key: 'assessDate',
+                        title: '下次考核时间',
+                        width: 120
+                    },
+                    {
+                        key: 'bonusCoin',
                         title: '奖金',
                         width: 120
                     },
                     {
-                        key: 'user_consumeCoin',
+                        key: 'consumeCoin',
                         title: '报单币',
                         width: 120
                     },
                     {
-                        key: 'user_productCoin',
+                        key: 'productCoin',
                         title: '产品积分',
+                        width: 120
+                    },
+                    {
+                        key: 'departmentA',
+                        title: 'A市场用户',
+                        width: 120
+                    },
+                    {
+                        key: 'departmentB',
+                        title: 'B市场用户',
+                        width: 120
+                    },
+                    {
+                        key: 'departmentC',
+                        title: 'C市场用户',
+                        width: 120
+                    },
+                    {
+                        key: 'passwordReset',
+                        title: '是否初始化密码',
                         width: 120
                     }
                 ],
-                userList: [
-                    {
-                        user_nickName: '李晓明1',
-                        user_account: 'lixiaoming',
-                        user_phone: '13520580169',
-                        user_level: '组长',
-                        user_createTime: '2017-12-21',
-                        user_status: '已激活',
-                        user_accessStatus: '已通过',
-                        user_bonusCoin: '1000',
-                        user_consumeCoin: '1000',
-                        user_productCoin: '1000'
-                    },
-                    {
-                        user_nickName: '李晓明2',
-                        user_account: 'lixiaoming',
-                        user_phone: '13520580169',
-                        user_level: '组长',
-                        user_createTime: '2017-12-21',
-                        user_status: '已激活',
-                        user_accessStatus: '已通过',
-                        user_bonusCoin: '1000',
-                        user_consumeCoin: '1000',
-                        user_productCoin: '1000'
-                    }
-                ]
+                userList: []
             };
         },
         methods: {
-            init() {
-                this.data2 = this.initTable2 = table.searchTable2;
-                this.data3 = this.initTable3 = table.searchTable3;
+            init () {
+                this.getAllUserListByPage(0);
+            },
+            getAllUserListByPage (page) {
+                this.doGet({url: this.APIServer + '/goeIndexUserManagement/findAllUsers?pageNum=' + page}).then(result => {
+                    if (result.success) {
+                        this.pageObj.totalPage = result.data.totalPages;
+                        this.pageObj.totalCount = result.data.totalElements;
+                        this.userList = result.data.content;
+                    } else {
+                        this.$Message.error('加载待提现数量数据失败!');
+                    }
+                });
             },
             search(data, argumentObj) {
                 let res = data;
@@ -228,29 +199,13 @@
                 this.userInfo = item
                 this.showRechargeModal = true;
             },
-            lockConfirm(item) {
-                this.$Modal.confirm({
-                    title: '确认冻结?',
-                    content: '确定是否要冻结' + item.user_nickName + '?',
-                    onOk: function () {
-                        alert('冻结成功');
-                    }
-                });
-
-            },
-            changePage(pageNum) {
-                console.log('now at page: ' + pageNum);
+            changePage (pageNum) {
+                if (pageNum >= 0 || pageNum < this.pageObj.totalPage) {
+                    this.getAllUserListByPage(pageNum - 1);
+                }
             },
             submitEdit () {
-                console.log('new value' + this.userInfo.user_nickName);
-            },
-            handleSearch1() {
-                this.data1 = this.initTable1;
-                this.data1 = this.search(this.data1, {name: this.searchConName1});
-            },
-            handleSearch2() {
-                this.data2 = this.initTable2;
-                this.data2 = this.search(this.data2, {name: this.searchConName2, tel: this.searchConTel2});
+                console.log('do update user info' + this.userInfo);
             },
             handleSearch3() {
                 this.userList = this.initTable3;
@@ -258,16 +213,6 @@
             },
             handleCancel3() {
                 this.userList = this.data1;
-            },
-            testAPI1 (param) {
-                var requestOption = {
-                    url: 'http://localhost:8088/user/login',
-                    params: {
-                        account: 'administrator',
-                        password: '123456'
-                    }
-                }
-                var result = this.doPost(requestOption);
             }
         },
         mounted() {
