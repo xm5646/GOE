@@ -34,11 +34,11 @@ public class OrderInfoService {
 		return this.orderInfoRepository.findByExpressId(expressId);
 	}
 
-	public  Page<OrderInfo> findAllOrdersRecord(Pageable pageable) {
+	public Page<OrderInfo> findAllOrdersRecord(Pageable pageable) {
 		return this.orderInfoRepository.findAll(pageable);
 	}
-	
-	//更新或新增订单信息
+
+	// 更新或新增订单信息
 	@Transactional
 	public OrderInfo save(OrderInfo orderInfo) {
 		return this.orderInfoRepository.save(orderInfo);
@@ -49,23 +49,58 @@ public class OrderInfoService {
 	public void delete(OrderInfo orderInfo) {
 		this.orderInfoRepository.delete(orderInfo);
 	}
-	
-	// 分页查询：基于用户名
+
+	// 分页查询所有订单信息
+	public Page<OrderInfo> findAllOrderInfo(Pageable pageable) {
+		return this.orderInfoRepository.findAll(pageable);
+	}
+
+	// 分页查询：基于用户名,查询所用订单
 	public Page<OrderInfo> findOrderInfoByAccount(OrderInfo orderInfo, Pageable pageable) {
 		Specification<OrderInfo> spec = new Specification<OrderInfo>() {
 
 			@Override
 			public Predicate toPredicate(Root<OrderInfo> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-				Predicate p = cb.equal(root.get("userId").as(long.class),orderInfo.getUserId());
+				Predicate p = cb.equal(root.get("userId").as(long.class), orderInfo.getUserId());
 				return p;
 			}
 		};
-		
+
+		return this.orderInfoRepository.findAll(spec, pageable);
+	}
+
+	// 分页查询：基于orderType：重销兑换或积分兑换，分页查询所有用户的订单
+	public Page<OrderInfo> findOrderInfoByOrderType(OrderInfo orderInfo, Pageable pageable) {
+		Specification<OrderInfo> spec = new Specification<OrderInfo>() {
+
+			@Override
+			public Predicate toPredicate(Root<OrderInfo> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				Predicate p = cb.equal(root.get("orderType").as(long.class), orderInfo.getOrderType());
+				return p;
+			}
+		};
+
 		return this.orderInfoRepository.findAll(spec, pageable);
 	}
 	
-	//基于发货状态和消费类型查询订单列表
-	public List<OrderInfo> findByIsDeliveryAndOrderType(String deliveryStatus,String orderType) {
+	//分页查询：基于orderType和account：重销兑换或积分兑换，分页查询所有用户的订单
+	public Page<OrderInfo> findOrderInfoByOrderTypeAndAccount(OrderInfo orderInfo, Pageable pageable) {
+		Specification<OrderInfo> spec = new Specification<OrderInfo>() {
+
+			@Override
+			public Predicate toPredicate(Root<OrderInfo> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				Predicate p1 = cb.equal(root.get("orderType").as(long.class), orderInfo.getOrderType());
+				Predicate p2 = cb.equal(root.get("userId").as(long.class), orderInfo.getUserId());
+				return cb.and(p1,p2);
+			}
+		};
+
+		return this.orderInfoRepository.findAll(spec, pageable);
+	}
+	
+
+	// 基于发货状态和消费类型查询订单列表
+	public List<OrderInfo> findByIsDeliveryAndOrderType(String deliveryStatus, String orderType) {
 		return this.orderInfoRepository.findByIsDeliveryAndOrderType(deliveryStatus, orderType);
 	}
 
