@@ -22,7 +22,7 @@ public class DrawCashService {
 	@Autowired
 	private DrawCashRepository drawCashRepository;
 
-	public DrawCashRecord findByCardInfoId(long drawId) {
+	public DrawCashRecord findDrawCashRecordByDrawId(long drawId) {
 		return this.drawCashRepository.findByDrawId(drawId);
 	}
 
@@ -65,7 +65,7 @@ public class DrawCashService {
 	public Page<DrawCashRecord> findAllDrawCardRecordBySort(Pageable pageable) {
 		return this.drawCashRepository.findAll(pageable);
 	}
-
+	
 	// 分页查询：基于提现状态，按时间降序查询提现记录
 	public Page<DrawCashRecord> findByDrawStatus(String drawStatus, Pageable pageable) {
 		Specification<DrawCashRecord> spec = new Specification<DrawCashRecord>() {

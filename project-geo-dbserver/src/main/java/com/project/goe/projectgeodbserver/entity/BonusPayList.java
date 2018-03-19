@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 /*
  * 奖金发放表
@@ -44,10 +45,21 @@ public class BonusPayList {
 	// 产品积分
 	@Column
 	private double productCoinNumber;
-	
+
 	@Column
 	private Date createTime;
-	
+
+	@Transient
+	private String account;
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
 	public Date getCreateTime() {
 		return createTime;
 	}
@@ -93,7 +105,7 @@ public class BonusPayList {
 	}
 
 	public void setBonusNumber(double totalMoney) {
-		this.bonusNumber = totalMoney ;
+		this.bonusNumber = totalMoney;
 	}
 
 	public double getManageCost() {
@@ -111,5 +123,5 @@ public class BonusPayList {
 	public void setProductCoinNumber(double totalMoney) {
 		this.productCoinNumber = totalMoney;
 	}
-	
+
 }

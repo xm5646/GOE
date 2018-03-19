@@ -21,6 +21,8 @@ public interface BonusPayListRepository extends JpaSpecificationExecutor<BonusPa
 	//所有记录分页查询
 	public Page<BonusPayList> findAll(Pageable pageable);
 	
+	public List<BonusPayList> findByUserId(long userId);
+	
 	// 基于支付payTime，查询奖金记录
 	@Query("select r from BonusPayList r where payTime between date_format(?1,'%Y-%m-%d %H:%i:%S') and date_format(?2,'%Y-%m-%d %H:%i:%S')")
 	public List<BonusPayList> findByPayTimeBetween(Date startDate, Date endDate);

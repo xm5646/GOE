@@ -14,12 +14,12 @@ public class MathUtil {
 		System.out.println(Math.ceil(d));
 	}
 	
-	public static int floor(double value) {
-		return (int)(Math.floor(value));
+	public static long floor(double value) {
+		return (long)(Math.floor(value));
 	}
 	
-	public static int ceil(double value) {
-		return (int)(Math.ceil(value));
+	public static long ceil(double value) {
+		return (long)(Math.ceil(value));
 	}
 	
 }

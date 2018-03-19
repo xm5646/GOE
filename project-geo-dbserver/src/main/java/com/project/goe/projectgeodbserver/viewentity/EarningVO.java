@@ -6,7 +6,7 @@ public class EarningVO {
 	private String touchType;
 	private String createTime;
 	private String endTime;
-	private int dayMoney;
+	private long dayMoney;
 	private int surplusNumber;
 
 	public String getAccount() {
@@ -49,11 +49,11 @@ public class EarningVO {
 		this.endTime = endTime;
 	}
 
-	public int getDayMoney() {
+	public long getDayMoney() {
 		return dayMoney;
 	}
 
-	public void setDayMoney(int dayMoney) {
+	public void setDayMoney(long dayMoney) {
 		this.dayMoney = dayMoney;
 	}
 

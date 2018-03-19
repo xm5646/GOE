@@ -46,6 +46,10 @@ public class BonusPayListService {
 	public Page<BonusPayList> findAllBonusBySort(Pageable pageable) {
 		return this.bonusPayListRepository.findAll(pageable);
 	}
+	
+	public List<BonusPayList> findByUserId(long userId) {
+		return this.bonusPayListRepository.findByUserId(userId);
+	}
 
 	// 基于userId分页查询
 	public Page<BonusPayList> findBonusPageByAccount(BonusPayList bonusPayList, Pageable pageable) {

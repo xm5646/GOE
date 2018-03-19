@@ -13,36 +13,36 @@ public class UserVO {
 	private String createTime;
 	private String assessDate;
 	private String assessStatus;
-	private int bonusCoin;
-	private int consumeCoin;
-	private int productCoin;
+	private long bonusCoin;
+	private long consumeCoin;
+	private long productCoin;
 	private String activateTime;
 	private String identityNo;
 	private String passwordReset;
 	private String province;
 	private String city;
 
-	public int getBonusCoin() {
+	public long getBonusCoin() {
 		return bonusCoin;
 	}
 
-	public void setBonusCoin(int bonusCoin) {
+	public void setBonusCoin(long bonusCoin) {
 		this.bonusCoin = bonusCoin;
 	}
 
-	public int getConsumeCoin() {
+	public long getConsumeCoin() {
 		return consumeCoin;
 	}
 
-	public void setConsumeCoin(int consumeCoin) {
+	public void setConsumeCoin(long consumeCoin) {
 		this.consumeCoin = consumeCoin;
 	}
 
-	public int getProductCoin() {
+	public long getProductCoin() {
 		return productCoin;
 	}
 
-	public void setProductCoin(int productCoin) {
+	public void setProductCoin(long productCoin) {
 		this.productCoin = productCoin;
 	}
 

@@ -138,7 +138,13 @@ public class GoeIndexChargeController {
 			bonusPayList.setManageCost(0f);
 			bonusPayList.setPayTime(date);
 			bonusPayList.setProductCoinNumber(productCoin);
-			bonusPayList.setTotalMoney(0f);
+			
+			if(0 != bonus)
+				bonusPayList.setTotalMoney(bonus);
+			
+			if(0 != productCoin)
+				bonusPayList.setTotalMoney(productCoin);
+			
 			bonusPayList.setUserId(chargeUser.getUserId());
 			this.bonusPayListService.save(bonusPayList);
 
@@ -154,7 +160,7 @@ public class GoeIndexChargeController {
 
 			retMsg = new RetMsg();
 			retMsg.setCode(200);
-			retMsg.setData(new int[] { MathUtil.floor(chargeUser.getBonusCoin()), MathUtil.floor(chargeUser.getProductCoin()) });
+			retMsg.setData(new long[] { MathUtil.floor(chargeUser.getBonusCoin()), MathUtil.floor(chargeUser.getProductCoin()) });
 			retMsg.setMessage("充值成功");
 			retMsg.setSuccess(true);
 

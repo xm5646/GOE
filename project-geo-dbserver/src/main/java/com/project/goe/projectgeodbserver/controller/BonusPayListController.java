@@ -2,6 +2,7 @@ package com.project.goe.projectgeodbserver.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,8 @@ import com.project.goe.projectgeodbserver.entity.BonusPayList;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.service.BonusPayListService;
 import com.project.goe.projectgeodbserver.service.UserService;
+import com.project.goe.projectgeodbserver.util.BonusUtil;
+import com.project.goe.projectgeodbserver.viewentity.BonusVO;
 
 @CrossOrigin
 @RestController
@@ -31,7 +34,7 @@ public class BonusPayListController {
 
 	// 分页查询所有用户奖金
 	@GetMapping("/findAllBonusByPage")
-	public Page<BonusPayList> findAllBonusPayRecordBySort(
+	public Page<BonusVO> findAllBonusPayRecordBySort(
 			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
 			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
 			@RequestParam(value = "keyword", required = false, defaultValue = "createTime") String keyword,
@@ -46,8 +49,22 @@ public class BonusPayListController {
 				sort = new Sort(Direction.DESC, keyword);
 
 			Pageable pageable = new PageRequest(pageNum, size, sort);
+			
+			Page<BonusPayList> bonusPage = this.bonusPayListService.findAllBonusBySort(pageable);
+			Page<BonusVO> bonusVOPage = bonusPage.map(new Converter<BonusPayList, BonusVO>() {
 
-			return this.bonusPayListService.findAllBonusBySort(pageable);
+				@Override
+				public BonusVO convert(BonusPayList bonusPayList) {
+					long userId = bonusPayList.getUserId();
+					User user = userService.findByUserId(userId);
+					bonusPayList.setAccount(user.getAccount());
+					
+					return BonusUtil.bonusToBonusVO(bonusPayList);
+				}
+				
+			});
+
+			return bonusVOPage;
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}

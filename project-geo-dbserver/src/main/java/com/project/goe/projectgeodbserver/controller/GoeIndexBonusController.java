@@ -1,9 +1,7 @@
 package com.project.goe.projectgeodbserver.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,8 +17,9 @@ import com.project.goe.projectgeodbserver.entity.BonusPayList;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.service.BonusPayListService;
 import com.project.goe.projectgeodbserver.service.UserService;
+import com.project.goe.projectgeodbserver.util.BonusUtil;
+import com.project.goe.projectgeodbserver.viewentity.BonusVO;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
-import com.project.goe.projectgeodbserver.viewentity.UserTypeQueryRequest;
 
 @RestController
 @RequestMapping("/goeIndexBonus")
@@ -38,55 +37,63 @@ public class GoeIndexBonusController {
 	public RetMsg findAllBonusPayRecordBySort(
 			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
 			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
-			@RequestParam(value = "keyword", required = false, defaultValue = "createTime") String keyword,
+			@RequestParam(value = "keyword", required = false, defaultValue = "payTime") String keyword,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
-		
 		Sort sort = null;
 		RetMsg retMsg = null;
-		try {
-			
-			retMsg = new RetMsg();
 
+		try {
 			if (order.equals("asc"))
 				sort = new Sort(Direction.ASC, keyword);
 			else
 				sort = new Sort(Direction.DESC, keyword);
 
 			Pageable pageable = new PageRequest(pageNum, size, sort);
-			
-			retMsg.setCode(200);
-			//retMsg.setData(data);
 
-			return null;
+			Page<BonusPayList> bonusPage = this.bonusPayListService.findAllBonusBySort(pageable);
+			Page<BonusVO> bonusVOPage = bonusPage.map(new Converter<BonusPayList, BonusVO>() {
+
+				@Override
+				public BonusVO convert(BonusPayList bonusPayList) {
+					long userId = bonusPayList.getUserId();
+					User user = userService.findByUserId(userId);
+					bonusPayList.setAccount(user.getAccount());
+
+					return BonusUtil.bonusToBonusVO(bonusPayList);
+				}
+
+			});
+
+			retMsg = new RetMsg();
+			retMsg.setCode(200);
+			retMsg.setData(bonusVOPage);
+			retMsg.setMessage("查询成功");
+			retMsg.setSuccess(true);
+
+			return retMsg;
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
 
 	}
 
-	// 基于用户名或昵称分页查询奖金信息:account或nickName查询（按时间降序排序）
-	@GetMapping("/findBonusPageByAccountOrNickName")
-	public RetMsg findBonusPageByAccountOrNickName(UserTypeQueryRequest userTypeQueryRequest,
+	// 基于用户名称分页查询奖金信息:account查询（按时间降序排序）
+	@GetMapping("/findBonusPageByAccount")
+	public RetMsg findBonusPageByAccount(@RequestParam("account") String account,
 			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
 			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
 			@RequestParam(value = "keyword", required = false, defaultValue = "payTime") String keyword,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		Sort sort = null;
 		RetMsg retMsg = null;
-		List<Page<BonusPayList>> pageList = null;
-
-		if (null == userTypeQueryRequest)
-			throw new RuntimeException("未传递参数");
-
-		String type = userTypeQueryRequest.getType();
-		String value = userTypeQueryRequest.getValue();
-
-		if (null == type)
-			throw new RuntimeException("参数类型能为空");
-
-		if (null == value)
-			throw new RuntimeException("参数类型值不能为空");
-
+		
+		if(null == account)
+			throw new RuntimeException("用户名不能为空");
+		
+		User user = this.userService.findByAccount(account);
+		if(null == user)
+			throw new RuntimeException("用户不存在");
+		
 		try {
 			if (order.equals("asc"))
 				sort = new Sort(Direction.ASC, keyword);
@@ -95,34 +102,27 @@ public class GoeIndexBonusController {
 
 			retMsg = new RetMsg();
 			Pageable pageable = new PageRequest(pageNum, size, sort);
+			
+			BonusPayList bonusPayList = new BonusPayList();
+			bonusPayList.setUserId(user.getUserId());
+			
+			Page<BonusPayList> bonusPage = this.bonusPayListService.findBonusPageByAccount(bonusPayList, pageable);
+			Page<BonusVO> bonusVOPage = bonusPage.map(new Converter<BonusPayList, BonusVO>() {
 
-			pageList = new ArrayList<Page<BonusPayList>>();
+				@Override
+				public BonusVO convert(BonusPayList bonusPayList) {
+					long userId = bonusPayList.getUserId();
+					User user = userService.findByUserId(userId);
+					bonusPayList.setAccount(user.getAccount());
 
-			if (type.equals("account")) {
-				User u = this.userService.findByAccount(value);
-
-				if (null == u)
-					throw new RuntimeException("用户不存在");
-
-				Page<BonusPayList> bonusPayListPage = this.bonusPayListService.findBonusPageByUserId(u.getUserId(),
-						pageable);
-				pageList.add(bonusPayListPage);
-			} else if (type.equals("nickName")) {
-				List<User> userList = this.userService.findByNickName(value);
-
-				if (null == userList)
-					throw new RuntimeException("用户不存在");
-
-				for (User u : userList) {
-					Page<BonusPayList> bonusPayListPage = this.bonusPayListService.findBonusPageByUserId(u.getUserId(),
-							pageable);
-					pageList.add(bonusPayListPage);
+					return BonusUtil.bonusToBonusVO(bonusPayList);
 				}
-			} else
-				throw new RuntimeException("类型错误");
 
+			});
+			
+			retMsg = new RetMsg();
 			retMsg.setCode(200);
-			retMsg.setData(pageList);
+			retMsg.setData(bonusVOPage);
 			retMsg.setMessage("查询成功");
 			retMsg.setSuccess(true);
 

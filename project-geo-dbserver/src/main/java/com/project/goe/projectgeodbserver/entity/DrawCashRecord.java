@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /*
  * 提现记录实体类
@@ -50,6 +51,17 @@ public class DrawCashRecord {
 	// 电话号码
 	@Column
 	private String phone;
+	
+	@Transient
+	private String account;
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
 
 	public String getPhone() {
 		return phone;
