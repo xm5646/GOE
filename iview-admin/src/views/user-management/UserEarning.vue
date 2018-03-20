@@ -12,9 +12,10 @@
                 </p>
                 <Row>
                     <div>
-                        <Input v-model="searchAccount" placeholder="请输入用户编号搜搜..." style="width: 200px" />
-                        <span @click="handleSearch2" style="margin: 0 10px;"><Button type="primary" icon="search">搜索</Button></span>
-                        <Button @click="handleCancel2" type="ghost" >取消</Button>
+                        <Input v-model="searchAccount" placeholder="请输入用户编号搜搜..." style="width: 200px"/>
+                        <span @click="handleSearch2" style="margin: 0 10px;"><Button type="primary"
+                                                                                     icon="search">搜索</Button></span>
+                        <Button @click="handleCancel2" type="ghost">取消</Button>
                     </div>
                 </Row>
                 <Row class="margin-top-10 searchable-table-con1">
@@ -30,17 +31,9 @@
                         </vue-table>
                     </div>
                     <div v-else>
-                        <div v-if="isNotFindData">
-                            <Alert type="warning" show-icon>
-                                未找到数据!
-                            </Alert>
-                        </div>
-                        <div v-else>
-                            <Alert show-icon>
-                                请输入准确的用户编号进行查询
-                            </Alert>
-                        </div>
-
+                        <Alert type="info" show-icon>
+                            该用户未产生收入记录!
+                        </Alert>
                     </div>
                 </Row>
             </Card>
@@ -52,12 +45,13 @@
 <script>
     import * as table from '../tables/data/search';
     import vueTable from 'vue-table2';
+
     export default {
         name: 'searchable-table',
         components: {
             vueTable
         },
-        data () {
+        data() {
             return {
                 searchAccount: '',
                 isNotFindData: false,
@@ -106,10 +100,10 @@
             };
         },
         methods: {
-            init () {
+            init() {
                 this.getAllListByPage(0);
             },
-            getAllListByPage (page) {
+            getAllListByPage(page) {
                 this.doGet({url: this.APIServer + '/goeIndexUserManagement/findAllEarnings?pageNum=' + page}).then(result => {
                     if (result.success) {
                         this.pageObj.totalPage = result.data.totalPages;
@@ -120,20 +114,7 @@
                     }
                 });
             },
-            search (data, argumentObj) {
-                let res = data;
-                let dataClone = data;
-                for (let argu in argumentObj) {
-                    if (argumentObj[argu].length > 0) {
-                        res = dataClone.filter(d => {
-                            return d[argu].indexOf(argumentObj[argu]) > -1;
-                        });
-                        dataClone = res;
-                    }
-                }
-                return res;
-            },
-            changePage (pageNum) {
+            changePage(pageNum) {
                 this.getAllListByPage(pageNum - 1);
             },
             handleSearch2 () {
@@ -156,7 +137,7 @@
                 this.getAllListByPage(0);
             }
         },
-        mounted () {
+        mounted() {
             this.init();
         }
     };

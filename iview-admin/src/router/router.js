@@ -98,7 +98,7 @@ export const appRouter = [
                 path: 'organizationView',
                 title: '组织结构图',
                 name: 'organizationView_userManagement',
-                component: () => import('@/views/user-management/OrganizationView.vue')
+                component: () => import('@/views/user-management/OrganizationViewBody.vue')
             },
             {
                 path: 'userEarning',
