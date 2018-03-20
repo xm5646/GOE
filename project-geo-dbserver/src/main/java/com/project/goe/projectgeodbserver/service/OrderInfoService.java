@@ -69,29 +69,31 @@ public class OrderInfoService {
 		return this.orderInfoRepository.findAll(spec, pageable);
 	}
 
-	// 分页查询：基于orderType：重销兑换或积分兑换，分页查询所有用户的订单
-	public Page<OrderInfo> findOrderInfoByOrderType(OrderInfo orderInfo, Pageable pageable) {
+	// 分页查询：基于orderType和isDelivery：重销兑换或积分兑换，分页查询所有用户未发货订单
+	public Page<OrderInfo> findOrderInfoByOrderTypeAndIsDelivery(OrderInfo orderInfo, Pageable pageable) {
 		Specification<OrderInfo> spec = new Specification<OrderInfo>() {
 
 			@Override
 			public Predicate toPredicate(Root<OrderInfo> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-				Predicate p = cb.equal(root.get("orderType").as(long.class), orderInfo.getOrderType());
-				return p;
+				Predicate p1 = cb.equal(root.get("orderType").as(String.class), orderInfo.getOrderType());
+				Predicate p2 = cb.equal(root.get("isDelivery").as(String.class), orderInfo.getIsDelivery());
+				return cb.and(p1, p2);
 			}
 		};
 
 		return this.orderInfoRepository.findAll(spec, pageable);
 	}
 	
-	//分页查询：基于orderType和account：重销兑换或积分兑换，分页查询所有用户的订单
-	public Page<OrderInfo> findOrderInfoByOrderTypeAndAccount(OrderInfo orderInfo, Pageable pageable) {
+	//分页查询：基于orderType、isDelivery和account：重销兑换或积分兑换，分页查询指定用户待处理的订单
+	public Page<OrderInfo> findOrderInfoByOrderTypeAndIsDeliveryAndAccount(OrderInfo orderInfo, Pageable pageable) {
 		Specification<OrderInfo> spec = new Specification<OrderInfo>() {
 
 			@Override
 			public Predicate toPredicate(Root<OrderInfo> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-				Predicate p1 = cb.equal(root.get("orderType").as(long.class), orderInfo.getOrderType());
+				Predicate p1 = cb.equal(root.get("orderType").as(String.class), orderInfo.getOrderType());
 				Predicate p2 = cb.equal(root.get("userId").as(long.class), orderInfo.getUserId());
-				return cb.and(p1,p2);
+				Predicate p3 = cb.equal(root.get("isDelivery").as(String.class), orderInfo.getIsDelivery());
+				return cb.and(p1,p2,p3);
 			}
 		};
 

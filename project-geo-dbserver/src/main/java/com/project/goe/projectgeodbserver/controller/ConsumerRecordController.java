@@ -26,7 +26,6 @@ import com.project.goe.projectgeodbserver.service.ConsumeRecordService;
 import com.project.goe.projectgeodbserver.service.UserService;
 import com.project.goe.projectgeodbserver.statusType.ConsumeType;
 import com.project.goe.projectgeodbserver.util.BonusPayPercentage;
-import com.project.goe.projectgeodbserver.util.DateFormatUtil;
 import com.project.goe.projectgeodbserver.util.MD5Util;
 import com.project.goe.projectgeodbserver.util.ValidateErrorUtil;
 import com.project.goe.projectgeodbserver.viewentity.ConsumeRecordRequest;

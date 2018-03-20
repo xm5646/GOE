@@ -1,16 +1,10 @@
 package com.project.goe.projectgeodbserver.viewentity;
 
-public class OrderInfoVO {
+public class OrderInfoOfReconsume {
 	// 订单编号
 	private long orderId;
-	// 订单类型：重销购买or积分兑换
-	private String orderType;
 	// 订单产生时间
 	private String createTime;
-	// 产品数量
-	private long productCount;
-	// 订单状态:未发货
-	private String isDelivery;
 	// 创建订单的用户编号
 	private String account;
 	// 收件联系人
@@ -30,36 +24,12 @@ public class OrderInfoVO {
 		this.orderId = orderId;
 	}
 
-	public String getOrderType() {
-		return orderType;
-	}
-
-	public void setOrderType(String orderType) {
-		this.orderType = orderType;
-	}
-
 	public String getCreateTime() {
 		return createTime;
 	}
 
 	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
-	}
-
-	public long getProductCount() {
-		return productCount;
-	}
-
-	public void setProductCount(long productCount) {
-		this.productCount = productCount;
-	}
-
-	public String getIsDelivery() {
-		return isDelivery;
-	}
-
-	public void setIsDelivery(String isDelivery) {
-		this.isDelivery = isDelivery;
 	}
 
 	public String getAccount() {
