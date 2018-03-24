@@ -72,27 +72,32 @@
                 },
                 columns1: [
                     {
-                        key: 'getcash_id',
+                        key: 'drawId',
                         title: '提现编号',
                         width: 100
                     },
                     {
-                        key: 'user_account',
+                        key: 'account',
                         title: '用户编号',
                         width: 100
                     },
                     {
-                        key: 'getNumber',
+                        key: 'finalNumber',
                         title: '打款金额',
                         width: 100
                     },
                     {
-                        key: 'cardOwner',
+                        key: 'drawCommitTime',
+                        title: '申请提现时间',
+                        width: 120
+                    },
+                    {
+                        key: 'cardOwnerName',
                         title: '持卡人',
                         width: 100
                     },
                     {
-                        key: 'user_phone',
+                        key: 'phone',
                         title: '手机号码',
                         width: 120
                     },
@@ -107,7 +112,7 @@
                         width: 160
                     },
                     {
-                        key: 'status',
+                        key: 'drawStatus',
                         title: '状态',
                         width: 120
                     }
@@ -119,19 +124,57 @@
             init() {
                 this.getAllListByPage(0);
             },
-            rejectPay(item) {
-                console.log('item type: ' + typeof item)
-                this.userInfo = item
-                this.showEditModal = true;
+            rejectPay (item) {
+                let that = this
+                this.$Modal.confirm({
+                    title: '提示',
+                    content: '是否要拒绝 ' + item.account + ' 的提现申请?',
+                    onOk: function () {
+                        that.doPost({
+                            url: that.APIServer + '/goeIndexDrawCash/updateDrawCashStaus',
+                            params: {
+                                drawId: item.drawId,
+                                drawStatus: '不通过'
+                            }
+                        }).then(result => {
+                            if (result.success) {
+                                that.getAllListByPage(0);
+                                that.$Message.success(result.data);
+                            } else {
+                                that.$Message.error(result.message);
+                            }
+                        });
+                    }
+                });
             },
-            donePay(item) {
-                console.log('item type: ' + typeof item);
+            donePay (item) {
+                let that = this
+                this.$Modal.confirm({
+                    title: '提示',
+                    content: '是否已完成 ' + item.account + ' 的提现打款?',
+                    onOk: function () {
+                        that.doPost({
+                            url: that.APIServer + '/goeIndexDrawCash/updateDrawCashStaus',
+                            params: {
+                                drawId: item.drawId,
+                                drawStatus: '已打款'
+                            }
+                        }).then(result => {
+                            if (result.success) {
+                                that.getAllListByPage(0);
+                                that.$Message.success(result.data);
+                            } else {
+                                that.$Message.error(result.message);
+                            }
+                        });
+                    }
+                });
             },
-            exportExcel() {
+            exportExcel () {
                 console.log('export excel');
             },
-            getAllListByPage(page) {
-                this.doGet({url: this.APIServer + '/goeIndexUserManagement/findAllEarnings?pageNum=' + page}).then(result => {
+            getAllListByPage (page) {
+                this.doGet({url: this.APIServer + '/goeIndexDrawCash/findByDrawStatusOfAuditWait?pageNum=' + page}).then(result => {
                     if (result.success) {
                         this.pageObj.totalPage = result.data.totalPages;
                         this.pageObj.totalCount = result.data.totalElements;
@@ -141,13 +184,13 @@
                     }
                 });
             },
-            changePage(pageNum) {
+            changePage (pageNum) {
                 this.getAllListByPage(pageNum - 1);
             },
             handleSearch3 () {
                 this.allList = [];
                 this.doGet({
-                    url: this.APIServer + '/goeIndexBonus/findBonusPageByAccount?account=' + this.searchAccount
+                    url: this.APIServer + '/goeIndexDrawCash/findDrawStatusOfAuditWaitByAccount?account=' + this.searchAccount
                 }).then(result => {
                     if (result.success) {
                         this.pageObj.totalPage = result.data.totalPages;

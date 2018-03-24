@@ -33,7 +33,7 @@ public class ExcelDrawcash {
 	private double finalNumber;
 
 	// 提现的状态
-	@Excel(name = "状态", orderNum = "7")
+	@Excel(name = "审核状态", orderNum = "7")
 	private String drawStatus;
 
 	// 提现申请提交时间
@@ -47,6 +47,9 @@ public class ExcelDrawcash {
 	// 电话号码
 	@Excel(name = "电话号码", orderNum = "10",width = 15)
 	private String phone;
+	// 处理结果
+	@Excel(name = "处理结果", orderNum = "11",width = 15)
+	private String result;
 	
 	public ExcelDrawcash() {
 		super();
@@ -140,5 +143,15 @@ public class ExcelDrawcash {
 	public void setBankName(String bankName) {
 		this.bankName = bankName;
 	}
+
+	public String getResult() {
+		return result;
+	}
+
+	public void setResult(String result) {
+		this.result = result;
+	}
+	
+	
 
 }
