@@ -1,5 +1,7 @@
 package com.project.goe.projectgeodbserver.controller;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,7 @@ import com.project.goe.projectgeodbserver.service.CardInfoService;
 import com.project.goe.projectgeodbserver.service.DrawCashService;
 import com.project.goe.projectgeodbserver.service.UserService;
 import com.project.goe.projectgeodbserver.statusType.DrawStatus;
+import com.project.goe.projectgeodbserver.util.DateFormatUtil;
 import com.project.goe.projectgeodbserver.util.MathUtil;
 import com.project.goe.projectgeodbserver.viewentity.DrawCashRecordOfAuditWait;
 import com.project.goe.projectgeodbserver.viewentity.DrawCashRecordVO;
@@ -45,7 +48,7 @@ public class GoeIndexDrawCashController {
 			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
 			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
 			@RequestParam(value = "keyword", required = false, defaultValue = "drawCommitTime") String keyword,
-			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
+			@RequestParam(value = "order", required = false, defaultValue = "asc") String order) {
 		Sort sort = null;
 		RetMsg retMsg = null;
 
@@ -71,7 +74,8 @@ public class GoeIndexDrawCashController {
 
 							CardInfo cardInfo = cardInfoService.findByCardInfoId(cardInfoId);
 							User user = userService.getUserById(userId);
-
+							
+							drawCashRecordOfAuditWait.setDrawCommitTime(DateFormatUtil.DateObjectToString(drawCashRecord.getDrawCommitTime()));
 							drawCashRecordOfAuditWait.setBankName(cardInfo.getBankName());
 							drawCashRecordOfAuditWait.setAccount(user.getAccount());
 							drawCashRecordOfAuditWait.setCardNumber(cardInfo.getCardNumber());
@@ -104,7 +108,7 @@ public class GoeIndexDrawCashController {
 			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
 			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
 			@RequestParam(value = "keyword", required = false, defaultValue = "drawCommitTime") String keyword,
-			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
+			@RequestParam(value = "order", required = false, defaultValue = "asc") String order) {
 		RetMsg retMsg = null;
 		Sort sort = null;
 
@@ -134,7 +138,7 @@ public class GoeIndexDrawCashController {
 
 							CardInfo cardInfo = cardInfoService.findByCardInfoId(cardInfoId);
 							User user = userService.getUserById(userId);
-
+							
 							drawCashRecordOfAuditWait.setBankName(cardInfo.getBankName());
 							drawCashRecordOfAuditWait.setAccount(user.getAccount());
 							drawCashRecordOfAuditWait.setCardNumber(cardInfo.getCardNumber());
@@ -143,6 +147,7 @@ public class GoeIndexDrawCashController {
 							drawCashRecordOfAuditWait.setDrawStatus(drawCashRecord.getDrawStatus());
 							drawCashRecordOfAuditWait.setFinalNumber(MathUtil.floor(drawCashRecord.getFinalNumber()));
 							drawCashRecordOfAuditWait.setPhone(drawCashRecord.getPhone());
+							drawCashRecordOfAuditWait.setDrawCommitTime(DateFormatUtil.DateObjectToString(drawCashRecord.getDrawCommitTime()));
 
 							return drawCashRecordOfAuditWait;
 						}
@@ -180,13 +185,14 @@ public class GoeIndexDrawCashController {
 		}
 		
 		drawCashRecord.setDrawStatus(drawStatus);
+		drawCashRecord.setPayTime(new Date());
 		this.drawCashService.save(drawCashRecord);
 		RetMsg retMsg = null;
 		
 		try {
 			retMsg = new RetMsg();
 			retMsg.setCode(200);
-			retMsg.setData("提现状态更新成功");
+			retMsg.setData(drawStatus);
 			retMsg.setMessage("提现状态更新成功");
 			retMsg.setSuccess(true);
 			
@@ -202,7 +208,7 @@ public class GoeIndexDrawCashController {
 			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
 			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
 			@RequestParam(value = "keyword", required = false, defaultValue = "drawCommitTime") String keyword,
-			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
+			@RequestParam(value = "order", required = false, defaultValue = "asc") String order) {
 		Sort sort = null;
 		RetMsg retMsg = null;
 		
@@ -227,7 +233,7 @@ public class GoeIndexDrawCashController {
 
 							CardInfo cardInfo = cardInfoService.findByCardInfoId(cardInfoId);
 							User user = userService.getUserById(userId);
-
+							
 							drawCashRecordVO.setBankName(cardInfo.getBankName());
 							drawCashRecordVO.setAccount(user.getAccount());
 							drawCashRecordVO.setCardNumber(cardInfo.getCardNumber());
@@ -235,7 +241,8 @@ public class GoeIndexDrawCashController {
 							drawCashRecordVO.setDrawId(drawCashRecord.getDrawId());
 							drawCashRecordVO.setDrawStatus(drawCashRecord.getDrawStatus());
 							drawCashRecordVO.setFinalNumber(MathUtil.floor(drawCashRecord.getFinalNumber()));
-							drawCashRecordVO.setPayTime(drawCashRecord.getPayTime());
+							drawCashRecordVO.setDrawCommitTime(DateFormatUtil.DateObjectToString(drawCashRecord.getDrawCommitTime()));
+							drawCashRecordVO.setPayTime(DateFormatUtil.DateObjectToString(drawCashRecord.getDrawCommitTime()));
 							drawCashRecordVO.setPhone(drawCashRecord.getPhone());
 
 							return drawCashRecordVO;
@@ -261,7 +268,7 @@ public class GoeIndexDrawCashController {
 			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
 			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
 			@RequestParam(value = "keyword", required = false, defaultValue = "drawCommitTime") String keyword,
-			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
+			@RequestParam(value = "order", required = false, defaultValue = "asc") String order) {
 		Sort sort = null;
 		RetMsg retMsg = null;
 		
@@ -301,8 +308,9 @@ public class GoeIndexDrawCashController {
 							drawCashRecordVO.setDrawId(drawCashRecord.getDrawId());
 							drawCashRecordVO.setDrawStatus(drawCashRecord.getDrawStatus());
 							drawCashRecordVO.setFinalNumber(MathUtil.floor(drawCashRecord.getFinalNumber()));
-							drawCashRecordVO.setPayTime(drawCashRecord.getPayTime());
 							drawCashRecordVO.setPhone(drawCashRecord.getPhone());
+							drawCashRecordVO.setDrawCommitTime(DateFormatUtil.DateObjectToString(drawCashRecord.getDrawCommitTime()));
+							drawCashRecordVO.setPayTime(DateFormatUtil.DateObjectToString(drawCashRecord.getDrawCommitTime()));
 
 							return drawCashRecordVO;
 						}

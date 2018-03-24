@@ -9,9 +9,18 @@ public class DrawCashRecordOfAuditWait {
 	private String bankName;
 	private String cardNumber;
 	private String drawStatus;
+	private String drawCommitTime;
 
 	public long getDrawId() {
 		return drawId;
+	}
+
+	public String getDrawCommitTime() {
+		return drawCommitTime;
+	}
+
+	public void setDrawCommitTime(String drawCommitTime) {
+		this.drawCommitTime = drawCommitTime;
 	}
 
 	public void setDrawId(long drawId) {
