@@ -27,7 +27,7 @@
                                 action="//jsonplaceholder.typicode.com/posts/">
                             <Button type="ghost" icon="ios-cloud-upload-outline">选择已处理的Excel表格</Button>
                         </Upload>
-                        <div v-if="file !== null">已选择文件: {{ file.name }} <Button type="button" @click="upload" :loading="loadingStatus">{{ loadingStatus ? 'Uploading' : '点击上传' }}</Button></div>
+                        <div v-if="file !== null">已选择文件: {{ file.name }} <Button  @click="upload" :loading="loadingStatus">{{ loadingStatus ? 'Uploading' : '点击上传' }}</Button></div>
                     </div>
                 </Row>
 
@@ -59,11 +59,19 @@
             },
             upload () {
                 this.loadingStatus = true;
-                setTimeout(() => {
-                    this.file = null;
+                let formData = new FormData();
+                formData.append('fileName',this.file)
+                this.doPost({
+                    url: this.APIServer + '/excel/uploadExcel',
+                    params: formData
+                }).then(result => {
                     this.loadingStatus = false;
-                    this.$Message.success('Success');
-                }, 1500);
+                    if (result.success) {
+                        this.$Message.success(result.message);
+                    } else {
+                        this.$Message.error(result.message);
+                    }
+                });
             }
         }
     };

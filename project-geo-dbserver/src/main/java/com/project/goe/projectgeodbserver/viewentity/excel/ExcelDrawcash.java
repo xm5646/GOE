@@ -10,7 +10,7 @@ public class ExcelDrawcash {
 
 	// 用户id
 	@Excel(name = "用户编号", orderNum = "1")
-	private long userId;
+	private String userAccount;
 	
 	//用戶姓名
 	@Excel(name = "用户姓名", orderNum = "2")
@@ -48,7 +48,7 @@ public class ExcelDrawcash {
 	@Excel(name = "电话号码", orderNum = "10",width = 15)
 	private String phone;
 	// 处理结果
-	@Excel(name = "处理结果", orderNum = "11",width = 15)
+	@Excel(name = "处理结果(已打款/不通过)", orderNum = "11",width = 30)
 	private String result;
 	
 	public ExcelDrawcash() {
@@ -64,12 +64,13 @@ public class ExcelDrawcash {
 		this.drawId = drawId;
 	}
 
-	public long getUserId() {
-		return userId;
+
+	public String getUserAccount() {
+		return userAccount;
 	}
 
-	public void setUserId(long userId) {
-		this.userId = userId;
+	public void setUserAccount(String userAccount) {
+		this.userAccount = userAccount;
 	}
 
 	public String getUserName() {

@@ -58,7 +58,7 @@
                     payPassword: ''
                 },
                 nickName: '',
-                coinType: 'bonusCoin',
+                coinType: 'consumeCoin',
                 rechargeType: 'plus',
                 rules: {
                     rechargeNumber: [

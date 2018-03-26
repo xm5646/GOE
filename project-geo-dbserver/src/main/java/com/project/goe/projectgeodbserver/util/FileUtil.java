@@ -9,7 +9,12 @@ import java.util.NoSuchElementException;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.DVConstraint;
+import org.apache.poi.hssf.usermodel.HSSFDataValidation;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddressList;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.goe.projectgeodbserver.exception.NormalException;
@@ -71,8 +76,13 @@ public class FileUtil {
 	private static void defaultExport(List<?> list, Class<?> pojoClass, String fileName, HttpServletResponse response,
 			ExportParams exportParams) {
 		Workbook workbook = ExcelExportUtil.exportExcel(exportParams, pojoClass, list);
-		if (workbook != null)
-			;
+		if (workbook != null) {
+			Sheet sheet = workbook.getSheet("提现记录");
+			if (sheet != null) {
+				sheet.addValidationData(FileUtil.setBoxs());
+			}
+		}
+			
 		downLoadExcel(fileName, response, workbook);
 	}
 
@@ -94,6 +104,17 @@ public class FileUtil {
 		downLoadExcel(fileName, response, workbook);
 	}
 
+	public static HSSFDataValidation setBoxs() {  
+        CellRangeAddressList addressList = new CellRangeAddressList(2, 65535, 11, 11);  
+        final String[] DATA_LIST = new String[] { "已打款", "不通过", };  
+        DVConstraint dvConstraint = DVConstraint.createExplicitListConstraint(DATA_LIST);  
+  
+        HSSFDataValidation dataValidation = new HSSFDataValidation(addressList, dvConstraint);  
+        dataValidation.setSuppressDropDownArrow(false);  
+        dataValidation.createPromptBox("输入提示", "请从下拉列表中选择处理结果");  
+        dataValidation.setShowPromptBox(true);  
+        return dataValidation;  
+    }  
 	public static <T> List<T> importExcel(String filePath, Integer titleRows, Integer headerRows, Class<T> pojoClass) {
 		if (StringUtils.isBlank(filePath)) {
 			return null;

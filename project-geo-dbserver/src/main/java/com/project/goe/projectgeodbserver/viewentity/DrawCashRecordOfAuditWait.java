@@ -1,5 +1,9 @@
 package com.project.goe.projectgeodbserver.viewentity;
 
+import java.util.Date;
+
+import com.google.common.base.Predicate;
+
 public class DrawCashRecordOfAuditWait {
 	private long drawId;
 	private String account;
@@ -9,6 +13,7 @@ public class DrawCashRecordOfAuditWait {
 	private String bankName;
 	private String cardNumber;
 	private String drawStatus;
+	private String commitTime;
 
 	public long getDrawId() {
 		return drawId;
@@ -74,4 +79,13 @@ public class DrawCashRecordOfAuditWait {
 		this.drawStatus = drawStatus;
 	}
 
+	public String getCommitTime() {
+		return commitTime;
+	}
+
+	public void setCommitTime(String commitTime) {
+		this.commitTime = commitTime;
+	}
+	
+	
 }

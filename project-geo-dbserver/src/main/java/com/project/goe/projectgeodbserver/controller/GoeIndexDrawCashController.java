@@ -1,5 +1,7 @@
 package com.project.goe.projectgeodbserver.controller;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,7 @@ import com.project.goe.projectgeodbserver.service.CardInfoService;
 import com.project.goe.projectgeodbserver.service.DrawCashService;
 import com.project.goe.projectgeodbserver.service.UserService;
 import com.project.goe.projectgeodbserver.statusType.DrawStatus;
+import com.project.goe.projectgeodbserver.util.DateFormatUtil;
 import com.project.goe.projectgeodbserver.util.MathUtil;
 import com.project.goe.projectgeodbserver.viewentity.DrawCashRecordOfAuditWait;
 import com.project.goe.projectgeodbserver.viewentity.DrawCashRecordVO;
@@ -71,7 +74,7 @@ public class GoeIndexDrawCashController {
 
 							CardInfo cardInfo = cardInfoService.findByCardInfoId(cardInfoId);
 							User user = userService.getUserById(userId);
-
+							drawCashRecordOfAuditWait.setCommitTime(DateFormatUtil.DateObjectToString(drawCashRecord.getDrawCommitTime()));
 							drawCashRecordOfAuditWait.setBankName(cardInfo.getBankName());
 							drawCashRecordOfAuditWait.setAccount(user.getAccount());
 							drawCashRecordOfAuditWait.setCardNumber(cardInfo.getCardNumber());
@@ -180,6 +183,7 @@ public class GoeIndexDrawCashController {
 		}
 		
 		drawCashRecord.setDrawStatus(drawStatus);
+		drawCashRecord.setPayTime(new Date());
 		this.drawCashService.save(drawCashRecord);
 		RetMsg retMsg = null;
 		
@@ -235,7 +239,8 @@ public class GoeIndexDrawCashController {
 							drawCashRecordVO.setDrawId(drawCashRecord.getDrawId());
 							drawCashRecordVO.setDrawStatus(drawCashRecord.getDrawStatus());
 							drawCashRecordVO.setFinalNumber(MathUtil.floor(drawCashRecord.getFinalNumber()));
-							drawCashRecordVO.setPayTime(drawCashRecord.getPayTime());
+							drawCashRecordVO.setPayTime(DateFormatUtil.DateObjectToString(drawCashRecord.getPayTime()));
+							drawCashRecordVO.setCommitTime(DateFormatUtil.DateObjectToString(drawCashRecord.getDrawCommitTime()));
 							drawCashRecordVO.setPhone(drawCashRecord.getPhone());
 
 							return drawCashRecordVO;
@@ -301,7 +306,8 @@ public class GoeIndexDrawCashController {
 							drawCashRecordVO.setDrawId(drawCashRecord.getDrawId());
 							drawCashRecordVO.setDrawStatus(drawCashRecord.getDrawStatus());
 							drawCashRecordVO.setFinalNumber(MathUtil.floor(drawCashRecord.getFinalNumber()));
-							drawCashRecordVO.setPayTime(drawCashRecord.getPayTime());
+							drawCashRecordVO.setPayTime(DateFormatUtil.DateObjectToString(drawCashRecord.getPayTime()));
+							drawCashRecordVO.setCommitTime(DateFormatUtil.DateObjectToString(drawCashRecord.getDrawCommitTime()));
 							drawCashRecordVO.setPhone(drawCashRecord.getPhone());
 
 							return drawCashRecordVO;

@@ -329,7 +329,7 @@
                     });
                 } else if (view === 'productCoinOrder') {
                     this.$router.push({
-                        name: 'exchangeProductWaitSendList'
+                        name: 'exchangeProductWaitSendList_orderManagement'
                     });
                 }
             }

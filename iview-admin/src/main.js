@@ -18,12 +18,7 @@ Vue.use(API);
 var useAuth = false;
 Vue.http.options.emulateJSON = true
 Vue.http.options.timeout = 5000
-<<<<<<< Updated upstream
-Vue.prototype.APIServer = 'http://192.168.123.175:8088'
-=======
 Vue.prototype.APIServer = 'http://localhost:8088'
->>>>>>> Stashed changes
-
 Vue.http.interceptors.push((request, next) => {
     // console.log('进入拦截器拦截方法')
     // Vue.$vux.loading.hide()
@@ -32,6 +27,9 @@ Vue.http.interceptors.push((request, next) => {
     //     delay: 500
     // })
     console.log(request)
+    if (request.url === '"http://localhost:8088/excel/uploadExcel"') {
+        request.headers.set('Content-Type', 'multipart/form-data');
+    }
     var timeout1;
     // 這裡改用 _timeout
     if (request.timeout) {

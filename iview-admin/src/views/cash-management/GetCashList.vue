@@ -77,7 +77,7 @@
                         width: 100
                     },
                     {
-                        key: 'drawCommitTime',
+                        key: 'commitTime',
                         title: '申请提现时间',
                         width: 120
                     },
@@ -107,7 +107,7 @@
                         width: 120
                     },
                     {
-                        key: 'drawCommitTime',
+                        key: 'payTime',
                         title: '打款时间',
                         width: 120
                     }

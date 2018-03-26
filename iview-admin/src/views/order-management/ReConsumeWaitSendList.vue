@@ -36,7 +36,7 @@
                         >
                             <template slot="operations" scope="scope">
                                 <!--<Button size="large" type="error" @click="edit(scope.item)">&nbsp;不通过&nbsp;</Button>-->
-                                <Button size="large" type="success" @click="recharge(scope.item)">&nbsp;完成发货&nbsp;
+                                <Button size="large" type="success" @click="doneSend(scope.item)">&nbsp;完成发货&nbsp;
                                 </Button>
                             </template>
                         </vue-table>
@@ -56,7 +56,7 @@
 <script>
     import * as table from '../tables/data/search';
     import vueTable from 'vue-table2';
-
+    import {Value2nameFilter as value2name, ChinaAddressV4Data} from 'vux';
     export default {
         name: 'searchable-table',
         components: {
@@ -71,44 +71,39 @@
                 },
                 columns1: [
                     {
-                        key: 'getcash_id',
-                        title: '提现编号',
-                        width: 100
+                        key: 'orderId',
+                        title: '订单编号',
+                        width: 80
                     },
                     {
-                        key: 'user_account',
+                        key: 'account',
                         title: '用户编号',
                         width: 100
                     },
                     {
-                        key: 'getNumber',
-                        title: '打款金额',
+                        key: 'createTime',
+                        title: '创建时间',
                         width: 100
                     },
                     {
-                        key: 'cardOwner',
-                        title: '持卡人',
+                        key: 'receiverName',
+                        title: '收件人',
                         width: 100
                     },
                     {
-                        key: 'user_phone',
+                        key: 'phone',
                         title: '手机号码',
                         width: 120
                     },
                     {
-                        key: 'bankName',
-                        title: '开户行',
-                        width: 140
+                        key: 'showAddress',
+                        title: '收货地址',
+                        width: 300
                     },
                     {
-                        key: 'cardNumber',
-                        title: '银行卡号',
+                        key: 'description',
+                        title: '描述',
                         width: 160
-                    },
-                    {
-                        key: 'status',
-                        title: '状态',
-                        width: 120
                     }
                 ],
                 allList: []
@@ -118,14 +113,44 @@
             init() {
                 this.getAllListByPage(0);
             },
-            getAllListByPage(page) {
-                this.doGet({url: this.APIServer + '/goeIndexOrderController/findAllDrawCashRecord?pageNum=' + page}).then(result => {
+            getAllListByPage (page) {
+                this.doGet({url: this.APIServer + '/goeIndexOrderController/findAllOrdersOfReconsume?pageNum=' + page}).then(result => {
                     if (result.success) {
+                        let tmpList = result.data.content;
+                        for (let i = 0; i < result.data.content.length; i++) {
+                            let addArray = new Array(3);
+                            let detailAdd = result.data.content[i].addressInfo[3];
+                            addArray = result.data.content[i].addressInfo;
+                            addArray.length = 3;
+                            tmpList[i]['showAddress'] = value2name(addArray, ChinaAddressV4Data) + ' ' + detailAdd;
+                        }
                         this.pageObj.totalPage = result.data.totalPages;
                         this.pageObj.totalCount = result.data.totalElements;
-                        this.allList = result.data.content;
+                        this.allList = tmpList;
                     } else {
                         this.$Message.error(result.message);
+                    }
+                });
+            },
+            doneSend (item) {
+                let that = this
+                this.$Modal.confirm({
+                    title: '提示',
+                    content: '是否已完成 ' + item.account + ' 的重销订单发货?',
+                    onOk: function () {
+                        that.doPost({
+                            url: that.APIServer + '/goeIndexOrderController/updateOrderInfo',
+                            params: {
+                                orderId: item.orderId
+                            }
+                        }).then(result => {
+                            if (result.success) {
+                                that.getAllListByPage(0);
+                                that.$Message.success(result.data);
+                            } else {
+                                that.$Message.error(result.message);
+                            }
+                        });
                     }
                 });
             },
@@ -134,25 +159,36 @@
             },
             handleSearch3 () {
                 this.allList = [];
-                this.doGet({
-                    url: this.APIServer + '/goeIndexDrawCash/findAllDrawCashRecordByAccount?account=' + this.searchAccount
-                }).then(result => {
-                    if (result.success) {
-                        this.pageObj.totalPage = result.data.totalPages;
-                        this.pageObj.totalCount = result.data.totalElements;
-                        this.allList = result.data.content;
-                    } else {
-                        this.allList = [];
-                        this.$Message.error(result.message);
-                    }
-                });
+                if (this.searchAccount === '') {
+                    this.getAllListByPage(0);
+                } else {
+                    this.doGet({
+                        url: this.APIServer + '/goeIndexOrderController/findAllOrdersOfReconsumeByAccount?account=' + this.searchAccount
+                    }).then(result => {
+                        if (result.success) {
+                            let tmpList = result.data.content;
+                            for (let i = 0; i < result.data.content.length; i++) {
+                                let addArray = new Array(3);
+                                let detailAdd = result.data.content[i].addressInfo[3];
+                                addArray = result.data.content[i].addressInfo;
+                                addArray.length = 3;
+                                tmpList[i]['showAddress'] = value2name(addArray, ChinaAddressV4Data) + ' ' + detailAdd;
+                            }
+                            this.pageObj.totalPage = result.data.totalPages;
+                            this.pageObj.totalCount = result.data.totalElements;
+                            this.allList = tmpList;
+                        } else {
+                            this.$Message.error(result.message);
+                        }
+                    });
+                }
             },
             handleCancel3 () {
                 this.searchAccount = '';
                 this.getAllListByPage(0);
             }
         },
-        mounted() {
+        mounted () {
             this.init();
         }
     };

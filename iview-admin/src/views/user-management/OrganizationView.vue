@@ -55,6 +55,7 @@
                 </org-tree>
             </div>
         </div>
+        <button @click="addData">test</button>
     </div>
 </template>
 
@@ -166,6 +167,13 @@
             renderContent (h, data) {
                 return data.label
             },
+            addData () {
+                console.log(this.data.children);
+                this.data.children.push({
+                    id: 15,
+                    label: '李晓明'
+                })
+            },
             onExpand (data) {
                 console.log(data.label)
                 if ('expand' in data) {
@@ -179,7 +187,7 @@
                 }
             },
             onNodeClick (e, data) {
-                console.log(data)
+                console.log(this.data)
             },
             collapse (list) {
                 list.forEach(child => {

@@ -11,7 +11,8 @@ public class DrawCashRecordVO {
 	private String bankName;
 	private String cardNumber;
 	private String drawStatus;
-	private Date payTime;
+	private String payTime;
+	private String commitTime;
 
 	public long getDrawId() {
 		return drawId;
@@ -77,12 +78,22 @@ public class DrawCashRecordVO {
 		this.drawStatus = drawStatus;
 	}
 
-	public Date getPayTime() {
+	public String getPayTime() {
 		return payTime;
 	}
 
-	public void setPayTime(Date payTime) {
+	public void setPayTime(String payTime) {
 		this.payTime = payTime;
 	}
+
+	public String getCommitTime() {
+		return commitTime;
+	}
+
+	public void setCommitTime(String commitTime) {
+		this.commitTime = commitTime;
+	}
+
+	
 
 }

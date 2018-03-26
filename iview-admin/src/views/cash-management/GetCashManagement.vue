@@ -87,9 +87,9 @@
                         width: 100
                     },
                     {
-                        key: 'drawCommitTime',
+                        key: 'commitTime',
                         title: '申请提现时间',
-                        width: 120
+                        width: 150
                     },
                     {
                         key: 'cardOwnerName',
@@ -171,7 +171,7 @@
                 });
             },
             exportExcel () {
-                console.log('export excel');
+                window.open(this.APIServer + '/excel/exportDraw', '_self');
             },
             getAllListByPage (page) {
                 this.doGet({url: this.APIServer + '/goeIndexDrawCash/findByDrawStatusOfAuditWait?pageNum=' + page}).then(result => {
