@@ -18,7 +18,7 @@ public class OrderInfoVO {
 	// 收件人电话
 	private String phone;
 	// 收件人快递地址信息
-	private String addressInfo;
+	private String[] addressInfo;
 	// 订单描述
 	private String description;
 
@@ -86,11 +86,11 @@ public class OrderInfoVO {
 		this.phone = phone;
 	}
 
-	public String getAddressInfo() {
+	public String[] getAddressInfo() {
 		return addressInfo;
 	}
 
-	public void setAddressInfo(String addressInfo) {
+	public void setAddressInfo(String[] addressInfo) {
 		this.addressInfo = addressInfo;
 	}
 

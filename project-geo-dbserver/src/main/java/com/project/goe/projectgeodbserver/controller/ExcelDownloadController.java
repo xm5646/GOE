@@ -12,8 +12,6 @@ import com.project.goe.projectgeodbserver.util.exceldemo.Person;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
 import com.project.goe.projectgeodbserver.viewentity.excel.ExcelDrawcash;
 
-import java.io.Console;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -70,6 +68,7 @@ public class ExcelDownloadController {
 	public void exportDrawcash(HttpServletResponse response) {
 		List<ExcelDrawcash> excellist = new ArrayList<>();
 		List<DrawCashRecord> drawList = drawCashService.findByDrawStatus(DrawStatus.AUDIT_WAIT);
+
 		Map<Long, CardInfo> cardMap = cardInfoService.findAllMap();
 
 		if (drawList != null && drawList.size() > 0) {

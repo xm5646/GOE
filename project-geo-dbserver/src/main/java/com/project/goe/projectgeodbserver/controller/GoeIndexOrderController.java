@@ -73,8 +73,11 @@ public class GoeIndexOrderController {
 					User user = userService.findByUserId(userId);
 
 					orderInfoVO.setAccount(user.getAccount());
-					orderInfoVO.setAddressInfo(expressAddress.getProvince() + expressAddress.getCity()
-							+ expressAddress.getDistrict() + expressAddress.getDetailAddress());
+					
+					String[] addressInfo = new String[] {expressAddress.getProvince(),expressAddress.getCity(),
+							expressAddress.getDistrict(),expressAddress.getDetailAddress()};
+					
+					orderInfoVO.setAddressInfo(addressInfo);
 					orderInfoVO.setCreateTime(DateFormatUtil.DateObjectToString(orderInfo.getCreateTime()));
 					orderInfoVO.setDescription(orderInfo.getDescription());
 					orderInfoVO.setIsDelivery(orderInfo.getIsDelivery());
@@ -142,8 +145,10 @@ public class GoeIndexOrderController {
 					User user = userService.findByUserId(userId);
 
 					orderInfoVO.setAccount(user.getAccount());
-					orderInfoVO.setAddressInfo(expressAddress.getProvince() + expressAddress.getCity()
-							+ expressAddress.getDistrict() + expressAddress.getDetailAddress());
+					
+					String[] addressInfo = new String[] {expressAddress.getProvince(),expressAddress.getCity(),
+							expressAddress.getDistrict(),expressAddress.getDetailAddress()};
+					orderInfoVO.setAddressInfo(addressInfo);
 					orderInfoVO.setCreateTime(DateFormatUtil.DateObjectToString(orderInfo.getCreateTime()));
 					orderInfoVO.setDescription(orderInfo.getDescription());
 					orderInfoVO.setIsDelivery(orderInfo.getIsDelivery());
@@ -210,8 +215,10 @@ public class GoeIndexOrderController {
 							User user = userService.findByUserId(userId);
 
 							orderInfoOfReconsume.setAccount(user.getAccount());
-							orderInfoOfReconsume.setAddressInfo(expressAddress.getProvince() + expressAddress.getCity()
-									+ expressAddress.getDistrict() + expressAddress.getDetailAddress());
+							
+							String[] addressInfo = new String[] {expressAddress.getProvince(),expressAddress.getCity(),
+									expressAddress.getDistrict(),expressAddress.getDetailAddress()};
+							orderInfoOfReconsume.setAddressInfo(addressInfo);
 							orderInfoOfReconsume
 									.setCreateTime(DateFormatUtil.DateObjectToString(orderInfo.getCreateTime()));
 							orderInfoOfReconsume.setDescription(orderInfo.getDescription());
@@ -281,8 +288,9 @@ public class GoeIndexOrderController {
 							User user = userService.findByUserId(userId);
 
 							orderInfoOfReconsume.setAccount(user.getAccount());
-							orderInfoOfReconsume.setAddressInfo(expressAddress.getProvince() + expressAddress.getCity()
-									+ expressAddress.getDistrict() + expressAddress.getDetailAddress());
+							String[] addressInfo = new String[] {expressAddress.getProvince(),expressAddress.getCity(),
+									expressAddress.getDistrict(),expressAddress.getDetailAddress()};
+							orderInfoOfReconsume.setAddressInfo(addressInfo);
 							orderInfoOfReconsume
 									.setCreateTime(DateFormatUtil.DateObjectToString(orderInfo.getCreateTime()));
 							orderInfoOfReconsume.setDescription(orderInfo.getDescription());
@@ -348,9 +356,9 @@ public class GoeIndexOrderController {
 
 							orderInfoOfProductCoin.setAccount(user.getAccount());
 							orderInfoOfProductCoin.setProductCount(orderInfo.getProductCount());
-							orderInfoOfProductCoin
-									.setAddressInfo(expressAddress.getProvince() + expressAddress.getCity()
-											+ expressAddress.getDistrict() + expressAddress.getDetailAddress());
+							String[] addressInfo = new String[] {expressAddress.getProvince(),expressAddress.getCity(),
+							expressAddress.getDistrict(),expressAddress.getDetailAddress()};
+							orderInfoOfProductCoin.setAddressInfo(addressInfo);
 							orderInfoOfProductCoin
 									.setCreateTime(DateFormatUtil.DateObjectToString(orderInfo.getCreateTime()));
 							orderInfoOfProductCoin.setDescription(orderInfo.getDescription());
@@ -421,9 +429,10 @@ public class GoeIndexOrderController {
 
 							orderInfoOfProductCoin.setAccount(user.getAccount());
 							orderInfoOfProductCoin.setProductCount(orderInfo.getProductCount());
-							orderInfoOfProductCoin
-									.setAddressInfo(expressAddress.getProvince() + expressAddress.getCity()
-											+ expressAddress.getDistrict() + expressAddress.getDetailAddress());
+							
+							String[] addressInfo = new String[]{expressAddress.getProvince(),expressAddress.getCity(),
+									expressAddress.getDistrict(),expressAddress.getDetailAddress()};
+							orderInfoOfProductCoin.setAddressInfo(addressInfo);
 							orderInfoOfProductCoin
 									.setCreateTime(DateFormatUtil.DateObjectToString(orderInfo.getCreateTime()));
 							orderInfoOfProductCoin.setDescription(orderInfo.getDescription());
@@ -460,14 +469,14 @@ public class GoeIndexOrderController {
 		if(null == oInfo)
 			throw new RuntimeException("订单不存在");
 		
-		oInfo.setIsDelivery(orderInfo.getIsDelivery());
+		oInfo.setIsDelivery(DeliveryStatus.ORDER__DELIVERY_OK);
 		
 		try {
 			this.orderInfoService.save(oInfo);
 			
 			retMsg = new RetMsg();
 			retMsg.setCode(200);
-			retMsg.setData("订单信息更新成功");
+			retMsg.setData(DeliveryStatus.ORDER__DELIVERY_OK);
 			retMsg.setMessage("订单信息更新成功");
 			retMsg.setSuccess(true);
 			

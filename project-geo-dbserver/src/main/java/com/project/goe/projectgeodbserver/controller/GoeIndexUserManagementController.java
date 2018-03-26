@@ -34,7 +34,7 @@ import com.project.goe.projectgeodbserver.viewentity.UserVO;
 public class GoeIndexUserManagementController {
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private EarningService earningService;
 
@@ -220,8 +220,8 @@ public class GoeIndexUserManagementController {
 		}
 
 	}
-	
-	//查询所有累计收益
+
+	// 查询所有累计收益
 	@GetMapping("/findAllEarnings")
 	public RetMsg findAllEarnings(@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
 			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
@@ -239,7 +239,7 @@ public class GoeIndexUserManagementController {
 			Pageable pageable = new PageRequest(pageNum, size, sort);
 
 			Page<Earning> pageEarning = this.earningService.findAllEarnings(pageable);
-			Page<EarningVO> pageEarningVO = pageEarning.map(new Converter<Earning,EarningVO>() {
+			Page<EarningVO> pageEarningVO = pageEarning.map(new Converter<Earning, EarningVO>() {
 
 				@Override
 				public EarningVO convert(Earning earning) {
@@ -250,7 +250,7 @@ public class GoeIndexUserManagementController {
 					return EarningUtil.earningToEarningVO(earning);
 				}
 			});
-			
+
 			retMsg.setCode(200);
 			retMsg.setData(pageEarningVO);
 			retMsg.setMessage("查询成功");
@@ -263,54 +263,54 @@ public class GoeIndexUserManagementController {
 		}
 
 	}
-	
+
 	// 基于用户账户名，分页模糊查询收益记录
-		@GetMapping("/findEarningsByAccountLike")
-		public RetMsg findEarningsByAccountLike(@RequestParam("account") String account,
-				@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
-				@RequestParam(value = "size", defaultValue = "10", required = false) int size,
-				@RequestParam(value = "keyword", required = false, defaultValue = "createTime") String keyword,
-				@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
+	@GetMapping("/findEarningsByAccountLike")
+	public RetMsg findEarningsByAccountLike(@RequestParam("account") String account,
+			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
+			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
+			@RequestParam(value = "keyword", required = false, defaultValue = "createTime") String keyword,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 
-			RetMsg retMsg = null;
-			Sort sort = null;
-			
-			if(null == account)
-				throw new RuntimeException("用户名不能为空");
-			
-			User user = this.userService.findByAccount(account);
-			if(null == user)
-				throw new RuntimeException("用户不存在");
-			
-			try {
-				if (order.equals("asc"))
-					sort = new Sort(Direction.ASC, keyword);
-				else
-					sort = new Sort(Direction.DESC, keyword);
+		RetMsg retMsg = null;
+		Sort sort = null;
 
-				Pageable pageable = new PageRequest(pageNum, size, sort);
+		if (null == account)
+			throw new RuntimeException("用户名不能为空");
 
-				Page<Earning> pageEarning = this.earningService.findEarningsByUserId(user.getUserId(), pageable);
-				Page<EarningVO> pageEarningVO = pageEarning.map(new Converter<Earning, EarningVO>() {
+		User user = this.userService.findByAccount(account);
+		if (null == user)
+			throw new RuntimeException("用户不存在");
 
-					@Override
-					public EarningVO convert(Earning earning) {
-						earning.setAccount(user.getAccount());
-						return EarningUtil.earningToEarningVO(earning);
-					}
-				});
+		try {
+			if (order.equals("asc"))
+				sort = new Sort(Direction.ASC, keyword);
+			else
+				sort = new Sort(Direction.DESC, keyword);
 
-				retMsg = new RetMsg();
-				retMsg.setCode(200);
-				retMsg.setData(pageEarningVO);
-				retMsg.setMessage("查询成功");
-				retMsg.setSuccess(true);
+			Pageable pageable = new PageRequest(pageNum, size, sort);
 
-				return retMsg;
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new RuntimeException("信息查询失败");
-			}
+			Page<Earning> pageEarning = this.earningService.findEarningsByUserId(user.getUserId(), pageable);
+			Page<EarningVO> pageEarningVO = pageEarning.map(new Converter<Earning, EarningVO>() {
+
+				@Override
+				public EarningVO convert(Earning earning) {
+					earning.setAccount(user.getAccount());
+					return EarningUtil.earningToEarningVO(earning);
+				}
+			});
+
+			retMsg = new RetMsg();
+			retMsg.setCode(200);
+			retMsg.setData(pageEarningVO);
+			retMsg.setMessage("查询成功");
+			retMsg.setSuccess(true);
+
+			return retMsg;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("信息查询失败");
 		}
+	}
 
 }
