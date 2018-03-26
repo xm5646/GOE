@@ -14,6 +14,7 @@ public class DrawCashRecordVO {
 	private String payTime;
 	private String commitTime;
 
+
 	public long getDrawId() {
 		return drawId;
 	}
@@ -86,6 +87,7 @@ public class DrawCashRecordVO {
 		this.payTime = payTime;
 	}
 
+
 	public String getCommitTime() {
 		return commitTime;
 	}
@@ -93,7 +95,5 @@ public class DrawCashRecordVO {
 	public void setCommitTime(String commitTime) {
 		this.commitTime = commitTime;
 	}
-
-	
 
 }

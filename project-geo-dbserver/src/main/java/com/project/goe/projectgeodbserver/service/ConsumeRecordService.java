@@ -71,7 +71,25 @@ public class ConsumeRecordService {
 
 		return this.consumeRecordRepository.findAll(spec, pageable);
 	}
+	
+	public Page<ConsumeRecord> findByAccountAndConsumeType1(ConsumeRecord consumeRecord, Pageable pageable) {
+		Specification<ConsumeRecord> spec = new Specification<ConsumeRecord>() {
 
+			@Override
+			public Predicate toPredicate(Root<ConsumeRecord> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				Predicate p1 = cb.equal(root.get("sendUserId").as(long.class), consumeRecord.getUserId());
+				Predicate p2 = cb.equal(root.get("receiveUserId").as(long.class),consumeRecord.getReceiveUserId());
+				Predicate p3 = cb.equal(root.get("consumeType").as(String.class), consumeRecord.getConsumeType());
+				query.where(cb.and(p3,cb.or(p1,p2)));
+
+				return query.getRestriction();
+			}
+
+		};
+
+		return this.consumeRecordRepository.findAll(spec, pageable);
+	}
+	
 	// 查询本月消费类型为重销和报单的消费记录
 	public List<ConsumeRecord> findByConsumeTimeOfNowMonth() {
 		List<ConsumeRecord> list = new ArrayList<ConsumeRecord>();

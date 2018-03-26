@@ -181,6 +181,8 @@ public class ConsumerRecordController {
 		
 		ConsumeRecord consumeRecord = new ConsumeRecord();
 		consumeRecord.setUserId(user.getUserId());
+		consumeRecord.setSendUserId(user.getUserId());
+		consumeRecord.setReceiveUserId(user.getUserId());
 		
 		String consumeType = null;
 		
@@ -218,8 +220,10 @@ public class ConsumerRecordController {
 				sort = new Sort(Direction.DESC, keyword);
 
 			Pageable pageable = new PageRequest(pageNum, size, sort);
-
-			return this.consumeRecordService.findByAccountAndConsumeType(consumeRecord, pageable);
+			if(3 == consumeTypeCode) {
+				return this.consumeRecordService.findByAccountAndConsumeType1(consumeRecord, pageable);
+			}else 
+				return this.consumeRecordService.findByAccountAndConsumeType(consumeRecord, pageable);
 		} catch (Exception e) {
 			throw new RuntimeException("查询失败");
 		}

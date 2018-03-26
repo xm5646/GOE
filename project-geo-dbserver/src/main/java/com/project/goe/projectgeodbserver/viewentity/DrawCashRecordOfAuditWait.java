@@ -1,8 +1,5 @@
 package com.project.goe.projectgeodbserver.viewentity;
 
-import java.util.Date;
-
-import com.google.common.base.Predicate;
 
 public class DrawCashRecordOfAuditWait {
 	private long drawId;

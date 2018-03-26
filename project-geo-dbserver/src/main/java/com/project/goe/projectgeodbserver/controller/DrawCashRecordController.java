@@ -1,8 +1,6 @@
 package com.project.goe.projectgeodbserver.controller;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.goe.projectgeodbserver.entity.BonusPayList;
 import com.project.goe.projectgeodbserver.entity.CardInfo;
 import com.project.goe.projectgeodbserver.entity.DrawCashRecord;
 import com.project.goe.projectgeodbserver.entity.User;
