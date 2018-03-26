@@ -30,7 +30,7 @@ public class UserLevelTreeUtil {
 				Long cId = (Long)o;
 				Object obj = map.get(cId);
 				Class clazz = obj.getClass();
-				
+				 
 			}
 		}
 		

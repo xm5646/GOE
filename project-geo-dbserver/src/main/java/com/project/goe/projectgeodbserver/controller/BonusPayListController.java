@@ -72,7 +72,7 @@ public class BonusPayListController {
 	}
 
 	// 分页查询单个用户（按时间降序排序）
-	@GetMapping("/findBonusPageByAccountOrNickName")
+	@GetMapping("/findBonusPageByAccount")
 	public Page<BonusPayList> findBonusPageByAccount(@RequestParam("account") String account,
 			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
 			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
