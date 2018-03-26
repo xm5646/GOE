@@ -114,18 +114,22 @@
             },
             handleSearch2 () {
                 this.allList = [];
-                this.doGet({
-                    url: this.APIServer + '/goeIndexBonus/findBonusPageByAccount?account=' + this.searchAccount
-                }).then(result => {
-                    if (result.success) {
-                        this.pageObj.totalPage = result.data.totalPages;
-                        this.pageObj.totalCount = result.data.totalElements;
-                        this.allList = result.data.content;
-                    } else {
-                        this.allList = [];
-                        this.$Message.error(result.message);
-                    }
-                });
+                if (this.searchAccount === '') {
+                    this.getAllListByPage(0);
+                } else {
+                    this.doGet({
+                        url: this.APIServer + '/goeIndexBonus/findBonusPageByAccount?account=' + this.searchAccount
+                    }).then(result => {
+                        if (result.success) {
+                            this.pageObj.totalPage = result.data.totalPages;
+                            this.pageObj.totalCount = result.data.totalElements;
+                            this.allList = result.data.content;
+                        } else {
+                            this.allList = [];
+                            this.$Message.error(result.message);
+                        }
+                    });
+                }
             },
             handleCancel2 () {
                 this.searchAccount = '';

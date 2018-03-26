@@ -135,18 +135,22 @@
             },
             handleSearch3() {
                 this.allList = [];
-                this.doGet({
-                    url: this.APIServer + '/goeIndexDrawCash/findAllDrawCashRecordByAccount?account=' + this.searchAccount
-                }).then(result => {
-                    if (result.success) {
-                        this.pageObj.totalPage = result.data.totalPages;
-                        this.pageObj.totalCount = result.data.totalElements;
-                        this.allList = result.data.content;
-                    } else {
-                        this.allList = [];
-                        this.$Message.error(result.message);
-                    }
-                });
+                if (this.searchAccount === '') {
+                    this.getAllListByPage(0);
+                } else {
+                    this.doGet({
+                        url: this.APIServer + '/goeIndexDrawCash/findAllDrawCashRecordByAccount?account=' + this.searchAccount
+                    }).then(result => {
+                        if (result.success) {
+                            this.pageObj.totalPage = result.data.totalPages;
+                            this.pageObj.totalCount = result.data.totalElements;
+                            this.allList = result.data.content;
+                        } else {
+                            this.allList = [];
+                            this.$Message.error(result.message);
+                        }
+                    });
+                }
             },
             handleCancel3() {
                 this.searchAccount = '';
