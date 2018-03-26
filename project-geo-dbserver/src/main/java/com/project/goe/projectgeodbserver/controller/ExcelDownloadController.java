@@ -2,6 +2,7 @@ package com.project.goe.projectgeodbserver.controller;
 
 import com.project.goe.projectgeodbserver.entity.CardInfo;
 import com.project.goe.projectgeodbserver.entity.DrawCashRecord;
+import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.service.CardInfoService;
 import com.project.goe.projectgeodbserver.service.DrawCashService;
 import com.project.goe.projectgeodbserver.service.UserService;
@@ -149,6 +150,18 @@ public class ExcelDownloadController {
 								drawCashService.save(record);
 								System.out.println(idCell.getStringCellValue() + "处理结果:" + resultCell.getStringCellValue());
 								
+							}
+							
+							//提现记录被拒绝，将提现金额退回用户账户
+							if(DrawStatus.AUDIT_NO_PASS.equals(resultCell.getStringCellValue())) {
+								long userId = record.getUserId();
+								User user = this.userService.findByUserId(userId);
+								
+								if(null == user)
+									throw new RuntimeException("用户不存在");
+								
+								user.setBonusCoin(user.getBonusCoin() + record.getDrawnumber());
+								this.userService.save(user);
 							}
 						}catch (Exception e) {
 							System.out.println("获取提现ID失败");

@@ -185,6 +185,18 @@ public class GoeIndexDrawCashController {
 		
 		drawCashRecord.setDrawStatus(drawStatus);
 		drawCashRecord.setPayTime(new Date());
+		
+		if(drawStatus.equals(DrawStatus.AUDIT_NO_PASS)) {
+			long userId = drawCashRecord.getUserId();
+			User user = this.userService.findByUserId(userId);
+			
+			if(null == user)
+				throw new RuntimeException("用户不存在");
+			
+			user.setBonusCoin(user.getBonusCoin() + drawCashRecord.getDrawnumber());
+			this.userService.save(user);
+		}
+		
 		this.drawCashService.save(drawCashRecord);
 		RetMsg retMsg = null;
 		
