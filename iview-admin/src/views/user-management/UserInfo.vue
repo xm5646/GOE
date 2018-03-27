@@ -27,19 +27,27 @@
                 <Row class="margin-top-10 searchable-table-con1">
                     <!--<Table :columns="columns1" :data="userList"></Table>-->
                     <div style="height: 20px"></div>
-                    <vue-table :tdata="userList"
-                               :tcolumns="columns1"
-                               :showHandle="true"
-                               :tdHeight="40"
-                               :handleFixed="true"
-                               :page="pageObj"
-                               @changePage="changePage"
-                    >
-                        <template slot="operations" scope="scope">
-                            <Button size="large" type="primary" @click="edit(scope.item)">&nbsp;修改&nbsp;</Button>
-                            <Button size="large" type="primary" @click="recharge(scope.item)">&nbsp;充币&nbsp;</Button>
-                        </template>
-                    </vue-table>
+                    <div v-if="userList.length>0">
+                        <vue-table :tdata="userList"
+                                   :tcolumns="columns1"
+                                   :showHandle="true"
+                                   :tdHeight="40"
+                                   :handleFixed="true"
+                                   :page="pageObj"
+                                   @changePage="changePage"
+                        >
+                            <template slot="operations" scope="scope">
+                                <Button size="large" type="primary" @click="edit(scope.item)">&nbsp;修改&nbsp;</Button>
+                                <Button size="large" type="primary" @click="recharge(scope.item)">&nbsp;充币&nbsp;
+                                </Button>
+                            </template>
+                        </vue-table>
+                    </div>
+                    <div v-else>
+                        <Alert type="info" show-icon>
+                            未找到记录!
+                        </Alert>
+                    </div>
                 </Row>
             </Card>
             </Col>
@@ -164,10 +172,10 @@
             };
         },
         methods: {
-            init () {
+            init() {
                 this.getAllUserListByPage(0);
             },
-            getAllUserListByPage (page) {
+            getAllUserListByPage(page) {
                 this.doGet({url: this.APIServer + '/goeIndexUserManagement/findAllUsers?pageNum=' + page}).then(result => {
                     if (result.success) {
                         this.pageObj.totalPage = result.data.totalPages;
@@ -178,29 +186,16 @@
                     }
                 });
             },
-            search(data, argumentObj) {
-                let res = data;
-                let dataClone = data;
-                for (let argu in argumentObj) {
-                    if (argumentObj[argu].length > 0) {
-                        res = dataClone.filter(d => {
-                            return d[argu].indexOf(argumentObj[argu]) > -1;
-                        });
-                        dataClone = res;
-                    }
-                }
-                return res;
-            },
             edit (item) {
                 console.log('item type: ' + typeof item)
                 this.userInfo = item
                 this.showEditModal = true;
             },
-            recharge (item) {
+            recharge(item) {
                 this.userInfo = item
                 this.showRechargeModal = true;
             },
-            changePage (pageNum) {
+            changePage(pageNum) {
                 if (pageNum >= 0 || pageNum < this.pageObj.totalPage) {
                     this.getAllUserListByPage(pageNum - 1);
                 }
@@ -222,46 +217,52 @@
                     }
                 });
             },
-            handleSearch3 () {
+            handleSearch3() {
                 this.userList = [];
-                this.doGet({
-                    url: this.APIServer + '/goeIndexUserManagement/findUsersByNickNameOrAccountLike?type=nickName&value=' + this.searchNickName
-                }).then(result => {
-                    if (result.success) {
-                        this.pageObj.totalPage = result.data.totalPages;
-                        this.pageObj.totalCount = result.data.totalElements;
-                        this.userList = result.data.content;
-                    } else {
-                        this.$Message.error(result.message);
-                    }
-                });
-
+                if (this.searchNickName === '') {
+                    this.getAllListByPage(0);
+                } else {
+                    this.doGet({
+                        url: this.APIServer + '/goeIndexUserManagement/findUsersByNickNameOrAccountLike?type=nickName&value=' + this.searchNickName
+                    }).then(result => {
+                        if (result.success) {
+                            this.pageObj.totalPage = result.data.totalPages;
+                            this.pageObj.totalCount = result.data.totalElements;
+                            this.userList = result.data.content;
+                        } else {
+                            this.$Message.error(result.message);
+                        }
+                    });
+                }
             },
-            handleCancel3 () {
+            handleCancel3() {
                 this.searchNickName = '';
                 this.getAllUserListByPage(0);
             },
-            handleSearch2 () {
+            handleSearch2() {
                 this.userList = [];
-                this.doGet({
-                    url: this.APIServer + '/goeIndexUserManagement/findUsersByNickNameOrAccountLike?type=account&value=' + this.searchAccount
-                }).then(result => {
-                    if (result.success) {
-                        this.pageObj.totalPage = result.data.totalPages;
-                        this.pageObj.totalCount = result.data.totalElements;
-                        this.userList = result.data.content;
-                    } else {
-                        this.$Message.error(result.message);
-                    }
-                });
-
+                if (this.searchAccount === '') {
+                    this.getAllListByPage(0);
+                } else {
+                    this.doGet({
+                        url: this.APIServer + '/goeIndexUserManagement/findUsersByNickNameOrAccountLike?type=account&value=' + this.searchAccount
+                    }).then(result => {
+                        if (result.success) {
+                            this.pageObj.totalPage = result.data.totalPages;
+                            this.pageObj.totalCount = result.data.totalElements;
+                            this.userList = result.data.content;
+                        } else {
+                            this.$Message.error(result.message);
+                        }
+                    });
+                }
             },
-            handleCancel2 () {
+            handleCancel2() {
                 this.searchAccount = '';
                 this.getAllUserListByPage(0);
             }
         },
-        mounted () {
+        mounted() {
             this.init();
         }
     };
