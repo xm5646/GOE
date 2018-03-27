@@ -174,6 +174,9 @@ public class GoeIndexUserManagementController {
 		if (null == u)
 			throw new RuntimeException("用户信息不存在");
 
+		if ("administrator".equals(u.getAccount()))
+			throw new RuntimeException("不允许修改管理员密码");
+
 		if (null != nickName)
 			u.setNickName(nickName);
 
@@ -311,6 +314,55 @@ public class GoeIndexUserManagementController {
 			e.printStackTrace();
 			throw new RuntimeException("信息查询失败");
 		}
+	}
+
+	/************ 重置管理员交易密码和支付密码 **************************/
+	@PostMapping("/updatePasswordOfAdmin")
+	public RetMsg updatePasswordOfAdmin(
+			@RequestParam(value = "oldLoginPassword", required = false) String oldLoginPassword,
+			@RequestParam(value = "newLoginPassword", required = false) String newLoginPassword,
+			@RequestParam(value = "oldPaymentPassword", required = false) String oldPaymentPassword,
+			@RequestParam(value = "newPaymentPassword", required = false) String newPaymentPassword) {
+
+		User user = this.userService.findByAccount("administrator");
+		if (null == user)
+			throw new RuntimeException("管理员账号不存在");
+
+		if (null != oldLoginPassword && null != newLoginPassword) {
+			String encryOldLoginPassword = MD5Util.encrypeByMd5(oldLoginPassword);
+			String encryNewLoginPassword = MD5Util.encrypeByMd5(newLoginPassword);
+
+			if (!encryOldLoginPassword.equals(user.getPassword()))
+				throw new RuntimeException("旧登录密码输入错误");
+
+			user.setPassword(encryNewLoginPassword);
+		}
+
+		if (null != oldPaymentPassword && null != newPaymentPassword) {
+			String encryOldPaymentPassword = MD5Util.encrypeByMd5(oldPaymentPassword);
+			String encryNewPaymentPassword = MD5Util.encrypeByMd5(newPaymentPassword);
+
+			if (!encryOldPaymentPassword.equals(user.getPaymentPassword()))
+				throw new RuntimeException("旧支付密码输入错误");
+
+			user.setPaymentPassword(encryNewPaymentPassword);
+		}
+
+		// 更新用户信息
+		try {
+			this.userService.save(user);
+
+			RetMsg retMsg = new RetMsg();
+			retMsg.setCode(200);
+			retMsg.setData("密码更新成功");
+			retMsg.setMessage("密码更新成功");
+			retMsg.setSuccess(true);
+
+			return retMsg;
+		} catch (Exception e) {
+			throw new RuntimeException("密码更新失败");
+		}
+
 	}
 
 }
