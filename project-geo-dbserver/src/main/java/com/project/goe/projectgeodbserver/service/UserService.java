@@ -72,6 +72,10 @@ public class UserService {
 	public Iterable<User> getAll() {
 		return userRepositoy.findAll();
 	}
+	
+	public List<User> findAll() {
+		return this.userRepositoy.findAll();
+	}
 
 	@Transactional
 	public User getUserById(Long id) {

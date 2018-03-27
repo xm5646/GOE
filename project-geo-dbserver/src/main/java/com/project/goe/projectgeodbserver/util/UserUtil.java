@@ -3,6 +3,7 @@ package com.project.goe.projectgeodbserver.util;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.statusType.UserLevel;
 import com.project.goe.projectgeodbserver.statusType.UserType;
+import com.project.goe.projectgeodbserver.viewentity.UserNode;
 import com.project.goe.projectgeodbserver.viewentity.UserVO;
 
 import java.util.Date;
@@ -100,6 +101,16 @@ public class UserUtil {
 		u.setUserStatus(true);
 		u.setAssessDate(createDate);
 		return u;
+	}
+	
+	public static UserNode UserToUserNode(User user) {
+		UserNode userNode = new UserNode();
+		userNode.setAccount(user.getAccount());
+		userNode.setDepartAcount(user.getDepartmentA());
+		userNode.setDepartBcount(user.getDepartmentB());
+		userNode.setDepartCcount(user.getDepartmentC());
+		
+		return userNode;
 	}
 
 	public static User getTestUser(User parentUser, String departmentType) {

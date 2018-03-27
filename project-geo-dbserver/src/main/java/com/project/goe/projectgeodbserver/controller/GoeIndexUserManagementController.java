@@ -1,5 +1,8 @@
 package com.project.goe.projectgeodbserver.controller;
 
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
@@ -22,9 +25,11 @@ import com.project.goe.projectgeodbserver.service.EarningService;
 import com.project.goe.projectgeodbserver.service.UserService;
 import com.project.goe.projectgeodbserver.util.EarningUtil;
 import com.project.goe.projectgeodbserver.util.MD5Util;
+import com.project.goe.projectgeodbserver.util.UserTreeUtil;
 import com.project.goe.projectgeodbserver.util.UserUtil;
 import com.project.goe.projectgeodbserver.viewentity.EarningVO;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
+import com.project.goe.projectgeodbserver.viewentity.UserNode;
 import com.project.goe.projectgeodbserver.viewentity.UserTypeQueryRequest;
 import com.project.goe.projectgeodbserver.viewentity.UserVO;
 
@@ -363,6 +368,27 @@ public class GoeIndexUserManagementController {
 			throw new RuntimeException("密码更新失败");
 		}
 
+	}
+
+	/******************** 用户层级 ******************************/
+	@GetMapping("/userLevelInfo")
+	public RetMsg userLevelInfo(@RequestParam("account") String account,
+			@RequestParam(value = "level", defaultValue = "3", required = false) int level) {
+		//获取所有用户列表
+		List<User> userList = this.userService.findAll();
+		
+		//获取当前用户
+		User user = this.userService.findByAccount(account);
+		if(null == user)
+			throw new RuntimeException("当前用户不存在");
+		
+		//获取用户id
+		long uId = user.getUserId();
+		
+		UserTreeUtil.traverse(uId, userList);
+		
+		
+		return null;
 	}
 
 }
