@@ -386,7 +386,7 @@ public class GoeIndexUserManagementController {
 		long uId = user.getUserId();
 		
 		UserTreeUtil.traverse(uId, userList);
-		
+		System.out.println();
 		
 		return null;
 	}
