@@ -9,7 +9,8 @@
                     组织结构
                 </p>
                 <Row>
-                    <organ-view></organ-view>
+                    暂未开放
+                    <!--<organ-view></organ-view>-->
                 </Row>
             </Card>
             </Col>

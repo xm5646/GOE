@@ -36,7 +36,7 @@
                                    :page="pageObj"
                                    @changePage="changePage"
                         >
-                            <template slot="operations" scope="scope">
+                            <template slot="operations" slot-scope="scope">
                                 <Button size="large" type="primary" @click="edit(scope.item)">&nbsp;修改&nbsp;</Button>
                                 <Button size="large" type="primary" @click="recharge(scope.item)">&nbsp;充币&nbsp;
                                 </Button>

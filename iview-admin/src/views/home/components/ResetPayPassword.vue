@@ -4,13 +4,7 @@
             <Icon type="refresh" :size="23"></Icon>
         </Tooltip>
         <Modal :width="500" v-model="showModal" @on-ok="submitReset" title="重置密码">
-            <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
-                <FormItem label="原登陆密码" prop="oldPassword">
-                    <Input type="password" v-model="formValidate.oldPassword" style="width: 200px" placeholder=""></Input>
-                </FormItem>
-                <FormItem label="手机号码" prop="oldPassword">
-                    <Input type="password" v-model="formValidate.oldPassword" style="width: 200px" placeholder=""></Input>
-                </FormItem>
+            <Form ref="formValidate2" :model="formValidate" :rules="ruleValidate" :label-width="100">
                 <FormItem label="原交易密码" prop="oldPassword">
                     <Input type="password" v-model="formValidate.oldPassword" style="width: 200px" placeholder=""></Input>
                 </FormItem>

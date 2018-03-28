@@ -34,7 +34,7 @@
                                    :page="pageObj"
                                    @changePage="changePage"
                         >
-                            <template slot="operations" scope="scope">
+                            <template slot="operations" slot-scope="scope">
                                 <!--<Button size="large" type="error" @click="edit(scope.item)">&nbsp;不通过&nbsp;</Button>-->
                                 <Button size="large" type="success" @click="doneSend(scope.item)">&nbsp;完成发货&nbsp;
                                 </Button>

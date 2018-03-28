@@ -44,7 +44,7 @@
             <!--<p><br></p>-->
             <div class="text-center">
                 <org-tree style="color: #fff;"
-                        :data="data"
+                        :data="data1"
                         :horizontal="horizontal"
                         :collapsable="collapsable"
                         :label-class-name="labelClassName"
@@ -55,7 +55,6 @@
                 </org-tree>
             </div>
         </div>
-        <button @click="addData">test</button>
     </div>
 </template>
 
@@ -71,6 +70,7 @@
         },
         data () {
             return {
+                data1: {},
                 data: {
                     id: 0,
                     label: '神话',

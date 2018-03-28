@@ -86,7 +86,6 @@
                 }
             },
             doUpdatePassword() {
-                console.log(this.password1);
                 this.doPost({
                     url: this.APIServer + '/goeIndexUserManagement/updateUserInfo',
                     params: {

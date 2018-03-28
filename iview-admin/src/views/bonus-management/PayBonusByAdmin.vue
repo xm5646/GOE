@@ -1,6 +1,20 @@
 <template>
     <div>
-        <h1>暂未开放</h1>
+
+        <Row :gutter="10">
+            <Col span="24">
+                <Card>
+                    <p slot="title">
+                        <Icon type="person-stalker"></Icon>
+                        手工分红
+                    </p>
+                    <Row>
+                        暂未开放
+                        <!--<organ-view></organ-view>-->
+                    </Row>
+                </Card>
+            </Col>
+        </Row>
     </div>
 </template>
 
