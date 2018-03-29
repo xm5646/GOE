@@ -253,6 +253,7 @@ public class ConsumerRecordController {
 							tRecord.setReceiveUserAccount(receiver.getAccount());
 							tRecord.setSendUserAccount(sender.getAccount());
 							tRecord.setTransferCoinNumber((long) consumeRecord.getConsumeNumber());
+							tRecord.setDescription(consumeRecord.getDescription());
 
 							return tRecord;
 						}
@@ -268,6 +269,7 @@ public class ConsumerRecordController {
 
 			return retMsg;
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new RuntimeException("查询失败");
 		}
 	}

@@ -5,6 +5,15 @@ public class TransferCoinRecord {
 	private String sendUserAccount;
 	private String receiveUserAccount;
 	private long transferCoinNumber;
+	private String description;
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 	public String getConsumeTime() {
 		return consumeTime;
