@@ -18,6 +18,8 @@
   "license": "MIT",
   "dependencies": {
     "area-data": "^1.0.0",
+    "array-find": "^1.0.0",
+    "array-map": "0.0.0",
     "axios": "^0.17.1",
     "clipboard": "^1.7.1",
     "countup": "^1.8.2",
@@ -37,7 +39,6 @@
     "vue-table2": "^1.0.4",
     "vue-virtual-scroller": "^0.10.6",
     "vuex": "^3.0.1",
-    "vux": "^2.8.1",
     "xlsx": "^0.11.17"
   },
   "devDependencies": {

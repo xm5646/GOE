@@ -56,7 +56,8 @@
 <script>
     import * as table from '../tables/data/search';
     import vueTable from 'vue-table2';
-    import {Value2nameFilter as value2name, ChinaAddressV4Data} from 'vux';
+    import value2name from '../../libs/value2name';
+    import ChinaAddressV4Data from '../../libs/china_address_v4.json';
     export default {
         name: 'searchable-table',
         components: {

@@ -5,6 +5,7 @@ import {appRouter} from './router/router';
 import VueResource from 'vue-resource';
 import store from './store';
 import App from './app.vue';
+import Cookies from 'js-cookie';
 import '@/locale';
 import 'iview/dist/styles/iview.css';
 import VueI18n from 'vue-i18n';
@@ -18,7 +19,7 @@ Vue.use(API);
 var useAuth = true;
 Vue.http.options.emulateJSON = true
 Vue.http.options.timeout = 5000
-Vue.prototype.APIServer = 'http://www.mythvip.top:8088'
+Vue.prototype.APIServer = 'http://www.mythvip.top/api'
 Vue.http.interceptors.push((request, next) => {
     // console.log('进入拦截器拦截方法')
     // Vue.$vux.loading.hide()
@@ -38,19 +39,22 @@ Vue.http.interceptors.push((request, next) => {
         }, 5000);
     }
     next((response) => {
-        // Vue.$vux.loading.hide()
         clearTimeout(timeout1)
         if (useAuth) {
             console.log('进入拦截器响应方法,输出获取的相应数据,读取cookie和header')
-            console.log('获取登陆状态:' + response.headers.get('loginstatus'))
-            if (!(response.headers.get('loginstatus') === 'true')) {
-                // Vue.$router.push({name: 'login'})
-                window.localStorage.clear()
-                window.location.href = 'http://www.mythvip.top/login'
-                response.abort();
+            console.log('获取登陆状态:' + response.headers.get('loginstatus'));
+            if (!(response.headers.get('loginStatus') === 'true')) {
+                window.localStorage.clear();
+                var keys = document.cookie.match(/[^ =;]+(?=\=)/g);
+                if (keys) {
+                    for (var i = keys.length; i--;) {
+                        document.cookie = keys[i] + '=0;expires=' + new Date(0).toUTCString();
+                    }
+                }
+                // Vue.$router.push({name: 'login'});
+                window.location.href = 'http://www.mythvip.top';
             } else {
                 console.log('已登录状态')
-                Vue.$vux.loading.hide()
                 console.log(response.body);
             }
         } else {
@@ -59,32 +63,14 @@ Vue.http.interceptors.push((request, next) => {
     });
 })
 
-// router.beforeEach(function (to, from, next) {
-//     console.log('from :' + from.name + ',to: ' + to.name)
-//     // var arr, reg = new RegExp('(^| )' + 'autoLogin' + '=([^;]*)(;|$)')
-//     //
-//     // if (arr = document.cookie.match(reg))
-//     //   return unescape(arr[2])
-//     // else
-//     //   return null
-//     // if (to.name === 'index' && (from.name === 'getCashOrderView')) {
-//     //   console.log('从获取提现记录到首页')
-//     //   router.push({name: 'index', params: {view: 'wallet'}})
-//     // }
-//     // if (to.name !== 'login') {
-//     //     if (window.localStorage.getItem('User') == null) {
-//     //         router.push({name: 'login'})
-//     //     }
-//     //     // if (to.name === 'index') {
-//     //     //   console.log('进入首页,来源网页:' + from.name)
-//     //     //   if (from.name === 'getCash') {
-//     //     //     console.log('返回钱包页面')
-//     //     //     router.push({name: 'index', params: {view: 'wallet'}})
-//     //     //   }
-//     //     // }
-//     // }
-//     next();
-// })
+router.beforeEach(function (to, from, next) {
+    if (to.name !== 'login') {
+        if (Cookies.get('autoLogin') === null) {
+            router.push({name: 'login'});
+        }
+    }
+    next();
+})
 
 new Vue({
     el: '#app',
@@ -94,7 +80,7 @@ new Vue({
     data: {
         currentPageName: ''
     },
-    mounted () {
+    mounted() {
         this.currentPageName = this.$route.name;
         // 显示打开的页面的列表
         this.$store.commit('setOpenedList');
@@ -104,7 +90,7 @@ new Vue({
         // iview-admin检查更新
         util.checkUpdate(this);
     },
-    created () {
+    created() {
         let tagsList = [];
         appRouter.map((item) => {
             if (item.children.length <= 1) {

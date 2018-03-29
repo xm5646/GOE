@@ -83,6 +83,7 @@ public class LoginFilterHandler implements HandlerInterceptor {
 		response.setHeader("loginStatus", "false");
 		response.setHeader( "Access-Control-Allow-Origin","*");
 		response.setHeader( "Access-Control-Allow-Methods","POST,GET" );
+		response.setHeader( "Access-Control-Expose-Headers", "loginStatus");
 		return false;
 	}
 
