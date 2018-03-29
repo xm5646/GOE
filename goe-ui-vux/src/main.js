@@ -48,7 +48,7 @@ Vue.http.interceptors.push((request, next) => {
     if (GoeConfig.useAuth) {
       console.log('进入拦截器响应方法,输出获取的相应数据,读取cookie和header')
       console.log('获取登陆状态:' + response.headers.get('loginstatus'))
-      if (!(response.headers.get('loginstatus') === 'true')) {
+      if (!(response.headers.get('loginStatus') === 'true')) {
         // Vue.$router.push({name: 'login'})
         window.localStorage.clear()
         window.location.href = 'http://xm.xmkkk023.cn/login'
