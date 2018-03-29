@@ -260,6 +260,7 @@ public class ConsumerRecordController {
 					});
 
 			RetMsg retMsg = new RetMsg();
+			
 			retMsg.setCode(200);
 			retMsg.setData(transferCoinRecordPage);
 			retMsg.setMessage("查询成功");
