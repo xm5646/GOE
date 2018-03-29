@@ -12,7 +12,7 @@
       <tbody>
       <tr v-for="row in rows">
         <td>{{row.sendUserAccount}}</td>
-        <td>{{row.transferCoinNumber.toFixed(0)}}</td>
+        <td>{{row.transferCoinNumber}}</td>
         <td>{{row.consumeTime}}</td>
         <td>{{row.receiveUserAccount}}</td>
       </tr>

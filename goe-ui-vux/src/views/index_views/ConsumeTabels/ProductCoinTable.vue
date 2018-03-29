@@ -10,8 +10,8 @@
       </thead>
       <tbody>
       <tr v-for="row in rows">
-        <td>{{row.consumeNumber.toFixed(0)}}</td>
-        <td>{{row.showPayTime}}</td>
+        <td>{{row.transferCoinNumber}}</td>
+        <td>{{row.consumeTime}}</td>
         <td>积分兑换</td>
       </tr>
       </tbody>
