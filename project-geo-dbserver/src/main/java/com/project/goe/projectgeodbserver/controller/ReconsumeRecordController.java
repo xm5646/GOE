@@ -148,7 +148,7 @@ public class ReconsumeRecordController {
 		consumeRecord.setUserId(user.getUserId());
 		consumeRecord.setConsumeTime(now);
 		consumeRecord.setConsumeType(ConsumeType.COIN_TRANSFER_RECONSUME);
-		consumeRecord.setUserId(user.getUserId());
+		consumeRecord.setSendUserId(user.getUserId());
 		consumeRecord.setReceiveUserId(this.userService.findByAccount("administrator").getUserId());
 		consumeRecord.setConsumeNumber(reConsumeCost);
 		consumeRecord.setConsumeStatus(false);
