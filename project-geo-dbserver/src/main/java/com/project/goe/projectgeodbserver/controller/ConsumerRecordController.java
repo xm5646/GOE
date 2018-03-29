@@ -263,6 +263,7 @@ public class ConsumerRecordController {
 			retMsg.setCode(200);
 			retMsg.setData(transferCoinRecordPage);
 			retMsg.setMessage("查询成功");
+			retMsg.setSuccess(true);
 
 			return retMsg;
 		} catch (Exception e) {

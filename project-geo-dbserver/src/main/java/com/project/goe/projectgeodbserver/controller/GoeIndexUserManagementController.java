@@ -25,11 +25,9 @@ import com.project.goe.projectgeodbserver.service.EarningService;
 import com.project.goe.projectgeodbserver.service.UserService;
 import com.project.goe.projectgeodbserver.util.EarningUtil;
 import com.project.goe.projectgeodbserver.util.MD5Util;
-import com.project.goe.projectgeodbserver.util.UserTreeUtil;
 import com.project.goe.projectgeodbserver.util.UserUtil;
 import com.project.goe.projectgeodbserver.viewentity.EarningVO;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
-import com.project.goe.projectgeodbserver.viewentity.UserNode;
 import com.project.goe.projectgeodbserver.viewentity.UserTypeQueryRequest;
 import com.project.goe.projectgeodbserver.viewentity.UserVO;
 
@@ -385,7 +383,7 @@ public class GoeIndexUserManagementController {
 		//获取用户id
 		long uId = user.getUserId();
 		
-		UserTreeUtil.traverse(uId, userList);
+		//UserTreeUtil.traverse(uId, userList);
 		System.out.println();
 		
 		return null;
