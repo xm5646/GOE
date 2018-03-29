@@ -74,15 +74,14 @@
           })
           .then(response => {
             console.log(response.body)
-            if (response.body.totalElements > 0) {
-              this.totalPageNum = response.body.totalPages
-              console.log(response.body.content)
-              const GetNumber = response.body.content.length
-              this.rows.splice(0, this.rows.length)
-              for (var i = 0; i < GetNumber; i++) {
-                response.body.content[i].showPayTime = this.getDateStr(response.body.content[i].consumeTime)
-                this.rows[i] = response.body.content[i]
-              }
+            if (response.body.success) {
+              this.rows = response.body.data.content
+              this.totalPageNum = response.body.data.totalPages
+            } else {
+              this.$vux.toast.show({
+                type: 'cancel',
+                text: response.body.message
+              })
             }
           }, responseErr => {
             this.$vux.toast.show({

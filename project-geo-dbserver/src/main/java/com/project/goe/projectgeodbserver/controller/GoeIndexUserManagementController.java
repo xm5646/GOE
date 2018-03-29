@@ -383,7 +383,6 @@ public class GoeIndexUserManagementController {
 		//获取用户id
 		long uId = user.getUserId();
 		
-		//UserTreeUtil.traverse(uId, userList);
 		System.out.println();
 		
 		return null;
