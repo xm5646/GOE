@@ -6,6 +6,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,10 +27,12 @@ import com.project.goe.projectgeodbserver.service.ConsumeRecordService;
 import com.project.goe.projectgeodbserver.service.UserService;
 import com.project.goe.projectgeodbserver.statusType.ConsumeType;
 import com.project.goe.projectgeodbserver.util.BonusPayPercentage;
+import com.project.goe.projectgeodbserver.util.DateFormatUtil;
 import com.project.goe.projectgeodbserver.util.MD5Util;
 import com.project.goe.projectgeodbserver.util.ValidateErrorUtil;
 import com.project.goe.projectgeodbserver.viewentity.ConsumeRecordRequest;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
+import com.project.goe.projectgeodbserver.viewentity.TransferCoinRecord;
 
 @CrossOrigin
 @RestController
@@ -48,7 +51,8 @@ public class ConsumerRecordController {
 	// 新增一条消费记录
 	@PostMapping("/save")
 	@Transactional
-	public RetMsg addOneConsumeRecord(@Validated ConsumeRecordRequest consumeRecordRequest,BindingResult bindingResult) {
+	public RetMsg addOneConsumeRecord(@Validated ConsumeRecordRequest consumeRecordRequest,
+			BindingResult bindingResult) {
 		// 如果数据校验有误，则直接返回校验错误信息
 		RetMsg retMsg = ValidateErrorUtil.getInstance().errorList(bindingResult);
 		if (null != retMsg)
@@ -94,18 +98,18 @@ public class ConsumerRecordController {
 		/********************* 更新用户表 ******************/
 		// 消费类型：公司转账报单币
 		if (consumeTypeCode == 1) {
-			if(!(sendUser.getAccount()).equals("administrator"))
+			if (!(sendUser.getAccount()).equals("administrator"))
 				throw new RuntimeException("支出方必须为公司账户");
-			
+
 			sendUser.setConsumeCoin(sendUser.getConsumeCoin() - consumeNumber);
 			receiveUser.setConsumeCoin(receiveUser.getConsumeCoin() + consumeNumber);
 			this.userService.save(receiveUser);
 			this.userService.save(sendUser);
 			// 消费类型：奖金转报单币
 		} else if (consumeTypeCode == 2) {
-			if(!sendUser.getAccount().equals(receiveUser.getAccount()))
+			if (!sendUser.getAccount().equals(receiveUser.getAccount()))
 				throw new RuntimeException("支出方和收入方必须为同一账户");
-			
+
 			double bonousCoin = receiveUser.getBonusCoin();
 			if (consumeNumber > bonousCoin)
 				throw new RuntimeException("奖金余额不足");
@@ -136,7 +140,7 @@ public class ConsumerRecordController {
 		consumeRecord.setConsumeNumber(consumeNumber);
 		consumeRecord.setConsumeStatus(true);
 		consumeRecord.setConsumeType(consumeType);
-		
+
 		if (consumeTypeCode == 3)
 			consumeRecord.setDescription(receiveUser.getAccount());
 		else {
@@ -163,54 +167,54 @@ public class ConsumerRecordController {
 	public List<ConsumeRecord> findByConsumeId(@RequestParam("consumeId") long consumeId) {
 		return this.consumeRecordService.findByConsumeId(consumeId);
 	}
-	
-	//基于用户id和消费类型，按时间降序排序分页查询
+
+	// 基于用户id和消费类型，按时间降序排序分页查询
 	@GetMapping("/findByAccountAndConsumeType")
-	public Page<ConsumeRecord> findByAccountAndConsumeType(@RequestParam("account") String account,
+	public RetMsg findByAccountAndConsumeType(@RequestParam("account") String account,
 			@RequestParam("consumeTypeCode") int consumeTypeCode,
 			@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
 			@RequestParam(value = "size", defaultValue = "10", required = false) int size,
 			@RequestParam(value = "keyword", required = false, defaultValue = "consumeTime") String keyword,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
-		if(null == account)
+		if (null == account)
 			throw new RuntimeException("用户名不能为空");
-		
+
 		User user = this.userService.findByAccount(account);
-		if(null == user)
+		if (null == user)
 			throw new RuntimeException("用户名不存在");
-		
+
 		ConsumeRecord consumeRecord = new ConsumeRecord();
 		consumeRecord.setUserId(user.getUserId());
 		consumeRecord.setSendUserId(user.getUserId());
 		consumeRecord.setReceiveUserId(user.getUserId());
-		
+
 		String consumeType = null;
-		
-		switch(consumeTypeCode) {
-			case 1: 
-				consumeType = ConsumeType.COMPANY_TRANSFER_CONIN;
-				break;
-			case 2:
-				consumeType = ConsumeType.BONUS_TRANSFER_CONIN;
-				break;
-			case 3:
-				consumeType = ConsumeType.COIN_TRANSFER_COIN;
-				break;
-			case 4:
-				consumeType = ConsumeType.COIN_TRANSFER_ADDCONSUMER;
-				break;
-			case 5:
-				consumeType = ConsumeType.PRODCUTCOIN_TRANSFER_PRODUCT;
-				break;
-			case 6:
-				consumeType = ConsumeType.COIN_TRANSFER_RECONSUME;
-				break;
-			default:
-				throw new RuntimeException("消费类型码有误");
+
+		switch (consumeTypeCode) {
+		case 1:
+			consumeType = ConsumeType.COMPANY_TRANSFER_CONIN;
+			break;
+		case 2:
+			consumeType = ConsumeType.BONUS_TRANSFER_CONIN;
+			break;
+		case 3:
+			consumeType = ConsumeType.COIN_TRANSFER_COIN;
+			break;
+		case 4:
+			consumeType = ConsumeType.COIN_TRANSFER_ADDCONSUMER;
+			break;
+		case 5:
+			consumeType = ConsumeType.PRODCUTCOIN_TRANSFER_PRODUCT;
+			break;
+		case 6:
+			consumeType = ConsumeType.COIN_TRANSFER_RECONSUME;
+			break;
+		default:
+			throw new RuntimeException("消费类型码有误");
 		}
-		
+
 		consumeRecord.setConsumeType(consumeType);
-		
+
 		try {
 			Sort sort = null;
 
@@ -220,13 +224,50 @@ public class ConsumerRecordController {
 				sort = new Sort(Direction.DESC, keyword);
 
 			Pageable pageable = new PageRequest(pageNum, size, sort);
-			if(3 == consumeTypeCode) {
-				return this.consumeRecordService.findByAccountAndConsumeType1(consumeRecord, pageable);
-			}else 
-				return this.consumeRecordService.findByAccountAndConsumeType(consumeRecord, pageable);
+
+			Page<ConsumeRecord> consumeRecordPage = null;
+
+			if (3 == consumeTypeCode) {
+				consumeRecordPage = this.consumeRecordService.findByAccountAndConsumeType1(consumeRecord, pageable);
+			} else
+				consumeRecordPage = this.consumeRecordService.findByAccountAndConsumeType(consumeRecord, pageable);
+
+			Page<TransferCoinRecord> transferCoinRecordPage = consumeRecordPage
+					.map(new Converter<ConsumeRecord, TransferCoinRecord>() {
+
+						@Override
+						public TransferCoinRecord convert(ConsumeRecord consumeRecord) {
+							long sendUserId = consumeRecord.getSendUserId();
+							long receiveUserId = consumeRecord.getReceiveUserId();
+
+							User sender = userService.findByUserId(sendUserId);
+							User receiver = userService.findByUserId(receiveUserId);
+							if (null == sender)
+								throw new RuntimeException("转账账号不存在");
+
+							if (null == receiver)
+								throw new RuntimeException("收账账号不存在");
+
+							TransferCoinRecord tRecord = new TransferCoinRecord();
+							tRecord.setConsumeTime(DateFormatUtil.DateObjectToString(consumeRecord.getConsumeTime()));
+							tRecord.setReceiveUserAccount(receiver.getAccount());
+							tRecord.setSendUserAccount(sender.getAccount());
+							tRecord.setTransferCoinNumber((long) consumeRecord.getConsumeNumber());
+
+							return tRecord;
+						}
+
+					});
+
+			RetMsg retMsg = new RetMsg();
+			retMsg.setCode(200);
+			retMsg.setData(transferCoinRecordPage);
+			retMsg.setMessage("查询成功");
+
+			return retMsg;
 		} catch (Exception e) {
 			throw new RuntimeException("查询失败");
 		}
 	}
-	
+
 }

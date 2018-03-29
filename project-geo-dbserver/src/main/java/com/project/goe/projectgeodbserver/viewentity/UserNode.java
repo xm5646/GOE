@@ -2,9 +2,27 @@ package com.project.goe.projectgeodbserver.viewentity;
 
 public class UserNode {
 	private String account;
+	private String userLevel;
 	private long departAcount;
 	private long departBcount;
 	private long departCcount;
+	private String parentAccount;
+
+	public String getParentAccount() {
+		return parentAccount;
+	}
+
+	public void setParentAccount(String parentAccount) {
+		this.parentAccount = parentAccount;
+	}
+
+	public String getUserLevel() {
+		return userLevel;
+	}
+
+	public void setUserLevel(String userLevel) {
+		this.userLevel = userLevel;
+	}
 
 	public String getAccount() {
 		return account;

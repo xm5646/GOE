@@ -1,5 +1,6 @@
 package com.project.goe.projectgeodbserver.util;
 
+import com.project.goe.projectgeodbserver.entity.Performance;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.statusType.UserLevel;
 import com.project.goe.projectgeodbserver.statusType.UserType;
@@ -103,12 +104,18 @@ public class UserUtil {
 		return u;
 	}
 	
-	public static UserNode UserToUserNode(User user) {
+	public static UserNode UserToUserNode(User user,User parentUser,Performance performance) {
 		UserNode userNode = new UserNode();
 		userNode.setAccount(user.getAccount());
-		userNode.setDepartAcount(user.getDepartmentA());
-		userNode.setDepartBcount(user.getDepartmentB());
-		userNode.setDepartCcount(user.getDepartmentC());
+		userNode.setDepartAcount(performance.getDepartAcount());
+		userNode.setDepartBcount(performance.getDepartBcount());
+		userNode.setDepartCcount(performance.getDepartCcount());
+		userNode.setUserLevel(UserLevelUtil.transfer(user.getUserLevel()));
+		
+		if(null == parentUser)
+			userNode.setParentAccount(null);
+		else
+			userNode.setParentAccount(parentUser.getAccount());
 		
 		return userNode;
 	}
