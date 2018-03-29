@@ -79,8 +79,10 @@ public class ConsumeRecordService {
 			public Predicate toPredicate(Root<ConsumeRecord> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				Predicate p1 = cb.equal(root.get("sendUserId").as(long.class), consumeRecord.getUserId());
 				Predicate p2 = cb.equal(root.get("receiveUserId").as(long.class),consumeRecord.getReceiveUserId());
-				Predicate p3 = cb.equal(root.get("consumeType").as(String.class), consumeRecord.getConsumeType());
-				query.where(cb.and(p3,cb.or(p1,p2)));
+				Predicate p3 = cb.equal(root.get("consumeType").as(String.class), ConsumeType.COIN_TRANSFER_COIN);
+				Predicate p4 = cb.equal(root.get("consumeType").as(String.class), ConsumeType.COMPANY_TRANSFER_CONIN);
+				
+				query.where(cb.and(cb.or(p3,p4),cb.or(p1,p2)));
 
 				return query.getRestriction();
 			}
