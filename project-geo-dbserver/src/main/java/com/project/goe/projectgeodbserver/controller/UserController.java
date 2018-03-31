@@ -9,11 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,12 +20,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.goe.projectgeodbserver.entity.BonusPayList;
 import com.project.goe.projectgeodbserver.entity.ConsumeRecord;
 import com.project.goe.projectgeodbserver.entity.Performance;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.server.EarnServerSchedul;
-import com.project.goe.projectgeodbserver.service.BonusPayListService;
 import com.project.goe.projectgeodbserver.service.ConsumeRecordService;
 import com.project.goe.projectgeodbserver.service.PerformanceService;
 import com.project.goe.projectgeodbserver.service.UserService;
@@ -41,8 +34,6 @@ import com.project.goe.projectgeodbserver.util.BonusPayPercentage;
 import com.project.goe.projectgeodbserver.util.BusinessUtil;
 import com.project.goe.projectgeodbserver.util.MD5Util;
 import com.project.goe.projectgeodbserver.util.UserLoginSetting;
-import com.project.goe.projectgeodbserver.viewentity.ChargeBonusAndProductCoin;
-import com.project.goe.projectgeodbserver.viewentity.ChargeConsumeCoin;
 import com.project.goe.projectgeodbserver.viewentity.PerformanceLevel;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
 import com.project.goe.projectgeodbserver.viewentity.UpdatePaymentPasswordRequest;
@@ -70,9 +61,6 @@ public class UserController {
 
 	@Autowired
 	private ConsumeRecordService consumeRecordService;
-
-	@Autowired
-	private BonusPayListService bonusPayListService;
 
 	// 将业务全部移动到调度服务上
 	@Autowired
@@ -149,10 +137,8 @@ public class UserController {
 		try {
 			earnServerSchedul.mainTest(pid, weight);
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -210,12 +196,23 @@ public class UserController {
 		if (!(MD5Util.encrypeByMd5(password).equals(user.getPassword()))) {
 			throw new RuntimeException("用户密码输入有误");
 		}
-
+		
+		retMsg = new RetMsg();
+		//验证用户是否需要重置密码
+		if(!user.isPasswordReset()) {
+			retMsg.setCode(200);
+			retMsg.setSuccess(true);
+			retMsg.setData(user.isPasswordReset());
+			retMsg.setMessage("用户重置密码");
+			
+			return retMsg;
+		}
+		
 		// 设置cookie
 		setUserLoginCookie(user, request, response);
 		response.setHeader("loginStatus", "true");
 
-		retMsg = new RetMsg();
+		
 
 		retMsg.setCode(200);
 		retMsg.setSuccess(true);
