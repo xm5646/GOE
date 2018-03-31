@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -73,7 +74,7 @@ public class UserController {
 	@PostMapping("/updateLoginPassword")
 	@Transactional
 	public RetMsg updatePassword(@Validated UserLoginPasswordUpdateRequest userPasswordUpdateRequest,
-			BindingResult bindingResult) {
+			BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response) {
 		// 如果数据校验有误，则直接返回校验错误信息
 		RetMsg retMsg = ValidateErrorUtil.getInstance().errorList(bindingResult);
 		if (null != retMsg)
@@ -95,6 +96,9 @@ public class UserController {
 
 		user.setPassword(MD5Util.encrypeByMd5(newPassword));
 		this.userService.save(user);
+
+		setUserLoginCookie(user, request, response);
+		response.setHeader("loginStatus", "true");
 
 		retMsg = new RetMsg();
 		retMsg.setCode(200);
@@ -196,23 +200,21 @@ public class UserController {
 		if (!(MD5Util.encrypeByMd5(password).equals(user.getPassword()))) {
 			throw new RuntimeException("用户密码输入有误");
 		}
-		
-		retMsg = new RetMsg();
-		//验证用户是否需要重置密码
-		if(!user.isPasswordReset()) {
-			retMsg.setCode(200);
-			retMsg.setSuccess(true);
-			retMsg.setData(UserUtil.UserToUserVO(user));
-			retMsg.setMessage("用户重置密码");
-			
-			return retMsg;
-		}
-		
+
 		// 设置cookie
 		setUserLoginCookie(user, request, response);
 		response.setHeader("loginStatus", "true");
 
-		
+		retMsg = new RetMsg();
+		// 验证用户是否需要重置密码
+		if (!user.isPasswordReset()) {
+			retMsg.setCode(200);
+			retMsg.setSuccess(true);
+			retMsg.setData(UserUtil.UserToUserVO(user));
+			retMsg.setMessage("用户重置密码");
+
+			return retMsg;
+		}
 
 		retMsg.setCode(200);
 		retMsg.setSuccess(true);
@@ -243,8 +245,8 @@ public class UserController {
 	 */
 	@PostMapping("/initUserInfo")
 	@Transactional
-	public RetMsg initUserInfo(@Validated UserLoginSettingRequest userLoginSettingRequest,
-			BindingResult bindingResult) {
+	public RetMsg initUserInfo(@Validated UserLoginSettingRequest userLoginSettingRequest, BindingResult bindingResult,
+			HttpServletRequest request, HttpServletResponse response) {
 		String account = userLoginSettingRequest.getAccount();
 		String newPassword = userLoginSettingRequest.getNewPassword();
 		String paymentPassword = userLoginSettingRequest.getPaymentPassword();
@@ -270,6 +272,10 @@ public class UserController {
 
 		// 更新用户信息
 		this.userService.save(user);
+
+		// 设置cookie
+		setUserLoginCookie(user, request, response);
+		response.setHeader("loginStatus", "true");
 
 		retMsg = new RetMsg();
 		retMsg.setCode(200);
