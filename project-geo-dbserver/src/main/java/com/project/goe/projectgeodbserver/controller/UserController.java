@@ -202,7 +202,7 @@ public class UserController {
 		if(!user.isPasswordReset()) {
 			retMsg.setCode(200);
 			retMsg.setSuccess(true);
-			retMsg.setData(user.isPasswordReset());
+			retMsg.setData(UserUtil.UserToUserVO(user));
 			retMsg.setMessage("用户重置密码");
 			
 			return retMsg;
