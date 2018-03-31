@@ -49,10 +49,12 @@ Vue.http.interceptors.push((request, next) => {
       console.log('进入拦截器响应方法,输出获取的相应数据,读取cookie和header')
       console.log('获取登陆状态:' + response.headers.get('loginstatus'))
       if (!(response.headers.get('loginStatus') === 'true')) {
-        // Vue.$router.push({name: 'login'})
         window.localStorage.clear()
-        window.location.href = 'http://xm.xmkkk023.cn/login'
-        response.abort()
+        if (request.url === 'http://xm.xmkkk023.cn/api/user/login') {
+          console.log('登陆页面,不进行刷新')
+        } else {
+          window.location.href = 'http://xm.xmkkk023.cn/login'
+        }
       } else {
         console.log('已登录状态')
         Vue.$vux.loading.hide()

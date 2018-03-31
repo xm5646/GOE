@@ -16,11 +16,11 @@ Vue.use(VueI18n);
 Vue.use(iView);
 Vue.use(VueResource);
 Vue.use(API);
-var useAuth = false;
+var useAuth = true;
 Vue.http.options.emulateJSON = true
 Vue.http.options.timeout = 5000
-// Vue.prototype.APIServer = 'http://www.mythvip.top/api'
-Vue.prototype.APIServer = 'http://localhost:8088'
+Vue.prototype.APIServer = 'http://www.mythvip.top/api'
+// Vue.prototype.APIServer = 'http://localhost:8088'
 Vue.http.interceptors.push((request, next) => {
     // console.log('进入拦截器拦截方法')
     // Vue.$vux.loading.hide()
@@ -52,8 +52,11 @@ Vue.http.interceptors.push((request, next) => {
                         document.cookie = keys[i] + '=0;expires=' + new Date(0).toUTCString();
                     }
                 }
-                // Vue.$router.push({name: 'login'});
-                window.location.href = 'http://www.mythvip.top';
+                if (request.url === 'http://www.mythvip.top/api/user/login') {
+                    console.log('登陆页面不进行跳转');
+                } else {
+                    window.location.href = 'http://www.mythvip.top/';
+                }
             } else {
                 console.log('已登录状态')
                 console.log(response.body);

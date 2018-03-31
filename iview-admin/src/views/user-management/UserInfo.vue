@@ -220,7 +220,7 @@
             handleSearch3() {
                 this.userList = [];
                 if (this.searchNickName === '') {
-                    this.getAllListByPage(0);
+                    this.getAllUserListByPage(0);
                 } else {
                     this.doGet({
                         url: this.APIServer + '/goeIndexUserManagement/findUsersByNickNameOrAccountLike?type=nickName&value=' + this.searchNickName
@@ -242,7 +242,7 @@
             handleSearch2() {
                 this.userList = [];
                 if (this.searchAccount === '') {
-                    this.getAllListByPage(0);
+                    this.getAllUserListByPage(0);
                 } else {
                     this.doGet({
                         url: this.APIServer + '/goeIndexUserManagement/findUsersByNickNameOrAccountLike?type=account&value=' + this.searchAccount
