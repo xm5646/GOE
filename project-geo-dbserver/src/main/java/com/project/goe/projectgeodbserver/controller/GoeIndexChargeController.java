@@ -15,6 +15,7 @@ import com.project.goe.projectgeodbserver.service.BonusPayListService;
 import com.project.goe.projectgeodbserver.service.ConsumeRecordService;
 import com.project.goe.projectgeodbserver.service.UserService;
 import com.project.goe.projectgeodbserver.statusType.ConsumeType;
+import com.project.goe.projectgeodbserver.statusType.TouchType;
 import com.project.goe.projectgeodbserver.util.MD5Util;
 import com.project.goe.projectgeodbserver.util.MathUtil;
 import com.project.goe.projectgeodbserver.viewentity.ChargeBonusAndProductCoin;
@@ -138,6 +139,7 @@ public class GoeIndexChargeController {
 			bonusPayList.setManageCost(0f);
 			bonusPayList.setPayTime(date);
 			bonusPayList.setProductCoinNumber(productCoin);
+			bonusPayList.setTouchType(TouchType.MANUAL);
 			
 			if(0 != bonus)
 				bonusPayList.setTotalMoney(bonus);

@@ -37,5 +37,5 @@ bonus:
 
 login: 
   expireTime: 30
-  useInterceptor: true
+  useInterceptor: false
 

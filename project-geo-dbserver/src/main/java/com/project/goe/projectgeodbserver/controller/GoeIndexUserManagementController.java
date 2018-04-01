@@ -1,6 +1,7 @@
 package com.project.goe.projectgeodbserver.controller;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +19,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.goe.projectgeodbserver.entity.Earning;
+import com.project.goe.projectgeodbserver.entity.Performance;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.service.BonusPayListService;
 import com.project.goe.projectgeodbserver.service.ConsumeRecordService;
 import com.project.goe.projectgeodbserver.service.EarningService;
+import com.project.goe.projectgeodbserver.service.PerformanceService;
 import com.project.goe.projectgeodbserver.service.UserService;
 import com.project.goe.projectgeodbserver.util.EarningUtil;
 import com.project.goe.projectgeodbserver.util.MD5Util;
+import com.project.goe.projectgeodbserver.util.PerformanceUtil;
 import com.project.goe.projectgeodbserver.util.UserUtil;
 import com.project.goe.projectgeodbserver.viewentity.EarningVO;
 import com.project.goe.projectgeodbserver.viewentity.RetMsg;
+import com.project.goe.projectgeodbserver.viewentity.UserNode;
 import com.project.goe.projectgeodbserver.viewentity.UserTypeQueryRequest;
 import com.project.goe.projectgeodbserver.viewentity.UserVO;
 
@@ -46,6 +51,9 @@ public class GoeIndexUserManagementController {
 
 	@Autowired
 	private BonusPayListService bonusPayListService;
+	
+	@Autowired
+	private PerformanceService performanceService;
 
 	/**************** 用户信息管理 *****************/
 	// 按createTime，分页查询所有用户信息
@@ -370,22 +378,91 @@ public class GoeIndexUserManagementController {
 
 	/******************** 用户层级 ******************************/
 	@GetMapping("/userLevelInfo")
-	public RetMsg userLevelInfo(@RequestParam("account") String account,
-			@RequestParam(value = "level", defaultValue = "3", required = false) int level) {
-		//获取所有用户列表
-		List<User> userList = this.userService.findAll();
+	public RetMsg userLevelInfo(@RequestParam("account") String account) {
+		//父节点的基本信息和业绩信息
+		User pUser = this.userService.findByAccount(account);
+		if(null == pUser)
+			throw new RuntimeException("父节点不存在");
 		
-		//获取当前用户
-		User user = this.userService.findByAccount(account);
-		if(null == user)
-			throw new RuntimeException("当前用户不存在");
+		Performance pPerformamce = this.performanceService.findByUserId(pUser.getUserId());
+		if(null == pPerformamce)
+			throw new RuntimeException("父节点业绩信息不存在");
 		
-		//获取用户id
-		long uId = user.getUserId();
+		UserNode userNode = new UserNode();
+		userNode.setUserVO(UserUtil.UserToUserVO(pUser));
+		userNode.setPerformanceVO(PerformanceUtil.pToPerformanceVO(pPerformamce));
+		List<UserNode> childNodeList = new ArrayList<UserNode>();
 		
-		System.out.println();
+		long childId1 = pUser.getDepartmentA();
+		long childId2 = pUser.getDepartmentB();
+		long childId3 = pUser.getDepartmentC();
 		
-		return null;
+		User cUser1 = null;
+		User cUser2 = null;
+		User cUser3 = null;
+		
+		if(0 != childId1) {
+			cUser1 = this.userService.findByUserId(childId1);
+			if(null == cUser1)
+				throw new RuntimeException("子节点不存在");
+			
+			Performance cp1 = this.performanceService.findByUserId(cUser1.getUserId());
+			if(null == cp1) {
+				throw new RuntimeException("子节点业绩信息不存在");
+			}
+			
+			UserNode cUserNode = new UserNode();
+			cUserNode.setUserVO(UserUtil.UserToUserVO(cUser1));
+			cUserNode.setPerformanceVO(PerformanceUtil.pToPerformanceVO(cp1));
+			cUserNode.setChildNodeList(null);
+			
+			childNodeList.add(cUserNode);
+		}
+		
+		if(0 != childId2) {
+			cUser2 = this.userService.findByUserId(childId2);
+			if(null == cUser2)
+				throw new RuntimeException("用户不存在");
+			
+			Performance cp2 = this.performanceService.findByUserId(cUser2.getUserId());
+			if(null == cp2)
+				throw new RuntimeException("用户业绩信息不存在");
+			
+			UserNode cUserNode = new UserNode();
+			cUserNode.setUserVO(UserUtil.UserToUserVO(cUser2));
+			cUserNode.setPerformanceVO(PerformanceUtil.pToPerformanceVO(cp2));
+			cUserNode.setChildNodeList(null);
+			
+			childNodeList.add(cUserNode);
+		}
+		
+		if(0 != childId3) {
+			cUser3 = this.userService.findByUserId(childId3);
+			if(null == cUser3)
+				throw new RuntimeException("用户不存在");
+			
+			Performance cp3 = this.performanceService.findByUserId(cUser3.getUserId());
+			if(null == cp3)
+				throw new RuntimeException("用户业绩信息不存在");
+			
+			UserNode cUserNode = new UserNode();
+			cUserNode.setUserVO(UserUtil.UserToUserVO(cUser3));
+			cUserNode.setPerformanceVO(PerformanceUtil.pToPerformanceVO(cp3));
+			cUserNode.setChildNodeList(null);
+			
+			childNodeList.add(cUserNode);
+		}
+		
+		userNode.setChildNodeList(childNodeList);
+		RetMsg retMsg = new RetMsg();
+		retMsg.setCode(200);
+		retMsg.setSuccess(true);
+		retMsg.setMessage("二层用户节点显示");
+		retMsg.setData(userNode);
+		
+		return retMsg;
 	}
+	
+		
 
 }
