@@ -8,6 +8,15 @@ public class BonusVO {
 	private long productCoinNumber;
 	private String payTime;
 	private String createTime;
+	private String touchType;
+
+	public String getTouchType() {
+		return touchType;
+	}
+
+	public void setTouchType(String touchType) {
+		this.touchType = touchType;
+	}
 
 	public String getAccount() {
 		return account;

@@ -58,7 +58,7 @@ public class BonusPayListController {
 					long userId = bonusPayList.getUserId();
 					User user = userService.findByUserId(userId);
 					bonusPayList.setAccount(user.getAccount());
-					
+
 					return BonusUtil.bonusToBonusVO(bonusPayList);
 				}
 				

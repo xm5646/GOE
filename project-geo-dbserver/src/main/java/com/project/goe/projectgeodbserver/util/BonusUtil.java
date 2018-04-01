@@ -17,6 +17,7 @@ public class BonusUtil {
 		bonusVO.setPayTime(DateFormatUtil.DateObjectToString(bonusPayList.getPayTime()));
 		bonusVO.setProductCoinNumber(MathUtil.floor(bonusPayList.getProductCoinNumber()));
 		bonusVO.setTotalMoney(MathUtil.floor(bonusPayList.getTotalMoney()));
+		bonusVO.setTouchType(bonusPayList.getTouchType());
 		
 		return bonusVO;
 	}

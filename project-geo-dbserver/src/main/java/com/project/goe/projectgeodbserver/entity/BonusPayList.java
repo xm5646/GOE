@@ -26,6 +26,9 @@ public class BonusPayList {
 	@Column(nullable = false)
 	private long userId;
 
+	@Column
+	private String touchType;
+
 	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date payTime;
@@ -51,6 +54,14 @@ public class BonusPayList {
 
 	@Transient
 	private String account;
+
+	public String getTouchType() {
+		return touchType;
+	}
+
+	public void setTouchType(String touchType) {
+		this.touchType = touchType;
+	}
 
 	public String getAccount() {
 		return account;
