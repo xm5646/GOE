@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/goe?characterEncoding=utf8&useSSL=false
     username: root
-    password: 123456
+    password: clmAdm1n
     driver-class-name: com.mysql.jdbc.Driver
     tomcat:
       max-active: 20
@@ -37,5 +37,5 @@ bonus:
 
 login: 
   expireTime: 30
-  useInterceptor: false
+  useInterceptor: true
 

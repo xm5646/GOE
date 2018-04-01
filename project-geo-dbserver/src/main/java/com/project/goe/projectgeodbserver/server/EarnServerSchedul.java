@@ -37,33 +37,34 @@ import com.project.goe.projectgeodbserver.util.UserUtil;
 
 @Service
 public class EarnServerSchedul {
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private PerformanceService performanceService;
-	
+
 	@Autowired
 	private UserCreateRecordService userCreateRecordService;
-	
+
 	@Autowired
 	private EarningService earningService;
-	
+
 	@Autowired
 	private BonusPayListService bonusPayListService;
-	
+
 	@Autowired
 	private ReconsumeRecordService reconsumeRecordService;
-	
+
 	/**
 	 * 传递
+	 * 
 	 * @param parentId
 	 * @param type
 	 * @param newuser
 	 * @return
 	 */
-	public String mainUpdateUser(Long parentId,String type,User newuser) {
+	public String mainUpdateUser(Long parentId, String type, User newuser) {
 		User puser = userService.getUserById(parentId);
 		if (puser != null) {
 			if ("A".equals(type)) {
@@ -78,7 +79,7 @@ public class EarnServerSchedul {
 				} else {
 					saveuser(newuser, puser, type);
 				}
-			}else if ("C".equals(type)) {
+			} else if ("C".equals(type)) {
 				if (puser.getDepartmentC() != 0) {
 					return "B的下级节点已存在";
 				} else {
@@ -88,26 +89,26 @@ public class EarnServerSchedul {
 		}
 		return "测试数据插入成功";
 	}
-	
+
 	@Transactional
-	public void mainTest(long parentid,long count) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		if (parentid!=0 && count!=0) {
+	public void mainTest(long parentid, long count) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		if (parentid != 0 && count != 0) {
 			User puser = userService.findByUserId(parentid);
 			mainUpdatePerformance(puser.getUserId());
-			Map<Long,Boolean> map = new HashMap<Long,Boolean>();
+			Map<Long, Boolean> map = new HashMap<Long, Boolean>();
 			map.put(puser.getUserId(), false);
 			Iterable<Long> mapkey = map.keySet();
-			Map<Long,Boolean> mapnew = new HashMap<Long,Boolean>();
-//			testsave(newuser.getUserId(), map);
+			Map<Long, Boolean> mapnew = new HashMap<Long, Boolean>();
+			// testsave(newuser.getUserId(), map);
 			for (int i = 0; i < count; i++) {
 				for (Long userid : mapkey) {
 					if (!map.get(userid)) {
-						testsave(userid, map,mapnew,count);
+						testsave(userid, map, mapnew, count);
 					}
 				}
 				map.putAll(mapnew);
 			}
-		}else {
+		} else {
 			User newuser = UserUtil.getTestUser();
 			newuser.setAccount("admin");
 			newuser.setPassword(MD5Util.encrypeByMd5("123456"));
@@ -115,30 +116,29 @@ public class EarnServerSchedul {
 			userService.save(newuser);
 			savePer(newuser.getUserId());
 			mainUpdatePerformance(newuser.getUserId());
-			Map<Long,Boolean> map = new HashMap<Long,Boolean>();
+			Map<Long, Boolean> map = new HashMap<Long, Boolean>();
 			map.put(newuser.getUserId(), false);
 			Iterable<Long> mapkey = map.keySet();
-			Map<Long,Boolean> mapnew = new HashMap<Long,Boolean>();
-//			testsave(newuser.getUserId(), map);
+			Map<Long, Boolean> mapnew = new HashMap<Long, Boolean>();
+			// testsave(newuser.getUserId(), map);
 			for (int i = 0; i < 1; i++) {
 				for (Long userid : mapkey) {
 					if (!map.get(userid)) {
-						testsave(userid, map,mapnew,count);
+						testsave(userid, map, mapnew, count);
 					}
 				}
 				map.putAll(mapnew);
 			}
 		}
 	}
-	
-	
-	private void testsave(Long puserid,Map<Long,Boolean> map,Map<Long,Boolean> mapnew,long count) {
+
+	private void testsave(Long puserid, Map<Long, Boolean> map, Map<Long, Boolean> mapnew, long count) {
 		User newuserA = UserUtil.getTestUser();
 		User newuserB = UserUtil.getTestUser();
 
 		User pwd = userService.getUserById(puserid);
-		if (pwd!=null) {
-			if (pwd.getWeightCode()==1) {
+		if (pwd != null) {
+			if (pwd.getWeightCode() == 1) {
 				User newuserC = UserUtil.getTestUser();
 				String c = mainUpdateUser(puserid, "C", newuserC);
 				if ("测试数据插入成功".equals(c)) {
@@ -159,47 +159,48 @@ public class EarnServerSchedul {
 		}
 		map.put(puserid, true);
 	}
-	
+
 	/**
 	 * 更新收益表 传递新创建的用户ID
+	 * 
 	 * @param createId
 	 * @return
 	 */
 	public String mainUpdatePerformance(Long createId) {
-		//创建用户更新业绩表，记录是否更新业绩数据，如果没有更新数据更新业绩表并记录业绩表更新状态
-		UserCreatereRecord ucr  = saveUserCreateEntity(createId);
-		if (ucr!=null && !ucr.isStatus()) {
-			//在更新业绩的时候判断是否触发新增或者累计收益
+		// 创建用户更新业绩表，记录是否更新业绩数据，如果没有更新数据更新业绩表并记录业绩表更新状态
+		UserCreatereRecord ucr = saveUserCreateEntity(createId);
+		if (ucr != null && !ucr.isStatus()) {
+			// 在更新业绩的时候判断是否触发新增或者累计收益
 			updateUserPerformance(createId);
 			ucr.setStatus(true);
 			userCreateRecordService.save(ucr);
-		}else {
+		} else {
 			return "此用户已更新过业绩";
 		}
 		return "更新用户业绩成功";
 	}
-	
+
 	/**
 	 * 每天计算收益
 	 */
 	@Transactional
 	public void mainComperBonuspaylist() {
-		//取得所有收益表和用户表数据
+		// 取得所有收益表和用户表数据
 		Iterable<User> userlist = this.userService.getAll();
-		//这里面的数据要根据当期未过期的时间数据
+		// 这里面的数据要根据当期未过期的时间数据
 		Iterable<Earning> earns = earningService.getAll();
-		
-//		Map<Long,User> userMap = new HashMap<Long,User>();
-		Map<Long,Earning> earnsMap = new HashMap<Long,Earning>();
-		
-		//这里由于时间关系不操作数据库了，直接代码实现时间的处理
+
+		// Map<Long,User> userMap = new HashMap<Long,User>();
+		Map<Long, Earning> earnsMap = new HashMap<Long, Earning>();
+
+		// 这里由于时间关系不操作数据库了，直接代码实现时间的处理
 		conductEarnTime(earns, earnsMap);
-		
+
 		List<BonusPayList> buslist = new ArrayList<BonusPayList>();
 		List<User> userupdate = new ArrayList<User>();
 		for (User user : userlist) {
 			// userMap.put(user.getUserId(), user);
-			if (updateComperBonuspayForEarning(earnsMap.get(user.getUserId()))) {
+			if (user!=null && user.isAssessStatus() && updateComperBonuspayForEarning(earnsMap.get(user.getUserId()))) {
 				BonusPayList bus = CheckUtil.sendBonusPaylist(user, earnsMap.get(user.getUserId()));
 				if (bus != null) {
 					buslist.add(bus);
@@ -210,32 +211,32 @@ public class EarnServerSchedul {
 		bonusPayListService.saveAll(buslist);
 		userService.saveAll(userupdate);
 	}
-	
+
 	/**
 	 * 每天定时检查考核状态
 	 */
 	public void mainAssessInspect() {
-		//检查每个用户的考核时间是否是考核日
-		//如果为考核日，查看消费记录表是否有重销 考核日期加30天
-		//有考核状态为true，没有考核状态为false
+		// 检查每个用户的考核时间是否是考核日
+		// 如果为考核日，查看消费记录表是否有重销 考核日期加30天
+		// 有考核状态为true，没有考核状态为false
 		Iterable<User> userlist = this.userService.getAll();
-		if (userlist!=null) {
+		if (userlist != null) {
 			for (User user : userlist) {
-				if (user!=null) {
-					//默认在考核的下一天执行,如果前一天是考核时间则更新考核状态和考核时间
-					boolean issame = TimeUtil.getTimeSameDay(user.getAssessDate(), TimeUtil.addDay(new Date(),-1));
-					//需要判断考核
+				if (user != null) {
+					// 默认在考核的下一天执行,如果前一天是考核时间则更新考核状态和考核时间
+					boolean issame = TimeUtil.getTimeSameDay(user.getAssessDate(), TimeUtil.addDay(new Date(), -1));
+					// 需要判断考核
 					if (issame) {
-						user.setAssessDate(TimeUtil.addDay(user.getAssessDate(),30));
-						List<ReconsumeRecord> rrlist = reconsumeRecordService.findByUserId(user.getUserId()); 
+						user.setAssessDate(TimeUtil.addDay(user.getAssessDate(), 30));
+						List<ReconsumeRecord> rrlist = reconsumeRecordService.findByUserId(user.getUserId());
 						boolean isassess = false;
-						for (ReconsumeRecord r:rrlist) {
-							if (TimeUtil.getTimeSameDay(r.getCreateTime(), TimeUtil.addDay(new Date(),-1))) {
+						for (ReconsumeRecord r : rrlist) {
+							if (TimeUtil.getTimeSameDay(r.getCreateTime(), TimeUtil.addDay(new Date(), -1))) {
 								isassess = true;
 							}
 						}
-						user.setAssessStatus(isassess); //or set assessStatus ture;
-						Performance p =performanceService.findByUserId(user.getUserId());
+						user.setAssessStatus(isassess); // or set assessStatus ture;
+						Performance p = performanceService.findByUserId(user.getUserId());
 						p.setAddDepartAcount(0);
 						p.setAddDepartBcount(0);
 						p.setAddDepartCcount(0);
@@ -246,110 +247,123 @@ public class EarnServerSchedul {
 			}
 		}
 	}
-	
-	private void conductEarnTime(Iterable<Earning> earns,Map<Long,Earning> earnsMap) {
+
+	private void conductEarnTime(Iterable<Earning> earns, Map<Long, Earning> earnsMap) {
 		for (Earning earn : earns) {
 			Earning em = earnsMap.get(earn.getUserid());
-			if (em!=null) {
-				//得到可用使用的业绩对象
+			if (em != null) {
+				// 得到可用使用的业绩对象
 				Earning eu = getUsedEarning(earn, em);
-				if (eu!=null) {
+				if (eu != null) {
 					earnsMap.put(eu.getUserid(), eu);
 				}
-				
-			}else {
+
+			} else {
 				if (TouchType.ADDITION.equals(earn.getTouchType())) {
-					if (earn.getEndTime()!=null && earn.getEndTime().after(new Date())) {
+					if (earn.getEndTime() != null && earn.getEndTime().after(new Date())) {
 						earnsMap.put(earn.getUserid(), earn);
 					}
-				}else {
-					if (earn.getSurplusNumber()>0) {
-						earnsMap.put(earn.getUserid(), earn);
-					}
+				} else {
+					// if (earn.getSurplusNumber() > 0) {
+					earnsMap.put(earn.getUserid(), earn);
+					// }
 				}
 			}
 		}
 	}
-	
-	//得到可用Earning对象
-	//这里是复杂的业务逻辑
-	private Earning getUsedEarning(Earning earn,Earning em) {
-		//earn 是新要插入的数据 em是已经插入MAP的数据
-		//如果存在userID对应的业绩对象，比较用户级别
-		if (TouchType.ADDITION.equals(earn.getTouchType()) && TouchType.ADDITION.equals(em.getTouchType())) {
-			//新增 判断结束时间是不是已经结束
-			if (earn.getEndTime()!=null && earn.getEndTime().after(new Date())) {
-				return BusinessUtil.isBigBus(earn, em);
-			}
-		}else if (TouchType.ADDITION.equals(earn.getTouchType()) && TouchType.ACCUMULATION.equals(em.getTouchType())) {
-			//新增 return null 或者return em都可以，但是em 已经在map中，直接是替换了
-			return null;
-		}else if (TouchType.ACCUMULATION.equals(earn.getTouchType()) && TouchType.ADDITION.equals(em.getTouchType())) {
-			//累计
-			if (earn.getSurplusNumber()>0) {
-				return earn;
-			}
-		}else if (TouchType.ACCUMULATION.equals(earn.getTouchType()) && TouchType.ACCUMULATION.equals(em.getTouchType())) {
-			//累计
-			if (earn.getSurplusNumber()>0) {
-				return BusinessUtil.isBigBus(earn, em);
-			}
+
+	// 得到可用Earning对象
+	// 这里是复杂的业务逻辑
+	private Earning getUsedEarning(Earning earn, Earning em) {
+		// earn 是新要插入的数据 em是已经插入MAP的数据
+		// 如果存在userID对应的业绩对象，比较用户级别
+		// if (TouchType.ADDITION.equals(earn.getTouchType()) &&
+		// TouchType.ADDITION.equals(em.getTouchType())) {
+		// //新增 判断结束时间是不是已经结束
+		// if (earn.getEndTime()!=null && earn.getEndTime().after(new Date())) {
+		// return BusinessUtil.isBigBus(earn, em);
+		// }
+		// }else if (TouchType.ADDITION.equals(earn.getTouchType()) &&
+		// TouchType.ACCUMULATION.equals(em.getTouchType())) {
+		// //新增 return null 或者return em都可以，但是em 已经在map中，直接是替换了
+		// return null;
+		// }else if (TouchType.ACCUMULATION.equals(earn.getTouchType()) &&
+		// TouchType.ADDITION.equals(em.getTouchType())) {
+		// //累计
+		// if (earn.getSurplusNumber()>0) {
+		// return earn;
+		// }
+		// }else if (TouchType.ACCUMULATION.equals(earn.getTouchType()) &&
+		// TouchType.ACCUMULATION.equals(em.getTouchType())) {
+		// //累计
+		// if (earn.getSurplusNumber()>0) {
+		// return BusinessUtil.isBigBus(earn, em);
+		// }
+		// }
+		// return null;
+
+		if (earn.getEarningId() > em.getEarningId()) {
+			return earn;
+		} else {
+			return em;
 		}
-		return null;
 	}
-	
+
 	/**
 	 * 如果业绩是累计的且累计的剩余次数大于1 使累计次数-1
+	 * 
 	 * @param earn
 	 */
 	private boolean updateComperBonuspayForEarning(Earning earn) {
-		if(earn!=null) {
+		if (earn != null) {
 			if (TouchType.ACCUMULATION.equals(earn.getTouchType())) {
-				if (earn.getSurplusNumber()>0) {
-					earn.setSurplusNumber(earn.getSurplusNumber()-1);
+				if (earn.getSurplusNumber() > 0) {
+					earn.setSurplusNumber(earn.getSurplusNumber() - 1);
 					return true;
-				}else {
+				} else {
 					return false;
 				}
-			}else {
+			} else {
 				return true;
 			}
-		}else {
+		} else {
 			return false;
 		}
 
 	}
-	
+
 	/**
 	 * 创建新用户，同时更新上级用户的A B节点ID
+	 * 
 	 * @param newuser
 	 * @param puser
 	 * @param type
 	 */
-	private void saveuser(User newuser,User puser,String type) {
+	private void saveuser(User newuser, User puser, String type) {
 		newuser.setParentId(puser.getUserId());
-		newuser.setWeightCode(puser.getWeightCode()+1);
+		newuser.setWeightCode(puser.getWeightCode() + 1);
 		this.userService.save(newuser);
 		if ("A".equals(type)) {
 			puser.setDepartmentA(newuser.getUserId());
-		}else if ("B".equals(type)) {
+		} else if ("B".equals(type)) {
 			puser.setDepartmentB(newuser.getUserId());
-		}else if ("C".equals(type)) {
+		} else if ("C".equals(type)) {
 			puser.setDepartmentC(newuser.getUserId());
 		}
 		this.userService.save(puser);
 		savePer(newuser.getUserId());
-		//用户创建完成后更新用户收益信息
-//		updateUserPerformance(newuser.getUserId());
+		// 用户创建完成后更新用户收益信息
+		// updateUserPerformance(newuser.getUserId());
 	}
-	
+
 	/**
 	 * 在创建用户的时候同时创建业绩表默认数据
+	 * 
 	 * @param id
 	 */
 	public void savePer(long id) {
 		Performance per = performanceService.getOne(id);
-		if (per==null) {
+		if (per == null) {
 			per = new Performance();
 			Date newdate = new Date();
 			per.setUserId(id);
@@ -358,36 +372,37 @@ public class EarnServerSchedul {
 			performanceService.save(per);
 		}
 	}
-	
+
 	/**
 	 * 更加用户ID更新用户上级的所有业绩，并在所有业绩更新后判断业绩能否触发收益，并保存
+	 * 
 	 * @param userid
 	 */
 	private void updateUserPerformance(Long userid) {
-		//取得所有收益表和用户表数据
+		// 取得所有收益表和用户表数据
 		Iterable<User> userlist = this.userService.getAll();
 		Iterable<Performance> pers = performanceService.getAll();
-		
-		Map<Long,User> userMap = new HashMap<Long,User>();
-		Map<Long,Performance> perMap = new HashMap<Long,Performance>();
-		Map<Long,Boolean> isHaveTotalEarningMap = new HashMap<Long,Boolean>();
+
+		Map<Long, User> userMap = new HashMap<Long, User>();
+		Map<Long, Performance> perMap = new HashMap<Long, Performance>();
+		Map<Long, Boolean> isHaveTotalEarningMap = new HashMap<Long, Boolean>();
 		for (User user : userlist) {
 			userMap.put(user.getUserId(), user);
-			//取得可发放的累计收益
+			// 取得可发放的累计收益
 			isHaveTotalEarningMap.put(user.getUserId(), earningService.isHaveTotalEarning(user.getUserId()));
 		}
 		for (Performance per : pers) {
 			perMap.put(per.getUserId(), per);
 		}
-		//获得需要更新的业绩表数据
-		List<Performance> perlist = CheckUtil.computePer(userid, userMap, perMap,isHaveTotalEarningMap);
-		//在checkUtil中已经做了为空判断，这里不需要做
+		// 获得需要更新的业绩表数据
+		List<Performance> perlist = CheckUtil.computePer(userid, userMap, perMap, isHaveTotalEarningMap);
+		// 在checkUtil中已经做了为空判断，这里不需要做
 		for (Performance performance : perlist) {
-			//更新收益表数据
+			// 更新收益表数据
 			performanceService.save(performance);
 		}
 
-		Iterable<Earning> earns = earningService.getAll();		
+		Iterable<Earning> earns = earningService.getAll();
 		// 将获得的对象封装成MAP
 		Map<String, Earning> earnMap = new HashMap<String, Earning>();
 		for (Earning earn : earns) {
@@ -396,49 +411,50 @@ public class EarnServerSchedul {
 				earnMap.put(key, earn);
 			}
 		}
-		
-		//发生变化的业绩更新收益表
-		List<Earning> earnList = CheckUtil.userEarning(earnMap,perlist);
-		
-		if (earnList!=null && earnList.size()>0) {
-			
-			//清除不需要保存的收益表信息
-			CheckUtil.computeEarn(earnMap,earnList);
+
+		// 发生变化的业绩更新收益表
+		List<Earning> earnList = CheckUtil.userEarning(earnMap, perlist);
+
+		if (earnList != null && earnList.size() > 0) {
+
+			// 清除不需要保存的收益表信息
+			CheckUtil.computeEarn(earnMap, earnList);
 			for (Earning earn : earnList) {
-				if(earn != null) {
-					//在这里判断如果是第一次触发累计4：4更新user表考核时间
+				if (earn != null) {
+					// 在这里判断如果是第一次触发累计4：4更新user表考核时间
 					User upUser = userService.getUserById(earn.getUserid());
-					if(CheckUtil.theFirstEarning(earn)) {
-						//更新考核日期和考核状态
-						if (upUser!=null) {
+					if (CheckUtil.theFirstEarning(earn)) {
+						// 更新考核日期和考核状态
+						if (upUser != null) {
 							CheckUtil.updateUserForFirstEarning(upUser);
 							userService.save(upUser);
 						}
 					}
-					//如果是累计考核更新考核状态
+					// 如果是累计考核更新考核状态
 					if (TouchType.ACCUMULATION.equals(earn.getTouchType())) {
-						if(BusinessUtil.isBigBus(earn.getUserLevel(), upUser.getUserLevel())) {
-							if (upUser!=null) {
+						if (BusinessUtil.isBigBus(earn.getUserLevel(), upUser.getUserLevel())) {
+							if (upUser != null) {
 								upUser.setUserLevel(earn.getUserLevel());
 								userService.save(upUser);
 							}
 						}
 					}
-					
+
 					earningService.save(earn);
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * 在创建用户的时候同时创建用户更新表默认数据
+	 * 
 	 * @param id
 	 */
 	private UserCreatereRecord saveUserCreateEntity(long userId) {
 		UserCreatereRecord ucr = userCreateRecordService.getUserCreatereRecordByUserId(userId);
 		savePer(userId);
-		if (ucr==null) {
+		if (ucr == null) {
 			ucr = new UserCreatereRecord();
 			Date newdate = new Date();
 			ucr.setUserId(userId);

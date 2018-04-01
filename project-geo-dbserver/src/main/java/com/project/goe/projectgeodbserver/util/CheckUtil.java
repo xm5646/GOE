@@ -93,7 +93,7 @@ public class CheckUtil {
 	 */
 	public static BonusPayList sendBonusPaylist(User user, Earning earn) {
 		// earn 是当前用户以时间判断-可发的收益，时间最新的
-		if (user != null && earn != null) {
+		if (user != null && earn != null && user.isAssessStatus()) {
 			BonusPayList bpl = new BonusPayList();
 			bpl.setUserId(user.getUserId());
 			bpl.setPayTime(new Date());
@@ -102,6 +102,7 @@ public class CheckUtil {
 			bpl.setBonusNumber(earn.getDayMoney() * bpr.getBonusNumber());
 			bpl.setManageCost(earn.getDayMoney() * bpr.getManageCost());
 			bpl.setProductCoinNumber(earn.getDayMoney() * bpr.getProductCoinNumber());
+			bpl.setTouchType(earn.getTouchType());
 
 			// 将积分和金钱添加到user表
 			user.setBonusCoin(user.getBonusCoin() + bpl.getBonusNumber());
