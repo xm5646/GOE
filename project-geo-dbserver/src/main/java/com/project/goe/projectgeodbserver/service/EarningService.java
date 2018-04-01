@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import com.project.goe.projectgeodbserver.entity.Earning;
 import com.project.goe.projectgeodbserver.repository.EarningRepository;
@@ -62,5 +63,19 @@ public class EarningService {
 		};
 
 		return this.earningRepository.findAll(spec, pageable);
+	}
+	
+	/**
+	 * 当有新增累计的时候,判断这条新增累计是否存在，如果存在，则将除了这条累计的数据
+	 * @return
+	 */
+	public Iterable<Earning> updateEarnWhenAddCumulative(long userid,Earning addEarn){
+		return null;
+	}
+	
+	//得到可用发放的奖金
+	public Iterable<Earning> getAllEarning(){
+		//得到可用发放的奖金
+		return earningRepository.getAllEarningForUsable();
 	}
 }
