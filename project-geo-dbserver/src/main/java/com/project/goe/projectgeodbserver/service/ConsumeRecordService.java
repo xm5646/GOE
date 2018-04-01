@@ -144,4 +144,18 @@ public class ConsumeRecordService {
 	public List<ConsumeRecord> findByConsumeType(String consumeType) {
 		return this.consumeRecordRepository.findByConsumeType(consumeType);
 	}
+	
+	public Page<ConsumeRecord> findByConsumeTypeOfPage(String consumeType,Pageable pageable) {
+		Specification<ConsumeRecord> spec = new Specification<ConsumeRecord>() {
+
+			@Override
+			public Predicate toPredicate(Root<ConsumeRecord> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				Predicate p = cb.equal(root.get("consumeType").as(String.class),consumeType);
+				return p;
+			}
+
+		};
+
+		return this.consumeRecordRepository.findAll(spec, pageable);
+	}
 }
