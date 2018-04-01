@@ -1,58 +1,37 @@
 package com.project.goe.projectgeodbserver.viewentity;
 
+import java.util.List;
+
 public class UserNode {
-	private String account;
-	private String userLevel;
-	private long departAcount;
-	private long departBcount;
-	private long departCcount;
-	private String parentAccount;
+	// 用户基本信息
+	private UserVO userVO;
+	// 用户业绩信息
+	private PerformanceVO performanceVO;
+	// 用户子节点信息
+	private List<UserNode> childNodeList;
 
-	public String getParentAccount() {
-		return parentAccount;
+	public UserVO getUserVO() {
+		return userVO;
 	}
 
-	public void setParentAccount(String parentAccount) {
-		this.parentAccount = parentAccount;
+	public void setUserVO(UserVO userVO) {
+		this.userVO = userVO;
 	}
 
-	public String getUserLevel() {
-		return userLevel;
+	public PerformanceVO getPerformanceVO() {
+		return performanceVO;
 	}
 
-	public void setUserLevel(String userLevel) {
-		this.userLevel = userLevel;
+	public void setPerformanceVO(PerformanceVO performanceVO) {
+		this.performanceVO = performanceVO;
 	}
 
-	public String getAccount() {
-		return account;
+	public List<UserNode> getChildNodeList() {
+		return childNodeList;
 	}
 
-	public void setAccount(String account) {
-		this.account = account;
+	public void setChildNodeList(List<UserNode> childNodeList) {
+		this.childNodeList = childNodeList;
 	}
 
-	public long getDepartAcount() {
-		return departAcount;
-	}
-
-	public void setDepartAcount(long departAcount) {
-		this.departAcount = departAcount;
-	}
-
-	public long getDepartBcount() {
-		return departBcount;
-	}
-
-	public void setDepartBcount(long departBcount) {
-		this.departBcount = departBcount;
-	}
-
-	public long getDepartCcount() {
-		return departCcount;
-	}
-
-	public void setDepartCcount(long departCcount) {
-		this.departCcount = departCcount;
-	}
 }

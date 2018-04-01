@@ -1,10 +1,8 @@
 package com.project.goe.projectgeodbserver.util;
 
-import com.project.goe.projectgeodbserver.entity.Performance;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.statusType.UserLevel;
 import com.project.goe.projectgeodbserver.statusType.UserType;
-import com.project.goe.projectgeodbserver.viewentity.UserNode;
 import com.project.goe.projectgeodbserver.viewentity.UserVO;
 
 import java.util.Date;
@@ -30,7 +28,12 @@ public class UserUtil {
 			userVO.setAssessDate(DateFormatUtil.DateObjectToString(user.getAssessDate()));
 		} else {
 			userVO.setAssessStatus("未通过考核");
-			userVO.setAssessDate("未达到考核级别");
+			
+			String userLevel = user.getUserLevel();
+			if(userLevel.equals(UserLevel.CONSUMER))
+				userVO.setAssessDate("未达到考核级别");
+			else 
+				userVO.setAssessDate(DateFormatUtil.DateObjectToString(user.getAssessDate()));
 		}
 
 		userVO.setBonusCoin(MathUtil.floor(user.getBonusCoin()));
@@ -102,22 +105,6 @@ public class UserUtil {
 		u.setUserStatus(true);
 		u.setAssessDate(createDate);
 		return u;
-	}
-	
-	public static UserNode UserToUserNode(User user,User parentUser,Performance performance) {
-		UserNode userNode = new UserNode();
-		userNode.setAccount(user.getAccount());
-		userNode.setDepartAcount(performance.getDepartAcount());
-		userNode.setDepartBcount(performance.getDepartBcount());
-		userNode.setDepartCcount(performance.getDepartCcount());
-		userNode.setUserLevel(UserLevelUtil.transfer(user.getUserLevel()));
-		
-		if(null == parentUser)
-			userNode.setParentAccount(null);
-		else
-			userNode.setParentAccount(parentUser.getAccount());
-		
-		return userNode;
 	}
 
 	public static User getTestUser(User parentUser, String departmentType) {
