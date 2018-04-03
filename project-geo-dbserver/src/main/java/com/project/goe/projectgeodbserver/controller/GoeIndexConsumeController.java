@@ -91,7 +91,8 @@ public class GoeIndexConsumeController {
 								throw new RuntimeException("收账账号不存在");
 
 							TransferCoinRecord tRecord = new TransferCoinRecord();
-							tRecord.setConsumeTime(DateFormatUtil.DateObjectToString(consumeRecord.getConsumeTime()));
+							tRecord.setConsumeId(consumeRecord.getConsumeId());
+							tRecord.setConsumeTime(DateFormatUtil.DateObjectToTimeString(consumeRecord.getConsumeTime()));
 							tRecord.setReceiveUserAccount(receiver.getAccount());
 							tRecord.setSendUserAccount(sender.getAccount());
 							tRecord.setTransferCoinNumber((long) consumeRecord.getConsumeNumber());
@@ -176,9 +177,12 @@ public class GoeIndexConsumeController {
 			Page<ConsumeRecord> consumeRecordPage = null;
 
 			if (3 == code) {
-				consumeRecordPage = this.consumeRecordService.findByAccountAndConsumeType1(consumeRecord, pageable);
-			} else
+				consumeRecordPage = this.consumeRecordService.findTransferUserToUserByAccount(consumeRecord, pageable);
+			} else if (1 == code) {
+				consumeRecordPage = this.consumeRecordService.findCompanyToUserTransferByReceivedAccount(consumeRecord, pageable);
+			} else {
 				consumeRecordPage = this.consumeRecordService.findByAccountAndConsumeType(consumeRecord, pageable);
+			}
 
 			Page<TransferCoinRecord> transferCoinRecordPage = consumeRecordPage
 					.map(new Converter<ConsumeRecord, TransferCoinRecord>() {
@@ -197,7 +201,7 @@ public class GoeIndexConsumeController {
 								throw new RuntimeException("收账账号不存在");
 
 							TransferCoinRecord tRecord = new TransferCoinRecord();
-							tRecord.setConsumeTime(DateFormatUtil.DateObjectToString(consumeRecord.getConsumeTime()));
+							tRecord.setConsumeTime(DateFormatUtil.DateObjectToTimeString(consumeRecord.getConsumeTime()));
 							tRecord.setReceiveUserAccount(receiver.getAccount());
 							tRecord.setSendUserAccount(sender.getAccount());
 							tRecord.setTransferCoinNumber((long) consumeRecord.getConsumeNumber());

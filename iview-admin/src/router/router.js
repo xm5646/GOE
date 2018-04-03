@@ -109,6 +109,39 @@ export const appRouter = [
         ]
     },
     {
+        path: '/transferManagement',
+        icon: 'arrow-swap',
+        name: 'transferManagement',
+        title: '交易记录',
+        component: Main,
+        children: [
+            {
+                path: 'companyToUser',
+                title: '公司拨发报单币',
+                name: 'companyToUser_transfer',
+                component: () => import('@/views/transfer-management/CompanyToUser.vue')
+            },
+            {
+                path: 'userToUser',
+                title: '会员间转账记录',
+                name: 'userToUser_transfer',
+                component: () => import('@/views/transfer-management/UserToUser.vue')
+            },
+            {
+                path: 'userReport',
+                title: '会员报单记录',
+                name: 'userReport_transfer',
+                component: () => import('@/views/transfer-management/UserReport.vue')
+            },
+            {
+                path: 'convertConsume',
+                title: '奖金兑换报单币',
+                name: 'convertConsume_transfer',
+                component: () => import('@/views/transfer-management/BonusConvertToConsume.vue')
+            }
+        ]
+    },
+    {
         path: '/bonusManagement',
         icon: 'ios-paper',
         name: 'bonusManagement',

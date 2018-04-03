@@ -74,8 +74,8 @@ public class EarningService {
 	}
 	
 	//得到可用发放的奖金
-	public Iterable<Earning> getAllEarning(){
-		//得到可用发放的奖金
-		return earningRepository.getAllEarningForUsable();
-	}
+//	public Iterable<Earning> getAllEarning(){
+//		//得到可用发放的奖金
+//		return earningRepository.getAllEarningForUsable();
+//	}
 }

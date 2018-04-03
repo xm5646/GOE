@@ -1,11 +1,21 @@
 package com.project.goe.projectgeodbserver.viewentity;
 
 public class TransferCoinRecord {
+	private long consumeId;
 	private String consumeTime;
 	private String sendUserAccount;
 	private String receiveUserAccount;
 	private long transferCoinNumber;
 	private String description;
+	
+	
+	public long getConsumeId() {
+		return consumeId;
+	}
+
+	public void setConsumeId(long consumeId) {
+		this.consumeId = consumeId;
+	}
 
 	public String getDescription() {
 		return description;
