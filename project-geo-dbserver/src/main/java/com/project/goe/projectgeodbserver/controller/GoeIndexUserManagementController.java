@@ -389,7 +389,9 @@ public class GoeIndexUserManagementController {
 			throw new RuntimeException("父节点业绩信息不存在");
 		
 		UserNode userNode = new UserNode();
-		userNode.setUserVO(UserUtil.UserToUserVO(pUser));
+		userNode.setId(pUser.getUserId());
+		userNode.setLabel(pUser.getAccount());
+		userNode.setUserNodeVO(UserUtil.UserToUserNodeVO(pUser));
 		userNode.setPerformanceVO(PerformanceUtil.pToPerformanceVO(pPerformamce));
 		List<UserNode> childNodeList = new ArrayList<UserNode>();
 		
@@ -412,9 +414,11 @@ public class GoeIndexUserManagementController {
 			}
 			
 			UserNode cUserNode = new UserNode();
-			cUserNode.setUserVO(UserUtil.UserToUserVO(cUser1));
+			cUserNode.setId(cUser1.getUserId());
+			cUserNode.setLabel(cUser1.getAccount());
+			cUserNode.setUserNodeVO(UserUtil.UserToUserNodeVO(cUser1));
 			cUserNode.setPerformanceVO(PerformanceUtil.pToPerformanceVO(cp1));
-			cUserNode.setChildNodeList(null);
+			cUserNode.setChildren(null);
 			
 			childNodeList.add(cUserNode);
 		}
@@ -429,9 +433,11 @@ public class GoeIndexUserManagementController {
 				throw new RuntimeException("用户业绩信息不存在");
 			
 			UserNode cUserNode = new UserNode();
-			cUserNode.setUserVO(UserUtil.UserToUserVO(cUser2));
+			cUserNode.setId(cUser2.getUserId());
+			cUserNode.setLabel(cUser2.getAccount());
+			cUserNode.setUserNodeVO(UserUtil.UserToUserNodeVO(cUser2));
 			cUserNode.setPerformanceVO(PerformanceUtil.pToPerformanceVO(cp2));
-			cUserNode.setChildNodeList(null);
+			cUserNode.setChildren(null);
 			
 			childNodeList.add(cUserNode);
 		}
@@ -446,14 +452,16 @@ public class GoeIndexUserManagementController {
 				throw new RuntimeException("用户业绩信息不存在");
 			
 			UserNode cUserNode = new UserNode();
-			cUserNode.setUserVO(UserUtil.UserToUserVO(cUser3));
+			cUserNode.setId(cUser3.getUserId());
+			cUserNode.setLabel(cUser3.getAccount());
+			cUserNode.setUserNodeVO(UserUtil.UserToUserNodeVO(cUser3));
 			cUserNode.setPerformanceVO(PerformanceUtil.pToPerformanceVO(cp3));
-			cUserNode.setChildNodeList(null);
+			cUserNode.setChildren(null);
 			
 			childNodeList.add(cUserNode);
 		}
 		
-		userNode.setChildNodeList(childNodeList);
+		userNode.setChildren(childNodeList);
 		RetMsg retMsg = new RetMsg();
 		retMsg.setCode(200);
 		retMsg.setSuccess(true);

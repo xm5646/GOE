@@ -4,18 +4,22 @@ import java.util.List;
 
 public class UserNode {
 	// 用户基本信息
-	private UserVO userVO;
+	private long id;
+	private String label;
+	private UserNodeVO userNodeVO;
 	// 用户业绩信息
 	private PerformanceVO performanceVO;
 	// 用户子节点信息
-	private List<UserNode> childNodeList;
+	private List<UserNode> children;
 
-	public UserVO getUserVO() {
-		return userVO;
+	
+	
+	public UserNodeVO getUserNodeVO() {
+		return userNodeVO;
 	}
 
-	public void setUserVO(UserVO userVO) {
-		this.userVO = userVO;
+	public void setUserNodeVO(UserNodeVO userNodeVO) {
+		this.userNodeVO = userNodeVO;
 	}
 
 	public PerformanceVO getPerformanceVO() {
@@ -26,12 +30,30 @@ public class UserNode {
 		this.performanceVO = performanceVO;
 	}
 
-	public List<UserNode> getChildNodeList() {
-		return childNodeList;
+	public long getId() {
+		return id;
 	}
 
-	public void setChildNodeList(List<UserNode> childNodeList) {
-		this.childNodeList = childNodeList;
+	public void setId(long id) {
+		this.id = id;
 	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	public List<UserNode> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<UserNode> children) {
+		this.children = children;
+	}
+
+	
 
 }

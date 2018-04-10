@@ -44,7 +44,7 @@
             <!--<p><br></p>-->
             <div class="text-center">
                 <org-tree style="color: #fff;"
-                        :data="data1"
+                        :data="data"
                         :horizontal="horizontal"
                         :collapsable="collapsable"
                         :label-class-name="labelClassName"
@@ -65,99 +65,13 @@
 
     export default {
         name: 'page',
+        props: ['data'],
         components: {
             OrgTree
         },
         data () {
             return {
                 data1: {},
-                data: {
-                    id: 0,
-                    label: '神话',
-                    performance: '111:111',
-                    children: [{
-                        id: 2,
-                        label: '用户1',
-                        children: [{
-                            id: 5,
-                            label: '研发-前端',
-                            children: [{
-                                id: 6,
-                                label: '研发1'
-                            }, {
-                                id: 6,
-                                label: '研发1'
-                            }, {
-                                id: 6,
-                                label: '研发1'
-                            }, {
-                                id: 6,
-                                label: '研发1'
-                            }]
-                        }, {
-                            id: 6,
-                            label: '研发-后端'
-                        }, {
-                            id: 9,
-                            label: 'UI设计'
-                        }, {
-                            id: 10,
-                            label: '产品经理'
-                        }, {
-                            id: 6,
-                            label: '研发-后端'
-                        }, {
-                            id: 9,
-                            label: 'UI设计'
-                        }, {
-                            id: 10,
-                            label: '产品经理'
-                        }, {
-                            id: 6,
-                            label: '研发-后端'
-                        }, {
-                            id: 9,
-                            label: 'UI设计'
-                        }, {
-                            id: 10,
-                            label: '产品经理'
-                        }, {
-                            id: 6,
-                            label: '研发-后端'
-                        }, {
-                            id: 9,
-                            label: 'UI设计'
-                        }, {
-                            id: 10,
-                            label: '产品经理'
-                        }, {
-                            id: 6,
-                            label: '研发-后端'
-                        }, {
-                            id: 9,
-                            label: 'UI设计'
-                        }, {
-                            id: 10,
-                            label: '产品经理'
-                        }]
-                    }, {
-                        id: 3,
-                        label: '用户2',
-                        children: [{
-                            id: 7,
-                            label: '销售一部'
-                        }, {
-                            id: 8,
-                            label: '销售二部'
-                        }]
-                    }, {
-                        id: 4,
-                        label: '用户3'
-                    }, {
-                        id: 9,
-                        label: '用户4'
-                    }]
-                },
                 horizontal: false,
                 collapsable: true,
                 labelClassName: 'bg-blue'
@@ -175,7 +89,7 @@
                 })
             },
             onExpand (data) {
-                console.log(data.label)
+                this.$emit('loadData', data.children)
                 if ('expand' in data) {
                     data.expand = !data.expand
 
@@ -187,7 +101,8 @@
                 }
             },
             onNodeClick (e, data) {
-                console.log(this.data)
+                console.log('click')
+                console.log(data.performanceVO)
             },
             collapse (list) {
                 list.forEach(child => {

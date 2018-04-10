@@ -3,12 +3,75 @@ package com.project.goe.projectgeodbserver.util;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.statusType.UserLevel;
 import com.project.goe.projectgeodbserver.statusType.UserType;
+import com.project.goe.projectgeodbserver.viewentity.UserNodeVO;
 import com.project.goe.projectgeodbserver.viewentity.UserVO;
 
 import java.util.Date;
 
 public class UserUtil {
 	private UserUtil() {
+	}
+	
+	public static UserNodeVO UserToUserNodeVO(User user) {
+		UserNodeVO userVO = new UserNodeVO();
+		userVO.setAccount(user.getAccount());
+		userVO.setLabel(user.getAccount());
+		userVO.setId(user.getUserId());
+		userVO.setActivateTime(DateFormatUtil.DateObjectToString(user.getActivateTime()));
+
+		// if(DateFormatUtil.compareDateObject(user.getAssessDate(),user.getCreateTime())
+		// == 0) {
+		// userVO.setAssessDate("未达到考核级别");
+		// }else {
+		// userVO.setAssessDate(DateFormatUtil.DateObjectToString(user.getAssessDate()));
+		// }
+
+		if (user.isAssessStatus()) {
+			userVO.setAssessStatus("已通过考核");
+			userVO.setAssessDate(DateFormatUtil.DateObjectToString(user.getAssessDate()));
+		} else {
+			userVO.setAssessStatus("未通过考核");
+			
+			String userLevel = user.getUserLevel();
+			if(userLevel.equals(UserLevel.CONSUMER))
+				userVO.setAssessDate("未达到考核级别");
+			else 
+				userVO.setAssessDate(DateFormatUtil.DateObjectToString(user.getAssessDate()));
+		}
+
+		userVO.setBonusCoin(MathUtil.floor(user.getBonusCoin()));
+		userVO.setConsumeCoin(MathUtil.floor(user.getConsumeCoin()));
+
+		userVO.setCreateTime(DateFormatUtil.DateObjectToString(user.getCreateTime()));
+
+		userVO.setAccountA(user.getAccountA());
+		userVO.setAccountB(user.getAccountB());
+		userVO.setAccountC(user.getAccountC());
+
+		userVO.setProductCoin(MathUtil.floor(user.getProductCoin()));
+		userVO.setUserType(user.getUserType());
+
+		if (user.isUserStatus())
+			userVO.setUserStatus("已激活");
+		else
+			userVO.setUserStatus("未激活");
+
+		userVO.setUserPhone(user.getUserPhone());
+		String userLevelCH = BusinessUtil.getBusinessEntity(user.getUserLevel()).getUserLevel_CH();
+		userVO.setUserLevel(userLevelCH);
+		userVO.setNickName(user.getNickName());
+		userVO.setUserPhone(user.getUserPhone());
+		userVO.setIdentityNo(user.getIdentityNo());
+		userVO.setProvince(user.getProvince());
+		userVO.setCity(user.getCity());
+
+		if (user.isPasswordReset()) {
+			userVO.setPasswordReset("是");
+		} else {
+			userVO.setPasswordReset("否");
+		}
+
+		return userVO;
 	}
 
 	public static UserVO UserToUserVO(User user) {
