@@ -1,8 +1,0 @@
-
-module.exports = {
-  goe: {
-    price: 680,
-    reConsumeDiscount: 0.7
-  },
-  apiServer: 'http://localhost:8088'
-}
