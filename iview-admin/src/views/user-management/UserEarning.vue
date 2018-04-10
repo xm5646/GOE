@@ -44,7 +44,7 @@
 
 <script>
     import * as table from '../tables/data/search';
-    import vueTable from 'vue-table2';
+    import vueTable from 'vue-table-lxm';
 
     export default {
         name: 'searchable-table',

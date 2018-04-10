@@ -55,6 +55,9 @@
                 </org-tree>
             </div>
         </div>
+        <Modal :width="600" v-model="showInfoModal" title="会员信息" cancel-text="">
+            <show-user-info :userInfo="userInfo" v-if="userInfo"></show-user-info>
+        </Modal>
     </div>
 </template>
 
@@ -62,18 +65,22 @@
     /* eslint-disable semi */
 
     import OrgTree from './org-tree';
+    import ShowUserInfo from './components/ShowUserInfoWindow';
 
     export default {
         name: 'page',
         props: ['data'],
         components: {
-            OrgTree
+            OrgTree,
+            ShowUserInfo
         },
         data () {
             return {
                 data1: {},
                 horizontal: false,
                 collapsable: true,
+                showInfoModal: false,
+                userInfo: null,
                 labelClassName: 'bg-blue'
             }
         },
@@ -101,8 +108,9 @@
                 }
             },
             onNodeClick (e, data) {
-                console.log('click')
-                console.log(data.performanceVO)
+                this.userInfo = data
+                this.showInfoModal = true
+                console.log(data)
             },
             collapse (list) {
                 list.forEach(child => {
