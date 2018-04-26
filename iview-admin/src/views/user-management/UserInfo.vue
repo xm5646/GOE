@@ -186,6 +186,34 @@
                     }
                 });
             },
+            getListByAccountAndPage (page) {
+                this.doGet({
+                    url: this.APIServer + '/goeIndexUserManagement/findUsersByNickNameOrAccountLike?type=account&value=' + this.searchAccount + '&pageNum=' + page
+                }).then(result => {
+                    if (result.success) {
+                        this.pageObj.totalPage = result.data.totalPages;
+                        this.pageObj.totalCount = result.data.totalElements;
+                        this.userList = result.data.content;
+                    } else {
+                        this.userList = [];
+                        this.$Message.error(result.message);
+                    }
+                });
+            },
+            getListByNickNameAndPage (page) {
+                this.doGet({
+                    url: this.APIServer + '/goeIndexUserManagement/findUsersByNickNameOrAccountLike?type=nickName&value=' + this.searchNickName + '&pageNum=' + page
+                }).then(result => {
+                    if (result.success) {
+                        this.pageObj.totalPage = result.data.totalPages;
+                        this.pageObj.totalCount = result.data.totalElements;
+                        this.userList = result.data.content;
+                    } else {
+                        this.userList = [];
+                        this.$Message.error(result.message);
+                    }
+                });
+            },
             edit (item) {
                 console.log('item type: ' + typeof item)
                 this.userInfo = item
@@ -195,9 +223,19 @@
                 this.userInfo = item
                 this.showRechargeModal = true;
             },
-            changePage(pageNum) {
-                if (pageNum >= 0 || pageNum < this.pageObj.totalPage) {
+            changePage (pageNum) {
+                if (this.searchAccount === '' && this.searchNickName === '') {
                     this.getAllUserListByPage(pageNum - 1);
+                } else {
+                    if (this.searchAccount === '') {
+                        this.getListByNickNameAndPage(pageNum - 1);
+                    }
+                    if (this.searchNickName === '') {
+                        this.getListByAccountAndPage(pageNum - 1);
+                    }
+                    if (this.searchAccount !== '' && this.searchNickName !== '') {
+                        this.$Message.error('请指定单个条件查询');
+                    }
                 }
             },
             submitEdit () {
@@ -217,44 +255,24 @@
                     }
                 });
             },
-            handleSearch3() {
+            handleSearch3 () {
                 this.userList = [];
                 if (this.searchNickName === '') {
                     this.getAllUserListByPage(0);
                 } else {
-                    this.doGet({
-                        url: this.APIServer + '/goeIndexUserManagement/findUsersByNickNameOrAccountLike?type=nickName&value=' + this.searchNickName
-                    }).then(result => {
-                        if (result.success) {
-                            this.pageObj.totalPage = result.data.totalPages;
-                            this.pageObj.totalCount = result.data.totalElements;
-                            this.userList = result.data.content;
-                        } else {
-                            this.$Message.error(result.message);
-                        }
-                    });
+                    this.getListByNickNameAndPage(0);
                 }
             },
             handleCancel3() {
                 this.searchNickName = '';
                 this.getAllUserListByPage(0);
             },
-            handleSearch2() {
+            handleSearch2 () {
                 this.userList = [];
                 if (this.searchAccount === '') {
                     this.getAllUserListByPage(0);
                 } else {
-                    this.doGet({
-                        url: this.APIServer + '/goeIndexUserManagement/findUsersByNickNameOrAccountLike?type=account&value=' + this.searchAccount
-                    }).then(result => {
-                        if (result.success) {
-                            this.pageObj.totalPage = result.data.totalPages;
-                            this.pageObj.totalCount = result.data.totalElements;
-                            this.userList = result.data.content;
-                        } else {
-                            this.$Message.error(result.message);
-                        }
-                    });
+                    this.getListByAccountAndPage(0);
                 }
             },
             handleCancel2() {

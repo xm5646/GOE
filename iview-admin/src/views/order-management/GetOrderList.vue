@@ -142,33 +142,40 @@
                     }
                 });
             },
+            getListByAccountAndPage (page) {
+                this.doGet({
+                    url: this.APIServer + '/goeIndexOrderController/findAllOrdersByAccount?account=' + this.searchAccount + '&pageNum=' + page
+                }).then(result => {
+                    if (result.success) {
+                        let tmpList = result.data.content;
+                        for (let i = 0; i < result.data.content.length; i++) {
+                            let addArray = new Array(3);
+                            let detailAdd = result.data.content[i].addressInfo[3];
+                            addArray = result.data.content[i].addressInfo;
+                            addArray.length = 3;
+                            tmpList[i]['showAddress'] = value2name(addArray, ChinaAddressV4Data) + ' ' + detailAdd;
+                        }
+                        this.pageObj.totalPage = result.data.totalPages;
+                        this.pageObj.totalCount = result.data.totalElements;
+                        this.allList = tmpList;
+                    } else {
+                        this.$Message.error(result.message);
+                    }
+                });
+            },
             changePage (pageNum) {
-                this.getAllListByPage(pageNum - 1);
+                if (this.searchAccount === '') {
+                    this.getAllListByPage(pageNum - 1);
+                } else {
+                    this.getListByAccountAndPage(pageNum - 1);
+                }
             },
             handleSearch3 () {
                 this.allList = [];
                 if (this.searchAccount === '') {
                     this.getAllListByPage(0);
                 } else {
-                    this.doGet({
-                        url: this.APIServer + '/goeIndexOrderController/findAllOrdersByAccount?account=' + this.searchAccount
-                    }).then(result => {
-                        if (result.success) {
-                            let tmpList = result.data.content;
-                            for (let i = 0; i < result.data.content.length; i++) {
-                                let addArray = new Array(3);
-                                let detailAdd = result.data.content[i].addressInfo[3];
-                                addArray = result.data.content[i].addressInfo;
-                                addArray.length = 3;
-                                tmpList[i]['showAddress'] = value2name(addArray, ChinaAddressV4Data) + ' ' + detailAdd;
-                            }
-                            this.pageObj.totalPage = result.data.totalPages;
-                            this.pageObj.totalCount = result.data.totalElements;
-                            this.allList = tmpList;
-                        } else {
-                            this.$Message.error(result.message);
-                        }
-                    });
+                    this.getListByAccountAndPage(0);
                 }
             },
             handleCancel3 () {

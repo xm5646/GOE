@@ -108,25 +108,33 @@
                     }
                 });
             },
+            getListByAccountAndPage (page) {
+                this.doGet({
+                    url: this.APIServer + '/goeIndexConsumeController/findByAccountAndConsumeType?code=2&account=' + this.searchAccount + '&pageNum=' + page
+                }).then(result => {
+                    if (result.success) {
+                        this.pageObj.totalPage = result.data.totalPages;
+                        this.pageObj.totalCount = result.data.totalElements;
+                        this.allList = result.data.content;
+                    } else {
+                        this.allList = [];
+                        this.$Message.error(result.message);
+                    }
+                });
+            },
             changePage (pageNum) {
-                this.getAllListByPage(pageNum - 1);
+                if (this.searchAccount === '') {
+                    this.getAllListByPage(pageNum - 1);
+                } else {
+                    this.getListByAccountAndPage(pageNum - 1);
+                }
             },
             handleSearch3 () {
                 this.allList = [];
                 if (this.searchAccount === '') {
                     this.getAllListByPage(0);
                 } else {
-                    this.doGet({
-                        url: this.APIServer + '/goeIndexConsumeController/findByAccountAndConsumeType?code=2&account=' + this.searchAccount
-                    }).then(result => {
-                        if (result.success) {
-                            this.pageObj.totalPage = result.data.totalPages;
-                            this.pageObj.totalCount = result.data.totalElements;
-                            this.allList = result.data.content;;
-                        } else {
-                            this.$Message.error(result.message);
-                        }
-                    });
+                    this.getListByAccountAndPage(0);
                 }
             },
             handleCancel3 () {
