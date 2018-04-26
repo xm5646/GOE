@@ -66,6 +66,11 @@
                         width: 120
                     },
                     {
+                        key: 'touchType',
+                        title: '奖金类型',
+                        width: 120
+                    },
+                    {
                         key: 'totalMoney',
                         title: '发放总额',
                         width: 120

@@ -6,6 +6,7 @@
         <x-table :cell-bordered="false" :content-bordered="true" style="background-color:#fff; font-size: small">
           <thead>
           <tr style="background-color: #d43e2e; color: white">
+            <th>奖金类型</th>
             <th>发放总额</th>
             <th>奖金</th>
             <th>产品积分</th>
@@ -15,6 +16,7 @@
           </thead>
           <tbody>
           <tr v-for="row in rows">
+            <td>{{row.touchType}}</td>
             <td>{{row.totalMoney.toFixed(0)}}</td>
             <td>{{row.bonusNumber.toFixed(0)}}</td>
             <td>{{row.productCoinNumber.toFixed(0)}}</td>
