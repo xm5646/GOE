@@ -398,7 +398,7 @@ public class EarnServerSchedul {
 		List<Performance> perlist = CheckUtil.computePer(userid, userMap, perMap, isHaveTotalEarningMap);
 		// 在checkUtil中已经做了为空判断，这里不需要做
 		for (Performance performance : perlist) {
-			// 更新收益表数据
+			// 更新业绩表数据
 			performanceService.save(performance);
 		}
 

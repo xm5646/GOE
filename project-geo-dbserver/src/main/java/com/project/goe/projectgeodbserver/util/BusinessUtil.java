@@ -141,10 +141,10 @@ public class BusinessUtil {
 		}
 	}
 	
-	public static boolean isBigBusSame(String ea) {
+	public static boolean isBigBusSame(String ea, String eb) {
 		//第一个比第二个级别大
 		BusinessEntity bus1 = businessMap.get(ea);
-		BusinessEntity bus2 = businessMap.get(UserLevel.MARKET_DIRECTOR);
+		BusinessEntity bus2 = businessMap.get(eb);
 		if (bus1!= null && bus2!=null && bus1.getCode()>=bus2.getCode()) {
 			return true;
 		}else {

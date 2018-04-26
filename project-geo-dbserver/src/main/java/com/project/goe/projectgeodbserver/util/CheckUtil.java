@@ -57,13 +57,27 @@ public class CheckUtil {
 				// 用户已激活
 				Performance pm = perMap.get(pid);
 				// 计算累计
-				if (userid == pu.getDepartmentA()) {
-					pm.setDepartAcount(pm.getDepartAcount() + 1);
-				} else if (userid == pu.getDepartmentB()) {
-					pm.setDepartBcount(pm.getDepartBcount() + 1);
-				} else if (userid == pu.getDepartmentC()) {
-					pm.setDepartCcount(pm.getDepartCcount() + 1);
+				//判断用户级别大于主任UserLevel.DIRECOTR,并且是通过考核状态,并且否则不增加累计业绩
+				if (BusinessUtil.isBigBusSame(pu.getUserLevel(), UserLevel.DIRECOTR)) {
+					if (pu.isAssessStatus()) {
+						if (userid == pu.getDepartmentA()) {
+							pm.setDepartAcount(pm.getDepartAcount() + 1);
+						} else if (userid == pu.getDepartmentB()) {
+							pm.setDepartBcount(pm.getDepartBcount() + 1);
+						} else if (userid == pu.getDepartmentC()) {
+							pm.setDepartCcount(pm.getDepartCcount() + 1);
+						}
+					}
+				} else {
+					if (userid == pu.getDepartmentA()) {
+						pm.setDepartAcount(pm.getDepartAcount() + 1);
+					} else if (userid == pu.getDepartmentB()) {
+						pm.setDepartBcount(pm.getDepartBcount() + 1);
+					} else if (userid == pu.getDepartmentC()) {
+						pm.setDepartCcount(pm.getDepartCcount() + 1);
+					}
 				}
+				
 				// 计算新增
 				// 这里如果累计业绩没有超过4：4 不增加新增业绩
 				boolean isHaveTotalEarning = isHaveTotalEarningMap.get(pu.getUserId());
@@ -114,7 +128,7 @@ public class CheckUtil {
 	
 	private static BonusPayRatio getBonusPayRatio(Earning earn) {
 		BonusPayRatio bpr = new BonusPayRatio(0.7,0.1,0.2);
-		boolean bbpr = BusinessUtil.isBigBusSame(earn.getUserLevel());
+		boolean bbpr = BusinessUtil.isBigBusSame(earn.getUserLevel(),UserLevel.MARKET_DIRECTOR);
 		if (earn!=null &&bbpr) {
 			 bpr = new BonusPayRatio(0.6,0.1,0.3);
 		}
