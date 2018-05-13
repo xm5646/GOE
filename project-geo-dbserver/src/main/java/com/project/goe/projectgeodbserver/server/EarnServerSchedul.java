@@ -211,6 +211,28 @@ public class EarnServerSchedul {
 		bonusPayListService.saveAll(buslist);
 		userService.saveAll(userupdate);
 	}
+	
+	
+	/**
+	 * 每天检查新用户30天内是否完善资料,如未完成资料则设置激活状态为false
+	 */
+	public void mainCheckNewUserInit() {
+		Iterable<User> userlist = this.userService.getAll();
+		if (userlist != null) {
+			for (User user : userlist) {
+				if (user != null) {
+					//取出未完善资料的用户
+					if (!user.isPasswordReset()) {
+						//检查当前时间是否大于用户创建时间30天,如果是就修改激活状态为false
+						if ( TimeUtil.getDiscrepantDays(user.getCreateTime(), new Date()) > 30) {
+							user.setUserStatus(false);
+							this.userService.save(user);
+						}
+					}
+				}
+			}
+		}
+	}
 
 	/**
 	 * 每天定时检查考核状态

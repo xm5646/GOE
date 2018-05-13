@@ -57,6 +57,8 @@ public class BonusPaylistScheduling {
         //优先执行考核状态再计算收益
         //每天定时检查考核状态
         earnServerSchedul.mainAssessInspect();
+        //每天定时检查新用户是否超过30天未完善资料
+        earnServerSchedul.mainCheckNewUserInit();
         //每天计算收益
         earnServerSchedul.mainComperBonuspaylist();
     }

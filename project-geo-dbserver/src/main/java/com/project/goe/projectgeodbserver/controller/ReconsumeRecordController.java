@@ -126,6 +126,10 @@ public class ReconsumeRecordController {
 		// 更新用户表和公司表
 		user.setConsumeCoin(consumeCoin - reConsumeCost);
 		user.setAssessStatus(true);// 更新用户重销状态
+		//如果用户激活状态为false, 更新为true
+		if (!user.isUserStatus()) {
+			user.setUserStatus(true);
+		}
 
 		User company = this.userService.findByAccount("administrator");
 		if (null == company)
