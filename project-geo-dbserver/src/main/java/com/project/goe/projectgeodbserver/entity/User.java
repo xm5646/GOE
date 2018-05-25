@@ -22,6 +22,11 @@ import com.project.goe.projectgeodbserver.statusType.UserType;
 @Entity
 @Table(name = "tb_user")
 public class User implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Column
 	private String salt;// 加密密码的盐
 

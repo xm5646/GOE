@@ -23,6 +23,7 @@ public interface UserRepositoy extends JpaSpecificationExecutor<User>,JpaReposit
 	@Query("select r from User r where createTime between date_format(?1,'%Y-%m-%d %H:%i:%S') and date_format(?2,'%Y-%m-%d %H:%i:%S')")
 	public List<User> findByCreateTimeBetween(Date startDate,Date endDate);
 	
+	
 	//多条件分页查询
 	public Page<User> findAll(Specification<User> spec, Pageable pageable);
 }

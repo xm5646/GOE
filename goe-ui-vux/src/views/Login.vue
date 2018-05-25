@@ -59,13 +59,9 @@
             })
             .then(response => {
               if (response.body.success) {
-                window.setTimeout(() => {
-                  this.$router.push({name: 'login'})
-                  window.localStorage.clear()
-                }, 30 * 60 * 1000)
                 const userObj = response.body.data
                 window.localStorage.setItem('User', JSON.stringify(userObj))
-                if (userObj.passwordReset) {
+                if (userObj.passwordReset !== '否') {
                   this.$vux.toast.show({
                     text: '登陆成功'
                   })

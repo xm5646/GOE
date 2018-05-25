@@ -20,12 +20,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.goe.projectgeodbserver.entity.CardInfo;
 import com.project.goe.projectgeodbserver.entity.ConsumeRecord;
 import com.project.goe.projectgeodbserver.entity.Performance;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.server.EarnServerSchedul;
+import com.project.goe.projectgeodbserver.service.CardInfoService;
 import com.project.goe.projectgeodbserver.service.ConsumeRecordService;
 import com.project.goe.projectgeodbserver.service.PerformanceService;
+import com.project.goe.projectgeodbserver.service.UserRepeatCheckService;
 import com.project.goe.projectgeodbserver.service.UserService;
 import com.project.goe.projectgeodbserver.statusType.ConsumeType;
 import com.project.goe.projectgeodbserver.util.UserUtil;
@@ -54,6 +57,9 @@ public class UserController {
 	private UserService userService;
 
 	@Autowired
+	private UserRepeatCheckService UserRepeatCheckService;
+	
+	@Autowired
 	private PerformanceService performanceService;
 
 	@Autowired
@@ -61,6 +67,9 @@ public class UserController {
 
 	@Autowired
 	private ConsumeRecordService consumeRecordService;
+	
+	@Autowired
+	private CardInfoService cardInfoService;
 
 	// 将业务全部移动到调度服务上
 	@Autowired
@@ -239,7 +248,7 @@ public class UserController {
 	}
 
 	/**
-	 * @Description：重置登录密码，设置支付密码和用户电话号码
+	 * @Description：重置登录密码，设置支付密码和用户电话号码,银行卡
 	 * @return：RetMsg
 	 */
 	@PostMapping("/initUserInfo")
@@ -251,6 +260,8 @@ public class UserController {
 		String paymentPassword = userLoginSettingRequest.getPaymentPassword();
 		String userPhone = userLoginSettingRequest.getUserPhone();
 		String nickName = userLoginSettingRequest.getNickName();
+		String bankName = userLoginSettingRequest.getBankName();
+		String cardNumber = userLoginSettingRequest.getCardNumber();
 
 		// 如果数据校验有误，则直接返回校验错误信息
 		RetMsg retMsg = ValidateErrorUtil.getInstance().errorList(bindingResult);
@@ -261,6 +272,23 @@ public class UserController {
 		User user = this.userService.findByAccount(account);
 		if (null == user)
 			throw new RuntimeException("用户账号不存在");
+		
+		// 验证姓名手机号银行卡相同用户数量是否超过3个
+		if (this.UserRepeatCheckService.checkUserIsMaxRepeat(nickName + userPhone + bankName + cardNumber)) {
+			throw new RuntimeException("该用户信息超过最大注册次数");
+		}
+		
+		
+		// 添加用户银行卡
+		CardInfo cardInfo = new CardInfo();
+		cardInfo.setBankName(bankName);
+		cardInfo.setCardNumber(cardNumber);
+		cardInfo.setCardOwnerName(nickName);
+		cardInfo.setPhone(userPhone);
+		cardInfo.setUserId(userService.findByAccount(account).getUserId());
+		cardInfo.setCreateTime(new Date());
+		cardInfoService.save(cardInfo);
+		
 
 		// 设置用户登录新密码、支付密码和手机号码
 		user.setPassword(MD5Util.encrypeByMd5(newPassword));

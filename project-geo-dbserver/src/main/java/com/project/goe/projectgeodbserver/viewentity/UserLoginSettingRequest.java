@@ -24,6 +24,12 @@ public class UserLoginSettingRequest {
 
 	@NotBlank(message = "用户手机号码不能为空")
 	private String userPhone;
+	
+	@NotBlank(message = "开户银行不能为空")
+	private String bankName;
+	
+	@NotBlank(message = "银行卡号不能为空")
+	private String cardNumber;
 
 	public String getNickName() {
 		return nickName;
@@ -65,4 +71,21 @@ public class UserLoginSettingRequest {
 		this.paymentPassword = paymentPassword;
 	}
 
+	public String getBankName() {
+		return bankName;
+	}
+
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+	}
+
+	public String getCardNumber() {
+		return cardNumber;
+	}
+
+	public void setCardNumber(String cardNumber) {
+		this.cardNumber = cardNumber;
+	}
+
+	
 }
