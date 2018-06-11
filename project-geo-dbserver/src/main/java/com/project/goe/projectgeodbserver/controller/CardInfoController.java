@@ -1,6 +1,8 @@
 package com.project.goe.projectgeodbserver.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -56,6 +58,21 @@ public class CardInfoController {
 		if (null == user)
 			throw new RuntimeException("用户不存在");
 
+		//判断银行卡是否重复添加
+		List<CardInfo> personCards = cardInfoService.findByUserId(user.getUserId());
+		if ( null != personCards && personCards.size() > 0 ) {
+			for (CardInfo card : personCards) {
+				if (card.getBankName().equals(bankName) && card.getCardNumber().equals(cardNo) && card.getCardOwnerName().equals(ownerName) && card.getPhone().equals(phone)) {
+					retMsg = new RetMsg();
+					retMsg.setCode(400);
+					retMsg.setMessage("该银行卡已添加!");
+					retMsg.setData("该银行卡已添加!");
+					retMsg.setSuccess(false);
+					return retMsg;
+				}
+			}
+		}
+		
 		CardInfo cardInfo = new CardInfo();
 		cardInfo.setBankName(bankName);
 		cardInfo.setCardNumber(cardNo);
@@ -64,6 +81,8 @@ public class CardInfoController {
 		cardInfo.setUserId(user.getUserId());
 		cardInfo.setCreateTime(new Date());
 
+		
+		
 		// 新增银行卡信息
 		this.cardInfoService.save(cardInfo);
 
