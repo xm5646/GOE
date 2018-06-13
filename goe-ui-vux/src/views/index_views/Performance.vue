@@ -112,6 +112,7 @@
       },
       onSubmit () {
         if (this.findAccount.length > 0) {
+          this.currentUser = this.findAccount
           this.getPerformance(this.findAccount)
         } else {
           this.$vux.toast.show({
@@ -160,6 +161,7 @@
       },
       viewMyPerformance () {
         this.findAccount = ''
+        this.currentUser = JSON.parse(window.localStorage.getItem('User')).account
         this.getPerformance(JSON.parse(window.localStorage.getItem('User')).account)
       },
       getPerformance (account) {
