@@ -23,11 +23,15 @@ public class BusinessUtil {
 //	public final static String VIP8 = "HH";	//市场总监 260 260  1200
 //	public final static String VIP9 = "II";	//高级总监 380 380  1800
 //	
-//	public final static String DS1 = "JJJ";	//一星董事 380 380 300 3000
-//	public final static String DS2 = "KKK";	//执行总裁 750 750 600 5000
-//	public final static String DS3 = "LLL";	//总裁 1500 1500 1200  6000     
-//	public final static String DS4 = "MMM";	//皇冠 2200 2200 1800  13000
-//	public final static String DS5 = "NNN";	//皇冠大使 3000 3000 2100 20000
+//	public final static String DS1 = "JJJ";	//董事 750 750 750 3000
+//	public final static String DS2 = "KKK";	//执行总裁 2500 2500 2500 6000
+//	public final static String DS3 = "LLL";	//总裁 5000 5000 5000  20000
+	
+	
+	
+	
+//	public final static String DS4 = "MMM";	//皇冠 3000 3000 3000  10000
+//	public final static String DS5 = "NNN";	//皇冠大使 5000 5000 5000 20000
 	
 	public static Map<String,BusinessEntity> businessMap = new HashMap<>();
 	
@@ -53,16 +57,16 @@ public class BusinessUtil {
 		BusinessEntity VIP9 = new BusinessEntity(9,UserLevel.ADVANCED_DIRECTOR, UserLevel.ADVANCED_DIRECTOR_CH, 380, 380, 0, 1800);
 		businessMap.put(UserLevel.ADVANCED_DIRECTOR, VIP9);
 		
-		BusinessEntity DS1 = new BusinessEntity(10,UserLevel.BOARD_DIRECOTR, UserLevel.BOARD_DIRECOTR_CH, 380, 380, 380, 3000);
+		BusinessEntity DS1 = new BusinessEntity(10,UserLevel.BOARD_DIRECOTR, UserLevel.BOARD_DIRECOTR_CH, 750, 750, 750, 3000);
 		businessMap.put(UserLevel.BOARD_DIRECOTR, DS1);
-		BusinessEntity DS2 = new BusinessEntity(11,UserLevel.EXECUTIVE_PRESIDEANT, UserLevel.EXECUTIVE_PRESIDEANT_CH, 750, 750, 750, 4000);
+		BusinessEntity DS2 = new BusinessEntity(11,UserLevel.EXECUTIVE_PRESIDEANT, UserLevel.EXECUTIVE_PRESIDEANT_CH, 2500, 2500, 2500, 6000);
 		businessMap.put(UserLevel.EXECUTIVE_PRESIDEANT, DS2);
-		BusinessEntity DS3 = new BusinessEntity(12,UserLevel.PRESIDEANT, UserLevel.PRESIDEANT_CH, 1500, 1500, 1500, 6000);
+		BusinessEntity DS3 = new BusinessEntity(12,UserLevel.PRESIDEANT, UserLevel.PRESIDEANT_CH, 5000, 5000, 5000, 20000);
 		businessMap.put(UserLevel.PRESIDEANT, DS3);
-		BusinessEntity DS4 = new BusinessEntity(13,UserLevel.CROWN, UserLevel.CROWN_CH, 3000, 3000, 3000, 10000);
-		businessMap.put(UserLevel.CROWN, DS4);
-		BusinessEntity DS5 = new BusinessEntity(14,UserLevel.CROWN_AMBASSADOR, UserLevel.CROWN_AMBASSADOR_CH, 5000, 5000, 5000, 20000);
-		businessMap.put(UserLevel.CROWN_AMBASSADOR, DS5);
+//		BusinessEntity DS4 = new BusinessEntity(13,UserLevel.CROWN, UserLevel.CROWN_CH, 3000, 3000, 3000, 10000);
+//		businessMap.put(UserLevel.CROWN, DS4);
+//		BusinessEntity DS5 = new BusinessEntity(14,UserLevel.CROWN_AMBASSADOR, UserLevel.CROWN_AMBASSADOR_CH, 5000, 5000, 5000, 20000);
+//		businessMap.put(UserLevel.CROWN_AMBASSADOR, DS5);
 		
 		businessList.add(VIP1);
 		businessList.add(VIP2);
@@ -77,8 +81,8 @@ public class BusinessUtil {
 		businessList.add(DS1);
 		businessList.add(DS2);
 		businessList.add(DS3);
-		businessList.add(DS4);
-		businessList.add(DS5);
+//		businessList.add(DS4);
+//		businessList.add(DS5);
 	}
 	
 	/**
@@ -165,7 +169,7 @@ public class BusinessUtil {
 //		个人工单数:[2247,313,582,]
 //				排序后:[2247, 313, 582]
 //				你的等级是：普通会员
-		BusinessEntity bus = getBusinesLevel(10,11,0);
+		BusinessEntity bus = getBusinesLevel(5555,5555,2500);
 		System.out.println(bus);
 		
 //		CheckUtil.printMap(businessMap);

@@ -46,12 +46,12 @@ public class UserLevelUtil {
 			case UserLevel.PRESIDEANT:
 				userLevelDesc = UserLevel.PRESIDEANT_CH;
 				break;
-			case UserLevel.CROWN:
-				userLevelDesc = UserLevel.CROWN_CH;
-				break;
-			case UserLevel.CROWN_AMBASSADOR:
-				userLevelDesc = UserLevel.CROWN_AMBASSADOR_CH;
-				break;
+//			case UserLevel.CROWN:
+//				userLevelDesc = UserLevel.CROWN_CH;
+//				break;
+//			case UserLevel.CROWN_AMBASSADOR:
+//				userLevelDesc = UserLevel.CROWN_AMBASSADOR_CH;
+//				break;
 			default:
 				throw new RuntimeException("级别不正确");
 		}
@@ -60,7 +60,7 @@ public class UserLevelUtil {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(transfer("NNN"));
+		System.out.println(transfer("LLL"));
 	}
 	
 }

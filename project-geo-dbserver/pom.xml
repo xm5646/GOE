@@ -5,7 +5,7 @@
 
 	<groupId>com.project.goe</groupId>
 	<artifactId>project-geo-dbserver</artifactId>
-	<version>1.0-20180530</version>
+	<version>1.0-20180614</version>
 	<packaging>jar</packaging>
 
 	<name>project-geo-dbserver</name>
@@ -56,6 +56,18 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
+		</dependency>
+
+		<!-- ali 短信 -->
+		<dependency>
+			<groupId>com.aliyun</groupId>
+			<artifactId>aliyun-java-sdk-core</artifactId>
+			<version>3.7.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.aliyun</groupId>
+			<artifactId>aliyun-java-sdk-dysmsapi</artifactId>
+			<version>1.1.0</version>
 		</dependency>
 
 		<!-- Apache Shiro -->

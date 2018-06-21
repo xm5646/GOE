@@ -57,8 +57,8 @@ public class CheckUtil {
 				// 用户已激活
 				Performance pm = perMap.get(pid);
 				// 计算累计
-				//判断用户级别大于主任UserLevel.DIRECOTR,并且是通过考核状态,并且否则不增加累计业绩
-				if (BusinessUtil.isBigBusSame(pu.getUserLevel(), UserLevel.DIRECOTR)) {
+				//判断用户级别大于等于业务员UserLevel.COMMON_SALEMAN(即是否产生收入),并且是通过考核状态,并且否则不增加累计业绩
+				if (BusinessUtil.isBigBusSame(pu.getUserLevel(), UserLevel.COMMON_SALEMAN)) {
 					if (pu.isAssessStatus()) {
 						if (userid == pu.getDepartmentA()) {
 							pm.setDepartAcount(pm.getDepartAcount() + 1);
@@ -80,6 +80,7 @@ public class CheckUtil {
 				
 				// 计算新增
 				// 这里如果累计业绩没有超过4：4 不增加新增业绩
+				// 如果当前存在发放的累计升级奖励,则不增加新增业绩
 				boolean isHaveTotalEarning = isHaveTotalEarningMap.get(pu.getUserId());
 				if (!"AA".equals(pu.getUserLevel()) && !isHaveTotalEarning) {
 					if (userid == pu.getDepartmentA()) {

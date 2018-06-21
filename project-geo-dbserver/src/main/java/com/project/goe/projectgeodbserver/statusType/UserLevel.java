@@ -13,8 +13,8 @@ public class UserLevel {
 	public static final String BOARD_DIRECOTR = "JJJ";
 	public static final String EXECUTIVE_PRESIDEANT = "KKK";
 	public static final String PRESIDEANT = "LLL";
-	public static final String CROWN = "MMM";
-	public static final String CROWN_AMBASSADOR = "NNN";
+//	public static final String CROWN = "MMM";
+//	public static final String CROWN_AMBASSADOR = "NNN";
 	
 	public static final String CONSUMER_CH = "普通会员";
 	public static final String COMMON_SALEMAN_CH = "业务员";
@@ -28,6 +28,6 @@ public class UserLevel {
 	public static final String BOARD_DIRECOTR_CH = "董事";
 	public static final String EXECUTIVE_PRESIDEANT_CH = "执行总裁";
 	public static final String PRESIDEANT_CH = "总裁";
-	public static final String CROWN_CH = "皇冠";
-	public static final String CROWN_AMBASSADOR_CH = "皇冠大使";
+//	public static final String CROWN_CH = "皇冠";
+//	public static final String CROWN_AMBASSADOR_CH = "皇冠大使";
 }
