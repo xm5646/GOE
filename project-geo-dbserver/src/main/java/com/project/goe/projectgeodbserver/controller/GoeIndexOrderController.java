@@ -1,5 +1,10 @@
 package com.project.goe.projectgeodbserver.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.h2.util.New;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
@@ -66,26 +71,31 @@ public class GoeIndexOrderController {
 				public OrderInfoVO convert(OrderInfo orderInfo) {
 					OrderInfoVO orderInfoVO = new OrderInfoVO();
 
-					long expressId = orderInfo.getExpressId();
-					ExpressAddress expressAddress = expressAddressService.findByExpressId(expressId);
+					//取消从收货地址ID去查询收货地址信息
+//					long expressId = orderInfo.getExpressId();
+//					ExpressAddress expressAddress = expressAddressService.findByExpressId(expressId);
 
 					long userId = orderInfo.getUserId();
 					User user = userService.findByUserId(userId);
 
 					orderInfoVO.setAccount(user.getAccount());
 					
-					String[] addressInfo = new String[] {expressAddress.getProvince(),expressAddress.getCity(),
-							expressAddress.getDistrict(),expressAddress.getDetailAddress()};
+					String addr[] = new String[] {} ;
+					if (orderInfo.getAddressCode() != null && orderInfo.getAddressDetail() != null) {
+						String str = orderInfo.getAddressCode() + "," + orderInfo.getAddressDetail();
+						addr = str.split(",");
+					}
+					orderInfoVO.setAddressInfo(addr);
 					
-					orderInfoVO.setAddressInfo(addressInfo);
+					
 					orderInfoVO.setCreateTime(DateFormatUtil.DateObjectToString(orderInfo.getCreateTime()));
 					orderInfoVO.setDescription(orderInfo.getDescription());
 					orderInfoVO.setIsDelivery(orderInfo.getIsDelivery());
 					orderInfoVO.setOrderId(orderInfo.getOrderId());
 					orderInfoVO.setOrderType(orderInfo.getOrderType());
-					orderInfoVO.setPhone(expressAddress.getPhone());
+					orderInfoVO.setPhone(orderInfo.getPhoneNumber());
 					orderInfoVO.setProductCount(orderInfo.getProductCount());
-					orderInfoVO.setReceiverName(expressAddress.getReceiverName());
+					orderInfoVO.setReceiverName(orderInfo.getReceiveName());
 
 					return orderInfoVO;
 				}
@@ -138,25 +148,29 @@ public class GoeIndexOrderController {
 				public OrderInfoVO convert(OrderInfo orderInfo) {
 					OrderInfoVO orderInfoVO = new OrderInfoVO();
 
-					long expressId = orderInfo.getExpressId();
-					ExpressAddress expressAddress = expressAddressService.findByExpressId(expressId);
+//					long expressId = orderInfo.getExpressId();
+//					ExpressAddress expressAddress = expressAddressService.findByExpressId(expressId);
 
 					long userId = orderInfo.getUserId();
 					User user = userService.findByUserId(userId);
 
 					orderInfoVO.setAccount(user.getAccount());
 					
-					String[] addressInfo = new String[] {expressAddress.getProvince(),expressAddress.getCity(),
-							expressAddress.getDistrict(),expressAddress.getDetailAddress()};
-					orderInfoVO.setAddressInfo(addressInfo);
+					String addr[] = new String[] {} ;
+					if (orderInfo.getAddressCode() != null && orderInfo.getAddressDetail() != null) {
+						String str = orderInfo.getAddressCode() + "," + orderInfo.getAddressDetail();
+						addr = str.split(",");
+					}
+					orderInfoVO.setAddressInfo(addr);
+					
 					orderInfoVO.setCreateTime(DateFormatUtil.DateObjectToString(orderInfo.getCreateTime()));
 					orderInfoVO.setDescription(orderInfo.getDescription());
 					orderInfoVO.setIsDelivery(orderInfo.getIsDelivery());
 					orderInfoVO.setOrderId(orderInfo.getOrderId());
 					orderInfoVO.setOrderType(orderInfo.getOrderType());
-					orderInfoVO.setPhone(expressAddress.getPhone());
+					orderInfoVO.setPhone(orderInfo.getPhoneNumber());
 					orderInfoVO.setProductCount(orderInfo.getProductCount());
-					orderInfoVO.setReceiverName(expressAddress.getReceiverName());
+					orderInfoVO.setReceiverName(orderInfo.getReceiveName());
 
 					return orderInfoVO;
 				}
@@ -208,23 +222,28 @@ public class GoeIndexOrderController {
 						public OrderInfoOfReconsume convert(OrderInfo orderInfo) {
 							OrderInfoOfReconsume orderInfoOfReconsume = new OrderInfoOfReconsume();
 
-							long expressId = orderInfo.getExpressId();
-							ExpressAddress expressAddress = expressAddressService.findByExpressId(expressId);
+//							long expressId = orderInfo.getExpressId();
+//							ExpressAddress expressAddress = expressAddressService.findByExpressId(expressId);
 
 							long userId = orderInfo.getUserId();
 							User user = userService.findByUserId(userId);
 
 							orderInfoOfReconsume.setAccount(user.getAccount());
 							
-							String[] addressInfo = new String[] {expressAddress.getProvince(),expressAddress.getCity(),
-									expressAddress.getDistrict(),expressAddress.getDetailAddress()};
-							orderInfoOfReconsume.setAddressInfo(addressInfo);
+							String addr[] = new String[] {} ;
+							if (orderInfo.getAddressCode() != null && orderInfo.getAddressDetail() != null) {
+								String str = orderInfo.getAddressCode() + "," + orderInfo.getAddressDetail();
+								addr = str.split(",");
+							}
+							orderInfoOfReconsume.setAddressInfo(addr);
+						
+							
 							orderInfoOfReconsume
 									.setCreateTime(DateFormatUtil.DateObjectToString(orderInfo.getCreateTime()));
 							orderInfoOfReconsume.setDescription(orderInfo.getDescription());
 							orderInfoOfReconsume.setOrderId(orderInfo.getOrderId());
-							orderInfoOfReconsume.setPhone(expressAddress.getPhone());
-							orderInfoOfReconsume.setReceiverName(expressAddress.getReceiverName());
+							orderInfoOfReconsume.setPhone(orderInfo.getPhoneNumber());
+							orderInfoOfReconsume.setReceiverName(orderInfo.getReceiveName());
 
 							return orderInfoOfReconsume;
 						}
@@ -281,22 +300,27 @@ public class GoeIndexOrderController {
 						public OrderInfoOfReconsume convert(OrderInfo orderInfo) {
 							OrderInfoOfReconsume orderInfoOfReconsume = new OrderInfoOfReconsume();
 
-							long expressId = orderInfo.getExpressId();
-							ExpressAddress expressAddress = expressAddressService.findByExpressId(expressId);
+//							long expressId = orderInfo.getExpressId();
+//							ExpressAddress expressAddress = expressAddressService.findByExpressId(expressId);
 
 							long userId = orderInfo.getUserId();
 							User user = userService.findByUserId(userId);
 
 							orderInfoOfReconsume.setAccount(user.getAccount());
-							String[] addressInfo = new String[] {expressAddress.getProvince(),expressAddress.getCity(),
-									expressAddress.getDistrict(),expressAddress.getDetailAddress()};
-							orderInfoOfReconsume.setAddressInfo(addressInfo);
+							
+							String addr[] = new String[] {} ;
+							if (orderInfo.getAddressCode() != null && orderInfo.getAddressDetail() != null) {
+								String str = orderInfo.getAddressCode() + "," + orderInfo.getAddressDetail();
+								addr = str.split(",");
+							}
+							orderInfoOfReconsume.setAddressInfo(addr);
+							
 							orderInfoOfReconsume
 									.setCreateTime(DateFormatUtil.DateObjectToString(orderInfo.getCreateTime()));
 							orderInfoOfReconsume.setDescription(orderInfo.getDescription());
 							orderInfoOfReconsume.setOrderId(orderInfo.getOrderId());
-							orderInfoOfReconsume.setPhone(expressAddress.getPhone());
-							orderInfoOfReconsume.setReceiverName(expressAddress.getReceiverName());
+							orderInfoOfReconsume.setPhone(orderInfo.getPhoneNumber());
+							orderInfoOfReconsume.setReceiverName(orderInfo.getReceiveName());
 
 							return orderInfoOfReconsume;
 						}
@@ -348,23 +372,27 @@ public class GoeIndexOrderController {
 						public OrderInfoOfProductCoin convert(OrderInfo orderInfo) {
 							OrderInfoOfProductCoin orderInfoOfProductCoin = new OrderInfoOfProductCoin();
 
-							long expressId = orderInfo.getExpressId();
-							ExpressAddress expressAddress = expressAddressService.findByExpressId(expressId);
+//							long expressId = orderInfo.getExpressId();
+//							ExpressAddress expressAddress = expressAddressService.findByExpressId(expressId);
 
 							long userId = orderInfo.getUserId();
 							User user = userService.findByUserId(userId);
 
 							orderInfoOfProductCoin.setAccount(user.getAccount());
 							orderInfoOfProductCoin.setProductCount(orderInfo.getProductCount());
-							String[] addressInfo = new String[] {expressAddress.getProvince(),expressAddress.getCity(),
-							expressAddress.getDistrict(),expressAddress.getDetailAddress()};
-							orderInfoOfProductCoin.setAddressInfo(addressInfo);
+							
+							String addr[] = new String[] {} ;
+							if (orderInfo.getAddressCode() != null && orderInfo.getAddressDetail() != null) {
+								String str = orderInfo.getAddressCode() + "," + orderInfo.getAddressDetail();
+								addr = str.split(",");
+							}
+							orderInfoOfProductCoin.setAddressInfo(addr);
 							orderInfoOfProductCoin
 									.setCreateTime(DateFormatUtil.DateObjectToString(orderInfo.getCreateTime()));
 							orderInfoOfProductCoin.setDescription(orderInfo.getDescription());
 							orderInfoOfProductCoin.setOrderId(orderInfo.getOrderId());
-							orderInfoOfProductCoin.setPhone(expressAddress.getPhone());
-							orderInfoOfProductCoin.setReceiverName(expressAddress.getReceiverName());
+							orderInfoOfProductCoin.setPhone(orderInfo.getPhoneNumber());
+							orderInfoOfProductCoin.setReceiverName(orderInfo.getReceiveName());
 
 							return orderInfoOfProductCoin;
 						}
@@ -421,8 +449,8 @@ public class GoeIndexOrderController {
 						public OrderInfoOfProductCoin convert(OrderInfo orderInfo) {
 							OrderInfoOfProductCoin orderInfoOfProductCoin = new OrderInfoOfProductCoin();
 
-							long expressId = orderInfo.getExpressId();
-							ExpressAddress expressAddress = expressAddressService.findByExpressId(expressId);
+//							long expressId = orderInfo.getExpressId();
+//							ExpressAddress expressAddress = expressAddressService.findByExpressId(expressId);
 
 							long userId = orderInfo.getUserId();
 							User user = userService.findByUserId(userId);
@@ -430,15 +458,19 @@ public class GoeIndexOrderController {
 							orderInfoOfProductCoin.setAccount(user.getAccount());
 							orderInfoOfProductCoin.setProductCount(orderInfo.getProductCount());
 							
-							String[] addressInfo = new String[]{expressAddress.getProvince(),expressAddress.getCity(),
-									expressAddress.getDistrict(),expressAddress.getDetailAddress()};
-							orderInfoOfProductCoin.setAddressInfo(addressInfo);
+							String addr[] = new String[] {} ;
+							if (orderInfo.getAddressCode() != null && orderInfo.getAddressDetail() != null) {
+								String str = orderInfo.getAddressCode() + "," + orderInfo.getAddressDetail();
+								addr = str.split(",");
+							}
+							orderInfoOfProductCoin.setAddressInfo(addr);
+							
 							orderInfoOfProductCoin
 									.setCreateTime(DateFormatUtil.DateObjectToString(orderInfo.getCreateTime()));
 							orderInfoOfProductCoin.setDescription(orderInfo.getDescription());
 							orderInfoOfProductCoin.setOrderId(orderInfo.getOrderId());
-							orderInfoOfProductCoin.setPhone(expressAddress.getPhone());
-							orderInfoOfProductCoin.setReceiverName(expressAddress.getReceiverName());
+							orderInfoOfProductCoin.setPhone(orderInfo.getPhoneNumber());
+							orderInfoOfProductCoin.setReceiverName(orderInfo.getReceiveName());
 
 							return orderInfoOfProductCoin;
 						}

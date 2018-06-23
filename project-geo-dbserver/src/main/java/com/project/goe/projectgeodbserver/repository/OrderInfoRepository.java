@@ -15,7 +15,6 @@ import com.project.goe.projectgeodbserver.entity.OrderInfo;
 public interface OrderInfoRepository extends JpaSpecificationExecutor<OrderInfo>,JpaRepository<OrderInfo, Long> {
 	public OrderInfo findByOrderId(long orderId);
 	public List<OrderInfo> findByUserId(long userId);
-	public List<OrderInfo> findByExpressId(long expressId);
 	// 分页查询：基于用户名，按时间降序排序
 	public Page<OrderInfo> findAll(Specification<OrderInfo> spec, Pageable pageable);
 	

@@ -30,10 +30,6 @@ public class OrderInfoService {
 		return this.orderInfoRepository.findByUserId(userId);
 	}
 
-	public List<OrderInfo> findByExpressId(long expressId) {
-		return this.orderInfoRepository.findByExpressId(expressId);
-	}
-
 	public Page<OrderInfo> findAllOrdersRecord(Pageable pageable) {
 		return this.orderInfoRepository.findAll(pageable);
 	}

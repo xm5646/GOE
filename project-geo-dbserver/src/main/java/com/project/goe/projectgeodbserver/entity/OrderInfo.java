@@ -26,9 +26,25 @@ public class OrderInfo {
 	@Column(nullable = false)
 	private long userId;
 
-	// 订单关联用户快递id
-	@Column(nullable = false)
-	private long expressId;
+	//收货详细地址中文字符串
+	@Column
+	private String addressDetail;
+	
+	//收货地址省市县编码数组
+	@Column
+	private String addressCode;
+	
+	//收件人电话
+	@Column
+	private String phoneNumber;
+	
+	//收件人名称
+	@Column
+	private String receiveName;
+	
+//	// 订单关联用户快递id
+//	@Column(nullable = false)
+//	private long expressId;
 
 	// 产品名称
 	@Column
@@ -82,13 +98,13 @@ public class OrderInfo {
 		this.userId = userId;
 	}
 
-	public long getExpressId() {
-		return expressId;
-	}
-
-	public void setExpressId(long expressId) {
-		this.expressId = expressId;
-	}
+//	public long getExpressId() {
+//		return expressId;
+//	}
+//
+//	public void setExpressId(long expressId) {
+//		this.expressId = expressId;
+//	}
 
 	public String getProuductName() {
 		return prouductName;
@@ -162,4 +178,38 @@ public class OrderInfo {
 		this.createTime = createTime;
 	}
 
+	public String getAddressDetail() {
+		return addressDetail;
+	}
+
+	public void setAddressDetail(String addressDetail) {
+		this.addressDetail = addressDetail;
+	}
+
+	public String getAddressCode() {
+		return addressCode;
+	}
+
+	public void setAddressCode(String addressCode) {
+		this.addressCode = addressCode;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getReceiveName() {
+		return receiveName;
+	}
+
+	public void setReceiveName(String receiveName) {
+		this.receiveName = receiveName;
+	}
+
+	
+	
 }

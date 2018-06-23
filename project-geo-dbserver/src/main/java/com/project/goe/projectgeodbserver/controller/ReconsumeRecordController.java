@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.apache.poi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -175,7 +176,12 @@ public class ReconsumeRecordController {
 
 			for (ExpressAddress expressAddress : expressAddresses) {
 				if (expressAddress.isDefaultAddress()) {
-					orderInfo.setExpressId(expressAddress.getExpressId());
+					String codeArr[] = new String[3];
+					codeArr[0] = expressAddress.getProvince();
+					codeArr[1] = expressAddress.getCity();
+					codeArr[2] = expressAddress.getDistrict();
+					
+					orderInfo.setAddressCode(StringUtil.join(codeArr, ","));
 					break;
 				}
 			}
@@ -185,7 +191,21 @@ public class ReconsumeRecordController {
 			if (null == expressAddress) {
 				throw new RuntimeException("未找到快递地址!");
 			}
-			orderInfo.setExpressId(expressId);
+			
+			//取消绑定收货地址ID,防止用户删除收货地址导致空指针异常
+//			orderInfo.setExpressId(expressId);
+			
+			
+			//保存静态的收货地址信息
+			orderInfo.setAddressDetail(expressAddress.getDetailAddress());
+			String codeArr[] = new String[3];
+			codeArr[0] = expressAddress.getProvince();
+			codeArr[1] = expressAddress.getCity();
+			codeArr[2] = expressAddress.getDistrict();
+			
+			orderInfo.setAddressCode(StringUtil.join(codeArr, ","));
+			orderInfo.setPhoneNumber(expressAddress.getPhone());
+			orderInfo.setReceiveName(expressAddress.getReceiverName());
 		}
 		orderInfo.setOrderType(ConsumeType.COIN_TRANSFER_RECONSUME);
 		orderInfo.setUserId(user.getUserId());
@@ -237,4 +257,8 @@ public class ReconsumeRecordController {
 		}
 	}
 
+	public static void main(String[] args) {
+		String arrcode[] = new String[] {"2003","1233","12313"};
+		System.out.println(StringUtil.join(arrcode, ","));
+	}
 }
