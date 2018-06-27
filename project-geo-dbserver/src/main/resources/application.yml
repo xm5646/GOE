@@ -8,6 +8,17 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     tomcat:
       max-active: 20
+  redis:
+    host: localhost
+    port: 6380
+    database: 1
+    timeout: 3000
+    password:
+    pool: 
+      max-active: 8
+      max-wait: -1
+      max-idle: 8
+      min-idle: 0
   jpa:
     database: mysql
     show-sql: true

@@ -144,4 +144,13 @@ public class SmsUtil {
         }
 
     }
+
+
+    public static  String  getSmsCode(){
+        Long xx = Math.round(Math.random()*9999);
+        while(xx<1000){
+            xx = Math.round(Math.random()*9999);
+        }
+        return String.valueOf(xx);
+    }
 }
