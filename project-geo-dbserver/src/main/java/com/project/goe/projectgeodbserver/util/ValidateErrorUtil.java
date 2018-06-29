@@ -32,7 +32,11 @@ public class ValidateErrorUtil {
 		RetMsg retMsg = new RetMsg();
 		retMsg.setCode(400);
 		retMsg.setData(errorList);
-		retMsg.setMessage("数据不符合限制条件！");
+		if (errorList.size()>0) {
+			retMsg.setMessage(errorList.get(0));
+		} else {
+			retMsg.setMessage("表单数据格式不正确!");
+		}
 		retMsg.setSuccess(false);
 
 		return retMsg;

@@ -8,6 +8,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+
+import com.project.goe.projectgeodbserver.entity.*;
+import com.project.goe.projectgeodbserver.service.*;
+import com.project.goe.projectgeodbserver.statusType.SmsType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -20,16 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.goe.projectgeodbserver.entity.CardInfo;
-import com.project.goe.projectgeodbserver.entity.ConsumeRecord;
-import com.project.goe.projectgeodbserver.entity.Performance;
-import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.server.EarnServerSchedul;
-import com.project.goe.projectgeodbserver.service.CardInfoService;
-import com.project.goe.projectgeodbserver.service.ConsumeRecordService;
-import com.project.goe.projectgeodbserver.service.PerformanceService;
-import com.project.goe.projectgeodbserver.service.UserRepeatCheckService;
-import com.project.goe.projectgeodbserver.service.UserService;
 import com.project.goe.projectgeodbserver.statusType.ConsumeType;
 import com.project.goe.projectgeodbserver.util.UserUtil;
 import com.project.goe.projectgeodbserver.util.ValidateErrorUtil;
@@ -64,6 +59,9 @@ public class UserController {
 
 	@Autowired
 	private BonusPayPercentage bonusPayPercentage;
+
+	@Autowired
+	private RedisService redisService;
 
 	@Autowired
 	private ConsumeRecordService consumeRecordService;
@@ -262,6 +260,7 @@ public class UserController {
 		String nickName = userLoginSettingRequest.getNickName();
 		String bankName = userLoginSettingRequest.getBankName();
 		String cardNumber = userLoginSettingRequest.getCardNumber();
+		String smsCodeString = userLoginSettingRequest.getSmsCode();
 
 		// 如果数据校验有误，则直接返回校验错误信息
 		RetMsg retMsg = ValidateErrorUtil.getInstance().errorList(bindingResult);
@@ -272,6 +271,29 @@ public class UserController {
 		User user = this.userService.findByAccount(account);
 		if (null == user)
 			throw new RuntimeException("用户账号不存在");
+
+		// 验证短信验证码是否正确
+		try {
+			SmsCode smsCode = (SmsCode) redisService.getObj(account);
+			if (null != smsCode && smsCode.getOperation().equals(SmsType.INIT_USER_INFO)){
+				if (!smsCode.getCode().equals(smsCodeString)){
+					retMsg = new RetMsg();
+					retMsg.setMessage("验证码不正确");
+					retMsg.setCode(400);
+					retMsg.setSuccess(false);
+					return retMsg;
+				}
+			}else {
+				retMsg = new RetMsg();
+				retMsg.setMessage("请先获取验证码");
+				retMsg.setCode(400);
+				retMsg.setSuccess(false);
+				return retMsg;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("系统异常");
+		}
 		
 		// 验证姓名手机号银行卡相同用户数量是否超过3个
 		if (this.UserRepeatCheckService.checkUserIsMaxRepeat(nickName + userPhone + bankName + cardNumber)) {
@@ -435,7 +457,7 @@ public class UserController {
 				recommendUser.setUserStatus(true);
 			}
 
-			// 更新业绩信息
+			// 更新业绩信息 需要优化,单起一个线程去做更新,不然会引起用户页面添加用户请求超时
 			earnServerSchedul.mainUpdatePerformance(user.getUserId());
 
 			// 更新推荐人的报单币

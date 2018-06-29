@@ -2,90 +2,100 @@ package com.project.goe.projectgeodbserver.viewentity;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 public class UserLoginSettingRequest {
-	@NotBlank(message = "用户名不能为空")
-	@Size(min = 5,max = 20,message = "用户名的长度不合法!")
-	private String account;
+    @NotBlank(message = "用户名不能为空")
+    @Size(min = 5, max = 20, message = "用户名的长度不合法!")
+    private String account;
 
-	// 姓名
-	@NotBlank(message = "姓名不能为空")
-	@Size(min = 2,max = 10,message = "姓名的长度不合法!")
-	private String nickName;
+    // 姓名
+    @NotBlank(message = "姓名不能为空")
+    @Size(min = 2, max = 10, message = "姓名的长度不合法!")
+    private String nickName;
 
-	@NotBlank(message = "用户新密码不能为空")
-	@Size(min = 6, max = 12, message = "用户新密码长度不合法6-12位)!")
-	private String newPassword;
+    @NotBlank(message = "用户新密码不能为空")
+    @Size(min = 6, max = 12, message = "用户新密码长度不合法6-12位)!")
+    private String newPassword;
 
-	@NotBlank(message = "用户交易密码不能为空")
-	@Pattern(regexp = "[0-9]{6}", message = "交易密码只能是6位数字")
-	private String paymentPassword;
+    @NotBlank(message = "用户交易密码不能为空")
+    @Pattern(regexp = "[0-9]{6}", message = "交易密码只能是6位数字")
+    private String paymentPassword;
 
-	@NotBlank(message = "用户手机号码不能为空")
-	private String userPhone;
-	
-	@NotBlank(message = "开户银行不能为空")
-	private String bankName;
-	
-	@NotBlank(message = "银行卡号不能为空")
-	private String cardNumber;
+    @NotBlank(message = "用户手机号码不能为空")
+    private String userPhone;
 
-	public String getNickName() {
-		return nickName;
-	}
+    @NotBlank(message = "短信验证码不能为空")
+    private String smsCode;
 
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
-	}
+    @NotBlank(message = "开户银行不能为空")
+    private String bankName;
 
-	public String getAccount() {
-		return account;
-	}
+    @NotBlank(message = "银行卡号不能为空")
+    private String cardNumber;
 
-	public void setAccount(String account) {
-		this.account = account;
-	}
+    public String getNickName() {
+        return nickName;
+    }
 
-	public String getNewPassword() {
-		return newPassword;
-	}
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
 
-	public void setNewPassword(String newPassword) {
-		this.newPassword = newPassword;
-	}
+    public String getAccount() {
+        return account;
+    }
 
-	public String getUserPhone() {
-		return userPhone;
-	}
+    public void setAccount(String account) {
+        this.account = account;
+    }
 
-	public void setUserPhone(String userPhone) {
-		this.userPhone = userPhone;
-	}
+    public String getNewPassword() {
+        return newPassword;
+    }
 
-	public String getPaymentPassword() {
-		return paymentPassword;
-	}
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
 
-	public void setPaymentPassword(String paymentPassword) {
-		this.paymentPassword = paymentPassword;
-	}
+    public String getUserPhone() {
+        return userPhone;
+    }
 
-	public String getBankName() {
-		return bankName;
-	}
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
+    }
 
-	public void setBankName(String bankName) {
-		this.bankName = bankName;
-	}
+    public String getPaymentPassword() {
+        return paymentPassword;
+    }
 
-	public String getCardNumber() {
-		return cardNumber;
-	}
+    public void setPaymentPassword(String paymentPassword) {
+        this.paymentPassword = paymentPassword;
+    }
 
-	public void setCardNumber(String cardNumber) {
-		this.cardNumber = cardNumber;
-	}
+    public String getBankName() {
+        return bankName;
+    }
 
-	
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public String getSmsCode() {
+        return smsCode;
+    }
+
+    public void setSmsCode(String smsCode) {
+        this.smsCode = smsCode;
+    }
 }
