@@ -66,6 +66,11 @@ public class TestController {
         }
     }
 
+    @RequestMapping(value = "freeTime")
+    public String getFreeTime(String key) {
+        Long freetime = redisService.getFreeTime(key);
+        return  "剩余时间:" + String.valueOf(freetime);
+    }
 
     @RequestMapping(value = "getObj")
     public Object getObj(String key) {

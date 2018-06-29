@@ -10,10 +10,10 @@ spring:
       max-active: 20
   redis:
     host: localhost
-    port: 6380
+    port: 16666
     database: 1
     timeout: 3000
-    password:
+    password: x33+esaC
     pool: 
       max-active: 8
       max-wait: -1

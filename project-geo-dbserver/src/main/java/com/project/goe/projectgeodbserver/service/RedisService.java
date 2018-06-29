@@ -70,13 +70,20 @@ public class RedisService {
      */
     public boolean ExistsKey(String key) { return  redisTemplate.hasKey(key);}
 
+
+    /**
+     * 根据指定key 查看剩余存活时间
+     * @param key
+     * @return
+     */
+    public Long getFreeTime(String key) { return  redisTemplate.getExpire(key);}
     /**
      * 设置obj缓存
      * @param key
      * @param o2
      */
     public void setObj(String key, Object o2){
-        valOpsObj.set(key, o2, 120, TimeUnit.SECONDS);
+        valOpsObj.set(key, o2, 300, TimeUnit.SECONDS);
     }
 
     /**

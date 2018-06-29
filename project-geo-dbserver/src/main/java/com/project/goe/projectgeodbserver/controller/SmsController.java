@@ -36,7 +36,7 @@ public class SmsController {
 
         //判断该用户是否在分钟内发送过验证码,如果没有就调用阿里短信服务,发送短信验证码
         try {
-            if (redisService.ExistsKey(account)){
+            if (redisService.getFreeTime(account) > 180){
                 retMsg.setCode(400);
                 retMsg.setSuccess(false);
                 retMsg.setMessage("已经发送验证码,请在2分钟之后再试");
