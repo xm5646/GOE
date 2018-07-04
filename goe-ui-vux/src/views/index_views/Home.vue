@@ -36,13 +36,29 @@
     </group>
     <br>
     <br>
+    <div v-transfer-dom>
+      <x-dialog v-model="showNoticePanel" class="dialog-demo">
+        <notice-panel :noticesList="notices" @closePanelEvent="closeNoticePanel"></notice-panel>
+      </x-dialog>
+    </div>
   </div>
 </template>
 <script>
-  import { XHeader, Group, Panel, Divider, Card, Cell } from 'vux'
+  import { XHeader, Group, Panel, Divider, Card, Cell, XDialog, TransferDomDirective as TransferDom } from 'vux'
   import GoeConfig from '../../../config/goe'
+  import NoticePanel from '../../components/NoticePanel'
 
   export default {
+    beforeMount: function () {
+      console.log('beforCreate*******************')
+      console.log(this.$route.params.noticePanelShowStatus)
+      console.log(this.$route.params.notices)
+      if (this.$route.params.noticePanelShowStatus) {
+        this.notices = this.$route.params.notices
+        console.log(this.notices.length)
+        this.showNoticePanel = true
+      }
+    },
     mounted: function () {
       const userOjb = JSON.parse(window.localStorage.getItem('User'))
       this.user = userOjb
@@ -58,18 +74,25 @@
       }
       this.getPerformance()
     },
+    directives: {
+      TransferDom
+    },
     components: {
       XHeader,
       Group,
       Panel,
       Divider,
       Card,
+      XDialog,
+      NoticePanel,
       Cell
     },
     data () {
       return {
         user: '',
         type: '1',
+        notices: [],
+        showNoticePanel: false,
         list: [{
           src: require('../../assets/images/icon/user.png'),
           title: '张三 [组长]',
@@ -86,6 +109,9 @@
       }
     },
     methods: {
+      closeNoticePanel () {
+        this.showNoticePanel = false
+      },
       confirmLogout () {
         const _this = this // 需要注意 onCancel 和 onConfirm 的 this 指向
         this.$vux.confirm.show({

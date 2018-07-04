@@ -38,11 +38,42 @@
         msg: 'Login',
         password: '',
         account: '',
+        notices: [],
+        noticeShowStatus: false,
         show: false,
         show1: false
       }
     },
     methods: {
+      getNotices () {
+        const url = GoeConfig.apiServer + '/notice/getShownNotices'
+        this.$http.get(url, {
+          _timeout: 3000,
+          onTimeout: (request) => {
+          }
+        })
+          .then(response => {
+            if (response.body.success) {
+              this.notices = response.body.data
+              console.log('获取到的数据长度:' + this.notices.length)
+              if (this.notices.length > 0) {
+                this.noticeShowStatus = true
+              }
+              console.log('获取公告信息:' + this.noticeShowStatus)
+              this.$router.push({name: 'index', params: {noticePanelShowStatus: this.noticeShowStatus, notices: this.notices}})
+            } else {
+              this.$vux.toast.show({
+                type: 'cancel',
+                text: (response.body.message || '系统异常')
+              })
+            }
+          }, responseErr => {
+            this.$vux.toast.show({
+              type: 'cancel',
+              text: '系统异常'
+            })
+          })
+      },
       login () {
         if (this.account.length > 0 && this.password.length > 5) {
           const url = GoeConfig.apiServer + '/user/login'
@@ -65,7 +96,7 @@
                   this.$vux.toast.show({
                     text: '登陆成功'
                   })
-                  this.$router.push({name: 'index'})
+                  this.getNotices()
                 } else {
                   this.$router.push({name: 'initPassword'})
                 }

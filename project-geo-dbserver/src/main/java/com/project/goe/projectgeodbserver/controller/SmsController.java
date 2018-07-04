@@ -51,7 +51,7 @@ public class SmsController {
                     redisService.setObj(account, code);
                 }
             }
-        }catch (ClientException err){
+        }catch (Exception e){
             retMsg.setCode(400);
             retMsg.setSuccess(false);
             retMsg.setMessage("发送短信验证码失败");
