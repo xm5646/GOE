@@ -28,4 +28,6 @@ public class NoticeService {
 
     public List<Notice> findAllShownNotices() {return this.noticeRepository.findAllShownNotices();}
 
+    public void deleteById(Long id) {this.noticeRepository.delete(id);}
+
 }

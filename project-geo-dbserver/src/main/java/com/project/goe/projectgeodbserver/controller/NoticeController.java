@@ -34,6 +34,7 @@ public class NoticeController {
         notice.setShowStatus(showStatus);
         notice.setTitle(title);
         notice.setContent(content);
+        notice.setCreateTime(new Date());
         noticeService.save(notice);
         RetMsg msg = new RetMsg();
         msg.setCode(200);
@@ -42,6 +43,20 @@ public class NoticeController {
         return  msg;
     }
 
+    /**
+     * 根据noticeId 删除通知
+     * @param id
+     * @return
+     */
+    @GetMapping("/deleteNotice")
+    public RetMsg deleteNoticeById(@RequestParam Long noticeId) {
+        noticeService.deleteById(noticeId);
+        RetMsg msg = new RetMsg();
+        msg.setCode(200);
+        msg.setSuccess(true);
+        msg.setMessage("删除成功");
+        return  msg;
+    }
 
     /**
      * 更新通知
@@ -57,6 +72,7 @@ public class NoticeController {
         notice.setNoticeId(noticeId);
         notice.setShowStatus(showStatus);
         notice.setTitle(title);
+        notice.setCreateTime(new Date());
         notice.setContent(content);
         try{
             noticeService.save(notice);
@@ -83,7 +99,7 @@ public class NoticeController {
     @GetMapping("/getAllNotices")
     public RetMsg getAllNoticeByPage(@RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum){
 
-        Sort sort = new Sort(Sort.Direction.DESC, "createTime");
+        Sort sort = new Sort(Sort.Direction.DESC, "showStatus");
         Pageable pageable = new PageRequest( pageNum, 10, sort);
         RetMsg retMsg = new RetMsg();
         retMsg.setSuccess(true);
@@ -104,4 +120,7 @@ public class NoticeController {
         retMsg.setData(noticeService.findAllShownNotices());
         return  retMsg;
     }
+
+
+
 }
