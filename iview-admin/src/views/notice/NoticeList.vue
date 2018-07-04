@@ -163,11 +163,33 @@
                         this.pageObj.totalPage = result.data.totalPages;
                         this.pageObj.totalCount = result.data.totalElements;
                         this.noticesList = result.data.content;
+                        for (let i = 0; i < this.noticesList.length; i++) {
+                            this.noticesList[i].createTime = this.getDateStr(this.noticesList[i].createTime);
+                        }
                     } else {
                         this.noticesList = [];
                         this.$Message.error(result.message);
                     }
                 });
+            },
+            getDateStr (timestamp) {
+                var date = new Date(timestamp)
+                var year = date.getFullYear()
+                var month = date.getMonth()
+                var day = date.getDate()
+                var showMonth = ''
+                var showDay = ''
+                if (Number(month) < 9) {
+                    showMonth = '0' + Number(month + 1);
+                } else {
+                    showMonth = Number(month + 1);
+                }
+                if (Number(day) < 10) {
+                    showDay = '0' + day;
+                } else {
+                    showDay = day;
+                }
+                return year + '-' + showMonth + '-' + showDay;
             }
         }
     };
