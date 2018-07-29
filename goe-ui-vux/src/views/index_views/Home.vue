@@ -91,7 +91,12 @@
       return {
         user: '',
         type: '1',
-        notices: [],
+        notices: [
+          {
+            createTime: '',
+            title: ''
+          }
+        ],
         showNoticePanel: false,
         list: [{
           src: require('../../assets/images/icon/user.png'),

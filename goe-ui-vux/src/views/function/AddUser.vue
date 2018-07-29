@@ -93,7 +93,19 @@
             text: '用户编号最少5位字符,临时密码最低6位字符'
           })
         } else {
-          this.postAddUser()
+          const _this = this
+          this.$vux.confirm.show({
+            // 组件除show外的属性
+            title: '请核对报单位置',
+            content: '将要在用户' + _this.parentAccount + '的' + _this.place + '市场进行报单<br>提交报单后将无法撤回!',
+            onCancel () {
+              console.log(this) // 非当前 vm
+              console.log(_this) // 当前 vm
+            },
+            onConfirm () {
+              _this.postAddUser()
+            }
+          })
         }
         console.log('add user' + this.place + this.parentAccount + this.recommendAccount)
       },

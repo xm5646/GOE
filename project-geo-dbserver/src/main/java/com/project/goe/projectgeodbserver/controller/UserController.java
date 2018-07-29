@@ -457,8 +457,13 @@ public class UserController {
 				recommendUser.setUserStatus(true);
 			}
 
+			// 添加新建用户对应的业绩表记录
+			earnServerSchedul.savePer(user.getUserId());
+
 			// 更新业绩信息 需要优化,单起一个线程去做更新,不然会引起用户页面添加用户请求超时
-			earnServerSchedul.mainUpdatePerformance(user.getUserId());
+			// 将新创建的用户ID放入REDIS,等待更新业绩的线程去读取
+			redisService.pushObjToList("userIDList", user.getUserId());
+//			earnServerSchedul.mainUpdatePerformance(user.getUserId());
 
 			// 更新推荐人的报单币
 			recommendUser

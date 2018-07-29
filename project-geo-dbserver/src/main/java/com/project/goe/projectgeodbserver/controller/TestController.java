@@ -42,6 +42,31 @@ public class TestController {
         }
     }
 
+    @RequestMapping(value = "/testList")
+    public String addUserIdToList(String key,Long userId) {
+        try {
+            redisService.pushObjToList("testList", Math.random()*100+1);
+            return  "insert success!";
+//            return redisService.getObjFromList("testList").toString();
+        } catch (Exception e){
+            e.printStackTrace();;
+            return "error";
+        }
+    }
+
+    @RequestMapping(value = "/getList")
+    public String getUserIdFromList(String key) {
+        try {
+            if (redisService.getListSize("testList") > 0) {
+                return redisService.getObjFromList("testList").toString();
+            } else {
+                return  "list is empty!";
+            }
+        } catch (Exception e){
+            return  "error";
+        }
+    }
+
     @RequestMapping(value = "/exist")
     public Boolean ExistKey(String key) {
         try {

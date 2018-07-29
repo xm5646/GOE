@@ -94,4 +94,30 @@ public class RedisService {
         redisTemplate.delete(o);
     }
 
+    /**
+     * 从左边插入对象至List
+     * @param key
+     * @param obj 要存放的对象
+     */
+    public void pushObjToList(String key,Object obj) {
+        redisTemplate.opsForList().leftPush(key, obj);
+    }
+
+    /**
+     * 从指定List左边获取对象
+     * @param key
+     * @return 获取的对象
+     */
+    public Object getObjFromList(String key) {
+        return  redisTemplate.opsForList().leftPop(key);
+    }
+
+    /**
+     * 查询指定列表的元素数量
+     * @param key
+     * @return 元素数量
+     */
+    public Long getListSize(String key) {
+        return redisTemplate.opsForList().size(key);
+    }
 }
