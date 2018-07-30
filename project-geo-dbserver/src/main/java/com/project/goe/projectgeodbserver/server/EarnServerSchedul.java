@@ -270,14 +270,31 @@ public class EarnServerSchedul {
 		}
 	}
 
+
+	/**
+	 * 创建需要发放奖金的map,根据发放时间和到期时间取用户当前有效的收益记录
+	 * @param earns
+	 * @param earnsMap
+	 */
 	private void conductEarnTime(Iterable<Earning> earns, Map<Long, Earning> earnsMap) {
 		for (Earning earn : earns) {
+			//取出当前用户已经挂载的收益记录
 			Earning em = earnsMap.get(earn.getUserid());
 			if (em != null) {
-				// 得到可用使用的业绩对象
-				Earning eu = getUsedEarning(earn, em);
-				if (eu != null) {
-					earnsMap.put(eu.getUserid(), eu);
+				//判断新的收益记录是不是新增,如果是新增,并且奖金发放时间晚于当前时间,则进行挂载更新
+				if(TouchType.ADDITION.equals(earn.getTouchType())){
+					if (earn.getEndTime() != null && earn.getEndTime().after(new Date())) {
+						Earning eu = getUsedEarning(earn, em);
+						if (eu != null) {
+							earnsMap.put(eu.getUserid(), eu);
+						}
+					}
+				} else {
+					//新的收益记录不是新增,则取收益ID最大的去挂载
+					Earning eu = getUsedEarning(earn, em);
+					if (eu != null) {
+						earnsMap.put(eu.getUserid(), eu);
+					}
 				}
 
 			} else {
