@@ -73,12 +73,19 @@ public class GoeIndexDrawCashController {
 							long userId = drawCashRecord.getUserId();
 
 							CardInfo cardInfo = cardInfoService.findByCardInfoId(cardInfoId);
+							if (null == cardInfo) {
+								drawCashRecordOfAuditWait.setBankName("银行卡信息不存在");
+								drawCashRecordOfAuditWait.setCardNumber("银行卡信息不存在");
+								drawCashRecordOfAuditWait.setCardOwnerName("银行卡信息不存在");
+							} else {
+								drawCashRecordOfAuditWait.setBankName(cardInfo.getBankName());
+								drawCashRecordOfAuditWait.setCardNumber(cardInfo.getCardNumber());
+								drawCashRecordOfAuditWait.setCardOwnerName(cardInfo.getCardOwnerName());
+							}
+
 							User user = userService.getUserById(userId);
 							drawCashRecordOfAuditWait.setCommitTime(DateFormatUtil.DateObjectToString(drawCashRecord.getDrawCommitTime()));
-							drawCashRecordOfAuditWait.setBankName(cardInfo.getBankName());
 							drawCashRecordOfAuditWait.setAccount(user.getAccount());
-							drawCashRecordOfAuditWait.setCardNumber(cardInfo.getCardNumber());
-							drawCashRecordOfAuditWait.setCardOwnerName(cardInfo.getCardOwnerName());
 							drawCashRecordOfAuditWait.setDrawId(drawCashRecord.getDrawId());
 							drawCashRecordOfAuditWait.setDrawStatus(drawCashRecord.getDrawStatus());
 							drawCashRecordOfAuditWait.setFinalNumber(MathUtil.floor(drawCashRecord.getFinalNumber()));
