@@ -81,8 +81,10 @@ public class CheckUtil {
 				// 计算新增
 				// 这里如果累计业绩没有超过4：4 不增加新增业绩
 				// 如果当前存在发放的累计升级奖励,则不增加新增业绩
+				// 如果小于UserLevel.ADVANCED_DIRECTOR 级别, 不计算新增业绩
 				boolean isHaveTotalEarning = isHaveTotalEarningMap.get(pu.getUserId());
-				if (!"AA".equals(pu.getUserLevel()) && !isHaveTotalEarning) {
+				boolean isBigThanOrEqualVIP9 = BusinessUtil.isBigBusSame(pu.getUserLevel(), UserLevel.ADVANCED_DIRECTOR);
+				if (!"AA".equals(pu.getUserLevel()) && !isHaveTotalEarning && isBigThanOrEqualVIP9) {
 					if (userid == pu.getDepartmentA()) {
 						pm.setAddDepartAcount(pm.getAddDepartAcount() + 1);
 					} else if (userid == pu.getDepartmentB()) {
