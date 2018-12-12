@@ -17,9 +17,9 @@ public class BusinessUtil {
 //	public final static String VIP2 = "BB";	//业务员  4  4   40
 //	public final static String VIP3 = "CC";	//组长    10 10  140
 //	public final static String VIP4 = "DD";	//主任    20 20  180
-//	public final static String VIP5 = "EE";	//经理    40 40  330
-//	public final static String VIP6 = "FF";	//部门经理 80 80  660
-//	public final static String VIP7 = "GG";	//高级经理 160 160  990
+//	public final static String VIP5 = "EE";	//经理    40 40  300
+//	public final static String VIP6 = "FF";	//部门经理 80 80  600
+//	public final static String VIP7 = "GG";	//高级经理 160 160  900
 //	public final static String VIP8 = "HH";	//市场总监 260 260  1200
 //	public final static String VIP9 = "II";	//高级总监 380 380  1800
 //	
@@ -46,11 +46,11 @@ public class BusinessUtil {
 		businessMap.put(UserLevel.GROUP_LEADER, VIP3);
 		BusinessEntity VIP4 = new BusinessEntity(4,UserLevel.DIRECOTR, UserLevel.DIRECOTR_CH, 20, 20, 0, 180);
 		businessMap.put(UserLevel.DIRECOTR, VIP4);
-		BusinessEntity VIP5 = new BusinessEntity(5,UserLevel.MANAGEAR, UserLevel.MANAGEAR_CH, 40, 40, 0, 330);
+		BusinessEntity VIP5 = new BusinessEntity(5,UserLevel.MANAGEAR, UserLevel.MANAGEAR_CH, 40, 40, 0, 300);
 		businessMap.put(UserLevel.MANAGEAR, VIP5);
-		BusinessEntity VIP6 = new BusinessEntity(6,UserLevel.BRANCH_MANAGER, UserLevel.BRANCH_MANAGER_CH, 80, 80, 0, 660);
+		BusinessEntity VIP6 = new BusinessEntity(6,UserLevel.BRANCH_MANAGER, UserLevel.BRANCH_MANAGER_CH, 80, 80, 0, 600);
 		businessMap.put(UserLevel.BRANCH_MANAGER, VIP6);
-		BusinessEntity VIP7 = new BusinessEntity(7,UserLevel.ADVANCE_MANAGER, UserLevel.ADVANCE_MANAGER_CH, 160, 160, 0, 990);
+		BusinessEntity VIP7 = new BusinessEntity(7,UserLevel.ADVANCE_MANAGER, UserLevel.ADVANCE_MANAGER_CH, 160, 160, 0, 900);
 		businessMap.put(UserLevel.ADVANCE_MANAGER, VIP7);
 		BusinessEntity VIP8 = new BusinessEntity(8,UserLevel.MARKET_DIRECTOR, UserLevel.MARKET_DIRECTOR_CH, 260, 260, 0, 1200);
 		businessMap.put(UserLevel.MARKET_DIRECTOR, VIP8);

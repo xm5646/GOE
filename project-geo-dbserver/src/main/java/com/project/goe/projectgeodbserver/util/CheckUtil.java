@@ -129,7 +129,7 @@ public class CheckUtil {
 	
 	private static BonusPayRatio getBonusPayRatio(Earning earn) {
 		BonusPayRatio bpr = new BonusPayRatio(0.7,0.1,0.2);
-		boolean bbpr = BusinessUtil.isBigBusSame(earn.getUserLevel(),UserLevel.MARKET_DIRECTOR);
+		boolean bbpr = BusinessUtil.isBigBusSame(earn.getUserLevel(),UserLevel.BRANCH_MANAGER);
 		if (earn!=null &&bbpr) {
 			 bpr = new BonusPayRatio(0.6,0.1,0.3);
 		}
