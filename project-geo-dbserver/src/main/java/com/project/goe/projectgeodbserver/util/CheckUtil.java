@@ -150,7 +150,7 @@ public class CheckUtil {
 				if (e==null) {
 					continue;
 				}
-				boolean isincreased = false;
+				boolean isincreased = false; //标识累积奖励是否发放完成
 				String key = getEarnKey(e);
 				if (key != null && key.length() > 0) {
 					Earning em = earnMap.get(key);
@@ -165,21 +165,27 @@ public class CheckUtil {
 					}
 				}
 				
-				if (isincreased) {
+				if (isincreased) {  //如果累积奖励已经发放完成 则开始计算新增业绩
 					// 这里是计算新增业绩
-					e = increasedEarning(per);
-					if (e==null) {
-						continue;
-					}else {
-						String keyin = getEarnKey(e);
-						if (keyin != null && keyin.length() > 0) {
-							Earning em = earnMap.get(keyin);
-							if (em!=null) {
-								//ishava 已经存储，不需要存储
-							}else {
-								//需要存储
-								earnList.add(e);
-							}
+					// 级别大于 ADVANCED_DIRECTOR = "II" 开始计算新增奖励
+					if (BusinessUtil.isBigBusSame(e.getUserLevel(), UserLevel.ADVANCED_DIRECTOR)) {
+						//TODO 新增奖励触发条件判断不严谨,发放过的新增奖励级别则不会重复再发 不符合业务逻辑
+						e = increasedEarning(per);
+						if (e==null) {
+							continue;
+						}else {
+							earnList.add(e);
+							// 解决新增奖励只发放一次的BUG
+//							String keyin = getEarnKey(e);
+//							if (keyin != null && keyin.length() > 0) {
+//								Earning em = earnMap.get(keyin);
+//								if (em!=null) {
+//									//ishava 已经存储，不需要存储
+//								}else {
+//									//需要存储
+//									earnList.add(e);
+//								}
+//							}
 						}
 					}
 				}
