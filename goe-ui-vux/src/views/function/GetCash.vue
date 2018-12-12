@@ -224,12 +224,10 @@
       }
     },
     watch: {
-//      selectCard (newValue, oldValue) {
-//        console.log(newValue)
-//      }
       getNumber (newValue) {
         this.formView[0].value = '￥' + newValue + '元'
-        this.formView[2].value = '￥' + (newValue - 10) + '元'
+        this.formView[1].value = '￥' + (newValue * 0.03).toFixed(2) + '元'
+        this.formView[2].value = '￥' + (newValue - (newValue * 0.03).toFixed(2)) + '元'
       }
     }
   }

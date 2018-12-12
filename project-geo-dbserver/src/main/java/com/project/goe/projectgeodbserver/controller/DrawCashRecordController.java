@@ -101,7 +101,7 @@ public class DrawCashRecordController {
 			drawCashRecord.setDrawnumber(drawNumber);
 
 			double drawCost = this.bonusPayPercentage.getDrawCostPercentage();
-			drawCashRecord.setFinalNumber(drawNumber - drawCost);
+			drawCashRecord.setFinalNumber(drawNumber - Math.round(drawNumber * drawCost * 100) * 0.01d);
 			drawCashRecord.setDrawStatus(DrawStatus.AUDIT_WAIT);
 			drawCashRecord.setDrawCommitTime(new Date());
 			drawCashRecord.setPayTime(null);
