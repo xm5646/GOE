@@ -4,6 +4,7 @@ public class BonusPayRatio {
 	private double bonusNumber;
 	private double manageCost;
 	private double productCoinNumber;
+	private double repeatCoinNumber;
 	public double getBonusNumber() {
 		return bonusNumber;
 	}
@@ -22,22 +23,29 @@ public class BonusPayRatio {
 	public void setProductCoinNumber(double productCoinNumber) {
 		this.productCoinNumber = productCoinNumber;
 	}
+	public double getRepeatCoinNumber() {
+		return repeatCoinNumber;
+	}
+	public void setRepeatCoinNumber(double repeatCoinNumber) {
+		this.repeatCoinNumber = repeatCoinNumber;
+	}
 	
 	public BonusPayRatio() {
 		super();
 	}
 	
-	public BonusPayRatio(double bonusNumber,double manageCost,double productCoinNumber) {
+	public BonusPayRatio(double bonusNumber,double manageCost,double productCoinNumber, double repeatCoinNumber) {
 		super();
 		this.bonusNumber = bonusNumber;
 		this.manageCost = manageCost;
 		this.productCoinNumber = productCoinNumber;
+		this.repeatCoinNumber = repeatCoinNumber;
 	}
 	
 	@Override
 	public String toString() {
 		return "BonusPayRatio [bonusNumber=" + bonusNumber + ", manageCost=" + manageCost + ", productCoinNumber="
-				+ productCoinNumber + "]";
+				+ productCoinNumber + ", repeatCoin=" + repeatCoinNumber +"]";
 	}
 	@Override
 	public int hashCode() {
@@ -49,6 +57,8 @@ public class BonusPayRatio {
 		temp = Double.doubleToLongBits(manageCost);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		temp = Double.doubleToLongBits(productCoinNumber);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(repeatCoinNumber);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
@@ -67,6 +77,10 @@ public class BonusPayRatio {
 			return false;
 		if (Double.doubleToLongBits(productCoinNumber) != Double.doubleToLongBits(other.productCoinNumber))
 			return false;
+		if (Double.doubleToLongBits(repeatCoinNumber) != Double.doubleToLongBits(other.repeatCoinNumber))
+			return false;
 		return true;
 	}
+
+
 }

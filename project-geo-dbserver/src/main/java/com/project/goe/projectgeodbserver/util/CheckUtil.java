@@ -58,25 +58,34 @@ public class CheckUtil {
 				Performance pm = perMap.get(pid);
 				// 计算累计
 				//判断用户级别大于等于业务员UserLevel.COMMON_SALEMAN(即是否产生收入),并且是通过考核状态,并且否则不增加累计业绩
-				if (BusinessUtil.isBigBusSame(pu.getUserLevel(), UserLevel.COMMON_SALEMAN)) {
-					if (pu.isAssessStatus()) {
-						if (userid == pu.getDepartmentA()) {
-							pm.setDepartAcount(pm.getDepartAcount() + 1);
-						} else if (userid == pu.getDepartmentB()) {
-							pm.setDepartBcount(pm.getDepartBcount() + 1);
-						} else if (userid == pu.getDepartmentC()) {
-							pm.setDepartCcount(pm.getDepartCcount() + 1);
-						}
-					}
-				} else {
-					if (userid == pu.getDepartmentA()) {
-						pm.setDepartAcount(pm.getDepartAcount() + 1);
-					} else if (userid == pu.getDepartmentB()) {
-						pm.setDepartBcount(pm.getDepartBcount() + 1);
-					} else if (userid == pu.getDepartmentC()) {
-						pm.setDepartCcount(pm.getDepartCcount() + 1);
-					}
-				}
+                // 2018-12-14 取消判断用户是否通过考核
+                if (userid == pu.getDepartmentA()) {
+                    pm.setDepartAcount(pm.getDepartAcount() + 1);
+                } else if (userid == pu.getDepartmentB()) {
+                    pm.setDepartBcount(pm.getDepartBcount() + 1);
+                } else if (userid == pu.getDepartmentC()) {
+                    pm.setDepartCcount(pm.getDepartCcount() + 1);
+                }
+//				if (BusinessUtil.isBigBusSame(pu.getUserLevel(), UserLevel.COMMON_SALEMAN)) {
+//
+//					if (pu.isAssessStatus()) {
+//						if (userid == pu.getDepartmentA()) {
+//							pm.setDepartAcount(pm.getDepartAcount() + 1);
+//						} else if (userid == pu.getDepartmentB()) {
+//							pm.setDepartBcount(pm.getDepartBcount() + 1);
+//						} else if (userid == pu.getDepartmentC()) {
+//							pm.setDepartCcount(pm.getDepartCcount() + 1);
+//						}
+//					}
+//				} else {
+//					if (userid == pu.getDepartmentA()) {
+//						pm.setDepartAcount(pm.getDepartAcount() + 1);
+//					} else if (userid == pu.getDepartmentB()) {
+//						pm.setDepartBcount(pm.getDepartBcount() + 1);
+//					} else if (userid == pu.getDepartmentC()) {
+//						pm.setDepartCcount(pm.getDepartCcount() + 1);
+//					}
+//				}
 				
 				// 计算新增
 				// 这里如果累计业绩没有超过4：4 不增加新增业绩
@@ -110,7 +119,8 @@ public class CheckUtil {
 	 */
 	public static BonusPayList sendBonusPaylist(User user, Earning earn) {
 		// earn 是当前用户以时间判断-可发的收益，时间最新的
-		if (user != null && earn != null && user.isAssessStatus()) {
+		// 2018-12-14  取消判断用户是否通过考核,自动扣除重销奖金
+		if (user != null && earn != null) {
 			BonusPayList bpl = new BonusPayList();
 			bpl.setUserId(user.getUserId());
 			bpl.setPayTime(new Date());
@@ -119,21 +129,28 @@ public class CheckUtil {
 			bpl.setBonusNumber(earn.getDayMoney() * bpr.getBonusNumber());
 			bpl.setManageCost(earn.getDayMoney() * bpr.getManageCost());
 			bpl.setProductCoinNumber(earn.getDayMoney() * bpr.getProductCoinNumber());
+			bpl.setRepearCoinNumber(earn.getDayMoney() * bpr.getRepeatCoinNumber());
 			bpl.setTouchType(earn.getTouchType());
 
 			// 将积分和金钱添加到user表
 			user.setBonusCoin(user.getBonusCoin() + bpl.getBonusNumber());
 			user.setProductCoin(user.getProductCoin() + bpl.getProductCoinNumber());
+			user.setRepeatCoin(user.getRepeatCoin() + bpl.getRepearCoinNumber());
 			return bpl;
 		}
 		return null;
 	}
-	
+
+	/**
+	 * 设置奖金分配比例
+	 * @param earn 收益记录
+	 * @return 分配比例
+	 */
 	private static BonusPayRatio getBonusPayRatio(Earning earn) {
-		BonusPayRatio bpr = new BonusPayRatio(0.7,0.1,0.2);
+		BonusPayRatio bpr = new BonusPayRatio(0.6,0.1,0.2, 0.1);
 		boolean bbpr = BusinessUtil.isBigBusSame(earn.getUserLevel(),UserLevel.BRANCH_MANAGER);
 		if (earn!=null &&bbpr) {
-			 bpr = new BonusPayRatio(0.6,0.1,0.3);
+			 bpr = new BonusPayRatio(0.5,0.1,0.3, 0.1);
 		}
 		return bpr;
 	}
@@ -171,11 +188,12 @@ public class CheckUtil {
 					// 这里是计算新增业绩
 					// 级别大于 ADVANCED_DIRECTOR = "II" 开始计算新增奖励
 					if (BusinessUtil.isBigBusSame(e.getUserLevel(), UserLevel.ADVANCED_DIRECTOR)) {
-						//TODO 新增奖励触发条件判断不严谨,发放过的新增奖励级别则不会重复再发 不符合业务逻辑
 						e = increasedEarning(per);
 						if (e==null) {
 							continue;
 						}else {
+							//TODO 新增奖励触发条件判断不严谨,发放过的新增奖励级别则不会重复再发 不符合业务逻辑
+							// 修复 待验证
 							earnList.add(e);
 							// 解决新增奖励只发放一次的BUG
 //							String keyin = getEarnKey(e);
@@ -223,7 +241,6 @@ public class CheckUtil {
 	/**
 	 * 第一次累计业绩触发
 	 * @param e
-	 * @param earnMap
 	 */
 	public static boolean theFirstEarning(Earning e) {
 		if (UserLevel.COMMON_SALEMAN.equals(e.getUserLevel()) && TouchType.ACCUMULATION.equals(e.getTouchType())) {
@@ -282,9 +299,8 @@ public class CheckUtil {
 
 	/**
 	 * 计算累计业绩是否有重复的
-	 * 
-	 * @param earns
-	 * @param earnList
+	 * @param earnMap 收益记录
+	 * @param earnList 收益记录
 	 */
 	public static void computeEarn(Map<String, Earning> earnMap, List<Earning> earnList) {
 		if (earnMap != null && earnList != null && earnList.size() > 0) {

@@ -120,6 +120,10 @@ public class User implements Serializable {
 	@Column
 	private double productCoin;
 
+	// 冲销奖金
+	@Column
+	private double repeatCoin;
+
 	// 用户激活时间
 	@Column
 	private Date activateTime;
@@ -390,6 +394,14 @@ public class User implements Serializable {
 	 */
 	public String getCredentialsSalt() {
 		return this.account + this.salt;
+	}
+
+	public double getRepeatCoin() {
+		return repeatCoin;
+	}
+
+	public void setRepeatCoin(double repeatCoin) {
+		this.repeatCoin = repeatCoin;
 	}
 	// 重新对盐重新进行了定义，用户名+salt，这样就更加不容易被破解
 }

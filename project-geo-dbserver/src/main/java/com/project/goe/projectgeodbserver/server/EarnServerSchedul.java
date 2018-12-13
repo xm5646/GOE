@@ -200,10 +200,13 @@ public class EarnServerSchedul {
 		List<User> userupdate = new ArrayList<User>();
 		for (User user : userlist) {
 			// userMap.put(user.getUserId(), user);
-			if (user!=null && user.isAssessStatus() && updateComperBonuspayForEarning(earnsMap.get(user.getUserId()))) {
+			// 2018-12-14 取消判断用户是否通过考核
+			if (user!=null && updateComperBonuspayForEarning(earnsMap.get(user.getUserId()))) {
 				BonusPayList bus = CheckUtil.sendBonusPaylist(user, earnsMap.get(user.getUserId()));
 				if (bus != null) {
 					buslist.add(bus);
+					//发放奖金自动扣除重销奖金,并设置考核状态为true
+					user.setAssessStatus(true);
 					userupdate.add(user);
 				}
 			}

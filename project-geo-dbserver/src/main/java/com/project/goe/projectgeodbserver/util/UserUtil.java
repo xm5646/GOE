@@ -28,15 +28,13 @@ public class UserUtil {
 
 		if (user.isAssessStatus()) {
 			userVO.setAssessStatus("已通过考核");
-			userVO.setAssessDate(DateFormatUtil.DateObjectToString(user.getAssessDate()));
 		} else {
 			userVO.setAssessStatus("未通过考核");
-			
-			String userLevel = user.getUserLevel();
-			if(userLevel.equals(UserLevel.CONSUMER))
-				userVO.setAssessDate("未达到考核级别");
-			else 
-				userVO.setAssessDate(DateFormatUtil.DateObjectToString(user.getAssessDate()));
+		}
+		if (user.getUserLevel().equals(UserLevel.CONSUMER)) {
+			userVO.setAssessDate("未达到考核级别");
+		} else {
+			userVO.setAssessDate(DateFormatUtil.DateObjectToString(user.getAssessDate()));
 		}
 
 		userVO.setBonusCoin(MathUtil.floor(user.getBonusCoin()));
@@ -88,15 +86,13 @@ public class UserUtil {
 
 		if (user.isAssessStatus()) {
 			userVO.setAssessStatus("已通过考核");
-			userVO.setAssessDate(DateFormatUtil.DateObjectToString(user.getAssessDate()));
 		} else {
 			userVO.setAssessStatus("未通过考核");
-			
-			String userLevel = user.getUserLevel();
-			if(userLevel.equals(UserLevel.CONSUMER))
-				userVO.setAssessDate("未达到考核级别");
-			else 
-				userVO.setAssessDate(DateFormatUtil.DateObjectToString(user.getAssessDate()));
+		}
+		if (user.getUserLevel().equals(UserLevel.CONSUMER)) {
+			userVO.setAssessDate("未达到考核级别");
+		} else {
+			userVO.setAssessDate(DateFormatUtil.DateObjectToString(user.getAssessDate()));
 		}
 
 		userVO.setBonusCoin(MathUtil.floor(user.getBonusCoin()));
