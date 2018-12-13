@@ -24,8 +24,8 @@ public class BusinessUtil {
 //	public final static String VIP9 = "II";	//高级总监 380 380  1800
 //	
 //	public final static String DS1 = "JJJ";	//董事 750 750 750 3000
-//	public final static String DS2 = "KKK";	//执行总裁 2500 2500 2500 6000
-//	public final static String DS3 = "LLL";	//总裁 5000 5000 5000  20000
+//	public final static String DS2 = "KKK";	//执行总裁 2500 2500 2500 5000
+//	public final static String DS3 = "LLL";	//总裁 5000 5000 5000  15000
 	
 	
 	
@@ -59,9 +59,9 @@ public class BusinessUtil {
 		
 		BusinessEntity DS1 = new BusinessEntity(10,UserLevel.BOARD_DIRECOTR, UserLevel.BOARD_DIRECOTR_CH, 750, 750, 750, 3000);
 		businessMap.put(UserLevel.BOARD_DIRECOTR, DS1);
-		BusinessEntity DS2 = new BusinessEntity(11,UserLevel.EXECUTIVE_PRESIDEANT, UserLevel.EXECUTIVE_PRESIDEANT_CH, 2500, 2500, 2500, 6000);
+		BusinessEntity DS2 = new BusinessEntity(11,UserLevel.EXECUTIVE_PRESIDEANT, UserLevel.EXECUTIVE_PRESIDEANT_CH, 2500, 2500, 2500, 5000);
 		businessMap.put(UserLevel.EXECUTIVE_PRESIDEANT, DS2);
-		BusinessEntity DS3 = new BusinessEntity(12,UserLevel.PRESIDEANT, UserLevel.PRESIDEANT_CH, 5000, 5000, 5000, 20000);
+		BusinessEntity DS3 = new BusinessEntity(12,UserLevel.PRESIDEANT, UserLevel.PRESIDEANT_CH, 5000, 5000, 5000, 15000);
 		businessMap.put(UserLevel.PRESIDEANT, DS3);
 //		BusinessEntity DS4 = new BusinessEntity(13,UserLevel.CROWN, UserLevel.CROWN_CH, 3000, 3000, 3000, 10000);
 //		businessMap.put(UserLevel.CROWN, DS4);
