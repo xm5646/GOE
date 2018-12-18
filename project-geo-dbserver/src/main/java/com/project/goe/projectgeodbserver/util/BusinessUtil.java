@@ -15,7 +15,7 @@ import com.project.goe.projectgeodbserver.statusType.UserLevel;
 public class BusinessUtil {
 //	public final static String VIP1 = "AA";	//VIP    0  0
 //	public final static String VIP2 = "BB";	//业务员  4  4   40
-//	public final static String VIP3 = "CC";	//组长    10 10  140
+//	public final static String VIP3 = "CC";	//组长    10 10  100
 //	public final static String VIP4 = "DD";	//主任    20 20  180
 //	public final static String VIP5 = "EE";	//经理    40 40  300
 //	public final static String VIP6 = "FF";	//部门经理 80 80  600
@@ -42,7 +42,7 @@ public class BusinessUtil {
 		businessMap.put(UserLevel.CONSUMER, VIP1);
 		BusinessEntity VIP2 = new BusinessEntity(2,UserLevel.COMMON_SALEMAN, UserLevel.COMMON_SALEMAN_CH, 4, 4, 0, 40);
 		businessMap.put(UserLevel.COMMON_SALEMAN, VIP2);
-		BusinessEntity VIP3 = new BusinessEntity(3,UserLevel.GROUP_LEADER, UserLevel.GROUP_LEADER_CH, 10, 10, 0, 140);
+		BusinessEntity VIP3 = new BusinessEntity(3,UserLevel.GROUP_LEADER, UserLevel.GROUP_LEADER_CH, 10, 10, 0, 100);
 		businessMap.put(UserLevel.GROUP_LEADER, VIP3);
 		BusinessEntity VIP4 = new BusinessEntity(4,UserLevel.DIRECOTR, UserLevel.DIRECOTR_CH, 20, 20, 0, 180);
 		businessMap.put(UserLevel.DIRECOTR, VIP4);

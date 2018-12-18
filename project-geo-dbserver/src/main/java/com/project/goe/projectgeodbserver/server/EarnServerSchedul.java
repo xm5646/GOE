@@ -474,7 +474,7 @@ public class EarnServerSchedul {
 	/**
 	 * 在创建用户的时候同时创建用户更新表默认数据
 	 * 
-	 * @param id
+	 * @param userId
 	 */
 	private UserCreatereRecord saveUserCreateEntity(long userId) {
 		UserCreatereRecord ucr = userCreateRecordService.getUserCreatereRecordByUserId(userId);
