@@ -2,7 +2,9 @@ package com.project.goe.projectgeodbserver.controller;
 
 import java.util.List;
 
+import com.project.goe.projectgeodbserver.aop.LogAspect;
 import com.project.goe.projectgeodbserver.service.RedisService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +23,8 @@ import com.project.goe.projectgeodbserver.service.TestService;
 @RestController
 @RequestMapping("/tUser/")
 public class TestController {
+
+	private static final Logger sLogger = Logger.getLogger(TestController.class);
 	@Autowired
 	private TestService testService;
 
@@ -53,6 +57,7 @@ public class TestController {
 
 	@RequestMapping(value = "/getList")
 	public String getUserIdFromList(String key) {
+		sLogger.info("Hello world");
 		try {
 			if (redisService.getListSize("testList") > 0) {
 				return redisService.getObjFromList("testList").toString();

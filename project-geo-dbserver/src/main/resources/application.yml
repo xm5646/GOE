@@ -33,6 +33,7 @@ spring:
     cache: false
     mode: LEGACYHTML5
 
+
 myconfg: 
   servername: goe-server
   ishave: true
@@ -49,4 +50,5 @@ bonus:
 login: 
   expireTime: 30
   useInterceptor: false
-
+logging:
+  config: src/main/resources/log4j.properties
