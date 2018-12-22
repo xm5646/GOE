@@ -2,6 +2,7 @@ package com.project.goe.projectgeodbserver.controller;
 
 import java.util.List;
 
+import com.project.goe.projectgeodbserver.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +23,91 @@ import com.project.goe.projectgeodbserver.service.TestService;
 public class TestController {
 	@Autowired
 	private TestService testService;
+
+	@Autowired
+	private RedisService redisService;
+
+
+	@RequestMapping(value = "/setStr")
+	public String setStr(String key, String val) {
+		try {
+			redisService.setStr("li", "xiaoming");
+			return "success";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/testList")
+	public String addUserIdToList(String key,Long userId) {
+		try {
+			redisService.pushObjToList("testList", Math.random()*100+1);
+			return  "insert success!";
+//            return redisService.getObjFromList("testList").toString();
+		} catch (Exception e){
+			e.printStackTrace();;
+			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/getList")
+	public String getUserIdFromList(String key) {
+		try {
+			if (redisService.getListSize("testList") > 0) {
+				return redisService.getObjFromList("testList").toString();
+			} else {
+				return  "list is empty!";
+			}
+		} catch (Exception e){
+			return  "error";
+		}
+	}
+
+	@RequestMapping(value = "/exist")
+	public Boolean ExistKey(String key) {
+		try {
+			return redisService.ExistsKey("lixiaoming");
+		} catch (Exception e) {
+			return  false;
+		}
+	}
+
+	@RequestMapping(value = "setObj")
+	public String setObj(String key, User user) {
+		try {
+			User u1 = new User();
+			u1.setAccount("lixiaoming");
+			redisService.setObj("obj", u1);
+			return "success";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping(value = "freeTime")
+	public String getFreeTime(String key) {
+		Long freetime = redisService.getFreeTime(key);
+		return  "剩余时间:" + String.valueOf(freetime);
+	}
+
+	@RequestMapping(value = "getObj")
+	public Object getObj(String key) {
+		User result = (User) redisService.getObj("key");
+		return result;
+	}
+
+	@RequestMapping(value = "delObj")
+	public Object delObj(String key) {
+		try {
+			redisService.delObj("obj");
+			return "success";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
 	
 	//新增用户
 	@PostMapping("/save")

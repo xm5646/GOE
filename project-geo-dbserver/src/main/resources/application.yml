@@ -8,6 +8,17 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     tomcat:
       max-active: 20
+  redis:
+    host: localhost
+    port: 16666
+    database: 1
+    timeout: 3000
+    password: x33+esaC
+    pool:
+      max-active: 8
+      max-wait: -1
+      max-idle: 8
+      min-idle: 0
   jpa:
     database: mysql
     show-sql: true
@@ -21,7 +32,7 @@ spring:
   thymeleaf:
     cache: false
     mode: LEGACYHTML5
-        
+
 myconfg: 
   servername: goe-server
   ishave: true
@@ -33,7 +44,7 @@ bonus:
      productCoinNumberPercentage: 0.2
      consumeCoinUnitPrice: 680
      reconsumeCoinUnitPrice: 480
-     drawCostPercentage: 10
+     drawCostPercentage: 0.03
 
 login: 
   expireTime: 30

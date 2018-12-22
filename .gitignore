@@ -1,7 +1,10 @@
 project-goe-ui/node_modules/
+goe-ui-vux/www/
 goe-ui/node_modules/
 goe-ui/.idea/workspace.xml
 project-geo-dbserver/target/
+project-geo-dbserver/.idea/
+project-geo-dbserver/project-geo-dbserver.iml
 project-geo-dbserver/src/main/resources/application.yml
 .metadata/
 .recommenders/
