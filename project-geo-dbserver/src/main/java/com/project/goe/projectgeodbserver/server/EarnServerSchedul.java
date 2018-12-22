@@ -403,7 +403,7 @@ public class EarnServerSchedul {
 	 * 
 	 * @param userid
 	 */
-	private void updateUserPerformance(Long userid) {
+	public void updateUserPerformance(Long userid) {
 		// 取得所有收益表和用户表数据
 		Iterable<User> userlist = this.userService.getAll();
 		Iterable<Performance> pers = performanceService.getAll();

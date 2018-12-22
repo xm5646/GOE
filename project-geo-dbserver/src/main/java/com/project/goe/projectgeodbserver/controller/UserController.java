@@ -8,6 +8,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+
+import com.project.goe.projectgeodbserver.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -25,11 +27,6 @@ import com.project.goe.projectgeodbserver.entity.ConsumeRecord;
 import com.project.goe.projectgeodbserver.entity.Performance;
 import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.server.EarnServerSchedul;
-import com.project.goe.projectgeodbserver.service.CardInfoService;
-import com.project.goe.projectgeodbserver.service.ConsumeRecordService;
-import com.project.goe.projectgeodbserver.service.PerformanceService;
-import com.project.goe.projectgeodbserver.service.UserRepeatCheckService;
-import com.project.goe.projectgeodbserver.service.UserService;
 import com.project.goe.projectgeodbserver.statusType.ConsumeType;
 import com.project.goe.projectgeodbserver.util.UserUtil;
 import com.project.goe.projectgeodbserver.util.ValidateErrorUtil;
@@ -55,6 +52,9 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private RedisService redisService;
 
 	@Autowired
 	private UserRepeatCheckService UserRepeatCheckService;
@@ -436,7 +436,8 @@ public class UserController {
 			}
 
 			// 更新业绩信息
-			earnServerSchedul.mainUpdatePerformance(user.getUserId());
+			redisService.pushObjToList("userIDList", user.getUserId());
+//			earnServerSchedul.mainUpdatePerformance(user.getUserId());
 
 			// 更新推荐人的报单币
 			recommendUser
