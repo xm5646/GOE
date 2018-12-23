@@ -50,10 +50,10 @@ Vue.http.interceptors.push((request, next) => {
       console.log('获取登陆状态:' + response.headers.get('loginstatus'))
       if (!(response.headers.get('loginStatus') === 'true')) {
         window.localStorage.clear()
-        if (request.url === 'http://xm.xmkkk023.cn/api/user/login') {
+        if (request.url === 'http://mobile.mythvip.top/api/user/login') {
           console.log('登陆页面,不进行刷新')
         } else {
-          window.location.href = 'http://xm.xmkkk023.cn/login'
+          window.location.href = 'http://mobile.mythvip.top/login'
         }
       } else {
         console.log('已登录状态')

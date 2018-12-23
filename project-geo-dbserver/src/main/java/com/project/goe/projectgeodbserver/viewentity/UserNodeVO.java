@@ -18,6 +18,7 @@ public class UserNodeVO {
 	private long bonusCoin;
 	private long consumeCoin;
 	private long productCoin;
+	private long repeatCoin;
 	private String activateTime;
 	private String identityNo;
 	private String passwordReset;
@@ -202,4 +203,11 @@ public class UserNodeVO {
 		this.assessStatus = assessStatus;
 	}
 
+	public long getRepeatCoin() {
+		return repeatCoin;
+	}
+
+	public void setRepeatCoin(long repeatCoin) {
+		this.repeatCoin = repeatCoin;
+	}
 }

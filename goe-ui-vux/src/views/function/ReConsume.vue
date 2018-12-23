@@ -1,40 +1,38 @@
 <template>
   <div class="page">
     <x-header :left-options="{showBack: true}">会员管理系统</x-header>
-    <card :header="{title: '重复消费'}">
+    <card :header="{title: '重销奖金兑换'}">
       <div slot="content" class="card-demo-flex card-demo-content01">
         <div class="vux-1px-r">
-          ￥<span>{{bonusCoin}}</span>
+          ￥<span>{{repeatCoin}}</span>
           <br/>
-          奖金
-        </div>
-        <div class="vux-1px-r">
-          ￥<span>{{consumeCoin}}</span>
-          <br/>
-          报单币
+          重销奖金
         </div>
       </div>
     </card>
-    <selector ref="defaultValueRef" title="选择收货地址" :options="addressesInfo" v-model="selectExpressId"></selector>
-    <div v-if="selectedAddress">
-      <div class="weui-cells">
-        <div class="weui-cell">
-          <div class="weui-cell__bd">
-            <p>{{address.receivedName}}&nbsp;&nbsp;{{address.tel}}</p>
-          </div>
-        </div>
-        <p class="weui-cells__title" style="">{{address.addressShowName}}&nbsp;&nbsp;{{address.detail}}</p>
-      </div>
-    </div>
-    <div v-if="!isEnableAccess">
-      <message title="未达到重销条件" description="请确认是否到达考核级别,或是否达到考核日期"></message>
-    </div>
-    <div v-else-if="isEnableBuy">
-      <message title="报单币余额不足" description="请使用奖金转换报单币,或进行报单币充值"></message>
+    <div v-if="repeatCoin < 480">
+      <message title="重销奖金不足" description="重销奖金满480即可进行产品兑换。"></message>
     </div>
     <div v-else>
-      <form-preview :body-items="list2" :footer-buttons="buttons2"
-                    name="demo"></form-preview>
+      <group>
+        <group>
+          <x-number  title="兑换数量"  :min="1" :max="MaxNumber" v-model="exchangeNumber" @on-change="changeNumber"></x-number>
+          <selector ref="defaultValueRef" title="选择收货地址" :options="addressesInfo" v-model="selectExpressId"></selector>
+          <div v-if="selectedAddress">
+            <div class="weui-cells">
+              <div class="weui-cell">
+                <div class="weui-cell__bd">
+                  <p>{{address.receivedName}}&nbsp;&nbsp;{{address.tel}}</p>
+                </div>
+              </div>
+              <p class="weui-cells__title" style="">{{address.addressShowName}}&nbsp;&nbsp;{{address.detail}}</p>
+            </div>
+          </div>
+        </group>
+        <div>
+          <form-preview header-label="单价" :header-value="showConvertNumber" :body-items="orderInfo" :footer-buttons="buttons2" name="demo"></form-preview>
+        </div>
+      </group>
     </div>
 
     <pay-password :showPayPasswordInput="showPayPasswordStatus" @paySubmitEvent="submitPay"
@@ -44,7 +42,7 @@
 
 <script>
   import { XHeader, XInput, Group, XButton, Card, FormPreview, Selector, Value2nameFilter as value2name,
-    ChinaAddressV4Data } from 'vux'
+    ChinaAddressV4Data, XNumber } from 'vux'
   import Message from '../../components/msg'
   import PayPassword from '../../components/PayPassword'
   import GoeConfig from '../../../config/goe'
@@ -55,6 +53,7 @@
       const userObj = JSON.parse(window.localStorage.getItem('User'))
       this.bonusCoin = userObj.bonusCoin
       this.consumeCoin = userObj.consumeCoin
+      this.repeatCoin = userObj.repeatCoin
       const date = new Date()
       var seperator1 = '-'
       var year = date.getFullYear()
@@ -84,23 +83,33 @@
       Card,
       FormPreview,
       Message,
-      PayPassword
+      PayPassword,
+      XNumber
     },
     data () {
       return {
         bonusCoin: 0,
         consumeCoin: 0,
+        repeatCoin: 0,
         selectExpressId: '',
+        exchangeNumber: 1,
         showPayPasswordStatus: false,
         isEnableAccess: true,
         selectedAddress: false,
         address: {},
         addresses: [],
+        orderInfo: [{
+          label: '兑换数量',
+          value: '1'
+        }, {
+          label: '总计',
+          value: '￥680'
+        }],
         price: GoeConfig.goe.price,
         reConsumePrice: GoeConfig.goe.reConsumePrice,
         buttons2: [{
           style: 'primary',
-          text: '重复消费',
+          text: '兑换',
           onButtonClick: () => {
             this.confirmReConsume()
           }
@@ -116,20 +125,28 @@
             text: '请选择一个收货地址'
           })
         } else {
-          const _this = this
-          this.$vux.confirm.show({
-            // 组件除show外的属性
-            title: '确定进行重复消费?',
-            onCancel () {
-              console.log(this) // 非当前 vm
-              console.log(_this) // 当前 vm
-            },
-            onConfirm () {
-              console.log('show payPassword')
-              _this.showPayPasswordStatus = true
-            }
-          })
+          if (this.exchangeNumber * GoeConfig.goe.reConsumePrice > this.repeatCoin) {
+            console.log('重销奖金不足')
+          } else {
+            const _this = this
+            this.$vux.confirm.show({
+              // 组件除show外的属性
+              title: '确定进行重复消费?',
+              onCancel () {
+                console.log(this) // 非当前 vm
+                console.log(_this) // 当前 vm
+              },
+              onConfirm () {
+                console.log('show payPassword')
+                _this.showPayPasswordStatus = true
+              }
+            })
+          }
         }
+      },
+      changeNumber (val) {
+        this.orderInfo[1].value = '￥' + val * GoeConfig.goe.reConsumePrice
+        this.orderInfo[0].value = this.exchangeNumber
       },
       submitPay (payPassword) {
         this.showPayPasswordStatus = false
@@ -146,7 +163,8 @@
           {
             account: JSON.parse(window.localStorage.getItem('User')).account,
             paymentPassword: payPassword,
-            expressId: this.selectExpressId
+            expressId: this.selectExpressId,
+            exchangeNum: this.exchangeNumber
           },
           {
             _timeout: 3000,
@@ -158,6 +176,7 @@
               this.$vux.toast.show({
                 text: '重销成功'
               })
+              this.updateUserInfo()
               window.history.go(-1)
             } else {
               this.$vux.toast.show({
@@ -220,6 +239,7 @@
               const result = response.body.data
               this.bonusCoin = result.bonusCoin
               this.consumeCoin = result.consumeCoin
+              this.repeatCoin = result.repeatCoin
               window.localStorage.setItem('User', JSON.stringify(result))
             } else {
               this.$vux.toast.show({
@@ -236,6 +256,18 @@
       }
     },
     computed: {
+      /**
+       * @return {number}
+       */
+      MaxNumber: function () {
+        return parseInt(this.repeatCoin / GoeConfig.goe.reConsumePrice)
+      },
+      showConvertNumber: function () {
+        return '重销奖金￥' + GoeConfig.goe.reConsumePrice
+      },
+      isEnoughCoin: function () {
+        return this.repeatCoin >= 480
+      },
       list2: function () {
         const list = [{
           label: '商品原价',

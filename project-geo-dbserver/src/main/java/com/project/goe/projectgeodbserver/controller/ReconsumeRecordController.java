@@ -72,6 +72,7 @@ public class ReconsumeRecordController {
 
 		String account = userReConsumeRequest.getAccount();
 		String paymentPassword = userReConsumeRequest.getPaymentPassword();
+		int exchangeNum = userReConsumeRequest.getExchangeNum();
 		long expressId = userReConsumeRequest.getExpressId();
 
 		// 验证用户是否存在
@@ -79,53 +80,53 @@ public class ReconsumeRecordController {
 		if (null == user)
 			throw new RuntimeException("用户不存在!");
 
-		// 验证用户是否激活:非激活状态，不能做任何操作
-		if (!(user.isUserStatus()))
-			throw new RuntimeException("用户未激活!");
+//		// 验证用户是否激活:非激活状态，不能做任何操作
+//		if (!(user.isUserStatus()))
+//			throw new RuntimeException("用户未激活!");
 
 		// 验证用户是否有资格重销:下次重销时间等于创建用户时间,用户未达到考核状态
-		if (DateFormatUtil.compareDateObject(user.getCreateTime(), user.getAssessDate()) == 0)
-			throw new RuntimeException("用户没有达到考核级别！");
+//		if (DateFormatUtil.compareDateObject(user.getCreateTime(), user.getAssessDate()) == 0)
+//			throw new RuntimeException("用户没有达到考核级别！");
 
 		// 用户为考核通过状态
-		if (user.isAssessStatus()) {
-			Date nowDate = new Date();
-			Date assDate = user.getAssessDate();
-			String nowDateDStr = DateFormatUtil.DateObjectToString(nowDate);
-			String assDateStr = DateFormatUtil.DateObjectToString(assDate);
+//		if (user.isAssessStatus()) {
+//			Date nowDate = new Date();
+//			Date assDate = user.getAssessDate();
+//			String nowDateDStr = DateFormatUtil.DateObjectToString(nowDate);
+//			String assDateStr = DateFormatUtil.DateObjectToString(assDate);
+//
+//			// 当天不是考核日，不允许用户重销
+//			if (!nowDateDStr.equals(assDateStr)) {
+//				throw new RuntimeException("未到考核日期！");
+//			}
+//
+//			// 当天为考核日，重销记录表有重销记录，则不允许再次重销
+//			ReconsumeRecord reconsumeRecord = this.reconsumeRecordService.findByCreateTime(nowDate,user.getUserId());
+//			if (null != reconsumeRecord)
+//				throw new RuntimeException("用户已重销!");
+//
+//			return reconsumeOperate(account, paymentPassword, expressId, user, retMsg);
+//		}
 
-			// 当天不是考核日，不允许用户重销
-			if (!nowDateDStr.equals(assDateStr)) {
-				throw new RuntimeException("未到考核日期！");
-			}
-
-			// 当天为考核日，重销记录表有重销记录，则不允许再次重销
-			ReconsumeRecord reconsumeRecord = this.reconsumeRecordService.findByCreateTime(nowDate,user.getUserId());
-			if (null != reconsumeRecord)
-				throw new RuntimeException("用户已重销!");
-
-			return reconsumeOperate(account, paymentPassword, expressId, user, retMsg);
-		}
-
-		return reconsumeOperate(account, paymentPassword, expressId, user, retMsg);
+		return reconsumeOperate(account, paymentPassword, expressId, exchangeNum, user, retMsg);
 
 	}
 
-	private RetMsg reconsumeOperate(String account, String paymentPassword, long expressId, User user, RetMsg retMsg) {
+	private RetMsg reconsumeOperate(String account, String paymentPassword, long expressId, int exchangeNum, User user, RetMsg retMsg) {
 		// 验证支付密码是否正确
 		if (!(MD5Util.encrypeByMd5(paymentPassword)).equals(user.getPaymentPassword())) {
 			throw new RuntimeException("用户支付密码错误!");
 		}
 
-		// 验证用户报单币是否够用
-		double consumeCoin = user.getConsumeCoin();
-		double reConsumeCost = this.bonusPayPercentage.getReconsumeCoinUnitPrice();
+		// 验证重销奖金币是否够用
+		double repeatCoin = user.getRepeatCoin();
+		double reConsumeCost = this.bonusPayPercentage.getReconsumeCoinUnitPrice() * exchangeNum;
 
-		if ((consumeCoin - reConsumeCost) < 0)
-			throw new RuntimeException("用户报单币余额不足！");
+		if ((repeatCoin - reConsumeCost) < 0)
+			throw new RuntimeException("用户重销奖金余额不足！");
 
 		// 更新用户表和公司表
-		user.setConsumeCoin(consumeCoin - reConsumeCost);
+		user.setRepeatCoin(repeatCoin - reConsumeCost);
 		user.setAssessStatus(true);// 更新用户重销状态
 		//如果用户激活状态为false, 更新为true
 		if (!user.isUserStatus()) {
@@ -136,7 +137,8 @@ public class ReconsumeRecordController {
 		if (null == company)
 			throw new RuntimeException("公司账户不存在!");
 
-		company.setConsumeCoin(company.getConsumeCoin() + reConsumeCost);
+//		company.setConsumeCoin(company.getConsumeCoin() + reConsumeCost);
+		company.setRepeatCoin(company.getRepeatCoin() + reConsumeCost);
 		this.userService.save(user);
 		this.userService.save(company);
 
@@ -147,6 +149,7 @@ public class ReconsumeRecordController {
 		reconsumeRecord.setUserId(user.getUserId());
 		reconsumeRecord.setReconsumePayment(reConsumeCost);
 		this.reconsumeRecordService.save(reconsumeRecord);
+
 
 		// 更新用户消费记录表
 		ConsumeRecord consumeRecord = new ConsumeRecord();
@@ -209,8 +212,8 @@ public class ReconsumeRecordController {
 		}
 		orderInfo.setOrderType(ConsumeType.COIN_TRANSFER_RECONSUME);
 		orderInfo.setUserId(user.getUserId());
-		orderInfo.setProductCount(1);
-		orderInfo.setTotalPrice(this.bonusPayPercentage.getReconsumeCoinUnitPrice());
+		orderInfo.setProductCount(exchangeNum);
+		orderInfo.setTotalPrice(reConsumeCost);
 
 		// 新增订单
 		this.orderInfoService.save(orderInfo);

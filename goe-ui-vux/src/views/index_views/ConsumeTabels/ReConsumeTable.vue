@@ -1,6 +1,6 @@
 <template>
   <div class="divFont">
-    <x-table :cell-bordered="false" :content-bordered="true" style="background-color:#fff;">
+    <x-table :cell-bordered="false" :content-bordered="true" style="background-color:#fff;font-size: xx-small">
       <thead>
       <tr style="background-color: #d43e2e;color: white">
         <th>消费金额(报单币)</th>

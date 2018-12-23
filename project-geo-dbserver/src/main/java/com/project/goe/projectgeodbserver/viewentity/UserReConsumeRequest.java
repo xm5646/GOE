@@ -11,6 +11,8 @@ public class UserReConsumeRequest {
 
 	private long expressId = -1;
 
+	private int exchangeNum;
+
 	public long getExpressId() {
 		return expressId;
 	}
@@ -35,4 +37,11 @@ public class UserReConsumeRequest {
 		this.paymentPassword = paymentPassword;
 	}
 
+	public int getExchangeNum() {
+		return exchangeNum;
+	}
+
+	public void setExchangeNum(int exchangeNum) {
+		this.exchangeNum = exchangeNum;
+	}
 }

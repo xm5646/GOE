@@ -107,11 +107,13 @@
               })
             })
         }
-//        if (view === 'salary') {
-//          this.$refs.nowView.update()
-//        }
         // 切换视图
         this.currentView = view
+        this.$nextTick(() => {
+          if (view === 'salary') {
+            this.$refs.nowView.update()
+          }
+        })
       }
     }
   }
@@ -119,13 +121,14 @@
 
 <style lang="less">
   .my-page {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  bottom: 2.8rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    bottom: 2.8rem;
   }
-  .weui-tabbar{
+
+  .weui-tabbar {
     position: absolute;
     z-index: 500;
     bottom: 0;

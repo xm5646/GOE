@@ -39,7 +39,7 @@ public class UserUtil {
 
 		userVO.setBonusCoin(MathUtil.floor(user.getBonusCoin()));
 		userVO.setConsumeCoin(MathUtil.floor(user.getConsumeCoin()));
-
+		userVO.setRepeatCoin(MathUtil.floor(user.getRepeatCoin()));
 		userVO.setCreateTime(DateFormatUtil.DateObjectToString(user.getCreateTime()));
 
 		userVO.setAccountA(user.getAccountA());
@@ -97,6 +97,7 @@ public class UserUtil {
 
 		userVO.setBonusCoin(MathUtil.floor(user.getBonusCoin()));
 		userVO.setConsumeCoin(MathUtil.floor(user.getConsumeCoin()));
+		userVO.setRepeatCoin(MathUtil.floor(user.getRepeatCoin()));
 
 		userVO.setCreateTime(DateFormatUtil.DateObjectToString(user.getCreateTime()));
 

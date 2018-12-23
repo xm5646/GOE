@@ -50,8 +50,8 @@ public class BonusPayList {
 	private double productCoinNumber;
 
 	// 重销奖金
-	@Column
-	private double repearCoinNumber;
+	@Column(columnDefinition = "double default 0")
+	private double repeatCoinNumber;
 
 	@Column
 	private Date createTime;
@@ -139,11 +139,11 @@ public class BonusPayList {
 		this.productCoinNumber = totalMoney;
 	}
 
-	public double getRepearCoinNumber() {
-		return repearCoinNumber;
+	public double getRepeatCoinNumber() {
+		return repeatCoinNumber;
 	}
 
-	public void setRepearCoinNumber(double repearCoinNumber) {
-		this.repearCoinNumber = repearCoinNumber;
+	public void setRepeatCoinNumber(double repeatCoinNumber) {
+		this.repeatCoinNumber = repeatCoinNumber;
 	}
 }

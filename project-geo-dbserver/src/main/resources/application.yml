@@ -49,6 +49,6 @@ bonus:
 
 login: 
   expireTime: 30
-  useInterceptor: false
+  useInterceptor: true
 logging:
   config: src/main/resources/log4j.properties

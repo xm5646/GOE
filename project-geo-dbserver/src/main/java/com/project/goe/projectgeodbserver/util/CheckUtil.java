@@ -129,13 +129,13 @@ public class CheckUtil {
 			bpl.setBonusNumber(earn.getDayMoney() * bpr.getBonusNumber());
 			bpl.setManageCost(earn.getDayMoney() * bpr.getManageCost());
 			bpl.setProductCoinNumber(earn.getDayMoney() * bpr.getProductCoinNumber());
-			bpl.setRepearCoinNumber(earn.getDayMoney() * bpr.getRepeatCoinNumber());
+			bpl.setRepeatCoinNumber(earn.getDayMoney() * bpr.getRepeatCoinNumber());
 			bpl.setTouchType(earn.getTouchType());
 
 			// 将积分和金钱添加到user表
 			user.setBonusCoin(user.getBonusCoin() + bpl.getBonusNumber());
 			user.setProductCoin(user.getProductCoin() + bpl.getProductCoinNumber());
-			user.setRepeatCoin(user.getRepeatCoin() + bpl.getRepearCoinNumber());
+			user.setRepeatCoin(user.getRepeatCoin() + bpl.getRepeatCoinNumber());
 			return bpl;
 		}
 		return null;

@@ -435,6 +435,9 @@ public class UserController {
 				recommendUser.setUserStatus(true);
 			}
 
+			// 添加新建用户对应的业绩表记录
+			earnServerSchedul.savePer(user.getUserId());
+
 			// 更新业绩信息
 			redisService.pushObjToList("userIDList", user.getUserId());
 //			earnServerSchedul.mainUpdatePerformance(user.getUserId());

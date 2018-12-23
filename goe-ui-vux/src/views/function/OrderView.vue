@@ -3,7 +3,7 @@
     <x-header :left-options="{showBack: true}">会员管理系统</x-header>
     <group>
       <div>
-        <x-table :cell-bordered="false" :content-bordered="true" style="background-color:#fff; font-size: small">
+        <x-table :cell-bordered="false" :content-bordered="true" style="background-color:#fff; font-size: xx-small">
           <thead>
           <tr style="background-color: #d43e2e;color: white">
             <th>订单类型</th>

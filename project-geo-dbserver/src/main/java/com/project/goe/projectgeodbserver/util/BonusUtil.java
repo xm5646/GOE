@@ -12,6 +12,7 @@ public class BonusUtil {
 		
 		bonusVO.setAccount(bonusPayList.getAccount());
 		bonusVO.setBonusNumber(MathUtil.floor(bonusPayList.getBonusNumber()));
+		bonusVO.setRepeatCoinNumber(MathUtil.floor(bonusPayList.getRepeatCoinNumber()));
 		bonusVO.setCreateTime(DateFormatUtil.DateObjectToString(bonusPayList.getCreateTime()));
 		bonusVO.setManageCost(MathUtil.floor(bonusPayList.getManageCost()));
 		bonusVO.setPayTime(DateFormatUtil.DateObjectToString(bonusPayList.getPayTime()));

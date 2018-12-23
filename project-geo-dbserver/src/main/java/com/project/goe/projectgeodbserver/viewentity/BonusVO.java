@@ -6,6 +6,7 @@ public class BonusVO {
 	private long bonusNumber;
 	private long manageCost;
 	private long productCoinNumber;
+	private long repeatCoinNumber;
 	private String payTime;
 	private String createTime;
 	private String touchType;
@@ -74,4 +75,11 @@ public class BonusVO {
 		this.createTime = createTime;
 	}
 
+	public long getRepeatCoinNumber() {
+		return repeatCoinNumber;
+	}
+
+	public void setRepeatCoinNumber(long repeatCoinNumber) {
+		this.repeatCoinNumber = repeatCoinNumber;
+	}
 }

@@ -2,15 +2,16 @@
   <div class="page">
     <x-header :left-options="{showBack: false}">会员管理系统</x-header>
     <group>
-      <div>
-        <x-table :cell-bordered="false" :content-bordered="true" style="background-color:#fff; font-size: small">
+      <div >
+        <x-table :cell-bordered="false" :content-bordered="true" style="background-color:#fff; font-size: xx-small;">
           <thead>
-          <tr style="background-color: #d43e2e; color: white">
+          <tr style="background-color: #d43e2e; color: white;">
             <th>奖金类型</th>
             <th>发放总额</th>
             <th>奖金</th>
             <th>产品积分</th>
-            <th>综合费</th>
+            <th>重销奖金</th>
+            <!--<th>综合费</th>-->
             <th>发放日期</th>
           </tr>
           </thead>
@@ -20,7 +21,8 @@
             <td>{{row.totalMoney.toFixed(0)}}</td>
             <td>{{row.bonusNumber.toFixed(0)}}</td>
             <td>{{row.productCoinNumber.toFixed(0)}}</td>
-            <td>{{row.manageCost.toFixed(0)}}</td>
+            <td>{{row.repeatCoinNumber.toFixed(0)}}</td>
+            <!--<td>{{row.manageCost.toFixed(0)}}</td>-->
             <td v-html="row.showPayTime"></td>
           </tr>
           </tbody>
@@ -72,6 +74,7 @@
         }
       },
       update () {
+        console.log('salary update')
         this.getPage(1)
       },
       getPage (pageNum) {

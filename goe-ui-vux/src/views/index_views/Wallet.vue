@@ -13,11 +13,20 @@
           <br/>
           报单币
         </div>
+      </div>
+      <div slot="content" class="card-demo-flex card-demo-content01">
+
+        <div class="vux-1px-r">
+          ￥<span>{{repeatCoin.toFixed(0)}}</span>
+          <br/>
+          重销奖金
+        </div>
         <div class="vux-1px-r">
           ￥<span>{{productCoin.toFixed(0)}}</span>
           <br/>
           产品积分
         </div>
+
       </div>
     </card>
 
@@ -54,7 +63,8 @@
         user: '',
         bonusCoin: 0,
         consumeCoin: 0,
-        productCoin: 0
+        productCoin: 0,
+        repeatCoin: 0
       }
     },
     methods: {
@@ -68,6 +78,7 @@
         this.bonusCoin = userObj.bonusCoin
         this.consumeCoin = userObj.consumeCoin
         this.productCoin = userObj.productCoin
+        this.repeatCoin = userObj.repeatCoin
       }
     }
   }

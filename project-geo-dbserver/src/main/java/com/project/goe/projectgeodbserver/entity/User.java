@@ -120,8 +120,8 @@ public class User implements Serializable {
 	@Column
 	private double productCoin;
 
-	// 冲销奖金
-	@Column
+	// 重销奖金
+	@Column(columnDefinition = "double default 0")
 	private double repeatCoin;
 
 	// 用户激活时间

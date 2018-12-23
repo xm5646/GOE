@@ -16,7 +16,7 @@
       <cell title='报单币转账' is-link @click.native="goTo('transferConsumeCoin')">
         <img slot="icon" width="20" style="display:block;margin-right:10px;" src="../../assets/images/icon/transfer.png">
       </cell>
-      <cell title='重复消费' is-link @click.native="goTo('reConsume')">
+      <cell title='重销奖金兑换' is-link @click.native="goTo('reConsume')">
         <img slot="icon" width="20" style="display:block;margin-right:10px;"
              src="../../assets/images/icon/reconsume.png">
       </cell>
