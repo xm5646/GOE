@@ -6,13 +6,13 @@
         <x-table :cell-bordered="false" :content-bordered="true" style="background-color:#fff; font-size: xx-small;">
           <thead>
           <tr style="background-color: #d43e2e; color: white;">
-            <th>奖金类型</th>
-            <th>发放总额</th>
+            <th>类型</th>
+            <th>总额</th>
             <th>奖金</th>
-            <th>产品积分</th>
+            <th>积分</th>
             <th>重销奖金</th>
-            <!--<th>综合费</th>-->
-            <th>发放日期</th>
+            <th>综合费</th>
+            <th>日期</th>
           </tr>
           </thead>
           <tbody>
@@ -22,7 +22,7 @@
             <td>{{row.bonusNumber.toFixed(0)}}</td>
             <td>{{row.productCoinNumber.toFixed(0)}}</td>
             <td>{{row.repeatCoinNumber.toFixed(0)}}</td>
-            <!--<td>{{row.manageCost.toFixed(0)}}</td>-->
+            <td>{{row.manageCost.toFixed(0)}}</td>
             <td v-html="row.showPayTime"></td>
           </tr>
           </tbody>

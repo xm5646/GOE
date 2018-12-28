@@ -202,7 +202,8 @@
                     accumulateEarning: 0,
                     bonusPaymentCost: 0,
                     managementCost: 20,
-                    productCoinCost: 10
+                    productCoinCost: 10,
+                    repeatCoinCost: 0
                 },
                 cityData: cityData,
                 showAddNewTodo: false,

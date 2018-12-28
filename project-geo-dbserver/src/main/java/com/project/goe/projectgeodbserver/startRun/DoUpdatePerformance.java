@@ -20,23 +20,30 @@ public class DoUpdatePerformance implements ApplicationRunner{
 
     @Override
     public void run(ApplicationArguments applicationArguments) throws Exception {
-        System.out.println("开始连接Redis, 查询是否有需要更新业绩的用户列表");
-        while(true) {
-            try{
-                Long count = redisService.getListSize("userIDList");
-                if (count > 0){
-                    for (int i=0;i<count; i++) {
-                        Long userId = Long.valueOf(redisService.getObjFromList("userIDList").toString());
-                        sLogger.info("发现新增用户ID:" + userId + ",开始更新该用户上层所有用户业绩");
-                        earnServerSchedul.updateUserPerformance(userId);
-                        sLogger.info("完成业绩更新,触发ID:" + userId);
+        new Thread(() ->{
+            sLogger.info("connection Redis, find if has need update user id");
+            while(true) {
+                try{
+                    Long count = redisService.getListSize("userIDList");
+                    if (count > 0){
+                        for (int i=0;i<count; i++) {
+                            Long userId = Long.valueOf(redisService.getObjFromList("userIDList").toString());
+                            sLogger.info("find new user ID:" + userId + ",starting update...");
+                            earnServerSchedul.updateUserPerformance(userId);
+                            sLogger.info("update complete, source ID:" + userId);
+                        }
                     }
+                } catch (Exception e) {
+                    sLogger.error("更新业绩线程出错!");
+                    sLogger.error(e.getMessage());
                 }
-            } catch (Exception e) {
-                sLogger.error("更新业绩线程出错!");
-                sLogger.error(e);
+                try{
+                    Thread.sleep(6000);
+                }catch (InterruptedException e){
+                    sLogger.error(e.getMessage());
+                }
+
             }
-            Thread.sleep(60000);
-        }
+        }).start();
     }
 }

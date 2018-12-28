@@ -7,6 +7,7 @@ public class FinanceOfAll {
 	private double productCoinCost;
 	private double managementCost;
 	private double bonusPaymentCost;
+	private double repeatCoinCost;
 
 	public double getAccumulateEarning() {
 		return accumulateEarning;
@@ -40,4 +41,11 @@ public class FinanceOfAll {
 		this.bonusPaymentCost = bonusPaymentCost;
 	}
 
+	public double getRepeatCoinCost() {
+		return repeatCoinCost;
+	}
+
+	public void setRepeatCoinCost(double repeatCoinCost) {
+		this.repeatCoinCost = repeatCoinCost;
+	}
 }

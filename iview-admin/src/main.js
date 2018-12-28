@@ -9,18 +9,18 @@ import Cookies from 'js-cookie';
 import '@/locale';
 import 'iview/dist/styles/iview.css';
 import VueI18n from 'vue-i18n';
-import util from './libs/util';
+// import util from './libs/util';
 import API from './libs/ajax';
 
 Vue.use(VueI18n);
 Vue.use(iView);
 Vue.use(VueResource);
 Vue.use(API);
-var useAuth = false;
-Vue.http.options.emulateJSON = true
-Vue.http.options.timeout = 5000
-// Vue.prototype.APIServer = 'http://www.mythvip.top/api'
-Vue.prototype.APIServer = 'http://localhost:8088'
+var useAuth = true;
+Vue.http.options.emulateJSON = true;
+Vue.http.options.timeout = 5000;
+Vue.prototype.APIServer = 'http://www.mythvip.top/api'
+// Vue.prototype.APIServer = 'http://localhost:8088';
 Vue.http.interceptors.push((request, next) => {
     // console.log('进入拦截器拦截方法')
     // Vue.$vux.loading.hide()
@@ -28,7 +28,7 @@ Vue.http.interceptors.push((request, next) => {
     //     text: '加载中',
     //     delay: 500
     // })
-    console.log(request)
+    console.log(request);
     var timeout1;
     // 這裡改用 _timeout
     if (request.timeout) {
@@ -40,9 +40,9 @@ Vue.http.interceptors.push((request, next) => {
         }, 5000);
     }
     next((response) => {
-        clearTimeout(timeout1)
+        clearTimeout(timeout1);
         if (useAuth) {
-            console.log('进入拦截器响应方法,输出获取的相应数据,读取cookie和header')
+            console.log('进入拦截器响应方法,输出获取的相应数据,读取cookie和header');
             console.log('获取登陆状态:' + response.headers.get('loginstatus'));
             if (!(response.headers.get('loginStatus') === 'true')) {
                 window.localStorage.clear();
@@ -58,14 +58,14 @@ Vue.http.interceptors.push((request, next) => {
                     window.location.href = 'http://www.mythvip.top/';
                 }
             } else {
-                console.log('已登录状态')
+                console.log('已登录状态');
                 console.log(response.body);
             }
         } else {
             console.log(response.body);
         }
     });
-})
+});
 
 router.beforeEach(function (to, from, next) {
     if (to.name !== 'login') {
@@ -74,7 +74,7 @@ router.beforeEach(function (to, from, next) {
         }
     }
     next();
-})
+});
 
 new Vue({
     el: '#app',
@@ -84,7 +84,7 @@ new Vue({
     data: {
         currentPageName: ''
     },
-    mounted() {
+    mounted () {
         this.currentPageName = this.$route.name;
         // 显示打开的页面的列表
         this.$store.commit('setOpenedList');
@@ -92,9 +92,9 @@ new Vue({
         // 权限菜单过滤相关
         this.$store.commit('updateMenulist');
         // iview-admin检查更新
-        util.checkUpdate(this);
+        // util.checkUpdate(this);
     },
-    created() {
+    created () {
         let tagsList = [];
         appRouter.map((item) => {
             if (item.children.length <= 1) {

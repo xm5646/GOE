@@ -250,6 +250,7 @@ public class GoeIndexController {
 		double productCoinCost = 0;
 		double managementCost = 0;
 		double bonusPaymentCost = 0;
+		double repeatCoinCost = 0;
 
 		try {
 			// 报单
@@ -272,10 +273,12 @@ public class GoeIndexController {
 				productCoinCost += bonusPayList.getProductCoinNumber();
 				managementCost += bonusPayList.getManageCost();
 				bonusPaymentCost += bonusPayList.getBonusNumber();
+				repeatCoinCost += bonusPayList.getRepeatCoinNumber();
 			}
 			financeOfAll.setBonusPaymentCost(bonusPaymentCost);
 			financeOfAll.setManagementCost(managementCost);
 			financeOfAll.setProductCoinCost(productCoinCost);
+			financeOfAll.setRepeatCoinCost(repeatCoinCost);
 
 			retMsg = new RetMsg();
 			retMsg.setCode(200);

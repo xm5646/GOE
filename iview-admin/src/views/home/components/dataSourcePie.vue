@@ -30,7 +30,7 @@ export default {
                 legend: {
                     orient: 'vertical',
                     left: 'right',
-                    data: ['发放奖金', '管理费', '产品积分', '剩余资金']
+                    data: ['奖金', '管理费', '产品积分', '重销奖金', '剩余资金']
                 },
                 series: [
                     {
@@ -39,10 +39,11 @@ export default {
                         radius: '66%',
                         center: ['50%', '60%'],
                         data: [
-                            {value: this.numbers.bonusPaymentCost, name: '发放奖金', itemStyle: {normal: {color: '#9bd598'}}},
+                            {value: this.numbers.bonusPaymentCost, name: '奖金', itemStyle: {normal: {color: '#9bd598'}}},
                             {value: this.freeMoney, name: '剩余资金', itemStyle: {normal: {color: '#ffd58f'}}},
                             {value: this.numbers.managementCost, name: '管理费', itemStyle: {normal: {color: '#e14f60'}}},
-                            {value: this.numbers.productCoinCost, name: '产品积分', itemStyle: {normal: {color: '#ab8df2'}}}
+                            {value: this.numbers.productCoinCost, name: '产品积分', itemStyle: {normal: {color: '#ab8df2'}}},
+                            {value: this.numbers.repeatCoinCost, name: '重销奖金', itemStyle: {normal: {color: '#3399FF'}}}
                         ],
                         itemStyle: {
                             emphasis: {
