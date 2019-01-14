@@ -194,7 +194,8 @@ public class EarnServerSchedul {
 		Map<Long, Earning> earnsMap = new HashMap<Long, Earning>();
 
 		// 这里由于时间关系不操作数据库了，直接代码实现时间的处理
-		conductEarnTime(earns, earnsMap);
+        // 迭代用户表,获取有效的收益记录
+        getLastVaildEarningByUserID(earns, earnsMap);
 
 		List<BonusPayList> buslist = new ArrayList<BonusPayList>();
 		List<User> userupdate = new ArrayList<User>();
@@ -273,6 +274,48 @@ public class EarnServerSchedul {
 		}
 	}
 
+    /**
+     *  根据用户Id获取可以发放奖金的有效收益记录
+     * @param earns 所有收益记录的集合
+     * @param earnsMap 有效的收益记录字典
+     */
+	private void getLastVaildEarningByUserID(Iterable<Earning> earns, Map<Long, Earning> earnsMap) {
+	    // 获取每个用户的最后一条收益记录
+        Map<Long, Earning> lastEarns = new HashMap<Long, Earning>();
+	    for (Earning earning : earns) {
+	        Earning mapOfEarn = lastEarns.get(earning.getUserid());
+	        if (null == mapOfEarn) {
+	            lastEarns.put(earning.getUserid(), earning);
+            } else {
+	            if (mapOfEarn.getEarningId() < earning.getEarningId()) {
+	                lastEarns.put(earning.getUserid(), earning);
+                }
+            }
+        }
+        // 迭代每个用户的最后一条记录, 判断是否有效
+	    for (Long userid : lastEarns.keySet()) {
+	        Earning earning = lastEarns.get(userid);
+	        if (null != earning) {
+	            if (TouchType.ACCUMULATION.equals(earning.getTouchType())) {
+                    // 如果是累积业绩奖励,判断是否还有剩余未发放天数
+	                if (earning.getSurplusNumber() > 0 ) {
+                        earnsMap.put(earning.getUserid(), earning);
+                    }
+                } else if (TouchType.ADDITION.equals(earning.getTouchType())) {
+	                // 如果是新增奖励,判断:
+                    // 1. 是否超过发放截止日期
+                    // 2. 是否超过380:380 vip9级别
+                    boolean bigOrSameForVip9 = BusinessUtil.isBigBusSame(earning.getUserLevel(), UserLevel.ADVANCED_DIRECTOR);
+                    if (null != earning.getEndTime() && earning.getEndTime().after(new Date()) && bigOrSameForVip9) {
+                        earnsMap.put(earning.getUserid(), earning);
+                    }
+
+                }
+            }
+        }
+    }
+
+    // 该方法已经由getLastVaildEarningByUserID替代
 	private void conductEarnTime(Iterable<Earning> earns, Map<Long, Earning> earnsMap) {
 		for (Earning earn : earns) {
 			Earning em = earnsMap.get(earn.getUserid());
@@ -285,13 +328,15 @@ public class EarnServerSchedul {
 
 			} else {
 				if (TouchType.ADDITION.equals(earn.getTouchType())) {
-					if (earn.getEndTime() != null && earn.getEndTime().after(new Date())) {
+                    // 判断用户级别是否超过 高级总V监380:380
+                    boolean bigOrSameForVip9 = BusinessUtil.isBigBusSame(earn.getUserLevel(), UserLevel.ADVANCED_DIRECTOR);
+					if (earn.getEndTime() != null && earn.getEndTime().after(new Date()) && bigOrSameForVip9) {
 						earnsMap.put(earn.getUserid(), earn);
 					}
 				} else {
-					// if (earn.getSurplusNumber() > 0) {
-					earnsMap.put(earn.getUserid(), earn);
-					// }
+					 if (earn.getSurplusNumber() > 0) {
+					    earnsMap.put(earn.getUserid(), earn);
+					 }
 				}
 			}
 		}

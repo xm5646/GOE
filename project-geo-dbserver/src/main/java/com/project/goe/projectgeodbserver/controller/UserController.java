@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
+import com.project.goe.projectgeodbserver.entity.*;
 import com.project.goe.projectgeodbserver.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -22,10 +23,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.goe.projectgeodbserver.entity.CardInfo;
-import com.project.goe.projectgeodbserver.entity.ConsumeRecord;
-import com.project.goe.projectgeodbserver.entity.Performance;
-import com.project.goe.projectgeodbserver.entity.User;
 import com.project.goe.projectgeodbserver.server.EarnServerSchedul;
 import com.project.goe.projectgeodbserver.statusType.ConsumeType;
 import com.project.goe.projectgeodbserver.util.UserUtil;
@@ -55,6 +52,9 @@ public class UserController {
 
 	@Autowired
 	private RedisService redisService;
+
+	@Autowired
+	private EarningService earningService;
 
 	@Autowired
 	private UserRepeatCheckService UserRepeatCheckService;
@@ -155,6 +155,13 @@ public class UserController {
 		}
 
 		return "测试数据插入根成功";
+	}
+
+
+	@RequestMapping("/getLastEarningByUserId/{userId}")
+	public String getLastEarningByUserId(@PathVariable("userId") Long userId) {
+		Earning earning = earningService.getLastEarningByUserID(userId);
+		return earning.toString();
 	}
 
 	@RequestMapping("/testusercreate/{id}")

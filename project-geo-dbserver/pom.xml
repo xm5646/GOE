@@ -5,7 +5,7 @@
 
 	<groupId>com.project.goe</groupId>
 	<artifactId>project-geo-dbserver</artifactId>
-	<version>1.0-20181228</version>
+	<version>1.0-20190113</version>
 	<packaging>jar</packaging>
 
 	<name>project-geo-dbserver</name>

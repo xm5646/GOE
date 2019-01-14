@@ -44,7 +44,11 @@ public class EarningService {
 		}
 		return false;
 	}
-	
+
+	public Earning getLastEarningByUserID(long userId) {
+		return this.earningRepository.getLastEarningByUserId(userId);
+	}
+
 	public Page<Earning> findAllEarnings(Pageable pageable) {
 		return this.earningRepository.findAll(pageable);
 	}

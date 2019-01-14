@@ -45,7 +45,7 @@ bonus:
      productCoinNumberPercentage: 0.2
      consumeCoinUnitPrice: 680
      reconsumeCoinUnitPrice: 480
-     drawCostPercentage: 0.03
+     drawCostPercentage: 0.05
 
 login: 
   expireTime: 30

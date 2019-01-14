@@ -15,6 +15,9 @@ public interface EarningRepository extends JpaSpecificationExecutor<Earning>, Jp
 	@Query(value = "select count(1) from (select * from tb_earning e where e.userid=?1 and e.touch_type=?2 order by e.create_time desc limit 0,1) el where el.surplus_number>?3", nativeQuery = true)
 	int getEarningExist(long userid, int surplusNumber, String touchType);
 
+	@Query(value = "select * from tb_earning e WHERE e.userid = ?1 order by e.earning_id desc limit 1;", nativeQuery = true)
+	Earning getLastEarningByUserId(long userId);
+
 	// @Query(value = "select count(1) from (select * from tb_earning e where
 	// e.userid=?1 and e.touch_type=?2 order by e.create_time desc limit 0,1) el
 	// where el.surplus_number>?3",nativeQuery=true)

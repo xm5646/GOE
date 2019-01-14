@@ -202,7 +202,7 @@
     },
     computed: {
       isInput: function () {
-        return this.getNumber >= 100 && this.getNumber < this.bonusCoin
+        return this.getNumber >= 100 && this.getNumber <= this.bonusCoin
       },
       isHasCards: function () {
         return (this.cards && this.cards.constructor === Array && this.cards.length !== 0)
@@ -226,8 +226,8 @@
     watch: {
       getNumber (newValue) {
         this.formView[0].value = '￥' + newValue + '元'
-        this.formView[1].value = '￥' + (newValue * 0.03).toFixed(2) + '元'
-        this.formView[2].value = '￥' + (newValue - (newValue * 0.03).toFixed(2)) + '元'
+        this.formView[1].value = '￥' + (newValue * 0.05).toFixed(2) + '元'
+        this.formView[2].value = '￥' + (newValue - (newValue * 0.05).toFixed(2)) + '元'
       }
     }
   }
