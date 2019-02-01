@@ -11,15 +11,10 @@ import java.util.Map;
 
 import javax.transaction.Transactional;
 
+import com.project.goe.projectgeodbserver.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.project.goe.projectgeodbserver.entity.BonusPayList;
-import com.project.goe.projectgeodbserver.entity.Earning;
-import com.project.goe.projectgeodbserver.entity.Performance;
-import com.project.goe.projectgeodbserver.entity.ReconsumeRecord;
-import com.project.goe.projectgeodbserver.entity.User;
-import com.project.goe.projectgeodbserver.entity.UserCreatereRecord;
 import com.project.goe.projectgeodbserver.service.BonusPayListService;
 import com.project.goe.projectgeodbserver.service.EarningService;
 import com.project.goe.projectgeodbserver.service.PerformanceService;
@@ -239,36 +234,40 @@ public class EarnServerSchedul {
 	}
 
 	/**
-	 * 每天定时检查考核状态
+	 * 每天定时更新用户的考核周期
 	 */
 	public void mainAssessInspect() {
 		// 检查每个用户的考核时间是否是考核日
-		// 如果为考核日，查看消费记录表是否有重销 考核日期加30天
+		// 如果为考核日，考核日期加30天
 		// 有考核状态为true，没有考核状态为false
 		Iterable<User> userlist = this.userService.getAll();
 		if (userlist != null) {
 			for (User user : userlist) {
 				if (user != null) {
+					user.setAssessStatus(true);
 					// 默认在考核的下一天执行,如果前一天是考核时间则更新考核状态和考核时间
 					boolean issame = TimeUtil.getTimeSameDay(user.getAssessDate(), TimeUtil.addDay(new Date(), -1));
 					// 需要判断考核
 					if (issame) {
 						user.setAssessDate(TimeUtil.addDay(user.getAssessDate(), 30));
-						List<ReconsumeRecord> rrlist = reconsumeRecordService.findByUserId(user.getUserId());
-						boolean isassess = false;
-						for (ReconsumeRecord r : rrlist) {
-							if (TimeUtil.getTimeSameDay(r.getCreateTime(), TimeUtil.addDay(new Date(), -1))) {
-								isassess = true;
-							}
-						}
-						user.setAssessStatus(isassess); // or set assessStatus ture;
+						user.setAssessStatus(true);
+						// 不再判断用户是否重销
+//						List<ReconsumeRecord> rrlist = reconsumeRecordService.findByUserId(user.getUserId());
+//						boolean isassess = false;
+//						for (ReconsumeRecord r : rrlist) {
+//							if (TimeUtil.getTimeSameDay(r.getCreateTime(), TimeUtil.addDay(new Date(), -1))) {
+//								isassess = true;
+//							}
+//						}
+//						user.setAssessStatus(isassess); // or set assessStatus ture;
+						// 清空新增业绩
 						Performance p = performanceService.findByUserId(user.getUserId());
 						p.setAddDepartAcount(0);
 						p.setAddDepartBcount(0);
 						p.setAddDepartCcount(0);
-						userService.save(user);
 						performanceService.save(p);
 					}
+					userService.save(user);
 				}
 			}
 		}
@@ -444,6 +443,93 @@ public class EarnServerSchedul {
 	}
 
 	/**
+	 *  根据变化后的业绩计算用户的等级,判断是否可以进行升级
+	 * @param userMap
+	 * @param pers
+	 * @param isHaveTotalEarningMap
+	 */
+	public void  ComputeUserLevelByPerformance(Map<Long, User> userMap, List<Performance> pers, Map<Long, Boolean> isHaveTotalEarningMap){
+		for(Performance p : pers) {
+			User user = userMap.get(p.getUserId());
+			// 获取下一级别需要的业绩要求
+			BusinessEntity entity = BusinessUtil.getBusinessEntity(user.getUserLevel());
+			BusinessEntity nextLevel = BusinessUtil.getNextLevel(entity);
+
+			// 判断用户当前是否正在领取累积收益
+			boolean isHaveTotalEarning = isHaveTotalEarningMap.get(user.getUserId());
+
+			// 判断用户是否第一次产生收入
+			BusinessEntity perNowLevel = BusinessUtil.getBusinesLevel(p.getDepartAcount(), p.getDepartBcount(), p.getDepartCcount());
+			if (user.getUserLevel().equals(UserLevel.CONSUMER) && !perNowLevel.getUserLevel().equals(UserLevel.CONSUMER)) {
+				user.setUserLevel(perNowLevel.getUserLevel());
+				user.setAssessDate(TimeUtil.addDay(new Date(), 30));
+				user.setAssessStatus(true);
+
+				Earning earning = new Earning();
+				earning.setCreateTime(new Date());
+				earning.setDayMoney(perNowLevel.getMoney());
+				earning.setSurplusNumber(30);
+				earning.setTouchType(TouchType.ACCUMULATION);
+				earning.setUserLevel(perNowLevel.getUserLevel());
+				earning.setUserid(user.getUserId());
+
+				userService.save(user);
+				performanceService.save(p);
+				earningService.save(earning);
+				continue;
+			}
+
+			// 获取需要升级所需的业绩数量: 下一级别所需的总业绩 - 当前累积业绩
+			Long needA = nextLevel.getCountA() - p.getDepartAcount();
+			Long needB = nextLevel.getCountB() - p.getDepartBcount();
+			Long needC = nextLevel.getCountC() - p.getDepartCcount();
+			if (p.getAddDepartAcount() >= needA && p.getAddDepartBcount() >= needB && p.getAddDepartCcount() >= needC) {
+				// 达到升级条件, 将新增业绩计入累积业绩后清空,并提升用户等级,更新考核周期,增加一条收益记录
+				p.setDepartAcount(p.getDepartAcount() + p.getAddDepartAcount());
+				p.setDepartBcount(p.getDepartBcount() + p.getAddDepartBcount());
+				p.setDepartCcount(p.getDepartCcount() + p.getAddDepartCcount());
+
+				p.clearNewPerformance();
+
+				user.setUserLevel(nextLevel.getUserLevel());
+				user.setAssessDate(TimeUtil.addDay(new Date(), 30));
+
+				Earning earning = new Earning();
+				earning.setCreateTime(new Date());
+				earning.setDayMoney(nextLevel.getMoney());
+				earning.setSurplusNumber(30);
+				earning.setTouchType(TouchType.ACCUMULATION);
+				earning.setUserLevel(nextLevel.getUserLevel());
+				earning.setUserid(user.getUserId());
+
+				userService.save(user);
+				performanceService.save(p);
+				earningService.save(earning);
+			} else {
+				// 未达到升级条件,对没有领取累积奖励的用户进行新增业绩计算是否可以触发新增奖励
+				BusinessEntity newPerLevel = BusinessUtil.getBusinesLevel(p.getAddDepartAcount(), p.getAddDepartBcount(), p.getAddDepartCcount());
+				if (!isHaveTotalEarning) {
+					// 当前用户没有领取累积奖励
+					if (!newPerLevel.getUserLevel().equals(UserLevel.CONSUMER)) {
+						// 当前新增业绩超过1:1, 可以产生新增收益
+						Earning earning = new Earning();
+						earning.setCreateTime(new Date());
+						earning.setEndTime(user.getAssessDate());
+						earning.setDayMoney(newPerLevel.getMoney());
+						earning.setSurplusNumber(0);
+						earning.setTouchType(TouchType.ADDITION);
+						earning.setUserLevel(newPerLevel.getUserLevel());
+						earning.setUserid(user.getUserId());
+
+						earningService.save(earning);
+					}
+				}
+			}
+
+		}
+	}
+
+	/**
 	 * 更加用户ID更新用户上级的所有业绩，并在所有业绩更新后判断业绩能否触发收益，并保存
 	 * 
 	 * @param userid
@@ -465,55 +551,58 @@ public class EarnServerSchedul {
 			perMap.put(per.getUserId(), per);
 		}
 		// 获得需要更新的业绩表数据
-		List<Performance> perlist = CheckUtil.computePer(userid, userMap, perMap, isHaveTotalEarningMap);
+		//UPDATE 2019-01-24 为新增用户及所有上线增加新增业绩,并返回业绩对象集合
+		List<Performance> perlist = CheckUtil.ComputeNewLinePerformance(userid, userMap, perMap, isHaveTotalEarningMap);
 		// 在checkUtil中已经做了为空判断，这里不需要做
 		for (Performance performance : perlist) {
 			// 更新业绩表数据
 			performanceService.save(performance);
 		}
 
-		Iterable<Earning> earns = earningService.getAll();
-		// 将获得的对象封装成MAP
-		Map<String, Earning> earnMap = new HashMap<String, Earning>();
-		for (Earning earn : earns) {
-			String key = CheckUtil.getEarnKey(earn);
-			if (key != null && key.length() > 0) {
-				earnMap.put(key, earn);
-			}
-		}
+		//UPDATE 2019-01-29 根据业绩变化,更新用户等级,并进行收益记录更新
+		ComputeUserLevelByPerformance(userMap, perlist, isHaveTotalEarningMap);
+
+//		Iterable<Earning> earns = earningService.getAll();
+//		// 将获得的对象封装成MAP
+//		Map<String, Earning> earnMap = new HashMap<String, Earning>();
+//		for (Earning earn : earns) {
+//			String key = CheckUtil.getEarnKey(earn);
+//			if (key != null && key.length() > 0) {
+//				earnMap.put(key, earn);
+//			}
+//		}
 
 		// 发生变化的业绩更新收益表
-		List<Earning> earnList = CheckUtil.userEarning(earnMap, perlist);
-
-		if (earnList != null && earnList.size() > 0) {
-
-			// 清除不需要保存的收益表信息
-			CheckUtil.computeEarn(earnMap, earnList);
-			for (Earning earn : earnList) {
-				if (earn != null) {
-					// 在这里判断如果是第一次触发累计4：4更新user表考核时间
-					User upUser = userService.getUserById(earn.getUserid());
-					if (CheckUtil.theFirstEarning(earn)) {
-						// 更新考核日期和考核状态
-						if (upUser != null) {
-							CheckUtil.updateUserForFirstEarning(upUser);
-							userService.save(upUser);
-						}
-					}
-					// 如果是累计考核更新考核状态
-					if (TouchType.ACCUMULATION.equals(earn.getTouchType())) {
-						if (BusinessUtil.isBigBus(earn.getUserLevel(), upUser.getUserLevel())) {
-							if (upUser != null) {
-								upUser.setUserLevel(earn.getUserLevel());
-								userService.save(upUser);
-							}
-						}
-					}
-
-					earningService.save(earn);
-				}
-			}
-		}
+//		List<Earning> earnList = CheckUtil.userEarning(earnMap, perlist);
+//		if (earnList != null && earnList.size() > 0) {
+//
+//			// 清除不需要保存的收益表信息
+//			CheckUtil.computeEarn(earnMap, earnList);
+//			for (Earning earn : earnList) {
+//				if (earn != null) {
+//					// 在这里判断如果是第一次触发累计4：4更新user表考核时间
+//					User upUser = userService.getUserById(earn.getUserid());
+//					if (CheckUtil.theFirstEarning(earn)) {
+//						// 更新考核日期和考核状态
+//						if (upUser != null) {
+//							CheckUtil.updateUserForFirstEarning(upUser);
+//							userService.save(upUser);
+//						}
+//					}
+//					// 如果是累计考核更新考核状态
+//					if (TouchType.ACCUMULATION.equals(earn.getTouchType())) {
+//						if (BusinessUtil.isBigBus(earn.getUserLevel(), upUser.getUserLevel())) {
+//							if (upUser != null) {
+//								upUser.setUserLevel(earn.getUserLevel());
+//								userService.save(upUser);
+//							}
+//						}
+//					}
+//
+//					earningService.save(earn);
+//				}
+//			}
+//		}
 	}
 
 	/**

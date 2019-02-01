@@ -3,10 +3,86 @@
     <x-header :left-options="{showBack: false}">会员管理系统</x-header>
     <div class="clearboth"></div>
     <panel :list="list" :type="type"></panel>
+    <group>
+    <card :header="{title: '累积业绩'}">
+      <div slot="content" class="card-demo-flex card-demo-content01">
+        <div class="vux-1px-r">
+          <span>{{performance.totalPerformanceA}}</span>
+          <br/>
+          A
+        </div>
+        <div class="vux-1px-r">
+          <span>{{performance.totalPerformanceB}}</span>
+          <br/>
+          B
+        </div>
+        <div class="vux-1px-r">
+          <span>{{performance.totalPerformanceC}}</span>
+          <br/>
+          C
+        </div>
+      </div>
+    </card>
 
-    <card :header="{title: '业绩信息'}">
-      <p slot="content" class="card-padding performance-info">累计业绩:&nbsp;&nbsp;A:{{performance.totalPerformanceA}}&nbsp;&nbsp; B:{{performance.totalPerformanceB}}&nbsp;&nbsp; C:{{performance.totalPerformanceC}}</p>
-      <p slot="content" class="card-padding performance-info">新增业绩:&nbsp;&nbsp;A:{{performance.newPerformanceA}}&nbsp;&nbsp; B:{{performance.newPerformanceB}}&nbsp;&nbsp; C:{{performance.newPerformanceC}}</p>
+    <card :header="{title: '新增业绩'}" style="margin-top: -10px;">
+      <div slot="content" class="card-demo-flex card-demo-content01">
+        <div class="vux-1px-r">
+          <span>{{performance.newPerformanceA}}</span>
+          <br/>
+          A
+        </div>
+        <div class="vux-1px-r">
+          <span>{{performance.newPerformanceB}}</span>
+          <br/>
+          B
+        </div>
+        <div class="vux-1px-r">
+          <span>{{performance.newPerformanceC}}</span>
+          <br/>
+          C
+        </div>
+      </div>
+    </card>
+    </group>
+
+    <!--<card :header="{title: '业绩信息'}">-->
+      <!--<p slot="content" class="card-padding performance-info">累计业绩:&nbsp;&nbsp;A:{{performance.totalPerformanceA}}&nbsp;&nbsp; B:{{performance.totalPerformanceB}}&nbsp;&nbsp; C:{{performance.totalPerformanceC}}</p>-->
+      <!--<p slot="content" class="card-padding performance-info">新增业绩:&nbsp;&nbsp;A:{{performance.newPerformanceA}}&nbsp;&nbsp; B:{{performance.newPerformanceB}}&nbsp;&nbsp; C:{{performance.newPerformanceC}}</p>-->
+    <!--</card>-->
+
+    <card :header="{title: '工资发放信息'}" >
+      <div slot="content" class="card-demo-flex card-demo-content01" v-if="earning.have">
+        <div class="vux-1px-r">
+          <span>{{earning.obj.touchType}}</span>
+          <br/>
+          工资类型
+        </div>
+        <div class="vux-1px-r">
+          <span>{{earning.obj.userLevel}}</span>
+          <br/>
+          工资级别
+        </div>
+        <div class="vux-1px-r">
+          <span>￥{{earning.obj.dayMoney}}</span>
+          <br/>
+          每日发放金额
+        </div>
+        <div class="vux-1px-r" v-if="earning.obj.touchType === '新增'">
+          <span>{{earning.obj.endTime}}</span>
+          <br/>
+          发放截止日期
+        </div>
+        <div class="vux-1px-r" v-if="earning.obj.touchType === '累积'">
+          <span>{{earning.obj.surplusNumber}}</span>
+          <br/>
+          发放剩余天数
+        </div>
+      </div>
+      <div v-else slot="content" class="card-demo-flex card-demo-content01">
+        <div class="vux-1px-r">
+          当前没有产生收益
+        </div>
+      </div>
     </card>
 
     <group title='常用功能'>
@@ -57,6 +133,7 @@
         this.list[0].desc = '<strong>' + userOjb.assessStatus + '</strong><br>' + '下次考核日期:' + userOjb.assessDate
       }
       this.getPerformance()
+      this.getEarningByUserAccount()
     },
     components: {
       XHeader,
@@ -70,6 +147,10 @@
       return {
         user: '',
         type: '1',
+        earning: {
+          have: false,
+          obj: {}
+        },
         list: [{
           src: require('../../assets/images/icon/user.png'),
           title: '张三 [组长]',
@@ -133,6 +214,26 @@
                 type: 'cancel',
                 text: (response.body.message || '系统异常')
               })
+            }
+          }, responseErr => {
+            this.$vux.toast.show({
+              type: 'cancel',
+              text: '系统异常'
+            })
+          })
+      },
+      getEarningByUserAccount () {
+        const url = GoeConfig.apiServer + '/user/getLastEarningByUserAccount/' + this.user.account
+        this.$http.get(url, {
+          _timeout: 3000,
+          onTimeout: (request) => {
+          }
+        })
+          .then(response => {
+            if (response.body.success) {
+              this.earning.obj = response.body.data
+              this.earning.have = true
+            } else {
             }
           }, responseErr => {
             this.$vux.toast.show({
@@ -213,6 +314,17 @@
   .performance-info {
     color: gray;
   }
+  .performance-body {
+    width: 90%;
+    margin-top: 5px;
+    margin-left: 5%;
+    padding-top: 2px;
+    padding-left: 5px;
+    height: 150px;
+    border: 1px solid red;
+    border-radius: 10px;
+  }
+
 
   /*.nav {*/
   /*position: fixed; !* 绝对定位，fixed是相对于浏览器窗口定位。 *!*/

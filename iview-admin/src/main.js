@@ -16,11 +16,11 @@ Vue.use(VueI18n);
 Vue.use(iView);
 Vue.use(VueResource);
 Vue.use(API);
-var useAuth = true;
+var useAuth = false;
 Vue.http.options.emulateJSON = true;
 Vue.http.options.timeout = 5000;
-Vue.prototype.APIServer = 'http://www.mythvip.top/api'
-// Vue.prototype.APIServer = 'http://localhost:8088';
+// Vue.prototype.APIServer = 'http://www.mythvip.top/api'
+Vue.prototype.APIServer = 'http://localhost:8088';
 Vue.http.interceptors.push((request, next) => {
     // console.log('进入拦截器拦截方法')
     // Vue.$vux.loading.hide()

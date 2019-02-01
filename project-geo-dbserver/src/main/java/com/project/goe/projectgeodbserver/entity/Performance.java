@@ -135,6 +135,12 @@ public class Performance {
 		this.updateTime = updateTime;
 	}
 
+	public void clearNewPerformance() {
+		this.setAddDepartAcount(0);
+		this.setAddDepartBcount(0);
+		this.setAddDepartCcount(0);
+	}
+
 	@Override
 	public String toString() {
 		return "Performance [pId=" + pId + ", userId=" + userId + ", departAcount=" + departAcount + ", departBcount="

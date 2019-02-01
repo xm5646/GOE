@@ -11,6 +11,9 @@ import javax.transaction.Transactional;
 
 import com.project.goe.projectgeodbserver.entity.*;
 import com.project.goe.projectgeodbserver.service.*;
+import com.project.goe.projectgeodbserver.statusType.TouchType;
+import com.project.goe.projectgeodbserver.util.*;
+import com.project.goe.projectgeodbserver.viewentity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -25,19 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.goe.projectgeodbserver.server.EarnServerSchedul;
 import com.project.goe.projectgeodbserver.statusType.ConsumeType;
-import com.project.goe.projectgeodbserver.util.UserUtil;
-import com.project.goe.projectgeodbserver.util.ValidateErrorUtil;
-import com.project.goe.projectgeodbserver.util.BonusPayPercentage;
-import com.project.goe.projectgeodbserver.util.BusinessUtil;
-import com.project.goe.projectgeodbserver.util.MD5Util;
-import com.project.goe.projectgeodbserver.util.UserLoginSetting;
-import com.project.goe.projectgeodbserver.viewentity.PerformanceLevel;
-import com.project.goe.projectgeodbserver.viewentity.RetMsg;
-import com.project.goe.projectgeodbserver.viewentity.UpdatePaymentPasswordRequest;
-import com.project.goe.projectgeodbserver.viewentity.UserLoginRequest;
-import com.project.goe.projectgeodbserver.viewentity.UserLoginSettingRequest;
-import com.project.goe.projectgeodbserver.viewentity.UserLoginPasswordUpdateRequest;
-import com.project.goe.projectgeodbserver.viewentity.UserSaveRequest;
 
 @RestController
 @RequestMapping("/user")
@@ -158,10 +148,35 @@ public class UserController {
 	}
 
 
-	@RequestMapping("/getLastEarningByUserId/{userId}")
-	public String getLastEarningByUserId(@PathVariable("userId") Long userId) {
-		Earning earning = earningService.getLastEarningByUserID(userId);
-		return earning.toString();
+	@RequestMapping("/getLastEarningByUserAccount/{userAccount}")
+	public RetMsg getLastEarningByUserId(@PathVariable("userAccount") String userAccount) {
+		Earning earning = earningService.getLastEarningByUserID(userService.findByAccount(userAccount).getUserId());
+		RetMsg retMsg = new RetMsg();
+		if (null == earning) {
+			retMsg.setCode(404);
+			retMsg.setSuccess(false);
+			retMsg.setMessage("未找到该用户收益记录");
+			retMsg.setData(null);
+		} else {
+			EarningVO earningVO = EarningUtil.earningToEarningVO(earning);
+			if (earning.getTouchType().equals(TouchType.ACCUMULATION) && earning.getSurplusNumber() > 0) {
+				retMsg.setData(earningVO);
+				retMsg.setCode(200);
+				retMsg.setSuccess(true);
+				retMsg.setMessage("查询成功");
+			} else if (earning.getTouchType().equals(TouchType.ADDITION) && earning.getEndTime().after(new Date())) {
+				retMsg.setData(earningVO);
+				retMsg.setCode(200);
+				retMsg.setSuccess(true);
+				retMsg.setMessage("查询成功");
+			} else {
+				retMsg.setData(null);
+				retMsg.setCode(501);
+				retMsg.setSuccess(false);
+				retMsg.setMessage("暂无有效收益记录");
+			}
+		}
+		return retMsg;
 	}
 
 	@RequestMapping("/testusercreate/{id}")
@@ -302,6 +317,8 @@ public class UserController {
 		user.setPaymentPassword(MD5Util.encrypeByMd5(paymentPassword));
 		user.setUserPhone(userPhone);
 		user.setPasswordReset(true);
+		user.setUserStatus(true);
+		user.setActivateTime(new Date());
 		user.setNickName(nickName);
 
 		// 更新用户信息

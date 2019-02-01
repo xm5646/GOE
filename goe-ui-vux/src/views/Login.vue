@@ -1,20 +1,20 @@
 <template>
   <div>
     <x-header :left-options="{showBack: false}">会员管理系统</x-header>
-    <div id="img-div">
+    <div id="img-div" style="width: 90%;margin-left: 5%">
       <img src="../assets/images/touming.png" width="100%">
-      <group title="">
+      <div class="login-form">
         <x-input title="用户名" name="username" placeholder="请输入用户编号" :min="5" :max="20" v-model="account">
-          <img slot="label" style="padding-right:10px;display:block;" src="../assets/images/icon/username-grey.png"
+          <img slot="label" style="padding-right:10px;display:block;" src="../assets/images/login/user-red.png"
                width="24" height="24">
         </x-input>
         <x-input title="密码" type="password" placeholder="请输入密码" v-model="password" :min="6" :max="12" @on-enter="login">
-          <img slot="label" style="padding-right:10px;display:block;" src="../assets/images/icon/password.png"
+          <img slot="label" style="padding-right:10px;display:block;" src="../assets/images/login/password-red.png"
                width="24" height="24">
         </x-input>
-      </group>
+      </div>
       <br>
-      <x-button type="warn" action-type="submit" @click.native="login">登陆</x-button>
+      <x-button type="warn" action-type="submit" @click.native="login">登录</x-button>
 
     </div>
   </div>
@@ -63,7 +63,7 @@
                 window.localStorage.setItem('User', JSON.stringify(userObj))
                 if (userObj.passwordReset !== '否') {
                   this.$vux.toast.show({
-                    text: '登陆成功'
+                    text: '登录成功'
                   })
                   this.$router.push({name: 'index'})
                 } else {
@@ -98,5 +98,11 @@
 <style lang="less">
   #img-div {
     text-align: center
+  }
+  .login-form {
+    width: 100%;
+    height: 100px;
+    border: 1px solid #c0bfc4;
+    border-radius: 15px;
   }
 </style>

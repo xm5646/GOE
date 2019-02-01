@@ -13,20 +13,38 @@ import com.project.goe.projectgeodbserver.entity.Earning;
 import com.project.goe.projectgeodbserver.statusType.UserLevel;
 
 public class BusinessUtil {
-//	public final static String VIP1 = "AA";	//VIP    0  0
-//	public final static String VIP2 = "BB";	//业务员  4  4   40
-//	public final static String VIP3 = "CC";	//组长    10 10  100
-//	public final static String VIP4 = "DD";	//主任    20 20  180
-//	public final static String VIP5 = "EE";	//经理    40 40  300
-//	public final static String VIP6 = "FF";	//部门经理 80 80  600
-//	public final static String VIP7 = "GG";	//高级经理 160 160  900
-//	public final static String VIP8 = "HH";	//市场总监 260 260  1200
-//	public final static String VIP9 = "II";	//高级总监 380 380  1800
+//	public final static String VIP1 = "AA";	//VIP     	0  	0	0
+//	public final static String VIP2 = "BB";	//业务员   	1  	1   10
+//	public final static String VIP3 = "CC";	//组长     	4  	4  	40
+//	public final static String VIP4 = "DD";	//主任     	15 	15  100
+//	public final static String VIP5 = "EE";	//经理     	30 	30  200
+//	public final static String VIP6 = "FF";	//部门经理 	60 	60  400
+//	public final static String VIP7 = "GG";	//高级经理 	140 140 600
+//	public final static String VIP8 = "HH";	//市场总监 	260 260 1000
+//	public final static String VIP9 = "II";	//高级总监 	380 380 1500
 //	
 //	public final static String DS1 = "JJJ";	//董事 750 750 750 3000
 //	public final static String DS2 = "KKK";	//执行总裁 2500 2500 2500 5000
 //	public final static String DS3 = "LLL";	//总裁 5000 5000 5000  15000
-	
+
+// 原规则
+//	VIP1 = "AA"; //VIP    0  0
+//	VIP2 = "BB"; //业务员  4  4   40
+//	VIP3 = "CC"; //组长    10 10  100
+//	VIP4 = "DD"; //主任    20 20  180
+//	VIP5 = "EE"; //经理    40 40  300
+//	VIP6 = "FF"; //部门经理 80 80  600
+//	VIP7 = "GG"; //高级经理 160 160  900
+//	VIP8 = "HH"; //市场总监 260 260  1200
+//	VIP9 = "II"; //高级总监 380 380  1800
+//
+//	DS1 = "JJJ"; //董事 750 750 750 3000
+//	DS2 = "KKK"; //执行总裁 2500 2500 2500 5000
+//	DS3 = "LLL"; //总裁 5000 5000 5000  15000
+//
+//
+//	DS4 = "MMM"; //皇冠 3000 3000 3000  10000
+//	DS5 = "NNN"; //皇冠大使 5000 5000 5000 20000
 	
 	
 	
@@ -40,21 +58,21 @@ public class BusinessUtil {
 	static{
 		BusinessEntity VIP1 = new BusinessEntity(1,UserLevel.CONSUMER, UserLevel.CONSUMER_CH, 0, 0, 0, 0);
 		businessMap.put(UserLevel.CONSUMER, VIP1);
-		BusinessEntity VIP2 = new BusinessEntity(2,UserLevel.COMMON_SALEMAN, UserLevel.COMMON_SALEMAN_CH, 4, 4, 0, 40);
+		BusinessEntity VIP2 = new BusinessEntity(2,UserLevel.COMMON_SALEMAN, UserLevel.COMMON_SALEMAN_CH, 1, 1, 0, 10);
 		businessMap.put(UserLevel.COMMON_SALEMAN, VIP2);
-		BusinessEntity VIP3 = new BusinessEntity(3,UserLevel.GROUP_LEADER, UserLevel.GROUP_LEADER_CH, 10, 10, 0, 100);
+		BusinessEntity VIP3 = new BusinessEntity(3,UserLevel.GROUP_LEADER, UserLevel.GROUP_LEADER_CH, 4, 4, 0, 40);
 		businessMap.put(UserLevel.GROUP_LEADER, VIP3);
-		BusinessEntity VIP4 = new BusinessEntity(4,UserLevel.DIRECOTR, UserLevel.DIRECOTR_CH, 20, 20, 0, 180);
+		BusinessEntity VIP4 = new BusinessEntity(4,UserLevel.DIRECOTR, UserLevel.DIRECOTR_CH, 15, 15, 0, 100);
 		businessMap.put(UserLevel.DIRECOTR, VIP4);
-		BusinessEntity VIP5 = new BusinessEntity(5,UserLevel.MANAGEAR, UserLevel.MANAGEAR_CH, 40, 40, 0, 300);
+		BusinessEntity VIP5 = new BusinessEntity(5,UserLevel.MANAGEAR, UserLevel.MANAGEAR_CH, 30, 30, 0, 200);
 		businessMap.put(UserLevel.MANAGEAR, VIP5);
-		BusinessEntity VIP6 = new BusinessEntity(6,UserLevel.BRANCH_MANAGER, UserLevel.BRANCH_MANAGER_CH, 80, 80, 0, 600);
+		BusinessEntity VIP6 = new BusinessEntity(6,UserLevel.BRANCH_MANAGER, UserLevel.BRANCH_MANAGER_CH, 60, 60, 0, 400);
 		businessMap.put(UserLevel.BRANCH_MANAGER, VIP6);
-		BusinessEntity VIP7 = new BusinessEntity(7,UserLevel.ADVANCE_MANAGER, UserLevel.ADVANCE_MANAGER_CH, 160, 160, 0, 900);
+		BusinessEntity VIP7 = new BusinessEntity(7,UserLevel.ADVANCE_MANAGER, UserLevel.ADVANCE_MANAGER_CH, 140, 140, 0, 600);
 		businessMap.put(UserLevel.ADVANCE_MANAGER, VIP7);
-		BusinessEntity VIP8 = new BusinessEntity(8,UserLevel.MARKET_DIRECTOR, UserLevel.MARKET_DIRECTOR_CH, 260, 260, 0, 1200);
+		BusinessEntity VIP8 = new BusinessEntity(8,UserLevel.MARKET_DIRECTOR, UserLevel.MARKET_DIRECTOR_CH, 260, 260, 0, 1000);
 		businessMap.put(UserLevel.MARKET_DIRECTOR, VIP8);
-		BusinessEntity VIP9 = new BusinessEntity(9,UserLevel.ADVANCED_DIRECTOR, UserLevel.ADVANCED_DIRECTOR_CH, 380, 380, 0, 1800);
+		BusinessEntity VIP9 = new BusinessEntity(9,UserLevel.ADVANCED_DIRECTOR, UserLevel.ADVANCED_DIRECTOR_CH, 380, 380, 0, 1500);
 		businessMap.put(UserLevel.ADVANCED_DIRECTOR, VIP9);
 		
 		BusinessEntity DS1 = new BusinessEntity(10,UserLevel.BOARD_DIRECOTR, UserLevel.BOARD_DIRECOTR_CH, 750, 750, 750, 3000);
@@ -162,6 +180,38 @@ public class BusinessUtil {
 		}
 		return false;
 	}
+
+	/**
+	 * 获取下一个级别
+	 * @param nowLevel
+	 * @return
+	 */
+	public static BusinessEntity getNextLevel(BusinessEntity nowLevel) {
+		for (int i = businessList.size()-1; i >= 0; i--) {
+			if (businessList.get(i).getUserLevel().equals(nowLevel.getUserLevel())) {
+				return businessList.get(i + 1);
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 获取上一个级别
+	 * @param nowLevel
+	 * @return
+	 */
+	public static BusinessEntity getPreLevel(BusinessEntity nowLevel) {
+		for (int i = businessList.size()-1; i >= 0; i--) {
+			if (businessList.get(i).getUserLevel().equals(nowLevel.getUserLevel())) {
+				return businessList.get(i - 1);
+			}
+		}
+		return null;
+	}
+
+	public static Boolean isVIP1(String level) {
+		return level.equals(UserLevel.CONSUMER);
+	}
 	
 	
 	public static void main(String[] args) {
@@ -169,9 +219,14 @@ public class BusinessUtil {
 //		个人工单数:[2247,313,582,]
 //				排序后:[2247, 313, 582]
 //				你的等级是：普通会员
-		BusinessEntity bus = getBusinesLevel(5555,5555,2500);
+		BusinessEntity bus = getBusinesLevel(60,60,0);
 		System.out.println(bus);
-		
+		BusinessEntity nex = getNextLevel(bus);
+		System.out.println(nex);
+		BusinessEntity pre = getPreLevel(bus);
+		System.out.println(pre);
+
+
 //		CheckUtil.printMap(businessMap);
 	}
 }

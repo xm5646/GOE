@@ -40,68 +40,132 @@ public class CheckUtil {
 	 * @param perMap
 	 * @return
 	 */
+	@Deprecated
 	public static List<Performance> computePer(Long userid, Map<Long, User> userMap, Map<Long, Performance> perMap,Map<Long,Boolean>  isHaveTotalEarningMap) {
+//		List<Performance> pers = new ArrayList<Performance>();
+//		// 添加最下级节点的时候的用户信息
+//		User u = userMap.get(userid);
+//		Long pid = u.getParentId();
+//		int weightCode = u.getWeightCode();
+//		// for循环内终止条件应该是 i >=1
+//		for (int i = weightCode; i > 1; i--) {
+//			// 增加业绩之前做判断，未激活用户不增加任何业绩,已激活用户只增加新增业绩
+//			// [取消] 增加新增业绩前判断,(当前用户级别>=业务员 或者当前业绩>=4:4, 或者判断该用户的考核日期和创建时间不一致)三个条件任何一个都行,才会计入新增
+//			// [取消] 新增业绩增加前判断用户是否有未领取完的累计升级奖励
+//			// [取消] 这里如果累计业绩没有超过4：4 不增加新增业绩
+//			User pu = userMap.get(pid);
+//			if (pu.isUserStatus()) {
+//				// 用户已激活
+//				Performance pm = perMap.get(pid);
+//				// 2019年1月24 用户新增不再增加累积业绩,只新增业绩
+//
+//
+//				// 计算累计
+//				//判断用户级别大于等于业务员UserLevel.COMMON_SALEMAN(即是否产生收入),并且是通过考核状态,并且否则不增加累计业绩
+//                // 2018-12-14 取消判断用户是否通过考核
+////                if (userid == pu.getDepartmentA()) {
+////                    pm.setDepartAcount(pm.getDepartAcount() + 1);
+////                } else if (userid == pu.getDepartmentB()) {
+////                    pm.setDepartBcount(pm.getDepartBcount() + 1);
+////                } else if (userid == pu.getDepartmentC()) {
+////                    pm.setDepartCcount(pm.getDepartCcount() + 1);
+////                }
+////				if (BusinessUtil.isBigBusSame(pu.getUserLevel(), UserLevel.COMMON_SALEMAN)) {
+////
+////					if (pu.isAssessStatus()) {
+////						if (userid == pu.getDepartmentA()) {
+////							pm.setDepartAcount(pm.getDepartAcount() + 1);
+////						} else if (userid == pu.getDepartmentB()) {
+////							pm.setDepartBcount(pm.getDepartBcount() + 1);
+////						} else if (userid == pu.getDepartmentC()) {
+////							pm.setDepartCcount(pm.getDepartCcount() + 1);
+////						}
+////					}
+////				} else {
+////					if (userid == pu.getDepartmentA()) {
+////						pm.setDepartAcount(pm.getDepartAcount() + 1);
+////					} else if (userid == pu.getDepartmentB()) {
+////						pm.setDepartBcount(pm.getDepartBcount() + 1);
+////					} else if (userid == pu.getDepartmentC()) {
+//////						pm.setDepartCcount(pm.getDepartCcount() + 1);
+//////					}
+//////				}
+////				 计算新增
+////				 如果当前存在发放的累计升级奖励,则不增加新增业绩
+////				 如果小于UserLevel.ADVANCED_DIRECTOR 级别, 不计算新增业绩
+////				boolean isHaveTotalEarning = isHaveTotalEarningMap.get(pu.getUserId());
+////				boolean isBigThanOrEqualVIP9 = BusinessUtil.isBigBusSame(pu.getUserLevel(), UserLevel.ADVANCED_DIRECTOR);
+////				if (!"AA".equals(pu.getUserLevel()) && !isHaveTotalEarning && isBigThanOrEqualVIP9) {
+////					if (userid == pu.getDepartmentA()) {
+////						pm.setAddDepartAcount(pm.getAddDepartAcount() + 1);
+////					} else if (userid == pu.getDepartmentB()) {
+////						pm.setAddDepartBcount(pm.getAddDepartBcount() + 1);
+////					} else if (userid == pu.getDepartmentC()) {
+////						pm.setAddDepartCcount(pm.getAddDepartCcount() + 1);
+////					}
+////				}
+//				// 为用户增加新增业绩
+//				if (userid == pu.getDepartmentA()) {
+//					pm.setAddDepartAcount(pm.getAddDepartAcount() + 1);
+//				} else if (userid == pu.getDepartmentB()) {
+//					pm.setAddDepartBcount(pm.getAddDepartBcount() + 1);
+//				} else if (userid == pu.getDepartmentC()) {
+//					pm.setAddDepartCcount(pm.getAddDepartCcount() + 1);
+//				}
+//				pers.add(pm);
+//			}
+//			userid = pu.getUserId();
+//			pid = pu.getParentId();
+//		}
+//		return pers;
+		return null;
+	}
+
+	/**
+	 * 为新增用户及所有上线增加新增业绩
+	 * @param userid 新增用户ID
+	 * @param userMap 所有用户
+	 * @param perMap 所有业绩对象
+	 * @return	有业绩变化的业业绩对象
+	 */
+	public static List<Performance> ComputeNewLinePerformance(Long userid, Map<Long, User> userMap, Map<Long, Performance> perMap, Map<Long, Boolean> isHaveTotalEarningMap) {
 		List<Performance> pers = new ArrayList<Performance>();
 		// 添加最下级节点的时候的用户信息
 		User u = userMap.get(userid);
 		Long pid = u.getParentId();
 		int weightCode = u.getWeightCode();
-		// for循环内终止条件应该是 i >=1
+		// 根据用户层数,进行该层数迭代, 迭代至最顶层
 		for (int i = weightCode; i > 1; i--) {
-			// 增加业绩之前做判断，未激活用户不增加任何业绩
-			// 增加新增业绩前判断,(当前用户级别>=业务员 或者当前业绩>=4:4, 或者判断该用户的考核日期和创建时间不一致)三个条件任何一个都行,才会计入新增
-			// 新增业绩增加前判断用户是否有未领取完的累计升级奖励
-			// 这里如果累计业绩没有超过4：4 不增加新增业绩
+			// 获取上一层用户
 			User pu = userMap.get(pid);
+			// 判断用户是否是激活状态,激活状态可以进行业绩增加
 			if (pu.isUserStatus()) {
-				// 用户已激活
 				Performance pm = perMap.get(pid);
-				// 计算累计
-				//判断用户级别大于等于业务员UserLevel.COMMON_SALEMAN(即是否产生收入),并且是通过考核状态,并且否则不增加累计业绩
-                // 2018-12-14 取消判断用户是否通过考核
-                if (userid == pu.getDepartmentA()) {
-                    pm.setDepartAcount(pm.getDepartAcount() + 1);
-                } else if (userid == pu.getDepartmentB()) {
-                    pm.setDepartBcount(pm.getDepartBcount() + 1);
-                } else if (userid == pu.getDepartmentC()) {
-                    pm.setDepartCcount(pm.getDepartCcount() + 1);
-                }
-//				if (BusinessUtil.isBigBusSame(pu.getUserLevel(), UserLevel.COMMON_SALEMAN)) {
-//
-//					if (pu.isAssessStatus()) {
-//						if (userid == pu.getDepartmentA()) {
-//							pm.setDepartAcount(pm.getDepartAcount() + 1);
-//						} else if (userid == pu.getDepartmentB()) {
-//							pm.setDepartBcount(pm.getDepartBcount() + 1);
-//						} else if (userid == pu.getDepartmentC()) {
-//							pm.setDepartCcount(pm.getDepartCcount() + 1);
-//						}
-//					}
-//				} else {
-//					if (userid == pu.getDepartmentA()) {
-//						pm.setDepartAcount(pm.getDepartAcount() + 1);
-//					} else if (userid == pu.getDepartmentB()) {
-//						pm.setDepartBcount(pm.getDepartBcount() + 1);
-//					} else if (userid == pu.getDepartmentC()) {
-//						pm.setDepartCcount(pm.getDepartCcount() + 1);
-//					}
-//				}
-				
-				// 计算新增
-				// 这里如果累计业绩没有超过4：4 不增加新增业绩
-				// 如果当前存在发放的累计升级奖励,则不增加新增业绩
-				// 如果小于UserLevel.ADVANCED_DIRECTOR 级别, 不计算新增业绩
-				boolean isHaveTotalEarning = isHaveTotalEarningMap.get(pu.getUserId());
-				boolean isBigThanOrEqualVIP9 = BusinessUtil.isBigBusSame(pu.getUserLevel(), UserLevel.ADVANCED_DIRECTOR);
-				if (!"AA".equals(pu.getUserLevel()) && !isHaveTotalEarning && isBigThanOrEqualVIP9) {
+				//
+				// 判断用户是否产生过收入,如果没有,直接将业绩计入累积业绩
+				if (BusinessUtil.isVIP1(pu.getUserLevel())) {
 					if (userid == pu.getDepartmentA()) {
-						pm.setAddDepartAcount(pm.getAddDepartAcount() + 1);
+						pm.setDepartAcount(pm.getDepartAcount() + 1);
 					} else if (userid == pu.getDepartmentB()) {
-						pm.setAddDepartBcount(pm.getAddDepartBcount() + 1);
+						pm.setDepartBcount(pm.getDepartBcount() + 1);
 					} else if (userid == pu.getDepartmentC()) {
-						pm.setAddDepartCcount(pm.getAddDepartCcount() + 1);
+						pm.setDepartCcount(pm.getDepartCcount() + 1);
+					}
+				} else {
+					// 判断用户是否在领取累积升级奖励
+					boolean isHaveTotalEarning = isHaveTotalEarningMap.get(pu.getUserId());
+					// 如果没有领取累积升级奖励则为用户增加新增业绩
+					if (!isHaveTotalEarning) {
+						if (userid == pu.getDepartmentA()) {
+							pm.setAddDepartAcount(pm.getAddDepartAcount() + 1);
+						} else if (userid == pu.getDepartmentB()) {
+							pm.setAddDepartBcount(pm.getAddDepartBcount() + 1);
+						} else if (userid == pu.getDepartmentC()) {
+							pm.setAddDepartCcount(pm.getAddDepartCcount() + 1);
+						}
 					}
 				}
+
 				pers.add(pm);
 			}
 			userid = pu.getUserId();
@@ -109,6 +173,8 @@ public class CheckUtil {
 		}
 		return pers;
 	}
+
+
 
 	/**
 	 * 奖金发放
@@ -147,11 +213,12 @@ public class CheckUtil {
 	 * @return 分配比例
 	 */
 	private static BonusPayRatio getBonusPayRatio(Earning earn) {
-		BonusPayRatio bpr = new BonusPayRatio(0.6,0.1,0.2, 0.1);
-		boolean bbpr = BusinessUtil.isBigBusSame(earn.getUserLevel(),UserLevel.DIRECOTR);
-		if (earn!=null &&bbpr) {
-			 bpr = new BonusPayRatio(0.5,0.1,0.3, 0.1);
-		}
+		//UPDATE 修改所有用户产品积分比例为30% 2019-01-24
+		BonusPayRatio bpr = new BonusPayRatio(0.5,0.1,0.3, 0.1);
+//		boolean bbpr = BusinessUtil.isBigBusSame(earn.getUserLevel(),UserLevel.DIRECOTR);
+//		if (earn!=null && bbpr) {
+//			 bpr = new BonusPayRatio(0.5,0.1,0.3, 0.1);
+//		}
 		return bpr;
 	}
 
@@ -253,7 +320,7 @@ public class CheckUtil {
 	 * 计算累计业绩
 	 */
 	private static Earning accumulativeEarning(Performance per) {
-		if (per != null && per.getDepartAcount() >= 4 && per.getDepartBcount() >= 4) {
+		if (per != null && per.getDepartAcount() >= 1 && per.getDepartBcount() >= 1) {
 			BusinessEntity busentity = BusinessUtil.getBusinesLevel(per.getDepartAcount(), per.getDepartBcount(),
 					per.getDepartCcount());
 			if (busentity != null) {
@@ -383,6 +450,10 @@ public class CheckUtil {
 			}
 			System.out.println("总数：" + list.size());
 		}
+
+	}
+
+	public static void UpdateUserLevel() {
 
 	}
 }
