@@ -126,7 +126,7 @@ public class CheckUtil {
 	 * @param userid 新增用户ID
 	 * @param userMap 所有用户
 	 * @param perMap 所有业绩对象
-	 * @return	有业绩变化的业业绩对象
+	 * @return	有业绩变化的业绩对象
 	 */
 	public static List<Performance> ComputeNewLinePerformance(Long userid, Map<Long, User> userMap, Map<Long, Performance> perMap, Map<Long, Boolean> isHaveTotalEarningMap) {
 		List<Performance> pers = new ArrayList<Performance>();
@@ -141,7 +141,6 @@ public class CheckUtil {
 			// 判断用户是否是激活状态,激活状态可以进行业绩增加
 			if (pu.isUserStatus()) {
 				Performance pm = perMap.get(pid);
-				//
 				// 判断用户是否产生过收入,如果没有,直接将业绩计入累积业绩
 				if (BusinessUtil.isVIP1(pu.getUserLevel())) {
 					if (userid == pu.getDepartmentA()) {
@@ -152,17 +151,13 @@ public class CheckUtil {
 						pm.setDepartCcount(pm.getDepartCcount() + 1);
 					}
 				} else {
-					// 判断用户是否在领取累积升级奖励
-					boolean isHaveTotalEarning = isHaveTotalEarningMap.get(pu.getUserId());
-					// 如果没有领取累积升级奖励则为用户增加新增业绩
-					if (!isHaveTotalEarning) {
-						if (userid == pu.getDepartmentA()) {
-							pm.setAddDepartAcount(pm.getAddDepartAcount() + 1);
-						} else if (userid == pu.getDepartmentB()) {
-							pm.setAddDepartBcount(pm.getAddDepartBcount() + 1);
-						} else if (userid == pu.getDepartmentC()) {
-							pm.setAddDepartCcount(pm.getAddDepartCcount() + 1);
-						}
+					// 如果产生过收入,则直接计入新增业绩
+					if (userid == pu.getDepartmentA()) {
+						pm.setAddDepartAcount(pm.getAddDepartAcount() + 1);
+					} else if (userid == pu.getDepartmentB()) {
+						pm.setAddDepartBcount(pm.getAddDepartBcount() + 1);
+					} else if (userid == pu.getDepartmentC()) {
+						pm.setAddDepartCcount(pm.getAddDepartCcount() + 1);
 					}
 				}
 

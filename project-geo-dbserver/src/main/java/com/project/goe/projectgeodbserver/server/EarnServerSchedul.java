@@ -455,9 +455,6 @@ public class EarnServerSchedul {
 			BusinessEntity entity = BusinessUtil.getBusinessEntity(user.getUserLevel());
 			BusinessEntity nextLevel = BusinessUtil.getNextLevel(entity);
 
-			// 判断用户当前是否正在领取累积收益
-			boolean isHaveTotalEarning = isHaveTotalEarningMap.get(user.getUserId());
-
 			// 判断用户是否第一次产生收入
 			BusinessEntity perNowLevel = BusinessUtil.getBusinesLevel(p.getDepartAcount(), p.getDepartBcount(), p.getDepartCcount());
 			if (user.getUserLevel().equals(UserLevel.CONSUMER) && !perNowLevel.getUserLevel().equals(UserLevel.CONSUMER)) {
@@ -506,6 +503,8 @@ public class EarnServerSchedul {
 				performanceService.save(p);
 				earningService.save(earning);
 			} else {
+				// 判断用户当前是否正在领取累积收益
+				boolean isHaveTotalEarning = isHaveTotalEarningMap.get(user.getUserId());
 				// 未达到升级条件,对没有领取累积奖励的用户进行新增业绩计算是否可以触发新增奖励
 				BusinessEntity newPerLevel = BusinessUtil.getBusinesLevel(p.getAddDepartAcount(), p.getAddDepartBcount(), p.getAddDepartCcount());
 				if (!isHaveTotalEarning) {
