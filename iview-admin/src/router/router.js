@@ -82,6 +82,27 @@ export const otherRouter = {
 // 作为Main组件的子页面展示并且在左侧菜单显示的路由写在appRouter里
 export const appRouter = [
     {
+        path: '/noticeManagement',
+        icon: 'clipboard',
+        name: 'noticeManagement',
+        title: '公告管理',
+        component: Main,
+        children: [
+            {
+                path: 'addNotice',
+                title: '新增公告',
+                name: 'noticeInfo_addNotice',
+                component: () => import('@/views/notice/AddNotice.vue')
+            },
+            {
+                path: 'noticeList',
+                title: '公告列表',
+                name: 'noticeInfo_noticeList',
+                component: () => import('@/views/notice/NoticeList.vue')
+            }
+        ]
+    },
+    {
         path: '/userManagement',
         icon: 'ios-people',
         name: 'userManagement',
