@@ -134,6 +134,9 @@ public class User implements Serializable {
 	// 密码重置标识
 	private boolean passwordReset = false;
 
+	// 会员费缴存年份
+	private String annualFeeYeal;
+
 	// 用户交易密码
 	private String paymentPassword;
 
@@ -402,6 +405,14 @@ public class User implements Serializable {
 
 	public void setRepeatCoin(double repeatCoin) {
 		this.repeatCoin = repeatCoin;
+	}
+
+	public String getAnnualFeeYeal() {
+		return annualFeeYeal;
+	}
+
+	public void setAnnualFeeYeal(String annualFeeYeal) {
+		this.annualFeeYeal = annualFeeYeal;
 	}
 	// 重新对盐重新进行了定义，用户名+salt，这样就更加不容易被破解
 }

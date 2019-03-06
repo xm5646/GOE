@@ -121,7 +121,7 @@ public class UserUtil {
 		userVO.setIdentityNo(user.getIdentityNo());
 		userVO.setProvince(user.getProvince());
 		userVO.setCity(user.getCity());
-
+		userVO.setAnnualFeeYear(user.getAnnualFeeYeal() == null ? "" : user.getAnnualFeeYeal());
 		if (user.isPasswordReset()) {
 			userVO.setPasswordReset("是");
 		} else {

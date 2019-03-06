@@ -7,4 +7,5 @@ public class ConsumeType {
 	public static final String COIN_TRANSFER_ADDCONSUMER = "报单币消费报单";//4
 	public static final String PRODCUTCOIN_TRANSFER_PRODUCT = "积分兑换";//5
 	public static final String COIN_TRANSFER_RECONSUME = "重复消费";//6
+	public static final String ANNUAL_FEE = "会员年费";//4
 }

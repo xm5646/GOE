@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Login from '../views/Login'
 import Index from '../views/Index'
 import InitPassword from '../views/function/InitPassword'
+import AnnualFee from '../views/function/AnnualFee'
 import ConvertConsumeCoin from '../views/function/ConvertConsumeCoin'
 import TransferConsumeCoin from '../views/function/TransferConsumeCoin'
 import ReConsume from '../views/function/ReConsume'
@@ -38,6 +39,11 @@ export default new Router({
       path: '/initPassword',
       name: 'initPassword',
       component: InitPassword
+    },
+    {
+      path: '/annualFee',
+      name: 'annualFee',
+      component: AnnualFee
     },
     {
       path: '/convertConsumeCoin',

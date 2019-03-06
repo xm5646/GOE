@@ -131,7 +131,7 @@
             const _this = this
             this.$vux.confirm.show({
               // 组件除show外的属性
-              title: '确定进行重复消费?',
+              title: '确定进行兑换?',
               onCancel () {
                 console.log(this) // 非当前 vm
                 console.log(_this) // 当前 vm

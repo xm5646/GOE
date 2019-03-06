@@ -2,6 +2,7 @@
 module.exports = {
   goe: {
     price: 680,
+    annualFee: 100,
     reConsumePrice: 480,
     reConsumeDiscount: 0.7
   },

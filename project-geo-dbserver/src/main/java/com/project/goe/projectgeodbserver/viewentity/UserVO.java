@@ -20,6 +20,7 @@ public class UserVO {
 	private String activateTime;
 	private String identityNo;
 	private String passwordReset;
+	private String annualFeeYear;
 	private String province;
 	private String city;
 
@@ -189,5 +190,13 @@ public class UserVO {
 
 	public void setRepeatCoin(long repeatCoin) {
 		this.repeatCoin = repeatCoin;
+	}
+
+	public String getAnnualFeeYear() {
+		return annualFeeYear;
+	}
+
+	public void setAnnualFeeYear(String annualFeeYear) {
+		this.annualFeeYear = annualFeeYear;
 	}
 }

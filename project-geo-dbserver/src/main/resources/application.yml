@@ -44,11 +44,12 @@ bonus:
      bonusNumberPercentage: 0.7
      productCoinNumberPercentage: 0.2
      consumeCoinUnitPrice: 680
+     annualFee: 100
      reconsumeCoinUnitPrice: 480
      drawCostPercentage: 0.05
 
 login: 
   expireTime: 30
-  useInterceptor: true
+  useInterceptor: false
 logging:
   config: src/main/resources/log4j.properties

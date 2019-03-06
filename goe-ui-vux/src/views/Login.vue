@@ -91,10 +91,15 @@
                 const userObj = response.body.data
                 window.localStorage.setItem('User', JSON.stringify(userObj))
                 if (userObj.passwordReset !== '否') {
-                  this.$vux.toast.show({
-                    text: '登录成功'
-                  })
-                  this.getNotices()
+                  // TODO 判断用户是否缴纳年费
+                  if (this.checkUserIsPayAnnualFee(userObj)) {
+                    this.$vux.toast.show({
+                      text: '登录成功'
+                    })
+                    this.getNotices()
+                  } else {
+                    this.$router.push({name: 'annualFee'})
+                  }
                 } else {
                   this.$router.push({name: 'initPassword'})
                 }
@@ -118,6 +123,22 @@
             width: '10em',
             text: '请完整输入登陆信息'
           })
+        }
+      },
+      checkUserIsPayAnnualFee (userObj) {
+        var dates = userObj.createTime
+        var datestr = dates.split('-')
+        var now = new Date()
+        var nowMonth = now.getMonth() + 1
+        var nowYear = now.getFullYear()
+
+        var nowDay = now.getDate()
+        if (nowMonth > datestr[1] || (nowMonth === parseInt(datestr[1]) && nowDay >= parseInt(datestr[2]))) {
+          if (userObj.annualFeeYear !== nowYear.toString()) {
+            return false
+          } else {
+            return true
+          }
         }
       }
     }

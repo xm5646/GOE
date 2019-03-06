@@ -2,6 +2,8 @@ package com.project.goe.projectgeodbserver.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.servlet.http.Cookie;
@@ -336,6 +338,52 @@ public class UserController {
 
 		return retMsg;
 	}
+
+
+    @PostMapping("/payAnnualFee")
+    @Transactional
+    public RetMsg payAnnualFee(@Validated UserPayAnnualFeeRequest userPayAnnualFeeRequest) {
+	    String account = userPayAnnualFeeRequest.getAccount();
+	    String payPasswd = userPayAnnualFeeRequest.getPaymentPassword();
+	    RetMsg retMsg = new RetMsg();
+
+	    User user = this.userService.findByAccount(account);
+	    // 判断用户是否存在
+        if (null == user)
+            throw new RuntimeException("用户账号不存在");
+
+        // 判断报单币余额是否充足
+        if (user.getConsumeCoin() < 100)
+            throw new RuntimeException("报单币余额不足");
+
+        // 验证支付密码是否正确
+        if (!(MD5Util.encrypeByMd5(payPasswd)).equals(user.getPaymentPassword())) {
+            throw new RuntimeException("用户支付密码错误!");
+        }
+
+        // 扣除报单币, 增加缴纳年费记录
+        user.setConsumeCoin(user.getConsumeCoin() - 100);
+        user.setAnnualFeeYeal(String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
+        this.userService.save(user);
+
+        ConsumeRecord consumeRecord = new ConsumeRecord();
+        consumeRecord.setUserId(user.getUserId());
+        consumeRecord.setConsumeTime(new Date());
+        consumeRecord.setConsumeType(ConsumeType.COIN_TRANSFER_ADDCONSUMER);
+        consumeRecord.setSendUserId(user.getUserId());
+        consumeRecord.setReceiveUserId(this.userService.findByAccount("administrator").getUserId());
+        consumeRecord.setConsumeNumber(100);
+        consumeRecord.setConsumeStatus(false);
+        consumeRecord.setDescription(ConsumeType.ANNUAL_FEE);
+        this.consumeRecordService.addOneConsumeRecord(consumeRecord);
+
+        retMsg.setCode(200);
+        retMsg.setData(UserUtil.UserToUserVO(user));
+        retMsg.setSuccess(true);
+        retMsg.setMessage("年费支付成功");
+
+	    return  retMsg;
+    }
 
 	// 返回用户的业绩信息
 	@GetMapping("/performance")

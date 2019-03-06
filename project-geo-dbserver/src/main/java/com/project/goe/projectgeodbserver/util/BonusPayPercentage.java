@@ -18,6 +18,8 @@ public class BonusPayPercentage {
 	private static double reconsumeCoinUnitPrice;
 	// 提现手续费
 	private static double drawCostPercentage;
+	// 年费单价
+	private static double annualFee;
 
 	public static double getManageCostPercentage() {
 		return manageCostPercentage;
@@ -26,7 +28,16 @@ public class BonusPayPercentage {
 	public static double getReconsumeCoinUnitPrice() {
 		return reconsumeCoinUnitPrice;
 	}
-	
+
+	public static double getAnnualFee() {
+		return annualFee;
+	}
+
+	@Value("${bonus.percentage.annualFee}")
+	public static void setAnnualFee(double annualFee) {
+		BonusPayPercentage.annualFee = annualFee;
+	}
+
 	@Value("${bonus.percentage.reconsumeCoinUnitPrice}")
 	public void setReconsumeCoinUnitPrice(double reconsumeCoinUnitPrice) {
 		BonusPayPercentage.reconsumeCoinUnitPrice = reconsumeCoinUnitPrice;
