@@ -126,18 +126,30 @@
         }
       },
       checkUserIsPayAnnualFee (userObj) {
+        var payAnnualYear = userObj.annualFeeYear
         var dates = userObj.createTime
         var datestr = dates.split('-')
+
+        var needPayMonth = parseInt(datestr[1])
+        var needPayDay = parseInt(datestr[2])
         var now = new Date()
+        var nowDay = now.getDate()
         var nowMonth = now.getMonth() + 1
         var nowYear = now.getFullYear()
-
-        var nowDay = now.getDate()
-        if (nowMonth > datestr[1] || (nowMonth === parseInt(datestr[1]) && nowDay >= parseInt(datestr[2]))) {
-          if (userObj.annualFeeYear !== nowYear.toString()) {
-            return false
-          } else {
+        // 判断本年度是否缴费
+        if (nowYear === parseInt(payAnnualYear)) {
+          return true
+        } else {
+          // 本年度未缴费, 判断月份和日
+          if (nowMonth < needPayMonth) {
+            // 当前月份小于创建日期月份,不需要缴费
             return true
+          } else if (nowMonth > needPayMonth) {
+            // 当前月份超过了创建日期月份,  需要缴费
+            return false
+          } else if (nowMonth === needPayMonth) {
+            // 当前月份等于创建日期月份, 比对日期
+            return nowDay <= needPayDay
           }
         }
       }

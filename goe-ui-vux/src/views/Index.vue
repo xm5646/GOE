@@ -44,6 +44,8 @@
 
   export default {
     mounted: function () {
+      // 判断用户是否缴纳年费
+      this.checkUserAnnualFeeStatus()
       // 判断是否是从 创建用户页面创建成功之后传过来的
       console.log('检查是否存在指定View: ' + this.$route.params.view)
       if (this.$route.params.view === 'performance') {
@@ -81,6 +83,40 @@
       }
     },
     methods: {
+      checkUserAnnualFeeStatus () {
+        if (this.checkUserIsPayAnnualFee(JSON.parse(window.localStorage.getItem('User')))) {
+        } else {
+          this.$router.push({name: 'annualFee'})
+        }
+      },
+      checkUserIsPayAnnualFee (userObj) {
+        var payAnnualYear = userObj.annualFeeYear
+        var dates = userObj.createTime
+        var datestr = dates.split('-')
+
+        var needPayMonth = parseInt(datestr[1])
+        var needPayDay = parseInt(datestr[2])
+        var now = new Date()
+        var nowDay = now.getDate()
+        var nowMonth = now.getMonth() + 1
+        var nowYear = now.getFullYear()
+        // 判断本年度是否缴费
+        if (nowYear === parseInt(payAnnualYear)) {
+          return true
+        } else {
+          // 本年度未缴费, 判断月份和日
+          if (nowMonth < needPayMonth) {
+            // 当前月份小于创建日期月份,不需要缴费
+            return true
+          } else if (nowMonth > needPayMonth) {
+            // 当前月份超过了创建日期月份,  需要缴费
+            return false
+          } else if (nowMonth === needPayMonth) {
+            // 当前月份等于创建日期月份, 比对日期
+            return nowDay <= needPayDay
+          }
+        }
+      },
       changeView (view) {
         if (view === 'wallet' || view === 'home') {
           console.log('触发视图更新,更新数据')

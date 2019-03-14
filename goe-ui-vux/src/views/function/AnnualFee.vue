@@ -11,7 +11,7 @@
       </div>
     </card>
     <div v-if="consumeCoin < 100">
-      <message title="报单币不足" description="保单币100即可续费一年会员年费"></message>
+      <message title="报单币不足" description="请联系管理员进行充值"></message>
     </div>
     <div v-else>
       <br>
@@ -152,6 +152,7 @@
               this.$vux.toast.show({
                 text: '支付成功'
               })
+              window.localStorage.setItem('User', JSON.stringify(response.body.data))
               this.getNotices()
             } else {
               this.$vux.toast.show({
